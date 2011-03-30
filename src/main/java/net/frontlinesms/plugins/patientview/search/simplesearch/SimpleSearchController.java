@@ -80,7 +80,7 @@ public class SimpleSearchController implements ThinletUiEventHandler, SearchCont
 		uiController.removeAll(descriptorPanel);
 		//this is a hack because we don't want to store class info for all the fields, and I don't
 		//want to mess with all that reflection at this point
-		if(field.getDisplayName().equalsIgnoreCase(InternationalisationUtils.getI18NString("medic.common.labels.gender"))){
+		if(field.getDisplayName().equalsIgnoreCase(InternationalisationUtils.getI18nString("medic.common.labels.gender"))){
 			uiController.add(descriptorPanel, getEnumFieldEntry(Gender.class));
 		}else if(field.getDataType() == SimpleSearchDataType.STRING){
 			uiController.add(descriptorPanel, getTextFieldEntry());
@@ -94,8 +94,8 @@ public class SimpleSearchController implements ThinletUiEventHandler, SearchCont
 	
 	public Object getDateFieldEntry(){
 		if(dateFieldAfter == null){
-			dateFieldAfter = new DateField(uiController,InternationalisationUtils.getI18NString(AFTER),null);
-			dateFieldBefore = new DateField(uiController,InternationalisationUtils.getI18NString(BEFORE),null);
+			dateFieldAfter = new DateField(uiController,InternationalisationUtils.getI18nString(AFTER),null);
+			dateFieldBefore = new DateField(uiController,InternationalisationUtils.getI18nString(BEFORE),null);
 		}
 		dateFieldAfter.setStringResponse("");
 		dateFieldBefore.setStringResponse("");

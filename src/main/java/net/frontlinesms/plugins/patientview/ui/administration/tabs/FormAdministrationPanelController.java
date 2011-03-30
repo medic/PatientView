@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.administration.tabs;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.util.Collection;
 
@@ -58,7 +58,7 @@ public class FormAdministrationPanelController implements AdministrationTabPanel
 	MedicFormFieldDao patientViewFieldDao;
 	
 	public String getListItemTitle() {
-		return InternationalisationUtils.getI18NString(FORM_PANEL_TITLE);
+		return InternationalisationUtils.getI18nString(FORM_PANEL_TITLE);
 	}
 
 	public FormAdministrationPanelController(UiGeneratorController uiController, ApplicationContext appCon){
@@ -140,7 +140,7 @@ public class FormAdministrationPanelController implements AdministrationTabPanel
 	 * @param form
 	 */
 	private void populateFieldList(MedicForm form){
-		uiController.setText(uiController.find(mainPanel,"fieldListTitle"),getI18NString(FIELDS_ON_FORM_PREFIX)+ " \"" + form.getName()+"\"");
+		uiController.setText(uiController.find(mainPanel,"fieldListTitle"),getI18nString(FIELDS_ON_FORM_PREFIX)+ " \"" + form.getName()+"\"");
 		uiController.removeAll(fieldList);
 		for(MedicFormField mff: patientViewFieldDao.getFieldsOnForm(form)){
 			Object item = uiController.createListItem(mff.getLabel(), mff);
@@ -161,9 +161,9 @@ public class FormAdministrationPanelController implements AdministrationTabPanel
 	private void populateFieldMappingPanel(MedicFormField field){
 		uiController.removeAll(mappingComboBox);
 		uiController.setAction(mappingComboBox, "mappingComboBoxSelectionChanged()", null, this);
-		uiController.add(mappingComboBox,uiController.createComboboxChoice(getI18NString("common.blank"),null));
+		uiController.add(mappingComboBox,uiController.createComboboxChoice(getI18nString("common.blank"),null));
 		uiController.setSelectedIndex(mappingComboBox,0);
-		uiController.setText(mappingComboBox, getI18NString("common.blank"));
+		uiController.setText(mappingComboBox, getI18nString("common.blank"));
 		for(int i = 0; i < PatientFieldMapping.values().length; i++){
 			PatientFieldMapping m = PatientFieldMapping.values()[i];
 			Object choice = uiController.createComboboxChoice(m.toString(), m);
@@ -209,7 +209,7 @@ public class FormAdministrationPanelController implements AdministrationTabPanel
 				patientViewFormDao.deleteMedicForm(mf);
 				populatePatientViewFormList();
 			} else {
-				uiController.alert(getI18NString(FORM_ALREADY_RESPONDED_TO_DIALG));
+				uiController.alert(getI18nString(FORM_ALREADY_RESPONDED_TO_DIALG));
 			}
 		}
 	}

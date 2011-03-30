@@ -31,6 +31,6 @@ public class CsvValidationException extends Exception {
 	protected String reason;
 	
 	public String toString(){
-		return InternationalisationUtils.getI18NString("medic.importer.line")+" " + lineNumber+ ": " + reason;
+		return InternationalisationUtils.getI18nString("medic.importer.line")+" " + lineNumber+ ": " + reason;
 	}
 }

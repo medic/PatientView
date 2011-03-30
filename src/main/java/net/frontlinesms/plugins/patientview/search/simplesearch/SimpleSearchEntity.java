@@ -114,7 +114,7 @@ public enum SimpleSearchEntity {
 	}
 
 	public String getEntityDisplayName() {
-		return InternationalisationUtils.getI18NString(displayName);
+		return InternationalisationUtils.getI18nString(displayName);
 	}
 
 	public String getTableAlias() {

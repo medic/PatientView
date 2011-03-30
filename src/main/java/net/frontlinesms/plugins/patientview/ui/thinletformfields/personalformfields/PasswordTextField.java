@@ -15,7 +15,7 @@ public class PasswordTextField extends TextField implements PersonalFormField {
 	private String response;
 
 	public PasswordTextField(ExtendedThinlet thinlet, String initialText, FormFieldDelegate delegate) {
-		super(thinlet, InternationalisationUtils.getI18NString("login.password")+":", delegate);
+		super(thinlet, InternationalisationUtils.getI18nString("login.password")+":", delegate);
 		response = "";
 		if(initialText != null && !initialText.equals("")){
 			textBoxKeyPressed(initialText);

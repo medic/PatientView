@@ -22,7 +22,7 @@ public class CHWComboBox extends ThinletFormField<CommunityHealthWorker> impleme
 	private boolean hasChanged = false;
 	
 	public CHWComboBox(ExtendedThinlet thinlet, ApplicationContext appCon, CommunityHealthWorker chw, FormFieldDelegate delegate) {
-		super(thinlet, InternationalisationUtils.getI18NString("medic.common.chw")+":", delegate);
+		super(thinlet, InternationalisationUtils.getI18nString("medic.common.chw")+":", delegate);
 		comboBox =ExtendedThinlet.create("combobox");
 		thinlet.setInsert(comboBox,"textChanged(this.text)", null, this);
 		thinlet.setRemove(comboBox, "textChanged(this.text)", null, this);

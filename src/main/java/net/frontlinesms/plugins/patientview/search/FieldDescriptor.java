@@ -25,7 +25,7 @@ public class FieldDescriptor {
 		this.parentEntity = parentEntity;
 	}
 	public String getDisplayName() {
-		return InternationalisationUtils.getI18NString(displayName);
+		return InternationalisationUtils.getI18nString(displayName);
 	}
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;

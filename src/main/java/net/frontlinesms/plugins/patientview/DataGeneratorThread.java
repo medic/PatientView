@@ -114,7 +114,7 @@ public class DataGeneratorThread extends Thread{
 				@Override
 				/** Provide an internationalised version of this group's name */
 				public String getName() {
-					return InternationalisationUtils.getI18NString(FrontlineSMSConstants.CONTACTS_ALL);
+					return InternationalisationUtils.getI18nString(FrontlineSMSConstants.CONTACTS_ALL);
 				}
 			};
 			GroupDao gd = (GroupDao) appCon.getBean("groupDao");

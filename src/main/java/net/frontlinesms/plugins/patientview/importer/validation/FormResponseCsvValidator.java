@@ -26,7 +26,7 @@ public class FormResponseCsvValidator extends CsvValidator{
 	
 	protected List<MedicFormField> fields;
 	
-	protected String[] booleanValues = new String[]{getI18NString("datatype.true"),getI18NString("datatype.false")};
+	protected String[] booleanValues = new String[]{getI18nString("datatype.true"),getI18nString("datatype.false")};
 	
 	protected PatientDao patientDao;
 	
@@ -54,7 +54,7 @@ public class FormResponseCsvValidator extends CsvValidator{
 		try {
 			while((currLine = reader.readNext()) != null){
 				if(currLine.length != fields.size() +1){
-					exceptions.add(new CsvValidationException(lineNumber, getI18NString("medic.importer.column.mismatch.error")));
+					exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.column.mismatch.error")));
 				}
 				//determine the submitter of the form
 				List<CommunityHealthWorker> chws  = chwDao.findCommunityHealthWorkerByName(currLine[0], -1);
@@ -69,11 +69,11 @@ public class FormResponseCsvValidator extends CsvValidator{
 								if(chwById == null){
 									User userById = userDao.getUsersById(id);
 									if(userById == null){
-										exceptions.add(new CsvValidationException(lineNumber,getI18NString("medic.importer.unknown.submitter.error")+" \""+currLine[0]+"\""));
+										exceptions.add(new CsvValidationException(lineNumber,getI18nString("medic.importer.unknown.submitter.error")+" \""+currLine[0]+"\""));
 									}
 								}
 							}catch(Exception e){
-								exceptions.add(new CsvValidationException(lineNumber,getI18NString("medic.importer.unknown.submitter.error")+" \""+currLine[0]+"\""));
+								exceptions.add(new CsvValidationException(lineNumber,getI18nString("medic.importer.unknown.submitter.error")+" \""+currLine[0]+"\""));
 							}
 						}
 					}
@@ -105,7 +105,7 @@ public class FormResponseCsvValidator extends CsvValidator{
 				}
 				Patient p = patientDao.findPatient(name, birthdate, id);
 				if (p == null) {
-					exceptions.add(new CsvValidationException(lineNumber,getI18NString("medic.importer.unknown.subject.error")));
+					exceptions.add(new CsvValidationException(lineNumber,getI18nString("medic.importer.unknown.subject.error")));
 				}
 			}
 		} catch (IOException e) {
@@ -118,7 +118,7 @@ public class FormResponseCsvValidator extends CsvValidator{
 		try {
 			InternationalisationUtils.getDateFormat().parse(date);
 		} catch (ParseException e) {
-			exceptions.add(new CsvValidationException(lineNumber,getI18NString("medic.importer.date.format.error")+": "+ date));
+			exceptions.add(new CsvValidationException(lineNumber,getI18nString("medic.importer.date.format.error")+": "+ date));
 		}
 	}
 	
@@ -130,13 +130,13 @@ public class FormResponseCsvValidator extends CsvValidator{
 			}
 		}
 		if(!valid){
-			exceptions.add(new CsvValidationException(lineNumber, getI18NString("medic.importer.boolean.format.error")+": "+ value));
+			exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.boolean.format.error")+": "+ value));
 		}
 	}
 	
 	public void validateString(String value,int lineNumber, List<CsvValidationException> exceptions){
 		if(value.length() > 255){
-			exceptions.add(new CsvValidationException(lineNumber, getI18NString("medic.importer.response.length.error") + ": "+ value));
+			exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.response.length.error") + ": "+ value));
 		}
 	}	
 }

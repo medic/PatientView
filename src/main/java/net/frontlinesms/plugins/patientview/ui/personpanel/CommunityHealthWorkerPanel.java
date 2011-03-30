@@ -31,7 +31,7 @@ public class CommunityHealthWorkerPanel extends PersonPanel<CommunityHealthWorke
 	protected void addAdditionalFields() {
 		Object panel = uiController.createPanel("");
 		uiController.setGap(panel, 5);
-		uiController.add(panel,uiController.createLabel(InternationalisationUtils.getI18NString("medic.common.labels.phone.number")+":"));
+		uiController.add(panel,uiController.createLabel(InternationalisationUtils.getI18nString("medic.common.labels.phone.number")+":"));
 		Object button = uiController.createButton(getPerson().getPhoneNumber());
 		uiController.setChoice(button, "type", "link");
 		uiController.setAction(button, "showSendMessageDialog", null, this);
@@ -46,22 +46,22 @@ public class CommunityHealthWorkerPanel extends PersonPanel<CommunityHealthWorke
 
 	@Override
 	protected String getDefaultTitle() {
-		return InternationalisationUtils.getI18NString(CHW_AAG);
+		return InternationalisationUtils.getI18nString(CHW_AAG);
 	}
 
 	@Override
 	protected String getEditingTitle() {
-		return InternationalisationUtils.getI18NString(EDIT_CHW_DATA);
+		return InternationalisationUtils.getI18nString(EDIT_CHW_DATA);
 	}
 
 	@Override
 	protected String getAddingTitle() {
-		return InternationalisationUtils.getI18NString(ADD_CHW);
+		return InternationalisationUtils.getI18nString(ADD_CHW);
 	}
 
 	@Override
 	protected void addAdditionalDemoFields() {
-		addLabelToLabelPanel(InternationalisationUtils.getI18NString(PHONE_NUMBER_FIELD)+": " + InternationalisationUtils.getI18NString(DEMO_PHONE_NUMBER));
+		addLabelToLabelPanel(InternationalisationUtils.getI18nString(PHONE_NUMBER_FIELD)+": " + InternationalisationUtils.getI18nString(DEMO_PHONE_NUMBER));
 	}
 
 	public void showSendMessageDialog(){

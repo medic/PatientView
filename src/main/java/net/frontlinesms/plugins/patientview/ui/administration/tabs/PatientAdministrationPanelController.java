@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.administration.tabs;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,18 +39,18 @@ public class PatientAdministrationPanelController extends PersonAdministrationPa
 
 	@Override
 	protected String getPersonType() {
-		return getI18NString("medic.common.patient");
+		return getI18nString("medic.common.patient");
 	}
 
 	@Override
 	protected void putHeader() {
-		advancedTableController.putHeader(Patient.class, HeaderColumn.createColumnList(new String[]{getI18NString("medic.common.labels.name"), getI18NString("medic.common.labels.id"), getI18NString("medic.common.chw")},
+		advancedTableController.putHeader(Patient.class, HeaderColumn.createColumnList(new String[]{getI18nString("medic.common.labels.name"), getI18nString("medic.common.labels.id"), getI18nString("medic.common.chw")},
 				 new String[]{"/icons/user.png", "/icons/key.png","/icons/user_phone.png"},
 				 new String[]{"getName", "getStringID","getCHWName"}));	
 	}
 
 	public String getListItemTitle() {
-		return getI18NString("admin.actionlist.manage.patients");
+		return getI18nString("admin.actionlist.manage.patients");
 	}
 
 	@Override

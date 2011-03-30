@@ -106,7 +106,7 @@ public class PersonAttributePanel {
 				MedicFormFieldResponse response= fieldResponseDao.getMostRecentFieldResponse(field, person);
 				DataType type = field.getDatatype();
 				if(type.isBoolean()){
-					value = response.getValue().equalsIgnoreCase(InternationalisationUtils.getI18NString("datatype.true"))? type.getTrueLabel() :type.getFalseLabel();
+					value = response.getValue().equalsIgnoreCase(InternationalisationUtils.getI18nString("datatype.true"))? type.getTrueLabel() :type.getFalseLabel();
 				}else if(type == DataType.TEXT_AREA){
 					Object textArea = Thinlet.create("textarea");
 					uiController.setInteger(textArea, "weightx",1);

@@ -1,7 +1,7 @@
 package net.frontlinesms.plugins.patientview.ui.thinletformfields;
 
 import static net.frontlinesms.ui.i18n.InternationalisationUtils.getDateFormat;
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -19,7 +19,7 @@ public class DateField extends TextBox<Date> {
 	Object btn;
 
 	public DateField(ExtendedThinlet thinlet, String label, FormFieldDelegate delegate) {
-		super(thinlet, label + " ("+getI18NString(FrontlineSMSConstants.DATEFORMAT_YMD)+")", delegate);
+		super(thinlet, label + " ("+getI18nString(FrontlineSMSConstants.DATEFORMAT_YMD)+")", delegate);
 		btn = thinlet.createButton("");
 		thinlet.setIcon(btn, "/icons/date.png");
 		thinlet.setAction(btn, "showDateSelector()", null, this);

@@ -20,7 +20,7 @@ public class AdditionalInfoPanel {
 	}
 	
 	public void addLine(String line){
-		Object firstLabel = uiController.createLabel(InternationalisationUtils.getI18NString("medic.importer.labels.column") + " "+currentColumn+":");
+		Object firstLabel = uiController.createLabel(InternationalisationUtils.getI18nString("medic.importer.labels.column") + " "+currentColumn+":");
 		uiController.add(mainPanel,firstLabel);
 		uiController.add(mainPanel,uiController.createLabel(line));
 		currentColumn++;

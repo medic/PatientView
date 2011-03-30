@@ -68,8 +68,8 @@ public class FormResponseDataImporter implements CsvDataImporter{
 	public Object getInformationPanel(){
 		Object panel = uiController.createPanel("");
 		uiController.setColumns(panel, 1);
-		uiController.add(panel,uiController.createLabel(getI18NString("medic.importer.labels.column") + " 1: "+getI18NString("medic.importer.forms.id.info")));
-		uiController.add(panel,uiController.createLabel(getI18NString("medic.importer.forms.remaining.columns") + " " +getI18NString("medic.importer.forms.form.response.data")));
+		uiController.add(panel,uiController.createLabel(getI18nString("medic.importer.labels.column") + " 1: "+getI18nString("medic.importer.forms.id.info")));
+		uiController.add(panel,uiController.createLabel(getI18nString("medic.importer.forms.remaining.columns") + " " +getI18nString("medic.importer.forms.form.response.data")));
 		return panel;
 	}
 	public Object getAdditionalOptionsPanel() {
@@ -77,7 +77,7 @@ public class FormResponseDataImporter implements CsvDataImporter{
 		uiController.setColumns(panel,3);
 		uiController.setWeight(panel, 1, 0);
 		uiController.setGap(panel,5);
-		uiController.add(panel,uiController.createLabel(getI18NString("medic.importer.import.form.select")));
+		uiController.add(panel,uiController.createLabel(getI18nString("medic.importer.import.form.select")));
 		formComboBox=  uiController.create(Thinlet.COMBOBOX);
 		uiController.setWeight(formComboBox, 1, 0);
 		for(MedicForm mf: formDao.getAllMedicForms()){
@@ -96,7 +96,7 @@ public class FormResponseDataImporter implements CsvDataImporter{
 
 	public void importFile(String path) {
 		//set the form for the validator
-		addMessageToList(getI18NString("medic.importer.beginning.message")+ ": " + path);
+		addMessageToList(getI18nString("medic.importer.beginning.message")+ ": " + path);
 		validator.setForm(getCurrentlySelectedForm());
 		try {
 			List<CsvValidationException> exceptions = validator.validateFile(path);
@@ -125,7 +125,7 @@ public class FormResponseDataImporter implements CsvDataImporter{
 										if(chwById == null){
 											User userById = userDao.getUsersById(id);
 											if(userById == null){
-												exceptions.add(new CsvValidationException(lineNumber,getI18NString("medic.importer.unknown.submitter.error") + " \""+currLine[0]+"\""));
+												exceptions.add(new CsvValidationException(lineNumber,getI18nString("medic.importer.unknown.submitter.error") + " \""+currLine[0]+"\""));
 											}else{
 												submitter = userById;
 											}
@@ -133,7 +133,7 @@ public class FormResponseDataImporter implements CsvDataImporter{
 											submitter = chwById;
 										}
 									}catch(Exception e){
-										exceptions.add(new CsvValidationException(lineNumber, getI18NString("medic.importer.unknown.submitter.error") + " \""+currLine[0]+"\""));
+										exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.unknown.submitter.error") + " \""+currLine[0]+"\""));
 									}
 								}else{
 									submitter = usernames.get(0);
@@ -168,34 +168,34 @@ public class FormResponseDataImporter implements CsvDataImporter{
 						try{
 							Patient p = patientDao.findPatient(name, birthdate, id);
 							if(p == null){
-								exceptions.add(new CsvValidationException(lineNumber,getI18NString("medic.importer.unknown.subject.error")));
+								exceptions.add(new CsvValidationException(lineNumber,getI18nString("medic.importer.unknown.subject.error")));
 							}else{
 								mfr.setSubject(p);
 							}
 						}catch(Exception e){
-							exceptions.add(new CsvValidationException(lineNumber,getI18NString("medic.importer.unknown.subject.error")));
+							exceptions.add(new CsvValidationException(lineNumber,getI18nString("medic.importer.unknown.subject.error")));
 						}
 						
 						responseDao.saveMedicFormResponse(mfr);
 					}
 				}catch(Exception e){
-					addMessageToList(getI18NString("medic.importer.file.parsing.error"));
+					addMessageToList(getI18nString("medic.importer.file.parsing.error"));
 					addMessageToList(e.toString());
 				}
 				if(exceptions.size() == 0){
-					addMessageToList("====== "+getI18NString("medic.common.form.response")+" " +getI18NString("medic.importer.creation.complete")+" ======");
-					addMessageToList(lineNumber + getI18NString("medic.common.form.responses")+ " " +getI18NString("medic.importer.success.message"));
+					addMessageToList("====== "+getI18nString("medic.common.form.response")+" " +getI18nString("medic.importer.creation.complete")+" ======");
+					addMessageToList(lineNumber + getI18nString("medic.common.form.responses")+ " " +getI18nString("medic.importer.success.message"));
 				}
 			}
 		} catch (FileNotFoundException e) {
-			addMessageToList(getI18NString("medic.importer.file.not.found"));
+			addMessageToList(getI18nString("medic.importer.file.not.found"));
 			addMessageToList(e.toString());
 		}
 	}
 	
 	private void addMessageToList(String message){
 		String text = uiController.getText(messageList);
-		String newLine = "["+getI18NString("medic.common.form.response")+ " "+getI18NString("medic.data.importer") +"] "+InternationalisationUtils.getDatetimeFormat().format(new Date()) + " - " + message;
+		String newLine = "["+getI18nString("medic.common.form.response")+ " "+getI18nString("medic.data.importer") +"] "+InternationalisationUtils.getDatetimeFormat().format(new Date()) + " - " + message;
 		text += "\n"+newLine;
 		uiController.setText(messageList, text);
 	}

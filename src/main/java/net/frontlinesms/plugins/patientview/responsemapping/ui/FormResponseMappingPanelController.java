@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.responsemapping.ui;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.util.Date;
 import java.util.List;
@@ -55,40 +55,40 @@ public class FormResponseMappingPanelController implements AdministrationTabPane
 		actionPanel = uiController.find(mainPanel,"actionPanel");
 		//set up the table
 		tableController = new PagedAdvancedTableController(this,uiController, uiController.find(mainPanel,"tablePanel"));
-		tableController.putHeader(MedicFormResponse.class, HeaderColumn.createColumnList(new String[]{getI18NString("medic.common.labels.form.name"),getI18NString("medic.common.labels.date.submitted"),getI18NString("medic.common.labels.submitter")}, 
+		tableController.putHeader(MedicFormResponse.class, HeaderColumn.createColumnList(new String[]{getI18nString("medic.common.labels.form.name"),getI18nString("medic.common.labels.date.submitted"),getI18nString("medic.common.labels.submitter")}, 
 				 																		 new String[]{"/icons/form.png","/icons/date_sent.png","/icons/user_sender.png"},
 				 																		 new String[]{"getFormName","getStringDateSubmitted","getSubmitterName"}));
-		tableController.setNoResultsMessage(getI18NString("medic.form.response.mapping.panel.no.responses.yet"));
+		tableController.setNoResultsMessage(getI18nString("medic.form.response.mapping.panel.no.responses.yet"));
 		tableController.enableRefreshButton(appCon);
 		//set up the results set
 		resultSet = new FormMappingResultSet(appCon);
 		resultSet.setSearchingMapped(false);
 		tableController.setResultsSet(resultSet);
 		//set up the control panel
-		DateField dateField = new DateField(uiController,getI18NString("medic.common.labels.date.submitted"),this);
+		DateField dateField = new DateField(uiController,getI18nString("medic.common.labels.date.submitted"),this);
 		dateField.setLabelIcon("/icons/date.png");
 		uiController.add(uiController.find(mainPanel,"controlPanel"),dateField.getThinletPanel());
 		//uiController.add(uiController.find(mainPanel,"controlPanel"),uiController.createLabel("   "));
 		//create the form combo box
 		List<MedicForm> forms = ((MedicFormDao) appCon.getBean("MedicFormDao")).getAllMedicForms();
 		comboBox = uiController.create("combobox");
-		uiController.add(comboBox,uiController.createComboboxChoice(getI18NString("medic.common.all.forms"), null));
+		uiController.add(comboBox,uiController.createComboboxChoice(getI18nString("medic.common.all.forms"), null));
 		for(MedicForm mf: forms){
 			uiController.add(comboBox,uiController.createComboboxChoice(mf.getName(), mf));
 		}
 		uiController.setAction(comboBox, "formChanged(this.selected)", null, this);
 		uiController.setWeight(comboBox,1,0);
-		Object label = uiController.createLabel(getI18NString("medic.common.form"));
+		Object label = uiController.createLabel(getI18nString("medic.common.form"));
 		uiController.setIcon(label, "/icons/form.png");
 		uiController.add(uiController.find(mainPanel,"controlPanel"),label);
 		uiController.add(uiController.find(mainPanel,"controlPanel"),comboBox);
 		dateField.setRawResponse(new Date());
-		uiController.setText(comboBox, getI18NString("medic.common.all.forms"));
+		uiController.setText(comboBox, getI18nString("medic.common.all.forms"));
 		tableController.updateTable();
 	}
 	
 	public String getListItemTitle() {
-		return getI18NString("admin.actionlist.map.form.responses");
+		return getI18nString("admin.actionlist.map.form.responses");
 	}
 
 	public Object getPanel() {

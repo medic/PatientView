@@ -12,7 +12,7 @@ public class NameField extends TextField implements PersonalFormField{
 
 	
 	public NameField(ExtendedThinlet thinlet, String initialText, FormFieldDelegate delegate) {
-		super(thinlet, InternationalisationUtils.getI18NString("medic.common.labels.name")+":", delegate);
+		super(thinlet, InternationalisationUtils.getI18nString("medic.common.labels.name")+":", delegate);
 		if(initialText != null){
 			thinlet.setText(textBox, initialText);
 		}

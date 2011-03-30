@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.personpanel;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -203,9 +203,9 @@ public abstract class PersonPanel<E extends Person> implements ThinletUiEventHan
 		}
 		// add the core fields
 		addLabelToLabelPanel(getPerson().getName());
-		addLabelToLabelPanel(getI18NString(ID_LABEL) + ": " + getPerson().getPid());
+		addLabelToLabelPanel(getI18nString(ID_LABEL) + ": " + getPerson().getPid());
 		addLabelToLabelPanel(getPerson().getGender().toString());
-		addLabelToLabelPanel(getI18NString(BDAY_LABEL) + ": " + getPerson().getStringBirthdate());
+		addLabelToLabelPanel(getI18nString(BDAY_LABEL) + ": " + getPerson().getStringBirthdate());
 		// let the subclasses add additional fields
 		addAdditionalFields();
 		uiController.add(mainPanelContainer, mainPanel);
@@ -266,12 +266,12 @@ public abstract class PersonPanel<E extends Person> implements ThinletUiEventHan
 		uiController.setInteger(saveCancelPanel, "right", 10);
 		uiController.setChoice(saveCancelPanel, "halign", "fill");
 		uiController.setWeight(saveCancelPanel, 1, 1);
-		Object saveButton = uiController.createButton(getI18NString("detailview.buttons.save"));
+		Object saveButton = uiController.createButton(getI18nString("detailview.buttons.save"));
 		uiController.setName(saveButton,"savebutton");
 		uiController.setAction(saveButton, "stopEditingWithSave()", null, this);
 		uiController.setChoice(saveButton, "halign", "left");
 		uiController.setIcon(saveButton, "/icons/tick.png");
-		Object cancelButton = uiController.createButton(getI18NString("detailview.buttons.cancel"));
+		Object cancelButton = uiController.createButton(getI18nString("detailview.buttons.cancel"));
 		uiController.setAction(cancelButton, "stopEditingWithoutSave()", null, this);
 		uiController.setChoice(cancelButton, "halign", "right");
 		uiController.setIcon(cancelButton, "/icons/cross.png");

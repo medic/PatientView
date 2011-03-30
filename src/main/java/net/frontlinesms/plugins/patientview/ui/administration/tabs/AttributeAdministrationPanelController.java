@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.administration.tabs;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class AttributeAdministrationPanelController implements AdministrationTab
 	private static final String PANEL_TITLE = "admin.attributes.panel.title";
 	
 	public String getListItemTitle() {
-		return getI18NString(PANEL_TITLE);
+		return getI18nString(PANEL_TITLE);
 	}
 
 	public Object getPanel() {
@@ -86,14 +86,14 @@ public class AttributeAdministrationPanelController implements AdministrationTab
 		fieldSearchTableController = new AdvancedTableController(this,uiController,fieldSearchTable);
 		currentItemTableController = new AdvancedTableController(this,uiController,currentItemTable);
 		
-		fieldSearchTableController.putHeader(MedicFormField.class, HeaderColumn.createColumnList(new String[]{getI18NString(LABEL_COLUMN), getI18NString(PARENT_FORM_COLUMN)},
+		fieldSearchTableController.putHeader(MedicFormField.class, HeaderColumn.createColumnList(new String[]{getI18nString(LABEL_COLUMN), getI18nString(PARENT_FORM_COLUMN)},
 																								 new String[]{"/icons/tag_purple.png", "/icons/form.png"},
 																								 new String[]{"getLabel","getParentFormName" }));
 		
-		currentItemTableController.putHeader(Field.class, HeaderColumn.createColumnList(new String[]{getI18NString(LABEL_COLUMN), getI18NString(DATA_TYPE_COLUMN)},
+		currentItemTableController.putHeader(Field.class, HeaderColumn.createColumnList(new String[]{getI18nString(LABEL_COLUMN), getI18nString(DATA_TYPE_COLUMN)},
 														  new String[]{"/icons/tag_purple.png", "/icons/page_white_star.png"},
 														  new String[]{"getLabel","getDataTypeName"}));
-		currentItemTableController.setNoResultsMessage(getI18NString("admin.attributes.advancedtable.no.results.message"));
+		currentItemTableController.setNoResultsMessage(getI18nString("admin.attributes.advancedtable.no.results.message"));
 		//initialize the combo box choices
 		uiController.removeAll(dataTypeComboBox);
 		for(DataType d: DataType.values()){
@@ -175,7 +175,7 @@ public class AttributeAdministrationPanelController implements AdministrationTab
 			field.setIsAttributePanelField(true);
 			formFieldDao.updateField(field);
 		}else{
-			uiController.createDialog(getI18NString(ATTRIBUTE_INFO_MISSING_DIALOG));
+			uiController.createDialog(getI18nString(ATTRIBUTE_INFO_MISSING_DIALOG));
 		}
 		updateCurrentItemTable();
 		clearInputs();
@@ -199,7 +199,7 @@ public class AttributeAdministrationPanelController implements AdministrationTab
 			if(attributeResponseDao.getResponsesForAttribute((PersonAttribute) field).size() == 0){
 				attributeDao.deleteAttribute((PersonAttribute) field);
 			}else{
-				uiController.alert(getI18NString(ALREADY_RESPONDED_TO_DIALOG));
+				uiController.alert(getI18nString(ALREADY_RESPONDED_TO_DIALOG));
 			}
 		}
 		updateCurrentItemTable();

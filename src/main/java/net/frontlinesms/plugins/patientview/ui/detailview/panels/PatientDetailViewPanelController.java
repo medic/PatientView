@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.detailview.panels;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person.Gender;
 import net.frontlinesms.plugins.patientview.data.domain.people.User.Role;
@@ -66,8 +66,8 @@ public class PatientDetailViewPanelController implements DetailViewPanelControll
 		Object buttonPanel = uiController.create("panel");
 		uiController.setName(buttonPanel, "buttonPanel");
 		uiController.setColumns(buttonPanel, 3);
-		Object leftButton = uiController.createButton(!inEditingMode?getI18NString(EDIT_PATIENT_ATTRIBUTES):getI18NString(SAVE_PATIENT_ATTRIBUTES));
-		Object rightButton = uiController.createButton(!inEditingMode?getI18NString(SEE_MORE):getI18NString(CANCEL));
+		Object leftButton = uiController.createButton(!inEditingMode?getI18nString(EDIT_PATIENT_ATTRIBUTES):getI18nString(SAVE_PATIENT_ATTRIBUTES));
+		Object rightButton = uiController.createButton(!inEditingMode?getI18nString(SEE_MORE):getI18nString(CANCEL));
 		if(inEditingMode){
 			uiController.setAction(leftButton, "saveButtonClicked", null, this);
 			uiController.setAction(rightButton, "cancelButtonClicked", null, this);

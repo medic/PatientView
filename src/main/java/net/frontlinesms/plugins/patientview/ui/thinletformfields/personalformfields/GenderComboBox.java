@@ -15,7 +15,7 @@ public class GenderComboBox extends ThinletFormField<Gender> implements Personal
 	protected boolean hasChanged = false;
 	
 	public GenderComboBox(ExtendedThinlet thinlet, Gender gender, FormFieldDelegate delegate) {
-		super(thinlet, InternationalisationUtils.getI18NString("medic.common.labels.gender")+":", delegate);
+		super(thinlet, InternationalisationUtils.getI18nString("medic.common.labels.gender")+":", delegate);
 		comboBox = thinlet.create("combobox");
 		for(Gender g: Gender.values()){
 			thinlet.add(comboBox,thinlet.createComboboxChoice(g.toString(), g));

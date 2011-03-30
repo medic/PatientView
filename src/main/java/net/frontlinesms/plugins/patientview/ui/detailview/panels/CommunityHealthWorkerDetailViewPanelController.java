@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.detailview.panels;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 import net.frontlinesms.plugins.patientview.data.domain.people.CommunityHealthWorker;
 import net.frontlinesms.plugins.patientview.data.domain.people.User.Role;
 import net.frontlinesms.plugins.patientview.data.repository.PersonAttributeDao;
@@ -75,8 +75,8 @@ public class CommunityHealthWorkerDetailViewPanelController implements DetailVie
 		Object buttonPanel = uiController.create("panel");
 		uiController.setName(buttonPanel, "buttonPanel");
 		uiController.setColumns(buttonPanel, 3);
-		Object leftButton = uiController.createButton(!inEditingMode?getI18NString(EDIT_CHW_ATTRIBUTES):getI18NString(SAVE_CHW_ATTRIBUTES));
-		Object rightButton = uiController.createButton(!inEditingMode?getI18NString(SEE_MORE):getI18NString(CANCEL));
+		Object leftButton = uiController.createButton(!inEditingMode?getI18nString(EDIT_CHW_ATTRIBUTES):getI18nString(SAVE_CHW_ATTRIBUTES));
+		Object rightButton = uiController.createButton(!inEditingMode?getI18nString(SEE_MORE):getI18nString(CANCEL));
 		if(inEditingMode){
 			uiController.setAction(leftButton, "saveButtonClicked", null, this);
 			uiController.setIcon(leftButton, SAVE_ICON);

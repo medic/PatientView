@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.personpanel;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.fieldgroups.PatientFieldGroup;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.fieldgroups.PersonFieldGroup;
@@ -57,7 +57,7 @@ public class PatientPanel extends PersonPanel<Patient> {
 	protected void addAdditionalFields() {
 		Object panel = uiController.createPanel("");
 		uiController.setGap(panel, 5);
-		uiController.add(panel,uiController.createLabel(InternationalisationUtils.getI18NString("medic.common.chw")+":"));
+		uiController.add(panel,uiController.createLabel(InternationalisationUtils.getI18nString("medic.common.chw")+":"));
 		Object button = uiController.createButton(getPerson().getCHWName());
 		uiController.setChoice(button, "type", "link");
 		uiController.setAction(button, "showCHWPanel", null, this);
@@ -78,7 +78,7 @@ public class PatientPanel extends PersonPanel<Patient> {
 	 */
 	@Override
 	protected String getDefaultTitle() {
-		return defaultTitle==null?InternationalisationUtils.getI18NString(PATIENT_AAG):defaultTitle;
+		return defaultTitle==null?InternationalisationUtils.getI18nString(PATIENT_AAG):defaultTitle;
 	}
 
 	/**
@@ -86,17 +86,17 @@ public class PatientPanel extends PersonPanel<Patient> {
 	 */
 	@Override
 	protected String getEditingTitle() {
-		return InternationalisationUtils.getI18NString(EDIT_PATIENT);
+		return InternationalisationUtils.getI18nString(EDIT_PATIENT);
 	}
 
 	@Override
 	protected String getAddingTitle() {
-		return InternationalisationUtils.getI18NString(ADD_PATIENT);
+		return InternationalisationUtils.getI18nString(ADD_PATIENT);
 	}
 
 	@Override
 	protected void addAdditionalDemoFields() {
-		addLabelToLabelPanel(getI18NString(CHW_FIELD) + ": " + getI18NString(DEMO_CHW));
+		addLabelToLabelPanel(getI18nString(CHW_FIELD) + ": " + getI18nString(DEMO_CHW));
 	}
 
 	public void setTitle(String title){

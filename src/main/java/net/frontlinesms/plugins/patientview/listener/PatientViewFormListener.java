@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.listener;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 import net.frontlinesms.FrontlineUtils;
 import net.frontlinesms.data.events.EntityUpdatedNotification;
 import net.frontlinesms.events.EventBus;
@@ -42,13 +42,13 @@ public class PatientViewFormListener implements EventObserver{
 					try{
 						MedicForm newForm = new MedicForm(f);
 						for(MedicFormField mff : newForm.getFields()){
-							if(mff.getLabel().equalsIgnoreCase(getI18NString("medic.field.mapping.birthdate")) && mff.getDatatype() == DataType.DATE_FIELD){
+							if(mff.getLabel().equalsIgnoreCase(getI18nString("medic.field.mapping.birthdate")) && mff.getDatatype() == DataType.DATE_FIELD){
 								mff.setMapping(PatientFieldMapping.BIRTHDATEFIELD);
 								LOG.trace("Mapped field \"" + mff.getLabel()+"\" as a birthday field");
-							}else if(mff.getLabel().equalsIgnoreCase(getI18NString("medic.field.mapping.name")) && mff.getDatatype() == DataType.TEXT_FIELD){
+							}else if(mff.getLabel().equalsIgnoreCase(getI18nString("medic.field.mapping.name")) && mff.getDatatype() == DataType.TEXT_FIELD){
 								mff.setMapping(PatientFieldMapping.NAMEFIELD);
 								LOG.trace("Mapped field \"" + mff.getLabel()+"\" as a patient name field");
-							}else if(mff.getLabel().equalsIgnoreCase(getI18NString("medic.field.mapping.id")) && (mff.getDatatype() == DataType.TEXT_FIELD || mff.getDatatype() == DataType.NUMERIC_TEXT_FIELD)){
+							}else if(mff.getLabel().equalsIgnoreCase(getI18nString("medic.field.mapping.id")) && (mff.getDatatype() == DataType.TEXT_FIELD || mff.getDatatype() == DataType.NUMERIC_TEXT_FIELD)){
 								mff.setMapping(PatientFieldMapping.IDFIELD);
 								LOG.trace("Mapped field \"" + mff.getLabel()+"\" as a patient ID field");
 							}

@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.security.ui;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.awt.Color;
 import java.security.GeneralSecurityException;
@@ -159,7 +159,7 @@ public class LoginScreen implements ThinletUiEventHandler {
 			changeModeNewPassword();
 		} else {
 			Object label = ui.find(mainPanel, MULTI_LABEL);
-			String text = getI18NString("password.reset.wrong.answer");
+			String text = getI18nString("password.reset.wrong.answer");
 			// text = text.replaceFirst("<X>", "" );
 			ui.setText(label, text);
 		}
@@ -186,7 +186,7 @@ public class LoginScreen implements ThinletUiEventHandler {
 				}else{
 					resetSoft();
 					Object label = ui.find(mainPanel, "multiLabel");
-					ui.setText(label, getI18NString("password.new.use"));
+					ui.setText(label, getI18nString("password.new.use"));
 				}
 			} else {
 				displayWarningMessage("password.new.warning.criteria");
@@ -205,7 +205,7 @@ public class LoginScreen implements ThinletUiEventHandler {
 	public void attemptSaveQuestions() throws GeneralSecurityException {
 		// TODO: error handling
 		if (questions == null || answers == null) {
-			ui.createDialog(getI18NString("password.new.warning"));
+			ui.createDialog(getI18nString("password.new.warning"));
 			return;
 		}
 		for (int i = 0; i < questions.length; i++) {
@@ -222,9 +222,9 @@ public class LoginScreen implements ThinletUiEventHandler {
 			Object label = ui.find(mainPanel, MULTI_LABEL);
 			String text;
 			if (count == 1) {
-				text = getI18NString(QUESTION_ON_FILE);
+				text = getI18nString(QUESTION_ON_FILE);
 			} else {
-				text = getI18NString(QUESTIONS_ON_FILE);
+				text = getI18nString(QUESTIONS_ON_FILE);
 				text = text.replaceAll("<X>", "" + count);
 			}
 			int req = requiredQuestions - count;
@@ -241,17 +241,17 @@ public class LoginScreen implements ThinletUiEventHandler {
 	protected void changeModeNewPassword() {
 		Object passwordScreen = ui.loadComponentFromFile(XML_NEW_PASSWORD, this);
 		Object notice = ui.find(passwordScreen, "noticeTextArea");
-		String text = getI18NString("password.new.notice");
+		String text = getI18nString("password.new.notice");
 		text += "\n -" + settings.getPasswordLength() + " "
-				+ getI18NString("admin.security.pass.length");
+				+ getI18nString("admin.security.pass.length");
 		if (settings.isCaseRequired()) {
-			text += "\n -" + getI18NString("admin.security.pass.letters");
+			text += "\n -" + getI18nString("admin.security.pass.letters");
 		}
 		if (settings.isNumberRequired()) {
-			text += "\n -" + getI18NString("admin.security.pass.numbers");
+			text += "\n -" + getI18nString("admin.security.pass.numbers");
 		}
 		if (settings.isSymbolRequired()) {
-			text += "\n -" + getI18NString("admin.security.pass.symbols");
+			text += "\n -" + getI18nString("admin.security.pass.symbols");
 		}
 		ui.setText(notice, text);
 		Object passwordBox = ui.find(passwordScreen, "passwordBox1");
@@ -273,9 +273,9 @@ public class LoginScreen implements ThinletUiEventHandler {
 		String text;
 		int num = numberOfSecurityQuestions(user);
 		if (num == 1) {
-			text = getI18NString(QUESTION_ON_FILE);
+			text = getI18nString(QUESTION_ON_FILE);
 		} else {
-			text = getI18NString(QUESTIONS_ON_FILE);
+			text = getI18nString(QUESTIONS_ON_FILE);
 			text = text.replaceFirst("<X>", "" + num);
 		}
 		int required = settings.getRequiredQuestionsRange().value() - num;
@@ -343,11 +343,11 @@ public class LoginScreen implements ThinletUiEventHandler {
 	protected Object createQuestionComboBox() {
 		Object question = Thinlet.create(Thinlet.COMBOBOX);
 		for (int j = 1; j <= 4; j++) {
-			Object choice = ui.createComboboxChoice(getI18NString(QUESTION
+			Object choice = ui.createComboboxChoice(getI18nString(QUESTION
 					+ "." + j), null);
 			ui.add(question, choice);
 		}
-		ui.setText(question, getI18NString(QUESTION_DEFAULT));
+		ui.setText(question, getI18nString(QUESTION_DEFAULT));
 		ui.setColspan(question, 2);
 		ui.setWeight(question, 1, 1);
 		return question;
@@ -363,7 +363,7 @@ public class LoginScreen implements ThinletUiEventHandler {
 	protected void displayWarningMessage(String key) {
 		Object label = ui.find(mainPanel, MULTI_LABEL);
 		ui.setColor(label, Thinlet.FOREGROUND, Color.RED);
-		ui.setText(label, getI18NString(key));
+		ui.setText(label, getI18nString(key));
 		ui.setFocus(ui.find(mainPanel, "usernameField"));
 	}
 

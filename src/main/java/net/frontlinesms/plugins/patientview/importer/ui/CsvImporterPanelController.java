@@ -63,7 +63,7 @@ public class CsvImporterPanelController implements AdministrationTabPanel, Thinl
 	}
 	
 	public String getListItemTitle() {
-		return InternationalisationUtils.getI18NString("medic.importer.tab.title");
+		return InternationalisationUtils.getI18nString("medic.importer.tab.title");
 	}
 
 	public Object getPanel() {
@@ -80,7 +80,7 @@ public class CsvImporterPanelController implements AdministrationTabPanel, Thinl
 	
 	public void browseButtonClicked(){
 		JFileChooser fc = new JFileChooser();
-		int returnVal = fc.showDialog(null, InternationalisationUtils.getI18NString("medic.common.label.open"));
+		int returnVal = fc.showDialog(null, InternationalisationUtils.getI18nString("medic.common.label.open"));
 		if(returnVal == JFileChooser.APPROVE_OPTION){
 			uiController.setText(fileTextField, fc.getSelectedFile().getAbsolutePath());
 		}

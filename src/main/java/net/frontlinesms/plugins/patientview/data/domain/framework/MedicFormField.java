@@ -74,7 +74,7 @@ public class MedicFormField extends Field{
 		}
 		
 		public String toString(){
-			return InternationalisationUtils.getI18NString(displayName);
+			return InternationalisationUtils.getI18nString(displayName);
 		}
 
 		public String getIconPath() {

@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.thinletformfields;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 import net.frontlinesms.plugins.patientview.data.domain.framework.DataType;
 import net.frontlinesms.plugins.patientview.data.domain.framework.Field;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField;
@@ -147,11 +147,11 @@ public abstract class ThinletFormField<E>{
 		}else if(datatype == DataType.TEXT_FIELD){
 			return new TextField(uiController,label,delegate);
 		}else if(datatype == DataType.POSITIVENEGATIVE){
-			return new ButtonGroup(uiController,label,getI18NString("datatype.positive"),getI18NString("datatype.negative"), delegate);
+			return new ButtonGroup(uiController,label,getI18nString("datatype.positive"),getI18nString("datatype.negative"), delegate);
 		}else if(datatype == DataType.TRUEFALSE){
-			return new ButtonGroup(uiController,label,getI18NString("datatype.true"),getI18NString("datatype.false"), delegate);
+			return new ButtonGroup(uiController,label,getI18nString("datatype.true"),getI18nString("datatype.false"), delegate);
 		}else if(datatype == DataType.YESNO){
-			return new ButtonGroup(uiController,label,getI18NString("datatype.yes"),getI18NString("datatype.no"), delegate);
+			return new ButtonGroup(uiController,label,getI18nString("datatype.yes"),getI18nString("datatype.no"), delegate);
 		}
 		return null;
 	}

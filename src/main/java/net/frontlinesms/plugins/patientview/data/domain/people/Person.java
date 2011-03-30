@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.data.domain.people;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.awt.image.BufferedImage;
 import java.util.Date;
@@ -48,7 +48,7 @@ public abstract class Person extends RemovableObject{
 	
 		@Override
 		public String toString(){
-			return getI18NString(name);
+			return getI18nString(name);
 		}
 
 		public static Gender getGenderForName(String name){

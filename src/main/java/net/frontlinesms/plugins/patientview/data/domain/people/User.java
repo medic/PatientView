@@ -4,7 +4,7 @@ import static net.frontlinesms.plugins.patientview.security.PasswordUtils.crypto
 import static net.frontlinesms.plugins.patientview.security.PasswordUtils.fillRandomBytes;
 import static net.frontlinesms.plugins.patientview.security.PasswordUtils.generatePassword;
 import static net.frontlinesms.plugins.patientview.security.PasswordUtils.verify;
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
@@ -73,7 +73,7 @@ public class User extends Person {
 		 * @return the role name
 		 */
 		public String toString() {
-			return getI18NString(name);
+			return getI18nString(name);
 		}
 	}
 	

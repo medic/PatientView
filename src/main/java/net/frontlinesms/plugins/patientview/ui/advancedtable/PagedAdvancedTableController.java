@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.advancedtable;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -75,15 +75,15 @@ public class PagedAdvancedTableController extends AdvancedTableController implem
 		if(resultSet == null || resultSet.getTotalResults() == 0){
 			uiController.setEnabled(uiController.find(pagingControls, "rightPageButton"),false);
 			uiController.setEnabled(uiController.find(pagingControls, "leftPageButton"),false);
-			uiController.setText(uiController.find(pagingControls, "resultsLabel"),getI18NString("pagingcontrols.no.results"));
+			uiController.setText(uiController.find(pagingControls, "resultsLabel"),getI18nString("pagingcontrols.no.results"));
 			return;
 		}
 		//set the paging buttons
 		uiController.setEnabled(uiController.find(pagingControls, "refreshButton"),refreshButtonStates.get(currentClass));
 		uiController.setEnabled(uiController.find(pagingControls, "leftPageButton"),resultSet.hasPreviousPage());
 		uiController.setEnabled(uiController.find(pagingControls, "rightPageButton"),resultSet.hasNextPage());
-		String pagingLabel = getI18NString("pagingcontrols.results")+" " + getResultsSet().getFirstResultOnPage() + " "+getI18NString("pagingcontrols.to")+" " +
-					resultSet.getLastResultOnPage() + " "+getI18NString("pagingcontrols.of")+" " + resultSet.getTotalResults();
+		String pagingLabel = getI18nString("pagingcontrols.results")+" " + getResultsSet().getFirstResultOnPage() + " "+getI18nString("pagingcontrols.to")+" " +
+					resultSet.getLastResultOnPage() + " "+getI18nString("pagingcontrols.of")+" " + resultSet.getTotalResults();
 		uiController.setText(uiController.find(pagingControls, "resultsLabel"),pagingLabel);
 	}
 

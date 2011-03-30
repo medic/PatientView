@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.dashboard.tabs;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.util.Date;
 import java.util.List;
@@ -48,7 +48,7 @@ public class FormResponseTab<P extends Person> extends TabController implements 
 	}
 
 	protected void init() {
-		super.setTitle(getI18NString(TAB_TITLE));
+		super.setTitle(getI18nString(TAB_TITLE));
 		super.setIconPath("/icons/big_form.png");
 		//set up skeleton
 		uiController.add(super.getMainPanel(),uiController.loadComponentFromFile(UI_FILE));
@@ -66,30 +66,30 @@ public class FormResponseTab<P extends Person> extends TabController implements 
 		// add the form response table
 		formResponseTable = new PagedAdvancedTableController(this, uiController,uiController.find(getMainPanel(),"tablePanel"));
 		if(isCHW()){
-			formResponseTable.putHeader(MedicFormResponse.class, HeaderColumn.createColumnList(new String[] { getI18NString(FORM_NAME_COLUMN), getI18NString(FORM_SUBJECT_COLUMN), getI18NString(DATE_SUBMITTED_COLUMN) },new String[]{"/icons/form.png","", "/icons/date_sent.png"}, new String[] { "getFormName", "getSubjectName", "getStringDateSubmitted" }));
+			formResponseTable.putHeader(MedicFormResponse.class, HeaderColumn.createColumnList(new String[] { getI18nString(FORM_NAME_COLUMN), getI18nString(FORM_SUBJECT_COLUMN), getI18nString(DATE_SUBMITTED_COLUMN) },new String[]{"/icons/form.png","", "/icons/date_sent.png"}, new String[] { "getFormName", "getSubjectName", "getStringDateSubmitted" }));
 		}else{
-			formResponseTable.putHeader(MedicFormResponse.class, HeaderColumn.createColumnList(new String[] { getI18NString(FORM_NAME_COLUMN), getI18NString(FORM_SENDER_COLUMN), getI18NString(DATE_SUBMITTED_COLUMN) },new String[]{"/icons/form.png","/icons/user_sender.png", "/icons/date_sent.png"}, new String[] { "getFormName", "getSubmitterName", "getStringDateSubmitted" }));
+			formResponseTable.putHeader(MedicFormResponse.class, HeaderColumn.createColumnList(new String[] { getI18nString(FORM_NAME_COLUMN), getI18nString(FORM_SENDER_COLUMN), getI18nString(DATE_SUBMITTED_COLUMN) },new String[]{"/icons/form.png","/icons/user_sender.png", "/icons/date_sent.png"}, new String[] { "getFormName", "getSubmitterName", "getStringDateSubmitted" }));
 		}
 		formResponseTable.setResultsSet(resultSet);
 		formResponseTable.updateTable();
-		formResponseTable.setNoResultsMessage(getI18NString("medic.form.responses.tab.no.search.results"));
+		formResponseTable.setNoResultsMessage(getI18nString("medic.form.responses.tab.no.search.results"));
 		formResponseTable.enableRefreshButton(appCon);
 		//set up controls
 		//create the date controls
-		DateField dateField = new DateField(uiController,getI18NString(DATE_SUBMITTED_COLUMN),this);
+		DateField dateField = new DateField(uiController,getI18nString(DATE_SUBMITTED_COLUMN),this);
 		dateField.setLabelIcon("/icons/date.png");
 		uiController.add(uiController.find(getMainPanel(),"controlPanel"),dateField.getThinletPanel());
 		uiController.add(uiController.find(getMainPanel(),"controlPanel"),uiController.createLabel("   "));
 		//create the form combo box
 		List<MedicForm> forms = ((MedicFormDao) appCon.getBean("MedicFormDao")).getAllMedicForms();
 		comboBox = uiController.create("combobox");
-		uiController.add(comboBox,uiController.createComboboxChoice(getI18NString(ALL_FORMS), null));
+		uiController.add(comboBox,uiController.createComboboxChoice(getI18nString(ALL_FORMS), null));
 		for(MedicForm mf: forms){
 			uiController.add(comboBox,uiController.createComboboxChoice(mf.getName(), mf));
 		}
 		uiController.setAction(comboBox, "formChanged(this.selected)", null, this);
 		uiController.setWeight(comboBox,1,0);
-		Object label = uiController.createLabel(getI18NString(FORM_COMBOBOX_LABEL));
+		Object label = uiController.createLabel(getI18nString(FORM_COMBOBOX_LABEL));
 		uiController.setIcon(label, "/icons/form.png");
 		uiController.add(uiController.find(getMainPanel(),"controlPanel"),label);
 		uiController.add(uiController.find(getMainPanel(),"controlPanel"),comboBox);

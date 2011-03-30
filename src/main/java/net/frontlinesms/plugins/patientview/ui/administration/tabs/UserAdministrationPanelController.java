@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.administration.tabs;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.security.GeneralSecurityException;
 import java.util.List;
@@ -60,7 +60,7 @@ public class UserAdministrationPanelController extends PersonAdministrationPanel
 		currentPersonPanel.stopEditingWithSave();
 		resetPassword(currentPersonPanel.getPerson());
 		Object titleLabel = uiController.find(resetNotice, "titlelabel");
-		uiController.setText(titleLabel, getI18NString("admin.user.new"));
+		uiController.setText(titleLabel, getI18nString("admin.user.new"));
 	}
 
 	@Override
@@ -70,18 +70,18 @@ public class UserAdministrationPanelController extends PersonAdministrationPanel
 
 	@Override
 	protected String getPersonType() {
-		return getI18NString("medic.common.user");
+		return getI18nString("medic.common.user");
 	}
 
 	@Override
 	protected void putHeader() {
-		advancedTableController.putHeader(User.class, HeaderColumn.createColumnList(new String[]{getI18NString("medic.common.labels.name"), getI18NString("medic.common.labels.username"), getI18NString("medic.common.labels.role")},
+		advancedTableController.putHeader(User.class, HeaderColumn.createColumnList(new String[]{getI18nString("medic.common.labels.name"), getI18nString("medic.common.labels.username"), getI18nString("medic.common.labels.role")},
 				 new String[]{"/icons/user.png", "", "/icons/group_gear.png"},
 				 new String[]{"getName", "getUsername", "getRoleName",}));
 	}
 
 	public String getListItemTitle() {
-		return getI18NString("admin.actionlist.manage.users");
+		return getI18nString("admin.actionlist.manage.users");
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class UserAdministrationPanelController extends PersonAdministrationPanel
 	public void editButtonClicked() {
 		currentPersonPanel.switchToEditingPanel();
 		// add the reset password button!
-		Object resetPasswordButton = uiController.createButton(getI18NString("password.reset"));
+		Object resetPasswordButton = uiController.createButton(getI18nString("password.reset"));
 		uiController.setAction(resetPasswordButton, "resetPassword()", null,this);
 		uiController.setHAlign(resetPasswordButton, "right");
 		Object buttonsPanel = uiController.find(currentPersonPanel.getMainPanel(), PersonPanel.BUTTON_PANEL);

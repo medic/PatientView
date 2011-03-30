@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.personpanel;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 import net.frontlinesms.plugins.patientview.data.domain.people.User;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.fieldgroups.PersonFieldGroup;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.fieldgroups.UserFieldGroup;
@@ -31,31 +31,31 @@ public class UserPanel extends PersonPanel<User> {
 	 */
 	@Override
 	protected void addAdditionalFields() {
-		addLabelToLabelPanel(getI18NString(USERNAME_LABEL) + ": " + getPerson().getUsername());
-		addLabelToLabelPanel(getI18NString(ROLE_LABEL) + ": "	+ getPerson().getRoleName());
+		addLabelToLabelPanel(getI18nString(USERNAME_LABEL) + ": " + getPerson().getUsername());
+		addLabelToLabelPanel(getI18nString(ROLE_LABEL) + ": "	+ getPerson().getRoleName());
 	}
 
 	@Override
 	protected String getDefaultTitle() {
-		return getI18NString(USER_AAG);
+		return getI18nString(USER_AAG);
 	}
 
 	@Override
 	protected String getEditingTitle() {
-		return getI18NString(EDIT_USER_DATA_BUTTON);
+		return getI18nString(EDIT_USER_DATA_BUTTON);
 	}
 
 	@Override
 	protected String getAddingTitle() {
-		return getI18NString(ADD_USER);
+		return getI18nString(ADD_USER);
 	}
 
 	@Override
 	protected void addAdditionalDemoFields() {
-		addLabelToLabelPanel(getI18NString(USERNAME_LABEL) + ": "
-				+ getI18NString(DEMO_USERNAME));
-		addLabelToLabelPanel(getI18NString(ROLE_LABEL) + ": "
-				+ getI18NString(DEMO_ROLE));
+		addLabelToLabelPanel(getI18nString(USERNAME_LABEL) + ": "
+				+ getI18nString(DEMO_USERNAME));
+		addLabelToLabelPanel(getI18nString(ROLE_LABEL) + ": "
+				+ getI18nString(DEMO_ROLE));
 
 	}
 

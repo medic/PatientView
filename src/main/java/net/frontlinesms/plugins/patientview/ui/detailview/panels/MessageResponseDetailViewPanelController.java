@@ -35,8 +35,8 @@ public class MessageResponseDetailViewPanelController implements
 	public void viewWillAppear(MedicMessageResponse message) {
 		uiController.removeAll(mainPanel);
 		DateFormat df = InternationalisationUtils.getDateFormat();
-		Object submitterLabel = uiController.createLabel(InternationalisationUtils.getI18NString(SUBMITTED_BY)+" "+ message.getSubmitter().getName());
-		Object dateLabel = uiController.createLabel(InternationalisationUtils.getI18NString(ON)+" " +  df.format(message.getDateSubmitted()));
+		Object submitterLabel = uiController.createLabel(InternationalisationUtils.getI18nString(SUBMITTED_BY)+" "+ message.getSubmitter().getName());
+		Object dateLabel = uiController.createLabel(InternationalisationUtils.getI18nString(ON)+" " +  df.format(message.getDateSubmitted()));
 		Object textarea = uiController.create("textarea");
 		uiController.setText(textarea, message.getMessageContent());
 		uiController.setEditable (textarea,false);

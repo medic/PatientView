@@ -60,7 +60,7 @@ public class FlagAdministrationPanelController implements AdministrationTabPanel
 	}
 
 	public String getListItemTitle() {
-		return InternationalisationUtils.getI18NString("medic.flags.admin.tab.title");
+		return InternationalisationUtils.getI18nString("medic.flags.admin.tab.title");
 	}
 
 	public Object getPanel() {

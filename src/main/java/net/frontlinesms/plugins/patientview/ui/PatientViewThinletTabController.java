@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 import net.frontlinesms.FrontlineUtils;
 import net.frontlinesms.plugins.PluginController;
 import net.frontlinesms.plugins.patientview.DummyDataGenerator;
@@ -158,21 +158,21 @@ public class PatientViewThinletTabController implements ThinletUiEventHandler, A
 			//initialize the results table
 			tableController = new PagedAdvancedTableController(this, uiController, uiController.find(mainTab, "resultTable"));
 			//create all the column labels
-			String nameLabel = getI18NString(NAME_COLUMN);
-			String bdayLabel = getI18NString(BDAY_COLUMN);
-			String idLabel = getI18NString(ID_COLUMN);
-			String phoneNumberLabel=getI18NString(PHONE_NUMBER_COLUMN);
-			String chwLabel=getI18NString(CHW_COLUMN);
-			String senderLabel = getI18NString(SENDER_COLUMN);
-			String subjectLabel = getI18NString(SUBJECT_COLUMN);
-			String dateSentLabel =getI18NString(DATE_SENT_COLUMN);
-			String dateSubmittedLabel =getI18NString(DATE_SUBMITTED_COLUMN);
-			String messageContentLabel=getI18NString(MESSAGE_CONTENT_COLUMN);
-			String labelLabel =getI18NString(LABEL_COLUMN);
-			String parentFormLabel =getI18NString(PARENT_FORM_COLUMN);
-			String formNameLabel = getI18NString(FORM_NAME_COLUMN);
-			String fieldLabelLabel =getI18NString(FIELD_LABEL_COLUMN);
-			String responseLabel =getI18NString(RESPONSE_COLUMN);
+			String nameLabel = getI18nString(NAME_COLUMN);
+			String bdayLabel = getI18nString(BDAY_COLUMN);
+			String idLabel = getI18nString(ID_COLUMN);
+			String phoneNumberLabel=getI18nString(PHONE_NUMBER_COLUMN);
+			String chwLabel=getI18nString(CHW_COLUMN);
+			String senderLabel = getI18nString(SENDER_COLUMN);
+			String subjectLabel = getI18nString(SUBJECT_COLUMN);
+			String dateSentLabel =getI18nString(DATE_SENT_COLUMN);
+			String dateSubmittedLabel =getI18nString(DATE_SUBMITTED_COLUMN);
+			String messageContentLabel=getI18nString(MESSAGE_CONTENT_COLUMN);
+			String labelLabel =getI18nString(LABEL_COLUMN);
+			String parentFormLabel =getI18nString(PARENT_FORM_COLUMN);
+			String formNameLabel = getI18nString(FORM_NAME_COLUMN);
+			String fieldLabelLabel =getI18nString(FIELD_LABEL_COLUMN);
+			String responseLabel =getI18nString(RESPONSE_COLUMN);
 			//create all the table headers
 			tableController.putHeader(CommunityHealthWorker.class, HeaderColumn.createColumnList(new String[]{nameLabel, bdayLabel, idLabel,phoneNumberLabel},
 																								 new String[]{"/icons/user.png", "/icons/cake.png", "/icons/key.png","/icons/phone_number.png"},
@@ -197,8 +197,8 @@ public class PatientViewThinletTabController implements ThinletUiEventHandler, A
 					 												new String[]{"getFieldLabel","getSubmitterName","getSubjectName","getStringDateSubmitted","getValue"}));
 			
 			tableController.enableRefreshButton(pluginController.getApplicationContext());
-			Object label = uiController.createLabel(getI18NString(LOGGED_IN_MESSAGE) + " " + UserSessionManager.getUserSessionManager().getCurrentUser().getName());
-			Object logoutButton = uiController.createButton(getI18NString("buttons.logout"));
+			Object label = uiController.createLabel(getI18nString(LOGGED_IN_MESSAGE) + " " + UserSessionManager.getUserSessionManager().getCurrentUser().getName());
+			Object logoutButton = uiController.createButton(getI18nString("buttons.logout"));
 			uiController.setAction(logoutButton, "logout()", null, this);
 			uiController.setIcon(logoutButton, "/icons/exit.png");
 			uiController.add(uiController.find(tableController.getMainPanel(),"bottomButtonPanel"),logoutButton,0);

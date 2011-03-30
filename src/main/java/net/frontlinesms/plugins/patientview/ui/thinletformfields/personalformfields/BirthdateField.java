@@ -11,7 +11,7 @@ import net.frontlinesms.ui.i18n.InternationalisationUtils;
 public class BirthdateField extends DateField implements PersonalFormField{
 	
 	public BirthdateField(ExtendedThinlet thinlet, Date initialDate, FormFieldDelegate delegate) {
-		super(thinlet, InternationalisationUtils.getI18NString("thinletformfields.birthdate"), delegate);		
+		super(thinlet, InternationalisationUtils.getI18nString("thinletformfields.birthdate"), delegate);		
 		if(initialDate != null){
 			String initialText = df.format(initialDate);
 			thinlet.setText(textBox, initialText);

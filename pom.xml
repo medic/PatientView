@@ -13,7 +13,7 @@
 			<distribution>manual</distribution>
 			<comments>
 	  		Patient View
-            Created by FrontlineSMS:Medic
+            Created by Medic Mobile
             </comments>
 		</license>
 	</licenses>
@@ -44,9 +44,13 @@
 			<layout>default</layout>
 		</repository>
 		<repository>
-			<id>cleone.net.repo</id>
-			<name>Temporary FrontlineSMS repository on cleone.net</name>
-			<url>http://m2repo.cleone.net</url>
+			<id>frontlinesms.repo</id>
+			<name>FrontlineSMS Maven repository</name>
+			<url>http://dev.frontlinesms.com/m2repo</url>
+		</repository>
+		<repository>
+			<id>maven-repository.dev.java.net</id>
+			<url>http://download.java.net/maven/2/</url>
 		</repository>
 	</repositories>
 
@@ -94,12 +98,12 @@
 		<dependency>
 			<groupId>net.frontlinesms.core</groupId>
 			<artifactId>frontlinesms</artifactId>
-			<version>1.6.16.2-SNAPSHOT</version>
+			<version>1.7.00-beta-5-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>net.frontlinesms.plugins</groupId>
 			<artifactId>frontlinesms-plugin-forms</artifactId>
-			<version>0.02.26-SNAPSHOT</version>
+			<version>0.02.32</version>
 		</dependency>
 		
 		<!--  Library Dependencies -->

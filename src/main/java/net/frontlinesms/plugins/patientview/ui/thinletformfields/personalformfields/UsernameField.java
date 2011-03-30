@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
 import net.frontlinesms.plugins.patientview.data.domain.people.User;
 import net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernateUserDao;
@@ -17,7 +17,7 @@ public class UsernameField extends TextField implements PersonalFormField {
 	private HibernateUserDao userDao;
 
 	public UsernameField(ExtendedThinlet thinlet, ApplicationContext appCon,boolean useIndicator, String initialUsername,FormFieldDelegate delegate) {
-		super(thinlet,getI18NString("login.username") + ":", delegate);
+		super(thinlet,getI18nString("login.username") + ":", delegate);
 		userDao = (HibernateUserDao) appCon.getBean("UserDao");
 		if (useIndicator) {
 			picture = thinlet.createButton("");

@@ -107,7 +107,7 @@ public class MedicFormResponse extends Response{
 	}
 	
 	public String isMappedString(){
-		return InternationalisationUtils.getI18NString(isMapped()?"datatype.true":"datatype.false");
+		return InternationalisationUtils.getI18nString(isMapped()?"datatype.true":"datatype.false");
 	}
 	
 	private void updateFieldPositions(){

@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.dashboard;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,8 +67,8 @@ public abstract class PersonDashboard<P extends Person> extends Dashboard {
 		Object buttonPanel = uiController.create("panel");
 		uiController.setName(buttonPanel, "buttonPanel");
 		uiController.setColumns(buttonPanel, 3);
-		Object leftButton = uiController.createButton(!inEditingMode?getI18NString(GO_BACK_BUTTON):getI18NString(SAVE));
-		Object rightButton = uiController.createButton(!inEditingMode?getI18NString(EDIT_ATTRIBUTES):getI18NString(CANCEL));
+		Object leftButton = uiController.createButton(!inEditingMode?getI18nString(GO_BACK_BUTTON):getI18nString(SAVE));
+		Object rightButton = uiController.createButton(!inEditingMode?getI18nString(EDIT_ATTRIBUTES):getI18nString(CANCEL));
 		if(inEditingMode){
 			uiController.setAction(leftButton, "saveButtonClicked", null, this);
 			uiController.setAction(rightButton, "cancelButtonClicked", null, this);

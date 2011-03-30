@@ -72,7 +72,7 @@ public class IncomingFormMatcher implements EventObserver{
 		thinlet.add(panel,button);
 		thinlet.add(panel);
 		//set up the date formatter
-		String dateString = InternationalisationUtils.getI18NString(FrontlineSMSConstants.DATEFORMAT_YMD);
+		String dateString = InternationalisationUtils.getI18nString(FrontlineSMSConstants.DATEFORMAT_YMD);
 		dateString = dateString.toLowerCase();
 		dateString = dateString.replace("mm", "MM");
 		dateString = dateString.replace("yyyy", "yy");

@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.detailview.panels;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -55,21 +55,21 @@ public class FormResponseDetailViewPanelController implements DetailViewPanelCon
 		if(response == null){
 			return;
 		}
-		String form = getI18NString(FORM) + ": " + response.getForm().getName();
+		String form = getI18nString(FORM) + ": " + response.getForm().getName();
 		String submitter;
 		try{
-			submitter = getI18NString(SUBMITTER) + ": " + response.getSubmitter().getName();
+			submitter = getI18nString(SUBMITTER) + ": " + response.getSubmitter().getName();
 		}catch(Exception e){
-			submitter = submitter = getI18NString(SUBMITTER) + ": "+ getI18NString("medic.common.labels.unknown");
+			submitter = submitter = getI18nString(SUBMITTER) + ": "+ getI18nString("medic.common.labels.unknown");
 		}
 		String subject;
 		try{
-			subject = getI18NString(SUBJECT) + ": " + response.getSubjectName();
+			subject = getI18nString(SUBJECT) + ": " + response.getSubjectName();
 		}catch(Exception e){
-			subject = getI18NString(SUBJECT) + ": " + getI18NString("medic.common.labels.unknown");
+			subject = getI18nString(SUBJECT) + ": " + getI18nString("medic.common.labels.unknown");
 		}
 		DateFormat df = InternationalisationUtils.getDateFormat();
-		String date = getI18NString(DATE_SUBMITTED) + " " + df.format(response.getDateSubmitted());
+		String date = getI18nString(DATE_SUBMITTED) + " " + df.format(response.getDateSubmitted());
 		uiController.setText(uiController.find(mainPanel,"nameLabel"),  form);
 		uiController.setText(uiController.find(mainPanel,"submitterLabel"),  submitter);
 		uiController.setText(uiController.find(mainPanel,"dateSubmittedLabel"),  date);

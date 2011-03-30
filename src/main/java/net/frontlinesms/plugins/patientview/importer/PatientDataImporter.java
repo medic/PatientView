@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.importer;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -51,16 +51,16 @@ public class PatientDataImporter implements CsvDataImporter{
 	public Object getInformationPanel() {
 		Object panel = uiController.createPanel("");
 		uiController.setColumns(panel, 1);
-		String patient = getI18NString("medic.common.patient");
-		uiController.add(panel,uiController.createLabel(getI18NString("medic.importer.labels.column") + " 1: "+patient+ " " + getI18NString("simplesearch.fields.name")));
-		uiController.add(panel,uiController.createLabel(getI18NString("medic.importer.labels.column") + " 2: "+patient+ " " + getI18NString("simplesearch.fields.birthdate")+" ("+getI18NString(FrontlineSMSConstants.DATEFORMAT_YMD)+")"));
-		uiController.add(panel,uiController.createLabel(getI18NString("medic.importer.labels.column") + " 3: "+patient+ " " + getI18NString("simplesearch.fields.gender")+" (" +getI18NString("medic.common.male")+", " +getI18NString("medic.common.female")+", or " +getI18NString("medic.common.transgender") +")"));
-		uiController.add(panel,uiController.createLabel(getI18NString("medic.importer.labels.column") + " 4: "+getI18NString("medic.importer.patient.chw.info")));
+		String patient = getI18nString("medic.common.patient");
+		uiController.add(panel,uiController.createLabel(getI18nString("medic.importer.labels.column") + " 1: "+patient+ " " + getI18nString("simplesearch.fields.name")));
+		uiController.add(panel,uiController.createLabel(getI18nString("medic.importer.labels.column") + " 2: "+patient+ " " + getI18nString("simplesearch.fields.birthdate")+" ("+getI18nString(FrontlineSMSConstants.DATEFORMAT_YMD)+")"));
+		uiController.add(panel,uiController.createLabel(getI18nString("medic.importer.labels.column") + " 3: "+patient+ " " + getI18nString("simplesearch.fields.gender")+" (" +getI18nString("medic.common.male")+", " +getI18nString("medic.common.female")+", or " +getI18nString("medic.common.transgender") +")"));
+		uiController.add(panel,uiController.createLabel(getI18nString("medic.importer.labels.column") + " 4: "+getI18nString("medic.importer.patient.chw.info")));
 		return panel;
 	}
 
 	public void importFile(String path) {
-		addMessageToList(getI18NString("medic.importer.beginning.message")+": " + path);
+		addMessageToList(getI18nString("medic.importer.beginning.message")+": " + path);
 		try {
 			List<CsvValidationException> exceptions = validator.validateFile(path);
 			if(exceptions.size() != 0){
@@ -79,36 +79,36 @@ public class PatientDataImporter implements CsvDataImporter{
 							Patient patient  = new Patient(chw.get(0),currLine[0],parseGender(currLine[2]),InternationalisationUtils.getDateFormat().parse(currLine[1]));
 							patientDao.savePatient(patient);
 						}else{
-							addMessageToList(getI18NString("medic.importer.line")+" " + lineNumber+ ": "+ getI18NString("medic.importer.patient.chw.parsing.error"));
+							addMessageToList(getI18nString("medic.importer.line")+" " + lineNumber+ ": "+ getI18nString("medic.importer.patient.chw.parsing.error"));
 						}
 						lineNumber ++;
 					}
 				}catch(Exception e){
-					addMessageToList(getI18NString("medic.importer.file.parsing.error"));
+					addMessageToList(getI18nString("medic.importer.file.parsing.error"));
 					addMessageToList(e.toString());
 				}
 				if(exceptions.size() == 0){
-					addMessageToList("====== "+getI18NString("medic.common.patient")+" " +getI18NString("medic.importer.creation.complete")+" ======");
-					addMessageToList(lineNumber + getI18NString("medic.common.patients")+ " " +getI18NString("medic.importer.success.message"));
+					addMessageToList("====== "+getI18nString("medic.common.patient")+" " +getI18nString("medic.importer.creation.complete")+" ======");
+					addMessageToList(lineNumber + getI18nString("medic.common.patients")+ " " +getI18nString("medic.importer.success.message"));
 				}
 			}
 		} catch (FileNotFoundException e) {
-			addMessageToList(getI18NString("medic.importer.file.not.found"));
+			addMessageToList(getI18nString("medic.importer.file.not.found"));
 			addMessageToList(e.toString());
 		}
 	}
 	
 	private void addMessageToList(String message){
 		String text = uiController.getText(messageList);
-		String newLine = "["+getI18NString("medic.common.patient")+ " "+getI18NString("medic.data.importer") +"] "+InternationalisationUtils.getDatetimeFormat().format(new Date()) + " - " + message;
+		String newLine = "["+getI18nString("medic.common.patient")+ " "+getI18nString("medic.data.importer") +"] "+InternationalisationUtils.getDatetimeFormat().format(new Date()) + " - " + message;
 		text += "\n"+newLine;
 		uiController.setText(messageList, text);
 	}
 	
 	private Gender parseGender(String gender){
-		String male = getI18NString("medic.common.male");
-		String female = getI18NString("medic.common.female");
-		String transGender = getI18NString("medic.common.transgender");
+		String male = getI18nString("medic.common.male");
+		String female = getI18nString("medic.common.female");
+		String transGender = getI18nString("medic.common.transgender");
 		if(gender.equalsIgnoreCase(male)){
 			return Gender.MALE;
 		}else if(gender.equalsIgnoreCase(female)){

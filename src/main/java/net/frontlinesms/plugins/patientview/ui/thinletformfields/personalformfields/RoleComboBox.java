@@ -16,7 +16,7 @@ public class RoleComboBox extends ThinletFormField<Role> implements PersonalForm
 	protected boolean hasChanged = false;
 	
 	public RoleComboBox(ExtendedThinlet thinlet, Role role, FormFieldDelegate delegate) {
-		super(thinlet, InternationalisationUtils.getI18NString("medic.common.labels.role") + ":",delegate);
+		super(thinlet, InternationalisationUtils.getI18nString("medic.common.labels.role") + ":",delegate);
 		comboBox = thinlet.create("combobox");
 		for (Role r : Role.values()) {
 			thinlet.add(comboBox, thinlet.createComboboxChoice(r.toString(), r));

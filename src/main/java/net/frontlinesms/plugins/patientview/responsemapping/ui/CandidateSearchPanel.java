@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.responsemapping.ui;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -92,7 +92,7 @@ public class CandidateSearchPanel implements ThinletUiEventHandler, AdvancedTabl
 			//then we should show the person that the response was mapped to
 			if(response.isMapped()){
 				//set the labels & icons for the whole panel
-				uiController.setText(panel, getI18NString("medic.common.labels.mapped.to"));
+				uiController.setText(panel, getI18nString("medic.common.labels.mapped.to"));
 				uiController.setIcon(panel,"/icons/user.png");
 				//create the patient panel for the person that the response was mapped to
 				PatientPanel pPanel = new PatientPanel(uiController,appCon,(Patient) response.getSubject());
@@ -100,16 +100,16 @@ public class CandidateSearchPanel implements ThinletUiEventHandler, AdvancedTabl
 				uiController.add(uiController.find(panel,"pPanel"),pPanel.getMainPanel());
 				//set the confidence
 				DecimalFormat myFormatter = new DecimalFormat("###.#%");
-				uiController.setText(uiController.find(panel,"confidenceLabel"),getI18NString("medic.common.confidence")+ ": " + myFormatter.format(matcher.getConfidence((Patient) response.getSubject(), response)/100F));
+				uiController.setText(uiController.find(panel,"confidenceLabel"),getI18nString("medic.common.confidence")+ ": " + myFormatter.format(matcher.getConfidence((Patient) response.getSubject(), response)/100F));
 				uiController.setColspan(uiController.find(panel,"confidenceLabel"),2);
 				//make the 'map to this person' button invisible
 				uiController.setVisible(uiController.find(panel,"mapButton"), false);
 				//set the text & iconfor the 'change mapping' button
-				uiController.setText(uiController.find(panel,"changeButton"),getI18NString("medic.candidate.search.panel.change.response.mapping"));
+				uiController.setText(uiController.find(panel,"changeButton"),getI18nString("medic.candidate.search.panel.change.response.mapping"));
 				uiController.setIcon(uiController.find(panel,"changeButton"),"/icons/change_mapping_small.png");
 			}else {  //if we aren't searching for candidates and the response is not mapped
 				//set the title and icons for the whole panel (top candidate - halo person)
-				uiController.setText(panel, getI18NString("medic.candidate.search.panel.top.candidate"));
+				uiController.setText(panel, getI18nString("medic.candidate.search.panel.top.candidate"));
 				uiController.setIcon(panel,"/icons/candidate.png");
 				//initialize the person panel for the top candidate
 				Candidate topCandidate = candidates.get(0);
@@ -118,7 +118,7 @@ public class CandidateSearchPanel implements ThinletUiEventHandler, AdvancedTabl
 				uiController.add(uiController.find(panel,"pPanel"),pPanel.getMainPanel());
 				uiController.setAttachedObject(uiController.find(panel,"mapButton"), topCandidate.getPatient());
 				//set the confidence label
-				uiController.setText(uiController.find(panel,"confidenceLabel"),getI18NString("medic.common.confidence")+ ": " + topCandidate.getConfidence());
+				uiController.setText(uiController.find(panel,"confidenceLabel"),getI18nString("medic.common.confidence")+ ": " + topCandidate.getConfidence());
 				this.currentlySelectedPatient = topCandidate.getPatient();
 			}
 			uiController.add(mainPanel,panel);
@@ -129,22 +129,22 @@ public class CandidateSearchPanel implements ThinletUiEventHandler, AdvancedTabl
 			//create the advanced table controller
 			tableController = new AdvancedTableController(this, uiController, uiController.find(panel,"resultsTable"));
 			//if searching patients, we want name, id and chw
-			tableController.putHeader(Patient.class, HeaderColumn.createColumnList(new String[]{getI18NString("medic.common.labels.name"), getI18NString("medic.common.labels.id"), getI18NString("medic.common.chw")},
+			tableController.putHeader(Patient.class, HeaderColumn.createColumnList(new String[]{getI18nString("medic.common.labels.name"), getI18nString("medic.common.labels.id"), getI18nString("medic.common.chw")},
 					 new String[]{"/icons/user.png", "/icons/key.png","/icons/user_phone.png"},
 					 new String[]{"getName", "getStringID","getCHWName"}));
 			//if searching Candidates, we want name, id , chw, and confidence
-			tableController.putHeader(Candidate.class, HeaderColumn.createColumnList(new String[]{getI18NString("medic.common.labels.name"), getI18NString("medic.common.labels.id"), getI18NString("medic.common.chw"),getI18NString("medic.common.confidence")},
+			tableController.putHeader(Candidate.class, HeaderColumn.createColumnList(new String[]{getI18nString("medic.common.labels.name"), getI18nString("medic.common.labels.id"), getI18nString("medic.common.chw"),getI18nString("medic.common.confidence")},
 					 new String[]{"/icons/user.png", "/icons/key.png","/icons/user_phone.png","/icons/thumb_up.png"},
 					 new String[]{"getName","getStringID","getCHWName","getConfidence"}));
 			//if we are searching and the response is mapped, the title should be 'Change Response Mapping'
 			if(response.isMapped()){
-				uiController.setText(panel,getI18NString("medic.candidate.search.panel.change.response.mapping"));
+				uiController.setText(panel,getI18nString("medic.candidate.search.panel.change.response.mapping"));
 				uiController.setIcon(panel, "/icons/change_mapping_small.png");
-				uiController.setText(uiController.find(panel,"changeButton"), getI18NString("medic.candidate.search.panel.change.mapping.to.person"));
+				uiController.setText(uiController.find(panel,"changeButton"), getI18nString("medic.candidate.search.panel.change.mapping.to.person"));
 			}else{ // if the response is not mapped, the title should be 'more candidates'
-				uiController.setText(panel,getI18NString("medic.candidate.search.panel.more.candidates"));
+				uiController.setText(panel,getI18nString("medic.candidate.search.panel.more.candidates"));
 				uiController.setIcon(panel, "/icons/users.png");
-				uiController.setText(uiController.find(panel,"changeButton"), getI18NString("medic.candidate.search.panel.set.mapping.to.person"));
+				uiController.setText(uiController.find(panel,"changeButton"), getI18nString("medic.candidate.search.panel.set.mapping.to.person"));
 			}
 			uiController.add(mainPanel,panel);
 			search("");

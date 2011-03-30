@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.dashboard.tabs;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 import net.frontlinesms.plugins.patientview.data.domain.people.CommunityHealthWorker;
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicMessageResponse;
 import net.frontlinesms.plugins.patientview.search.impl.SmsMessageResultSet;
@@ -38,15 +38,15 @@ public class SmsMessagesTab extends TabController implements AdvancedTableAction
 		
 		Object controlPanel = uiController.find(getMainPanel(),"controlPanel");
 		//create the thinlet form fields that make up the control panel
-		DateField dateField = new DateField(uiController,getI18NString("medic.common.labels.date.submitted"),this);
+		DateField dateField = new DateField(uiController,getI18nString("medic.common.labels.date.submitted"),this);
 		dateField.setLabelIcon("/icons/date.png");
-		TextField textField = new TextField(uiController,getI18NString("medic.common.labels.message"),this);
+		TextField textField = new TextField(uiController,getI18nString("medic.common.labels.message"),this);
 		textField.setLabelIcon("/icons/message.png");
-		CheckBox toCheckBox = new CheckBox(uiController, getI18NString("medic.common.sent.to"), this);
+		CheckBox toCheckBox = new CheckBox(uiController, getI18nString("medic.common.sent.to"), this);
 		toCheckBox.setLabelIcon("/icons/sms_send.png");
 		toCheckBox.setRawResponse(true);
 		uiController.setWeight(toCheckBox.getThinletPanel(), 0, 0);
-		CheckBox fromCheckBox = new CheckBox(uiController, getI18NString("medic.common.received.from"), this);
+		CheckBox fromCheckBox = new CheckBox(uiController, getI18nString("medic.common.received.from"), this);
 		fromCheckBox.setLabelIcon("/icons/sms_receive.png");
 		fromCheckBox.setRawResponse(true);
 		uiController.setWeight(fromCheckBox.getThinletPanel(), 0, 0);
@@ -60,10 +60,10 @@ public class SmsMessagesTab extends TabController implements AdvancedTableAction
 		uiController.add(controlPanel,fromCheckBox.getThinletPanel());
 		//create the table
 		tableController = new PagedAdvancedTableController(this, uiController, null);
-		tableController.putHeader(MedicMessageResponse.class, HeaderColumn.createColumnList(new String[]{getI18NString("common.status"),getI18NString("medic.common.labels.date"), getI18NString("medic.common.labels.sender"),getI18NString("medic.common.labels.recipient"),getI18NString("medic.common.labels.message")}, 
+		tableController.putHeader(MedicMessageResponse.class, HeaderColumn.createColumnList(new String[]{getI18nString("common.status"),getI18nString("medic.common.labels.date"), getI18nString("medic.common.labels.sender"),getI18nString("medic.common.labels.recipient"),getI18nString("medic.common.labels.message")}, 
 				new String[]{"/icons/status.png","", "/icons/user_sender.png","/icons/user_receiver.png","/icons/description.png"},
 				new String[]{"getStatus","getStringDateSubmitted","getSenderMsisdn","getRecipientMsisdn","getMessageContent"}));
-		tableController.setNoResultsMessage(getI18NString("medic.sms.messages.tab.no.search.results") +" "+ chw.getName());
+		tableController.setNoResultsMessage(getI18nString("medic.sms.messages.tab.no.search.results") +" "+ chw.getName());
 		tableController.setPagingControlBorder(false);
 		tableController.enableRefreshButton(appCon);
 		uiController.add(uiController.find(getMainPanel(),"tablePanel"),tableController.getMainPanel());
@@ -73,7 +73,7 @@ public class SmsMessagesTab extends TabController implements AdvancedTableAction
 		tableController.setResultsSet(resultSet);
 		tableController.updateTable();
 		
-		super.setTitle(getI18NString("medic.common.text.messages"));
+		super.setTitle(getI18nString("medic.common.text.messages"));
 		super.setIconPath("/icons/big_history.png");
 	}
 
@@ -88,7 +88,7 @@ public class SmsMessagesTab extends TabController implements AdvancedTableAction
 			resultSet.setAroundDate(((DateField) changedField).getRawResponse());
 		}else if(changedField instanceof TextField){
 			resultSet.setContentSearchString(newValue);
-		}else if(changedField.getLabel().equalsIgnoreCase(getI18NString("medic.common.sent.to"))){
+		}else if(changedField.getLabel().equalsIgnoreCase(getI18nString("medic.common.sent.to"))){
 			resultSet.setSearchingTo(((CheckBox) changedField).getRawResponse());
 		}else{
 			resultSet.setSearchingFrom(((CheckBox) changedField).getRawResponse());

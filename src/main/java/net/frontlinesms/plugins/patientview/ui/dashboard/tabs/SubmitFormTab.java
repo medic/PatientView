@@ -52,7 +52,7 @@ public class SubmitFormTab extends TabController implements ThinletUiEventHandle
 	public SubmitFormTab(UiGeneratorController uiController, ApplicationContext appContext, Patient patient){
 		super(uiController, appContext);
 		super.setIconPath("/icons/big_form_edit.png");
-		super.setTitle(InternationalisationUtils.getI18NString("submitform.title"));
+		super.setTitle(InternationalisationUtils.getI18nString("submitform.title"));
 		//load the main panel from the file
 		uiController.add(mainPanel,uiController.loadComponentFromFile(SUBMIT_FORM_DIALOG, this));
 		//create the new thinlet instance, and add the main panel
@@ -90,11 +90,11 @@ public class SubmitFormTab extends TabController implements ThinletUiEventHandle
 	@SuppressWarnings("unchecked")
 	public void submit(){
 		if(currentForm == null){
-			setWarningLabel(InternationalisationUtils.getI18NString(MUST_FILL_OUT_FORM_MESSAGE));
+			setWarningLabel(InternationalisationUtils.getI18nString(MUST_FILL_OUT_FORM_MESSAGE));
 			return;
 		}
 		if(currentPatient == null){
-			setWarningLabel(InternationalisationUtils.getI18NString(MUST_SELECT_PATIENT_MESSAGE));
+			setWarningLabel(InternationalisationUtils.getI18nString(MUST_SELECT_PATIENT_MESSAGE));
 			return;
 		}
 		if(fieldGroup.validate(true)){
@@ -108,7 +108,7 @@ public class SubmitFormTab extends TabController implements ThinletUiEventHandle
 			}
 			responseDao.saveMedicFormResponse(response);
 			updateFormPanel();
-			setSuccessLabel(InternationalisationUtils.getI18NString(SUCCESSFUL_SUBMIT_MESSAGE));
+			setSuccessLabel(InternationalisationUtils.getI18nString(SUCCESSFUL_SUBMIT_MESSAGE));
 		}
 	}
 	

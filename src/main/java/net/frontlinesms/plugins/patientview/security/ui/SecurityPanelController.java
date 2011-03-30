@@ -47,7 +47,7 @@ public class SecurityPanelController implements AdministrationTabPanel,
 		//questionAttemptsBox = ui.find(mainPanel, "questionattemptsbox");
 		//lockoutDurationBox = ui.find(mainPanel, "lockoutdurationbox");
 		// properly split the text for the lockout duration preference
-		//String[] lockoutText = getI18NString(LOCKOUT_DURATION).split("<X>");
+		//String[] lockoutText = getI18nString(LOCKOUT_DURATION).split("<X>");
 		//Object label1 = ui.find(mainPanel, "durationlabel1");
 		//Object label2 = ui.find(mainPanel, "durationlabel2");
 		//ui.setText(label1, lockoutText[0].trim());
@@ -115,7 +115,7 @@ public class SecurityPanelController implements AdministrationTabPanel,
 
 	/* from interface */
 	public String getListItemTitle() {
-		return getI18NString("admin.actionlist.manage.security");
+		return getI18nString("admin.actionlist.manage.security");
 	}
 
 	/* from interface */

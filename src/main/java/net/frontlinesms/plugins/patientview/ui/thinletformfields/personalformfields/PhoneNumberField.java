@@ -19,7 +19,7 @@ public class PhoneNumberField extends TextField implements PersonalFormField {
 	private ContactDao contactDao;
 
 	public PhoneNumberField(ExtendedThinlet thinlet, String phoneNumber, FormFieldDelegate delegate, ApplicationContext appCon) {
-		super(thinlet, InternationalisationUtils.getI18NString(PHONE_NUMBER_FIELD) + ":", delegate);
+		super(thinlet, InternationalisationUtils.getI18nString(PHONE_NUMBER_FIELD) + ":", delegate);
 		thinlet.setText(textBox, phoneNumber);
 		this.contactDao = (ContactDao) appCon.getBean("contactDao");
 	}

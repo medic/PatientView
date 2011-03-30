@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.administration.tabs;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.util.List;
 
@@ -63,10 +63,10 @@ public abstract class PersonAdministrationPanelController<E extends Person> impl
 		putHeader();
 		personResultSet = new PersonResultSet<E>(appCon, getPersonClass());
 		advancedTableController.setResultsSet(personResultSet);
-		uiController.setText(uiController.find(mainPanel,"titleLabel"), getI18NString(MANAGE)+ " "+ getPersonType() + "s");
-		uiController.setText(uiController.find(mainPanel,ADD_BUTTON), getI18NString(ADD)+ " " + getPersonType());
-		uiController.setText(uiController.find(mainPanel,REMOVE_BUTTON), getI18NString(REMOVE)+ " " + getPersonType());
-		uiController.setText(uiController.find(mainPanel,EDIT_BUTTON), getI18NString(EDIT)+ " " + getPersonType());
+		uiController.setText(uiController.find(mainPanel,"titleLabel"), getI18nString(MANAGE)+ " "+ getPersonType() + "s");
+		uiController.setText(uiController.find(mainPanel,ADD_BUTTON), getI18nString(ADD)+ " " + getPersonType());
+		uiController.setText(uiController.find(mainPanel,REMOVE_BUTTON), getI18nString(REMOVE)+ " " + getPersonType());
+		uiController.setText(uiController.find(mainPanel,EDIT_BUTTON), getI18nString(EDIT)+ " " + getPersonType());
 		uiController.setIcon(uiController.find(mainPanel,ADD_BUTTON), getIcons()[ADD_INDEX]);
 		uiController.setIcon(uiController.find(mainPanel,EDIT_BUTTON), getIcons()[EDIT_INDEX]);
 		uiController.setIcon(uiController.find(mainPanel,REMOVE_BUTTON), getIcons()[REMOVE_INDEX]);

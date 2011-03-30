@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.importer.validation;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,9 +12,9 @@ import au.com.bytecode.opencsv.CSVReader;
 public abstract class PersonCsvValidator extends CsvValidator{
 
 	
-	protected static String[] genderPossibilities = new String[]{getI18NString("medic.common.male"),
-																getI18NString("medic.common.female"),
-																getI18NString("medic.common.transgender")};
+	protected static String[] genderPossibilities = new String[]{getI18nString("medic.common.male"),
+																getI18nString("medic.common.female"),
+																getI18nString("medic.common.transgender")};
 	
 	protected static final int NAME_INDEX = 0;
 	protected static final int BDAY_INDEX = 1;
@@ -30,13 +30,13 @@ public abstract class PersonCsvValidator extends CsvValidator{
 				lineNumber++;
 				//check the name
 				if(currLine[NAME_INDEX] == null || currLine[NAME_INDEX].equals("") ){
-					exceptions.add(new CsvValidationException(lineNumber, getI18NString("medic.importer.blank.chw.name")));
+					exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.blank.chw.name")));
 				}
 				//check the birthdate
 				try{
 					InternationalisationUtils.getDateFormat().parse(currLine[BDAY_INDEX]);
 				}catch(Exception e){
-					exceptions.add(new CsvValidationException(lineNumber, getI18NString("medic.importer.date.format.error")+ ": \""+currLine[BDAY_INDEX]+"\""));
+					exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.date.format.error")+ ": \""+currLine[BDAY_INDEX]+"\""));
 				}
 				//check gender
 				boolean validGender = false;
@@ -46,7 +46,7 @@ public abstract class PersonCsvValidator extends CsvValidator{
 					}
 				}
 				if(!validGender){
-					exceptions.add(new CsvValidationException(lineNumber, getI18NString("medic.importer.gender.format.error")+": \""+currLine[GENDER_INDEX]+"\""));
+					exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.gender.format.error")+": \""+currLine[GENDER_INDEX]+"\""));
 				}
 				doAdditionalValidation(lineNumber,currLine,exceptions);
 			}

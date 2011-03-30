@@ -24,9 +24,9 @@ public class PatientCsvValidator extends PersonCsvValidator{
 	public void doAdditionalValidation(int lineNumber, String[] line, List<CsvValidationException> exceptions) {
 		Collection<CommunityHealthWorker> chws = chwDao.findCommunityHealthWorkerByName(line[CHW_INDEX], -1);
 		if(chws.size() == 0){
-			exceptions.add(new CsvValidationException(lineNumber, getI18NString("medic.importer.no.chw.association.error")+" \"" + line[CHW_INDEX]+"\""));
+			exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.no.chw.association.error")+" \"" + line[CHW_INDEX]+"\""));
 		}else if(chws.size() >1){
-			exceptions.add(new CsvValidationException(lineNumber, getI18NString("medic.importer.multiple.chw.association.error")+" \"" + line[CHW_INDEX]+"\""));
+			exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.multiple.chw.association.error")+" \"" + line[CHW_INDEX]+"\""));
 		}
 	}
 }

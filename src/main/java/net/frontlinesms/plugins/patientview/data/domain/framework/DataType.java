@@ -49,7 +49,7 @@ public enum DataType {
 		}
 		
 		public String toString(){
-			return InternationalisationUtils.getI18NString(description);
+			return InternationalisationUtils.getI18nString(description);
 		}
 		
 		public boolean isBoolean(){
@@ -57,11 +57,11 @@ public enum DataType {
 		}
 		
 		public String getTrueLabel(){
-			return InternationalisationUtils.getI18NString(trueLabel);
+			return InternationalisationUtils.getI18nString(trueLabel);
 		}
 		
 		public String getFalseLabel(){
-			return InternationalisationUtils.getI18NString(falseLabel);
+			return InternationalisationUtils.getI18nString(falseLabel);
 		}
 		
 		/**

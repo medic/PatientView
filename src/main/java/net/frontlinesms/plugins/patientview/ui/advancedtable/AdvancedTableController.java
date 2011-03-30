@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.advancedtable;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18NString;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -133,10 +133,10 @@ public class AdvancedTableController{
 		if(results.size() == 0){
 			uiController.removeAll(table);
 			Object header = uiController.create("header");
-			uiController.add(header,uiController.createColumn(getI18NString("advancedtable.no.results.to.display"), null));
+			uiController.add(header,uiController.createColumn(getI18nString("advancedtable.no.results.to.display"), null));
 			uiController.add(table,header);
 			Object row = uiController.createTableRow(null);
-			uiController.add(row, uiController.createTableCell(noResultsMessage==null?getI18NString("advancedtable.no.search.results"):noResultsMessage));
+			uiController.add(row, uiController.createTableCell(noResultsMessage==null?getI18nString("advancedtable.no.search.results"):noResultsMessage));
 			uiController.add(table,row);
 			resultsChanged();
 			return;
