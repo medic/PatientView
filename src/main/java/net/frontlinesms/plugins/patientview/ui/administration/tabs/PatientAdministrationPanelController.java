@@ -18,7 +18,7 @@ import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
 
-public class PatientAdministrationPanelController extends PersonAdministrationPanelController<Patient> implements DeleteDialogDelegate{
+public class PatientAdministrationPanelController extends PersonAdministrationPanelController<Patient>{
 
 	private PatientDao patientDao;
 	
@@ -78,16 +78,5 @@ public class PatientAdministrationPanelController extends PersonAdministrationPa
 	
 	public void viewWillAppear() {}
 	
-	public void removeButtonClicked(){
-		DeleteDialogController d = new DeleteDialogController(uiController,this,"Patient");
-	}
-
-	public void dialogReturned(Boolean delete, Boolean keepVisible, String reason) {
-		if(delete){
-			super.currentPersonPanel.getPerson().setRemoved(true, keepVisible,UserSessionManager.getUserSessionManager().getCurrentUser(), reason);
-			patientDao.updatePatient(super.currentPersonPanel.getPerson());
-		}
-		super.advancedTableController.updateTable();
-	}
-
+	public void removeButtonClicked(){}
 }

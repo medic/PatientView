@@ -81,13 +81,4 @@ public interface UserDao {
 	 */
 	public List<User> getUsersByName(String nameFragment, int limit);
 
-	/**
-	 * Voids this user. Also voids all responses submitted by or about this
-	 * user.
-	 * 
-	 * @param user
-	 * @param keepVisible
-	 * @param reason
-	 */
-	public void voidUser(User user, boolean keepVisible, String reason);
 }

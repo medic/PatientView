@@ -70,6 +70,4 @@ public interface PatientDao {
 	 * null. If there is no such patient, null is returned.
 	 */
 	public Patient findPatient(String name, String birthdate, String id);
-
-	public void voidPatient(Patient patient, boolean keepVisible, String reason);
 }

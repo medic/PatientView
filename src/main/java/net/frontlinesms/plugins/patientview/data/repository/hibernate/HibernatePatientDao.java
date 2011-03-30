@@ -8,9 +8,7 @@ import java.util.List;
 import net.frontlinesms.data.repository.hibernate.BaseHibernateDao;
 import net.frontlinesms.plugins.patientview.data.domain.people.CommunityHealthWorker;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
-import net.frontlinesms.plugins.patientview.data.domain.response.Response;
 import net.frontlinesms.plugins.patientview.data.repository.PatientDao;
-import net.frontlinesms.plugins.patientview.security.UserSessionManager;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
 import org.hibernate.criterion.DetachedCriteria;
@@ -94,20 +92,6 @@ public class HibernatePatientDao extends BaseHibernateDao<Patient> implements Pa
 
 	private DetachedCriteria getBaseCriterion(){
 		DetachedCriteria c= DetachedCriteria.forClass(Patient.class);
-		c.add(Restrictions.eq("deleted",false));
 		return c;
-	}
-	
-	public void voidPatient(Patient patient, boolean keepVisible, String reason){
-		patient.setRemoved(true, keepVisible, UserSessionManager.getUserSessionManager().getCurrentUser(), reason);
-		updateWithoutDuplicateHandling(patient);
-		//get a list of all responses about this patient
-		DetachedCriteria c = DetachedCriteria.forClass(Response.class);
-		c.add(Restrictions.eq("subject", patient));
-		List<Response> patientResponses = super.getHibernateTemplate().findByCriteria(c);
-		//void all responses
-		for(Response response: patientResponses){
-			response.setRemoved(true, keepVisible, UserSessionManager.getUserSessionManager().getCurrentUser(), reason);
-		}
 	}
 }

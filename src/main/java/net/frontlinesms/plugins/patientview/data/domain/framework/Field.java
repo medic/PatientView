@@ -14,8 +14,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
-import net.frontlinesms.plugins.patientview.domain.RemovableObject;
-
 /**
  * A field is an abstract class that has a label, datatype, and a unique identifier.
  * It should be extended to create more specific fields
@@ -26,7 +24,7 @@ import net.frontlinesms.plugins.patientview.domain.RemovableObject;
 @DiscriminatorColumn(name="field_type", discriminatorType=DiscriminatorType.STRING)
 @DiscriminatorValue(value="field")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-public abstract class Field extends RemovableObject{
+public abstract class Field{
 
 	/** Unique id for this entity.  This is for hibernate usage. */
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)

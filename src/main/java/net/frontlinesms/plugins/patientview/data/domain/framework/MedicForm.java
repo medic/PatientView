@@ -17,12 +17,9 @@ import javax.persistence.Table;
 
 import net.frontlinesms.plugins.forms.data.domain.Form;
 import net.frontlinesms.plugins.forms.data.domain.FormField;
-import net.frontlinesms.plugins.patientview.domain.RemovableObject;
 
 import org.hibernate.annotations.IndexColumn;
 import org.hibernate.annotations.OrderBy;
-
-import bsh.This;
 
 /**
  * A class that represents a form in the system.
@@ -32,7 +29,7 @@ import bsh.This;
  */
 @Entity
 @Table(name = "medic_forms")
-public class MedicForm extends RemovableObject{
+public class MedicForm{
 
 	/** Unique id for this entity. This is for hibernate usage. */
 	@Id

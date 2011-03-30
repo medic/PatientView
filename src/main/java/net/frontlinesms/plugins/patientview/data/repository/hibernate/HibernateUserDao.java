@@ -69,16 +69,4 @@ public class HibernateUserDao extends BaseHibernateDao<User> implements UserDao 
 		super.updateWithoutDuplicateHandling(u);
 	}
 	
-	public void voidUser(User user, boolean keepVisible, String reason){
-		user.setRemoved(true, keepVisible, UserSessionManager.getUserSessionManager().getCurrentUser(), reason);
-		updateWithoutDuplicateHandling(user);
-		//get a list of all responses related to this user (submitted by or about)
-		DetachedCriteria c = DetachedCriteria.forClass(Response.class);
-		c.add(Restrictions.or(Restrictions.eq("submitter",user), Restrictions.eq("subject", user)));
-		List<Response> userResponses = super.getHibernateTemplate().findByCriteria(c);
-		//void all responses
-		for(Response response: userResponses){
-			response.setRemoved(true, keepVisible, UserSessionManager.getUserSessionManager().getCurrentUser(), reason);
-		}
-	}
 }

@@ -14,7 +14,7 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-import net.frontlinesms.plugins.patientview.domain.RemovableObject;
+import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
 
 /**
@@ -23,7 +23,7 @@ import net.frontlinesms.ui.UiGeneratorController;
  * @author Dieterich
  *
  */
-public class AdvancedTableController{
+public class AdvancedTableController implements ThinletUiEventHandler{
 	
 	/** the thinlet table**/
 	protected Object table;
@@ -159,11 +159,6 @@ public class AdvancedTableController{
 				}
 				Object cell = uiController.createTableCell(value);
 				uiController.add(row,cell);
-				try{
-					if(!((RemovableObject) result).isActive()){
-						uiController.setEnabled(cell, false);
-					}
-				}catch(Exception e){}
 			}
 			uiController.add(table,row);
 		}
