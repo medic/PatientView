@@ -38,12 +38,13 @@ public class SmsMessageResultSet extends PagedResultSet{
 		//create the criteria
 		DetachedCriteria c = DetachedCriteria.forClass(MedicMessageResponse.class);
 		c.add(Restrictions.ilike("messageContent",contentSearchString,MatchMode.ANYWHERE));
+		DetachedCriteria messageCrit = c.createCriteria("message");
 		if(searchingFrom && !searchingTo){
-			c.add(Restrictions.eq("senderMsisdn",senderNumber));
+			messageCrit.add(Restrictions.eq("senderMsisdn",senderNumber));
 		}else if(searchingTo && !searchingFrom){
-			c.add(Restrictions.eq("recipientMsisdn",senderNumber));
+			messageCrit.add(Restrictions.eq("recipientMsisdn",senderNumber));
 		}else if(searchingTo && searchingFrom){
-			c.add(Restrictions.or(Restrictions.eq("senderMsisdn",senderNumber),Restrictions.eq("recipientMsisdn",senderNumber)));
+			messageCrit.add(Restrictions.or(Restrictions.eq("senderMsisdn",senderNumber),Restrictions.eq("recipientMsisdn",senderNumber)));
 		}
 		if(aroundDate != null){
 			c.addOrder(OrderBySQL.sqlFormula("abs(dateSubmitted - " + aroundDate.getTime() + ") asc"));

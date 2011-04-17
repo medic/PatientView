@@ -22,6 +22,7 @@ public class FormFieldGroup extends FieldGroup {
 	}
 	
 	private void initialize(){
+		if(form == null) return;
 		for(MedicFormField mff: form.getFields()){
 			// if its a label field, throw in a label
 			if(mff.getDatatype() == DataType.TRUNCATED_TEXT || mff.getDatatype() == DataType.WRAPPED_TEXT){
@@ -36,6 +37,7 @@ public class FormFieldGroup extends FieldGroup {
 	}
 	
 	public void autoFillWithPatient(Patient p){
+		if(form == null) return;
 		//int containing the number of non-respondable (label) fields we've passed
 		int nonRespondable=0;
 		for(int i = 0; i < form.getFields().size(); i++){
