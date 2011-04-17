@@ -198,7 +198,9 @@ public class SimpleSearchController implements ThinletUiEventHandler, SearchCont
 	}
 	
 	public void textEntryChanged(){
-		if(getTextInput().length() > 3 || getTextInput().equalsIgnoreCase("")){
+		if(currentField.getDataType().equals(SimpleSearchDataType.NUMBER)){
+			searchButtonPressed();
+		}else if(getTextInput().length() >= 3 && !getTextInput().trim().equals("")){
 			searchButtonPressed();
 		}
 	}
@@ -218,6 +220,4 @@ public class SimpleSearchController implements ThinletUiEventHandler, SearchCont
 	public void refresh(){
 		tableController.setResults(queryGenerator.getFreshResultsPage());
 	}
-	
-		
 }
