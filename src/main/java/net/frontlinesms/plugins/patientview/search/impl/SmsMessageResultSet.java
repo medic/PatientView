@@ -10,7 +10,6 @@ import net.frontlinesms.plugins.patientview.search.OrderBySQL;
 import net.frontlinesms.plugins.patientview.search.PagedResultSet;
 
 import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Projections;

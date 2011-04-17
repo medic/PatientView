@@ -69,14 +69,14 @@ public class DataGeneratorThread extends Thread{
 					"Charlie", "Lindsay", "Winnie", "Terrence", "Wilson", "Jenny",
 					"Meghan", "Katherine", "Poe", "Phillip", "Andrew", "Elizabeth",
 					"Whitney", "Frank", "Jared", "Maximillian", "Wylie","Theodore", "Margot",
-					"Forscythe","Lars","Sarah","Teddy","Fitz","Humphrey","James","Mark","Jesse"};
+					"Forscythe","Lars","Sarah","Teddy","Fitz","Humphrey","James","Mark","Jesse", "Tierney","Brooks","Alice"};
 			// list of last names
 			String[] lasts = { "Lawson", "Threadbare", "Evermore", "Brown",
 					"DeWilliams", "Taraban", "Polombo", "Benter", "Trought",
 					"Finkley", "Coriander", "Groesbeck", "Trounce", "Longbottom",
 					"Yip", "Fiars", "Trunch", "Whelp", "Schy", "Munificent",
 					"Coyote","Brown","Black","Ames","Chavez","Richards","Phillips","Ballard"
-					,"Roosevelt","Jackson","Trueblood","Wachowsky","Corlogne" };
+					,"Roosevelt","Jackson","Trueblood","Wachowsky","Corlogne","O'Dea","Booker" };
 			
 			ArrayList<CommunityHealthWorker> chws = new ArrayList<CommunityHealthWorker>();
 			ArrayList<Patient> ps = new ArrayList<Patient>();

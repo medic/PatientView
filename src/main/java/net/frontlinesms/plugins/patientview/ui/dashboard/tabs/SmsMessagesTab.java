@@ -32,7 +32,7 @@ public class SmsMessagesTab extends TabController implements AdvancedTableAction
 		uiController.add(super.getMainPanel(),uiController.loadComponentFromFile(UI_FILE,this));
 		//create the message panel
 		messagePanelHandler = MessagePanelHandler.create(uiController, false, true, 1);
-		messagePanelHandler.setShouldClearRecipientField(false);
+		//messagePanelHandler.setShouldClearRecipientField(false);
 		uiController.setText(uiController.find(messagePanelHandler.getPanel(), UiGeneratorControllerConstants.COMPONENT_TF_RECIPIENT),chw.getPhoneNumber());
 		uiController.add(uiController.find(getMainPanel(),"topPanel"),messagePanelHandler.getPanel());
 		

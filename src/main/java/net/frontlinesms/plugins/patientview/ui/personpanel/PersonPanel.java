@@ -250,7 +250,10 @@ public abstract class PersonPanel<E extends Person> implements ThinletUiEventHan
 	private boolean validateAndSaveFieldResponses() {
 		boolean isValid = fieldGroup.saveIfValid(true);
 		if(isNewPersonPanel && isValid){
-			delegate.didCreatePerson();
+			this.person = fieldGroup.getPerson();
+			if(delegate !=null){
+				delegate.didCreatePerson();
+			}
 		}
 		return isValid;       
 	}

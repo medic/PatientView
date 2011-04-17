@@ -15,21 +15,21 @@ import org.springframework.context.ApplicationContext;
 
 public abstract class PersonFieldGroup<P extends Person> extends FieldGroup {
 
-	protected P person;
+	private P person;
 	
 	protected boolean isNewPersonGroup;
 	
 	public PersonFieldGroup(UiGeneratorController ui, ApplicationContext appCon, FormFieldDelegate delegate, P person) {
 		super(ui, appCon, delegate);
-		this.person = person;
+		this.setPerson(person);
 		this.isNewPersonGroup = (person == null);
 		initialize();
 	}
 	
 	private void initialize(){
-		NameField name = new NameField(ui, isNewPersonGroup ? "" : person.getName(),null);
-		GenderComboBox gender = new GenderComboBox(ui,isNewPersonGroup? null : person.getGender(),null);
-		BirthdateField bday = new BirthdateField(ui, isNewPersonGroup? new Date() : person.getBirthdate(),null);
+		NameField name = new NameField(ui, isNewPersonGroup ? "" : getPerson().getName(),null);
+		GenderComboBox gender = new GenderComboBox(ui,isNewPersonGroup? null : getPerson().getGender(),null);
+		BirthdateField bday = new BirthdateField(ui, isNewPersonGroup? new Date() : getPerson().getBirthdate(),null);
 		super.addField(name);
 		super.addField(gender);
 		super.addField(bday);
@@ -39,9 +39,9 @@ public abstract class PersonFieldGroup<P extends Person> extends FieldGroup {
 	public boolean saveIfValid(boolean alert){
 		if(validate(alert)){
 			if(isNewPersonGroup){
-				person = createNewPerson();
+				setPerson(createNewPerson());
 			}
-			setFields(!isNewPersonGroup);
+			setFields(isNewPersonGroup);
 			saveOrUpdatePerson();
 			return  true;
 		}
@@ -50,8 +50,8 @@ public abstract class PersonFieldGroup<P extends Person> extends FieldGroup {
 	
 	private void setFields(boolean ifChanged){
 		for(ThinletFormField<?> field: getFormFields()){
-			if(ifChanged && field.hasChanged()){
-				((PersonalFormField) field).setFieldForPerson(person);
+			if(ifChanged || field.hasChanged()){
+				((PersonalFormField) field).setFieldForPerson(getPerson());
 			}
 		}
 	}
@@ -61,4 +61,12 @@ public abstract class PersonFieldGroup<P extends Person> extends FieldGroup {
 	protected abstract void saveOrUpdatePerson();
 	
 	protected abstract P createNewPerson();
+
+	public void setPerson(P person) {
+		this.person = person;
+	}
+
+	public P getPerson() {
+		return person;
+	}
 }

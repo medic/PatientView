@@ -19,16 +19,16 @@ public class CommunityHealthWorkerFieldGroup extends PersonFieldGroup<CommunityH
 
 	@Override
 	protected void addAdditionalFields() {
-		PhoneNumberField phoneNumber = new PhoneNumberField(ui,isNewPersonGroup? "":person.getPhoneNumber(),null, appCon);
+		PhoneNumberField phoneNumber = new PhoneNumberField(ui,isNewPersonGroup? "":getPerson().getPhoneNumber(),null, appCon);
 		super.addField(phoneNumber);
 	}
 
 	@Override
 	protected void saveOrUpdatePerson() {
 		if(isNewPersonGroup){
-			chwDao.saveCommunityHealthWorker(person);
+			chwDao.saveCommunityHealthWorker(getPerson());
 		}else{
-			chwDao.updateCommunityHealthWorker(person);
+			chwDao.updateCommunityHealthWorker(getPerson());
 		}
 	}
 

@@ -19,16 +19,16 @@ public class PatientFieldGroup extends PersonFieldGroup<Patient> {
 
 	@Override
 	protected void addAdditionalFields() {
-		CHWComboBox chwCombo = new CHWComboBox(ui, appCon, person == null?null:person.getChw(),null);
+		CHWComboBox chwCombo = new CHWComboBox(ui, appCon, getPerson() == null?null:getPerson().getChw(),null);
 		super.addField(chwCombo);
 	}
 	
 	@Override
 	protected void saveOrUpdatePerson() {
 		if(isNewPersonGroup){
-			patientDao.savePatient(person);
+			patientDao.savePatient(getPerson());
 		}else{
-			patientDao.updatePatient(person);
+			patientDao.updatePatient(getPerson());
 		}
 	}
 

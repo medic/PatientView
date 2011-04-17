@@ -103,7 +103,7 @@
 		<dependency>
 			<groupId>net.frontlinesms.plugins</groupId>
 			<artifactId>frontlinesms-plugin-forms</artifactId>
-			<version>0.02.32</version>
+			<version>0.02.33-SNAPSHOT</version>
 		</dependency>
 		
 		<!--  Library Dependencies -->

@@ -21,20 +21,20 @@ public class UserFieldGroup extends PersonFieldGroup<User> {
 
 	@Override
 	protected void addAdditionalFields() {
-		if(person == null || UserSessionManager.getUserSessionManager().getCurrentUser().equals(person)){
-			UsernameField usernameField = new UsernameField(ui, appCon, true, person == null ? "" : person.getUsername(),null);
+		if(getPerson() == null || UserSessionManager.getUserSessionManager().getCurrentUser().equals(getPerson())){
+			UsernameField usernameField = new UsernameField(ui, appCon, true, getPerson() == null ? "" : getPerson().getUsername(),null);
 			super.addField(usernameField);
 		}
-		RoleComboBox roleCombo = new RoleComboBox(ui, person == null ? null :person.getRole(),null);
+		RoleComboBox roleCombo = new RoleComboBox(ui, getPerson() == null ? null :getPerson().getRole(),null);
 		super.addField(roleCombo);
 	}
 	
 	@Override
 	protected void saveOrUpdatePerson() {
 		if(isNewPersonGroup){
-			userDao.saveUser(person);
+			userDao.saveUser(getPerson());
 		}else{
-			userDao.updateUser(person);
+			userDao.updateUser(getPerson());
 		}
 	}
 
