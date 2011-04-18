@@ -10,6 +10,7 @@ import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.DistinctRootEntityResultTransformer;
 
 public class HibernateMedicFormDao extends BaseHibernateDao<MedicForm> implements MedicFormDao{
 	
@@ -36,6 +37,7 @@ public class HibernateMedicFormDao extends BaseHibernateDao<MedicForm> implement
 	public List<MedicForm> findMedicFormsByName(String nameFragment){
 		DetachedCriteria c = DetachedCriteria.forClass(MedicForm.class);
 		c.add(Restrictions.like("name", nameFragment,MatchMode.ANYWHERE));
+		c.setResultTransformer(DistinctRootEntityResultTransformer.INSTANCE);
 		return super.getList(c);
 	}
 
