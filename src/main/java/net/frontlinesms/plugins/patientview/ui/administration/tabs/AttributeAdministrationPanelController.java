@@ -220,10 +220,5 @@ public class AttributeAdministrationPanelController extends AdministrationTabPan
 	public void doubleClickAction(Object selectedObject) {}
 	public void resultsChanged() {}
 	public void selectionChanged(Object selectedObject) {}
-	
-	/* ViewHandler methods*/
-	@Override
-	public void viewWillAppear() {}
-	@Override
-	public void viewWillDisappear() {}
+
 }

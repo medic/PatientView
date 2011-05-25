@@ -78,10 +78,4 @@ public class AdministrationTabController extends ViewHandler{
 		addSubview(getActionPanel(), panel);
 		currentPanel = panel;
 	}
-
-	@Override
-	public void viewWillAppear() {}
-
-	@Override
-	public void viewWillDisappear() {}
 }

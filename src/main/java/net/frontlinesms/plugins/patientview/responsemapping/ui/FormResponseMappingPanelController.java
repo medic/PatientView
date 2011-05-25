@@ -168,11 +168,4 @@ public class FormResponseMappingPanelController extends AdministrationTabPanel i
 		resultSet.setForm(mf);
 		tableController.updateTable();
 	}
-	
-	@Override
-	public void viewWillAppear() {}
-
-	@Override
-	public void viewWillDisappear() {}
-	
 }

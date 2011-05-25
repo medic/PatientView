@@ -149,12 +149,6 @@ public class UserAdministrationPanelController extends PersonAdministrationPanel
 	protected Class<User> getPersonClass() {
 		return User.class;
 	}
-
-	@Override
-	public void viewWillAppear() {}
-
-	@Override
-	public void viewWillDisappear() {}
 	
 	@Override
 	public void removeButtonClicked() {}

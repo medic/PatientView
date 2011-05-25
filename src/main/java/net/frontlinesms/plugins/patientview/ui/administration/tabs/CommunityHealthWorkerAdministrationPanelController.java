@@ -76,11 +76,5 @@ public class CommunityHealthWorkerAdministrationPanelController extends PersonAd
 	}
 	
 	@Override
-	public void viewWillAppear() {}
-
-	@Override
-	public void viewWillDisappear() {}
-	
-	@Override
 	public void removeButtonClicked() {	}
 }

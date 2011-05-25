@@ -49,16 +49,19 @@ public abstract class ViewHandler implements ThinletUiEventHandler{
 	}
 	
 	public void addSubview(ViewHandler view){
+		view.willAppear();
 		subviews.add(view);
 		add(view.getMainPanel());
 	}
 	
 	public void addSubview(Object thinletContainer, ViewHandler view){
+		view.willAppear();
 		subviews.add(view);
 		add(thinletContainer,view.getMainPanel());
 	}
 	
 	public boolean removeSubview(ViewHandler view){
+		view.willDisappear();
 		ui.remove(view.getMainPanel());
 		return subviews.remove(view);
 	}
@@ -79,15 +82,23 @@ public abstract class ViewHandler implements ThinletUiEventHandler{
 		return ui.find(container, objectName);
 	}
 	
-	public void viewWillAppear(){
+	public void willAppear(){
+		subviewsWillAppear();
+	}
+	
+	public void willDisappear(){
+		subviewsWillDisappear();
+	}
+	
+	protected void subviewsWillAppear(){
 		for(ViewHandler view: subviews){
-			view.viewWillAppear();
+			view.willAppear();
 		}
 	}
 	
-	public void viewWillDisappear(){
+	protected void subviewsWillDisappear(){
 		for(ViewHandler view: subviews){
-			view.viewWillDisappear();
+			view.willDisappear();
 		}
 	}
 	
