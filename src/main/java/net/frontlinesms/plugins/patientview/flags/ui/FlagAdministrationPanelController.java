@@ -147,12 +147,4 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel im
 	private FlagDefinition getCurrentlySelectedFlagDefinition(){
 		return ui.getAttachedObject(ui.getSelectedItem(flagList),FlagDefinition.class);
 	}
-	
-	@Override
-	public void viewWillAppear() {}
-
-	@Override
-	public void viewWillDisappear() {}
-	
-	
 }

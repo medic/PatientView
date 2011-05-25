@@ -169,11 +169,4 @@ public class SecurityPanelController extends AdministrationTabPanel {
 	public String getIconPath() {
 		return "/icons/big_lock.png";
 	}
-	
-	@Override
-	public void viewWillAppear() {}
-
-	@Override
-	public void viewWillDisappear() {}
-
 }

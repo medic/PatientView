@@ -216,11 +216,9 @@ public class FormAdministrationPanelController extends AdministrationTabPanel im
 	}
 	
 	@Override
-	public void viewWillAppear() {
+	public void willAppear() {
+		subviewsWillAppear();
 		populatePatientViewFormList();
 	}
-
-	@Override
-	public void viewWillDisappear() {}
 
 }

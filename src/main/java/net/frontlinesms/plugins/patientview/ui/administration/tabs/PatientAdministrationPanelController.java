@@ -73,11 +73,5 @@ public class PatientAdministrationPanelController extends PersonAdministrationPa
 		return Patient.class;
 	}
 	
-	@Override
-	public void viewWillAppear() {}
-	
-	@Override
-	public void viewWillDisappear() {}
-	
 	public void removeButtonClicked(){}	
 }

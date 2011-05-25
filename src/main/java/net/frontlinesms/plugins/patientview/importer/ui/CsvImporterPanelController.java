@@ -87,11 +87,5 @@ public class CsvImporterPanelController extends AdministrationTabPanel {
 	public String getIconPath() {
 		return "/icons/import_data.png";
 	}
-	
-	@Override
-	public void viewWillAppear() {}
-
-	@Override
-	public void viewWillDisappear() {}
 
 }
