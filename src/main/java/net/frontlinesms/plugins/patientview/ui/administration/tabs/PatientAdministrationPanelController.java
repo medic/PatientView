@@ -51,8 +51,8 @@ public class PatientAdministrationPanelController extends PersonAdministrationPa
 	}
 
 	@Override
-	protected PersonPanel getPersonPanelForPerson(Person person) {
-		return new PatientPanel(uiController,appCon,(Patient) person);
+	protected PersonPanel<Patient> getPersonPanelForPerson(Person person) {
+		return new PatientPanel(ui,appCon,(Patient) person);
 	}
 
 	public String getIconPath() {
@@ -73,7 +73,11 @@ public class PatientAdministrationPanelController extends PersonAdministrationPa
 		return Patient.class;
 	}
 	
+	@Override
 	public void viewWillAppear() {}
 	
-	public void removeButtonClicked(){}
+	@Override
+	public void viewWillDisappear() {}
+	
+	public void removeButtonClicked(){}	
 }

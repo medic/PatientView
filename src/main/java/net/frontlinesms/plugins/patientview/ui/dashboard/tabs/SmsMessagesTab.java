@@ -4,7 +4,7 @@ import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 import net.frontlinesms.plugins.patientview.data.domain.people.CommunityHealthWorker;
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicMessageResponse;
 import net.frontlinesms.plugins.patientview.search.impl.SmsMessageResultSet;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableActionDelegate;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedAdvancedTableController;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.CheckBox;
@@ -18,7 +18,7 @@ import net.frontlinesms.ui.UiGeneratorControllerConstants;
 import net.frontlinesms.ui.handler.message.MessagePanelHandler;
 
 import org.springframework.context.ApplicationContext;
-public class SmsMessagesTab extends TabController implements AdvancedTableActionDelegate, FormFieldDelegate, ThinletUiEventHandler{
+public class SmsMessagesTab extends TabController implements TableActionDelegate, FormFieldDelegate, ThinletUiEventHandler{
 
 	private UiGeneratorController uiController;
 	private SmsMessageResultSet resultSet;

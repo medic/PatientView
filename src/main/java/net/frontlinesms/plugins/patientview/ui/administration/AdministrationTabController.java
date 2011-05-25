@@ -5,21 +5,18 @@ import java.util.ArrayList;
 import net.frontlinesms.plugins.patientview.flags.ui.FlagAdministrationPanelController;
 import net.frontlinesms.plugins.patientview.importer.ui.CsvImporterPanelController;
 import net.frontlinesms.plugins.patientview.responsemapping.ui.FormResponseMappingPanelController;
-import net.frontlinesms.plugins.patientview.security.ui.SecurityPanelController;
+import net.frontlinesms.plugins.patientview.ui.ViewHandler;
 import net.frontlinesms.plugins.patientview.ui.administration.tabs.AttributeAdministrationPanelController;
 import net.frontlinesms.plugins.patientview.ui.administration.tabs.CommunityHealthWorkerAdministrationPanelController;
 import net.frontlinesms.plugins.patientview.ui.administration.tabs.FormAdministrationPanelController;
 import net.frontlinesms.plugins.patientview.ui.administration.tabs.PatientAdministrationPanelController;
 import net.frontlinesms.plugins.patientview.ui.administration.tabs.UserAdministrationPanelController;
-import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
 
-public class AdministrationTabController implements ThinletUiEventHandler{
-		
-	/** the Admin tab */
-	private Object adminTab;
+public class AdministrationTabController extends ViewHandler{
+
 	/** the list of actions that can be performed*/
 	private Object actionList;
 	/** the panel containing the list to the left and the juicy stuff to the right
@@ -31,64 +28,60 @@ public class AdministrationTabController implements ThinletUiEventHandler{
 	private static final String TASK_LIST = "tasklist";
 	private static final String SPLIT_PANEL = "splitpanel";
 	private static final String ACTION_PANEL = "actionPanel";
-		
-	UiGeneratorController uiController;
-	ApplicationContext appCon;
 	
 	private ArrayList<AdministrationTabPanel> panels;
 	
+	private AdministrationTabPanel currentPanel;
+	
 	public AdministrationTabController(UiGeneratorController uiController, ApplicationContext appCon){
-		this.uiController = uiController;
-		this.appCon = appCon;
+		super(uiController,appCon,UI_FILE_MAINTAB);
 		init();
-		
 	}
 	
 	public void init(){
 		//init the main, static components
-		adminTab = uiController.loadComponentFromFile(UI_FILE_MAINTAB, this);
-		actionList = uiController.find(adminTab, TASK_LIST);
-		splitPanel = uiController.find(adminTab, SPLIT_PANEL);
+		actionList = find(TASK_LIST);
+		splitPanel = find(SPLIT_PANEL);
 		//init the different choices for the action list
 		panels = new ArrayList<AdministrationTabPanel>();
-		panels.add(new PatientAdministrationPanelController(uiController,appCon));
-		panels.add(new CommunityHealthWorkerAdministrationPanelController(uiController,appCon));
-		panels.add(new UserAdministrationPanelController(uiController,appCon));
-		panels.add(new FormAdministrationPanelController(uiController,appCon));
+		panels.add(new PatientAdministrationPanelController(ui,appCon));
+		panels.add(new CommunityHealthWorkerAdministrationPanelController(ui,appCon));
+		panels.add(new UserAdministrationPanelController(ui,appCon));
+		panels.add(new FormAdministrationPanelController(ui,appCon));
 		//panels.add(new SecurityPanelController(uiController));
-		panels.add(new AttributeAdministrationPanelController(uiController,appCon));
-		panels.add(new FormResponseMappingPanelController(uiController,appCon));
-		panels.add(new CsvImporterPanelController(uiController,appCon));
-		panels.add(new FlagAdministrationPanelController(uiController, appCon));
+		panels.add(new AttributeAdministrationPanelController(ui,appCon));
+		panels.add(new FormResponseMappingPanelController(ui,appCon));
+		panels.add(new CsvImporterPanelController(ui,appCon));
+		panels.add(new FlagAdministrationPanelController(ui, appCon));
 		//create all the list items
 		for(AdministrationTabPanel panel: panels){
-			Object listItem = uiController.createListItem(panel.getListItemTitle(), panel.getPanel());
-			uiController.setIcon(listItem, panel.getIconPath());
-			uiController.add(actionList,listItem);
+			Object listItem = ui.createListItem(panel.getListItemTitle(), panel);
+			ui.setIcon(listItem, panel.getIconPath());
+			add(actionList,listItem);
 		}
-		setSelection(0);
+		ui.setSelectedIndex(actionList, 0);
+		listSelectionChanged();
 	}
 
 	
 	private Object getActionPanel(){
-		return uiController.find(splitPanel, ACTION_PANEL);
-	}
-	
-	private void setSelection(int index){
-		Object panel = uiController.getAttachedObject(uiController.getItem(actionList, index));
-		uiController.removeAll(getActionPanel());
-		uiController.add(getActionPanel(), panel);
-		uiController.setSelectedIndex(actionList, index);
+		return find(splitPanel, ACTION_PANEL);
 	}
 	
 	public void listSelectionChanged(){
-		Object panel = uiController.getAttachedObject(uiController.getSelectedItem(actionList));
-		uiController.removeAll(getActionPanel());
-		uiController.add(getActionPanel(), panel);
+		AdministrationTabPanel panel = (AdministrationTabPanel) ui.getAttachedObject(ui.getSelectedItem(actionList));
+		if(currentPanel != null){
+			removeSubview(currentPanel);
+		}else{
+			removeAll(getActionPanel());
+		}
+		addSubview(getActionPanel(), panel);
+		currentPanel = panel;
 	}
-	
-	public Object getMainPanel(){
-		return adminTab;
-	}
-	
+
+	@Override
+	public void viewWillAppear() {}
+
+	@Override
+	public void viewWillDisappear() {}
 }

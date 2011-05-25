@@ -5,7 +5,6 @@ import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
-import net.frontlinesms.events.FrontlineEventNotification;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
 import net.frontlinesms.plugins.patientview.data.domain.people.User;
 import net.frontlinesms.plugins.patientview.data.repository.UserDao;
@@ -26,7 +25,7 @@ import org.springframework.context.ApplicationContext;
 public class UserAdministrationPanelController extends PersonAdministrationPanelController<User> {
 
 	/**
-	 * The path to the .xml widget that appears when a user's password is reset.
+	 * The path to the xml widget that appears when a user's password is reset.
 	 */
 	private String XML_PASSWORD_RESET_NOTICE = "/ui/plugins/patientview/administration/security/passwordResetDialog.xml";
 
@@ -52,15 +51,15 @@ public class UserAdministrationPanelController extends PersonAdministrationPanel
 	@Override
 	public void addButtonClicked() {
 		super.addButtonClicked();
-		Object saveButton = uiController.find(currentPersonPanel.getMainPanel(), "savebutton");
-		uiController.setAction(saveButton, "saveNewUser()", null, this);
+		Object saveButton = find(currentPersonPanel.getMainPanel(), "savebutton");
+		ui.setAction(saveButton, "saveNewUser()", null, this);
 	}
 
 	public void saveNewUser() throws GeneralSecurityException {
 		currentPersonPanel.stopEditingWithSave();
 		resetPassword(currentPersonPanel.getPerson());
-		Object titleLabel = uiController.find(resetNotice, "titlelabel");
-		uiController.setText(titleLabel, getI18nString("admin.user.new"));
+		Object titleLabel = find(resetNotice, "titlelabel");
+		ui.setText(titleLabel, getI18nString("admin.user.new"));
 	}
 
 	@Override
@@ -109,28 +108,28 @@ public class UserAdministrationPanelController extends PersonAdministrationPanel
 		String newPass = user.assignTempPassword();
 		userDao.updateUser(user);
 		if (resetNotice == null) {
-			resetNotice = uiController.loadComponentFromFile(XML_PASSWORD_RESET_NOTICE);
+			resetNotice = ui.loadComponentFromFile(XML_PASSWORD_RESET_NOTICE);
 		}
-		Object passwordLabel = uiController.find(resetNotice, "passwordlabel");
-		uiController.setText(passwordLabel, newPass);
-		Object fieldsPanel = uiController.find(getPanel(), FIELDS_PANEL);
-		uiController.add(fieldsPanel, resetNotice);
+		Object passwordLabel = find(resetNotice, "passwordlabel");
+		ui.setText(passwordLabel, newPass);
+		Object fieldsPanel = find(FIELDS_PANEL);
+		add(fieldsPanel, resetNotice);
 	}
 
 	@Override
 	protected PersonPanel<User> getPersonPanelForPerson(Person person) {
-		return new UserPanel(uiController, appCon, (User) person);
+		return new UserPanel(ui, appCon, (User) person);
 	}
 
 	@Override
 	public void editButtonClicked() {
 		currentPersonPanel.switchToEditingPanel();
 		// add the reset password button!
-		Object resetPasswordButton = uiController.createButton(getI18nString("password.reset"));
-		uiController.setAction(resetPasswordButton, "resetPassword()", null,this);
-		uiController.setHAlign(resetPasswordButton, "right");
-		Object buttonsPanel = uiController.find(currentPersonPanel.getMainPanel(), PersonPanel.BUTTON_PANEL);
-		uiController.add(buttonsPanel, resetPasswordButton);
+		Object resetPasswordButton = ui.createButton(getI18nString("password.reset"));
+		ui.setAction(resetPasswordButton, "resetPassword()", null,this);
+		ui.setHAlign(resetPasswordButton, "right");
+		Object buttonsPanel = find(currentPersonPanel.getMainPanel(), PersonPanel.BUTTON_PANEL);
+		add(buttonsPanel, resetPasswordButton);
 	}
 
 	public String getIconPath() {
@@ -151,8 +150,12 @@ public class UserAdministrationPanelController extends PersonAdministrationPanel
 		return User.class;
 	}
 
+	@Override
 	public void viewWillAppear() {}
 
+	@Override
+	public void viewWillDisappear() {}
+	
 	@Override
 	public void removeButtonClicked() {}
 }

@@ -26,7 +26,7 @@ public class PagedAdvancedTableController extends AdvancedTableController implem
 		
 	protected Map<Class,Boolean> refreshButtonStates = Collections.synchronizedMap(new HashMap<Class,Boolean>());
 	
-	public PagedAdvancedTableController(AdvancedTableActionDelegate delegate,UiGeneratorController uiController, Object panel) {
+	public PagedAdvancedTableController(TableActionDelegate delegate,UiGeneratorController uiController, Object panel) {
 			super(delegate, uiController);
 			if(panel == null){
 				mainPanel = uiController.create("panel");

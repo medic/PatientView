@@ -21,7 +21,7 @@ import net.frontlinesms.plugins.patientview.search.simplesearch.SimpleSearchCont
 import net.frontlinesms.plugins.patientview.security.UserSessionManager;
 import net.frontlinesms.plugins.patientview.security.ui.LoginScreen;
 import net.frontlinesms.plugins.patientview.ui.administration.AdministrationTabController;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableActionDelegate;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedAdvancedTableController;
 import net.frontlinesms.plugins.patientview.ui.detailview.DetailViewController;
@@ -30,7 +30,7 @@ import net.frontlinesms.ui.UiGeneratorController;
 
 import org.apache.log4j.Logger;
 
-public class PatientViewThinletTabController implements ThinletUiEventHandler, AdvancedTableActionDelegate {
+public class PatientViewThinletTabController implements ThinletUiEventHandler, TableActionDelegate {
 
 	/** Logging object */
 	private final Logger LOG = FrontlineUtils.getLogger(this.getClass());
@@ -43,7 +43,7 @@ public class PatientViewThinletTabController implements ThinletUiEventHandler, A
 	}
 
 	/** The {@link UiGeneratorController} that shows the tab. */
-	private final UiGeneratorController uiController;
+	private final UiGeneratorController ui;
 
 	// Thinlet UI objects
 	/** the main tab **/
@@ -93,7 +93,7 @@ public class PatientViewThinletTabController implements ThinletUiEventHandler, A
 	 */
 	public PatientViewThinletTabController(PatientViewPluginController pluginController, UiGeneratorController uiController) {
 		this.pluginController = pluginController;
-		this.uiController = uiController;
+		this.ui = uiController;
 		loginScreen = new LoginScreen(uiController, this, pluginController.getApplicationContext());
 		initialInit();
 	}
@@ -107,20 +107,20 @@ public class PatientViewThinletTabController implements ThinletUiEventHandler, A
 	 */
 	public void initialInit() {
 		//load the main tab, and then gut it
-		mainTab = uiController.loadComponentFromFile(XML_MEDIC_TAB, this);
-		uiController.removeAll(mainTab);
+		mainTab = ui.loadComponentFromFile(XML_MEDIC_TAB, this);
+		ui.removeAll(mainTab);
 		UserDao userDao = (UserDao) pluginController.getApplicationContext().getBean("UserDao");
 		if(userDao.getAllUsers().size() ==0){
-			DummyDataGenerator ddg = new DummyDataGenerator(pluginController, uiController);
-			uiController.add(mainTab, ddg.getMainPanel());
+			DummyDataGenerator ddg = new DummyDataGenerator(pluginController, ui);
+			ui.add(mainTab, ddg.getMainPanel());
 		}else{
-			uiController.add(mainTab, loginScreen.getMainPanel());
+			ui.add(mainTab, loginScreen.getMainPanel());
 		}
 	}
 	
 	public void dummyDataDone(){
-		uiController.removeAll(mainTab);
-		uiController.add(mainTab, loginScreen.getMainPanel());
+		ui.removeAll(mainTab);
+		ui.add(mainTab, loginScreen.getMainPanel());
 	}
 
 	/**
@@ -128,11 +128,11 @@ public class PatientViewThinletTabController implements ThinletUiEventHandler, A
 	 */
 	public void logout() {
 		UserSessionManager.getUserSessionManager().logout();
-		uiController.removeAll(mainTab);
+		ui.removeAll(mainTab);
 		loginScreen.reset();
-		uiController.add(mainTab, loginScreen.getMainPanel());
+		ui.add(mainTab, loginScreen.getMainPanel());
 		if (adminTab != null) {
-			uiController.remove(adminTab.getMainPanel());
+			ui.remove(adminTab.getMainPanel());
 		}
 	}
 
@@ -140,23 +140,23 @@ public class PatientViewThinletTabController implements ThinletUiEventHandler, A
 	 * performs the initialization required for the main patient view screen
 	 */
 	public void init() {
-			uiController.removeAll(uiController.find(mainTab,"medic"));
-			uiController.add(uiController.find(mainTab,"medic"),uiController.find(uiController.loadComponentFromFile(XML_MEDIC_TAB, this),"medicTabMainPanel"));
-			detailViewController = new DetailViewController(uiController.find(mainTab,"detailViewPanel"),uiController,pluginController.getApplicationContext());
-			uiController.setInteger(uiController.find(mainTab,"splitPanel"), "divider", (int) (uiController.getWidth() * 0.56));
-			mainPanel =  uiController.find(mainTab,"medicTabMainPanel");
+			ui.removeAll(ui.find(mainTab,"medic"));
+			ui.add(ui.find(mainTab,"medic"),ui.find(ui.loadComponentFromFile(XML_MEDIC_TAB, this),"medicTabMainPanel"));
+			detailViewController = new DetailViewController(ui.find(mainTab,"detailViewPanel"),ui,pluginController.getApplicationContext());
+			ui.setInteger(ui.find(mainTab,"splitPanel"), "divider", (int) (ui.getWidth() * 0.56));
+			mainPanel =  ui.find(mainTab,"medicTabMainPanel");
 			//if user is an admin, add the admin tab
 			if(UserSessionManager.getUserSessionManager().getCurrentUserRole() == Role.ADMIN){
-				adminTab = new AdministrationTabController(uiController,pluginController.getApplicationContext());
-				uiController.add(uiController.getParent(getTab()),adminTab.getMainPanel());
+				adminTab = new AdministrationTabController(ui,pluginController.getApplicationContext());
+				ui.add(ui.getParent(getTab()),adminTab.getMainPanel());
 			}
 			if(UserSessionManager.getUserSessionManager().getCurrentUserRole() == Role.REGISTRAR){
-				uiController.removeAll(mainPanel);
-				RegistrationScreenController rsc = new RegistrationScreenController(uiController,pluginController.getApplicationContext(),this);
-				uiController.add(mainPanel,rsc.getMainPanel());
+				ui.removeAll(mainPanel);
+				RegistrationScreenController rsc = new RegistrationScreenController(ui,pluginController.getApplicationContext(),this);
+				ui.add(mainPanel,rsc.getMainPanel());
 			}else{
 			//initialize the results table
-			tableController = new PagedAdvancedTableController(this, uiController, uiController.find(mainTab, "resultTable"));
+			tableController = new PagedAdvancedTableController(this, ui, ui.find(mainTab, "resultTable"));
 			//create all the column labels
 			String nameLabel = getI18nString(NAME_COLUMN);
 			String bdayLabel = getI18nString(BDAY_COLUMN);
@@ -197,15 +197,15 @@ public class PatientViewThinletTabController implements ThinletUiEventHandler, A
 					 												new String[]{"getFieldLabel","getSubmitterName","getSubjectName","getStringDateSubmitted","getValue"}));
 			
 			tableController.enableRefreshButton(pluginController.getApplicationContext());
-			Object label = uiController.createLabel(getI18nString(LOGGED_IN_MESSAGE) + " " + UserSessionManager.getUserSessionManager().getCurrentUser().getName());
-			Object logoutButton = uiController.createButton(getI18nString("buttons.logout"));
-			uiController.setAction(logoutButton, "logout()", null, this);
-			uiController.setIcon(logoutButton, "/icons/exit.png");
-			uiController.add(uiController.find(tableController.getMainPanel(),"bottomButtonPanel"),logoutButton,0);
-			uiController.add(uiController.find(tableController.getMainPanel(),"bottomButtonPanel"),label,0);
+			Object label = ui.createLabel(getI18nString(LOGGED_IN_MESSAGE) + " " + UserSessionManager.getUserSessionManager().getCurrentUser().getName());
+			Object logoutButton = ui.createButton(getI18nString("buttons.logout"));
+			ui.setAction(logoutButton, "logout()", null, this);
+			ui.setIcon(logoutButton, "/icons/exit.png");
+			ui.add(ui.find(tableController.getMainPanel(),"bottomButtonPanel"),logoutButton,0);
+			ui.add(ui.find(tableController.getMainPanel(),"bottomButtonPanel"),label,0);
 			// intialize the search controllers
-			simpleSearch = new SimpleSearchController(uiController, pluginController.getApplicationContext(), tableController);
-			uiController.add(uiController.find(mainTab, "searchContainer"), simpleSearch.getMainPanel());
+			simpleSearch = new SimpleSearchController(ui, pluginController.getApplicationContext(), tableController);
+			ui.add(ui.find(mainTab, "searchContainer"), simpleSearch.getMainPanel());
 		}
 	}
 

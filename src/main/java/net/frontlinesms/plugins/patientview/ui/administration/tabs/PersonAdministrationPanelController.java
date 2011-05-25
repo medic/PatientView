@@ -11,27 +11,24 @@ import net.frontlinesms.events.FrontlineEventNotification;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
 import net.frontlinesms.plugins.patientview.search.impl.PersonResultSet;
 import net.frontlinesms.plugins.patientview.ui.administration.AdministrationTabPanel;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedAdvancedTableController;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.personpanel.PersonPanel;
-import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
 
-public abstract class PersonAdministrationPanelController<E extends Person> implements AdministrationTabPanel, ThinletUiEventHandler, AdvancedTableActionDelegate, EventObserver{
+public abstract class PersonAdministrationPanelController<E extends Person> extends AdministrationTabPanel implements TableActionDelegate, EventObserver{
 
 	/**
 	 * The main panel of the person administration screen
 	 */
-	private Object mainPanel;
-	protected final UiGeneratorController uiController;
-	protected final ApplicationContext appCon;
 	protected PagedAdvancedTableController advancedTableController;
 	protected PersonResultSet<E> personResultSet;
 	private Object advancedTable;
 	protected PersonPanel<E> currentPersonPanel;
 	
+	/* Thinlet object names*/
 	private static final String RESULTS_TABLE = "resultstable";
 	private static final String ADD_BUTTON = "addbutton";
 	private static final String REMOVE_BUTTON = "removebutton";
@@ -39,6 +36,7 @@ public abstract class PersonAdministrationPanelController<E extends Person> impl
 	protected static final String FIELDS_PANEL = "fieldspanel";
 	private static final String SEARCH_FIELD = "searchbox";
 	
+	/* i18n */
 	private static final String MANAGE= "medic.common.labels.manage";
 	private static final String ADD = "medic.common.labels.add";
 	private static final String REMOVE = "medic.common.labels.remove";
@@ -47,29 +45,29 @@ public abstract class PersonAdministrationPanelController<E extends Person> impl
 	protected static final int ADD_INDEX= 0;
 	protected static final int EDIT_INDEX= 1;
 	protected static final int REMOVE_INDEX= 2;
-	private String UI_FILE_MANAGE_PERSON_PANEL = "/ui/plugins/patientview/administration/personAdministrationPanel.xml";
+	
+	/** Thinlet XML file **/
+	private static String UI_FILE_MANAGE_PERSON_PANEL = "/ui/plugins/patientview/administration/personAdministrationPanel.xml";
 	
 	
 	public PersonAdministrationPanelController(UiGeneratorController uiController, ApplicationContext appCon){
-		this.uiController = uiController;
-		this.appCon = appCon;
+		super(uiController, appCon, UI_FILE_MANAGE_PERSON_PANEL);
 		init();
 	}
 
 	private void init(){
-		mainPanel = uiController.loadComponentFromFile(UI_FILE_MANAGE_PERSON_PANEL,this);
-		advancedTable = uiController.find(mainPanel,RESULTS_TABLE);
-		advancedTableController = new PagedAdvancedTableController(this,uiController,advancedTable);
+		advancedTable = find(RESULTS_TABLE);
+		advancedTableController = new PagedAdvancedTableController(this,ui,advancedTable);
 		putHeader();
 		personResultSet = new PersonResultSet<E>(appCon, getPersonClass());
 		advancedTableController.setResultsSet(personResultSet);
-		uiController.setText(uiController.find(mainPanel,"titleLabel"), getI18nString(MANAGE)+ " "+ getPersonType() + "s");
-		uiController.setText(uiController.find(mainPanel,ADD_BUTTON), getI18nString(ADD)+ " " + getPersonType());
-		uiController.setText(uiController.find(mainPanel,REMOVE_BUTTON), getI18nString(REMOVE)+ " " + getPersonType());
-		uiController.setText(uiController.find(mainPanel,EDIT_BUTTON), getI18nString(EDIT)+ " " + getPersonType());
-		uiController.setIcon(uiController.find(mainPanel,ADD_BUTTON), getIcons()[ADD_INDEX]);
-		uiController.setIcon(uiController.find(mainPanel,EDIT_BUTTON), getIcons()[EDIT_INDEX]);
-		uiController.setIcon(uiController.find(mainPanel,REMOVE_BUTTON), getIcons()[REMOVE_INDEX]);
+		ui.setText(find("titleLabel"), getI18nString(MANAGE)+ " "+ getPersonType() + "s");
+		ui.setText(find(ADD_BUTTON), getI18nString(ADD)+ " " + getPersonType());
+		ui.setText(find(REMOVE_BUTTON), getI18nString(REMOVE)+ " " + getPersonType());
+		ui.setText(find(EDIT_BUTTON), getI18nString(EDIT)+ " " + getPersonType());
+		ui.setIcon(find(ADD_BUTTON), getIcons()[ADD_INDEX]);
+		ui.setIcon(find(EDIT_BUTTON), getIcons()[EDIT_INDEX]);
+		ui.setIcon(find(REMOVE_BUTTON), getIcons()[REMOVE_INDEX]);
 		((EventBus) appCon.getBean("eventBus")).registerObserver(this);
 		advancedTableController.setSelected(0);
 		selectionChanged(advancedTableController.getCurrentlySelectedObject());
@@ -83,9 +81,13 @@ public abstract class PersonAdministrationPanelController<E extends Person> impl
 	
 	public void addButtonClicked(){
 		currentPersonPanel = getPersonPanelForPerson(null);
-		uiController.removeAll(uiController.find(mainPanel,FIELDS_PANEL));
-		uiController.add(uiController.find(mainPanel,FIELDS_PANEL), currentPersonPanel.getMainPanel());
+		removeAll(find(FIELDS_PANEL));
+		add(find(FIELDS_PANEL), currentPersonPanel.getMainPanel());
 	}
+	
+	public abstract void removeButtonClicked();
+	
+	protected abstract String[] getIcons();
 	
 	/**
 	 * should set the header of the advanced table as is required
@@ -109,27 +111,19 @@ public abstract class PersonAdministrationPanelController<E extends Person> impl
 	 * @param person
 	 * @return A person panel of the proper type for the parameter
 	 */
-	protected abstract PersonPanel getPersonPanelForPerson(Person person);
-
-	/**
-	 * Used by the administration tab to get the main panel
-	 * @see net.frontlinesms.plugins.patientview.ui.administration.AdministrationTabPanel#getPanel()
-	 */
-	public Object getPanel() {
-		return mainPanel;
-	}
+	protected abstract PersonPanel<E> getPersonPanelForPerson(Person person);
 
 	/** 
 	 * Called when the selection of the results table is changed
-	 * @see net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableActionDelegate#selectionChanged(java.lang.Object)
+	 * @see net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate#selectionChanged(java.lang.Object)
 	 */
 	public void selectionChanged(Object selectedObject) {
 		if(selectedObject == null){
 			return;
 		}
 		currentPersonPanel = getPersonPanelForPerson((Person) selectedObject);
-		uiController.removeAll(uiController.find(mainPanel,FIELDS_PANEL));
-		uiController.add(uiController.find(mainPanel,FIELDS_PANEL), currentPersonPanel.getMainPanel());
+		ui.removeAll(find(FIELDS_PANEL));
+		ui.add(find(FIELDS_PANEL), currentPersonPanel.getMainPanel());
 		
 	}
 
@@ -145,12 +139,6 @@ public abstract class PersonAdministrationPanelController<E extends Person> impl
 		selectionChanged(advancedTableController.getCurrentlySelectedObject());
 	}
 	
-	/** @see net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableActionDelegate#doubleClickAction(java.lang.Object)*/
-	public void doubleClickAction(Object selectedObject) {/*Do nothing*/}
-	
-	/** @see net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableActionDelegate#resultsChanged() */
-	public void resultsChanged() {/*do nothing*/}
-	
 	/**
 	 * @see net.frontlinesms.plugins.patientview.ui.AdvancedTableDataSource#refreshResults()
 	 */
@@ -163,7 +151,9 @@ public abstract class PersonAdministrationPanelController<E extends Person> impl
 		}
 	}
 	
-	protected abstract String[] getIcons();
+	/** @see net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate#doubleClickAction(java.lang.Object)*/
+	public void doubleClickAction(Object selectedObject) {}
 	
-	public abstract void removeButtonClicked();
+	/** @see net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate#resultsChanged() */
+	public void resultsChanged() {}
 }

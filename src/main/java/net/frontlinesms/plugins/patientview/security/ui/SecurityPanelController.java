@@ -1,25 +1,20 @@
 package net.frontlinesms.plugins.patientview.security.ui;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.*;
 import net.frontlinesms.plugins.patientview.security.Range;
 import net.frontlinesms.plugins.patientview.security.SecurityOptions;
 import net.frontlinesms.plugins.patientview.ui.administration.AdministrationTabPanel;
-import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
 
 /** This is the ui controller for the security settings panel. */
-public class SecurityPanelController implements AdministrationTabPanel,
-		ThinletUiEventHandler {
+public class SecurityPanelController extends AdministrationTabPanel {
 
 	// Files
-	private final String XML_FILE = "/ui/plugins/patientview/administration/security/securitySettingsAdministrationPanel.xml";
+	private static final String XML_FILE = "/ui/plugins/patientview/administration/security/securitySettingsAdministrationPanel.xml";
 
 	// I18N Strings
 	private final String LOCKOUT_DURATION = "admin.security.lockout.duration";
 
 	// UI Components
-	private final UiGeneratorController ui;
-	private final Object mainPanel;
 	private final Object passwordLengthBox;
 	private final Object lettersCheckBox;
 	private final Object numbersCheckBox;
@@ -34,9 +29,8 @@ public class SecurityPanelController implements AdministrationTabPanel,
 	private final SecurityOptions securityOptions;
 
 	public SecurityPanelController(UiGeneratorController uiController) {
-		ui = uiController;
+		super(uiController,null,XML_FILE);
 		securityOptions = SecurityOptions.getInstance();
-		mainPanel = ui.loadComponentFromFile(XML_FILE, this);
 		passwordLengthBox = ui.find(mainPanel, "passwordlengthbox");
 		lettersCheckBox = ui.find(mainPanel, "letterscheckbox");
 		numbersCheckBox = ui.find(mainPanel, "numberscheckbox");
@@ -117,12 +111,7 @@ public class SecurityPanelController implements AdministrationTabPanel,
 	public String getListItemTitle() {
 		return getI18nString("admin.actionlist.manage.security");
 	}
-
-	/* from interface */
-	public Object getPanel() {
-		return mainPanel;
-	}
-
+	
 	/**
 	 * Sets all of the components in the panel to be their default value.
 	 */
@@ -181,6 +170,10 @@ public class SecurityPanelController implements AdministrationTabPanel,
 		return "/icons/big_lock.png";
 	}
 	
+	@Override
 	public void viewWillAppear() {}
+
+	@Override
+	public void viewWillDisappear() {}
 
 }

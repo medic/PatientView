@@ -13,7 +13,6 @@ import net.frontlinesms.plugins.patientview.data.domain.flag.FlagDefinition;
 import net.frontlinesms.plugins.patientview.data.repository.FlagDefinitionDao;
 import net.frontlinesms.plugins.patientview.flags.FlagConditionValidator;
 import net.frontlinesms.plugins.patientview.ui.administration.AdministrationTabPanel;
-import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
@@ -22,14 +21,12 @@ import org.springframework.context.ApplicationContext;
 
 import thinlet.Thinlet;
 
-public class FlagAdministrationPanelController implements AdministrationTabPanel, EventObserver, ThinletUiEventHandler{
+public class FlagAdministrationPanelController extends AdministrationTabPanel implements EventObserver {
 
 	private static final String UI_FILE = "/ui/plugins/patientview/administration/flagAdministrationPanel.xml";
 	
-	private UiGeneratorController uiController;
 	private FlagDefinitionDao flagDefinitionDao;
 	private FlagConditionValidator flagValidator;
-	private Object mainPanel;
 	
 	
 	//text fields
@@ -42,10 +39,9 @@ public class FlagAdministrationPanelController implements AdministrationTabPanel
 	private Object flagList;
 	
 	public FlagAdministrationPanelController(UiGeneratorController uiController, ApplicationContext appCon){
-		this.uiController = uiController;
+		super(uiController,appCon,UI_FILE);
 		((EventBus) appCon.getBean("eventBus")).registerObserver(this);
 		this.flagDefinitionDao = (FlagDefinitionDao) appCon.getBean("FlagDefinitionDao");
-		this.mainPanel = uiController.loadComponentFromFile(UI_FILE,this);
 		this.flagList = uiController.find(mainPanel,"flagList");
 		this.nameField = uiController.find(mainPanel,"nameField");
 		this.descriptionField = uiController.find(mainPanel,"descriptionField");
@@ -62,19 +58,15 @@ public class FlagAdministrationPanelController implements AdministrationTabPanel
 	public String getListItemTitle() {
 		return InternationalisationUtils.getI18nString("medic.flags.admin.tab.title");
 	}
-
-	public Object getPanel() {
-		return mainPanel;
-	}
 	
 	public void addFlag(){
 		FlagDefinition fd = new FlagDefinition("<New Flag>", "", "");
 		flagDefinitionDao.saveFlagDefinition(fd);
-		uiController.setFocus(nameField);
+		ui.setFocus(nameField);
 	}
 	
 	public void removeFlag(){
-		FlagDefinition fd = (FlagDefinition) uiController.getAttachedObject(uiController.getSelectedItem(flagList));
+		FlagDefinition fd = (FlagDefinition) ui.getAttachedObject(ui.getSelectedItem(flagList));
 		if(fd != null){
 			flagDefinitionDao.deleteFlagDefinition(fd);
 			clearFields();
@@ -83,36 +75,36 @@ public class FlagAdministrationPanelController implements AdministrationTabPanel
 	}
 	
 	private void clearFields(){
-		uiController.setText(nameField, "");
-		uiController.setText(descriptionField, "");
-		uiController.setText(conditionArea, "");
+		ui.setText(nameField, "");
+		ui.setText(descriptionField, "");
+		ui.setText(conditionArea, "");
 	}
 	
 	public void flagListSelectionChanged(){
-		flagListSelectionChanged(uiController.getSelectedIndex(flagList));
+		flagListSelectionChanged(ui.getSelectedIndex(flagList));
 	}
 	public void flagListSelectionChanged(int selectedIndex){
-		FlagDefinition df = uiController.getAttachedObject(uiController.getItem(flagList, selectedIndex), FlagDefinition.class);
+		FlagDefinition df = ui.getAttachedObject(ui.getItem(flagList, selectedIndex), FlagDefinition.class);
 		if(df != null){
-			uiController.setEnabledRecursively(uiController.find(mainPanel, "flagSettingsPanel"), true);
-			uiController.setText(nameField, df.getName());
-			uiController.setText(descriptionField, df.getShortDescription());
-			uiController.setText(conditionArea, df.getFlagCondition());
+			ui.setEnabledRecursively(ui.find(mainPanel, "flagSettingsPanel"), true);
+			ui.setText(nameField, df.getName());
+			ui.setText(descriptionField, df.getShortDescription());
+			ui.setText(conditionArea, df.getFlagCondition());
 		}else{
-			uiController.setEnabledRecursively(uiController.find(mainPanel, "flagSettingsPanel"), false);
+			ui.setEnabledRecursively(ui.find(mainPanel, "flagSettingsPanel"), false);
 		}
 	}
 	
 	private void updateFlagList(){
 		List<FlagDefinition> flags = flagDefinitionDao.getAllFlagDefinitions();
-		uiController.removeAll(flagList);
+		ui.removeAll(flagList);
 		for(FlagDefinition fd: flags){
-			Object listItem = uiController.createListItem(fd.getName(), fd);
-			uiController.setString(listItem, "tooltip", fd.getShortDescription());
-			uiController.setIcon(listItem, fd.getIconPath());
-			uiController.add(flagList,listItem);
+			Object listItem = ui.createListItem(fd.getName(), fd);
+			ui.setString(listItem, "tooltip", fd.getShortDescription());
+			ui.setIcon(listItem, fd.getIconPath());
+			ui.add(flagList,listItem);
 		}
-		uiController.setSelectedIndex(flagList, 0);
+		ui.setSelectedIndex(flagList, 0);
 		flagListSelectionChanged(0);
 	}
 
@@ -127,7 +119,7 @@ public class FlagAdministrationPanelController implements AdministrationTabPanel
 	//thinlet change methods
 	public void nameChanged(String text){
 		getCurrentlySelectedFlagDefinition().setName(text);
-		uiController.setText(uiController.getSelectedItem(flagList), text);
+		ui.setText(ui.getSelectedItem(flagList), text);
 		flagDefinitionDao.updateFlagDefinition(getCurrentlySelectedFlagDefinition());
 	}
 	
@@ -140,22 +132,27 @@ public class FlagAdministrationPanelController implements AdministrationTabPanel
 		try{
 			flagValidator.validate(text);
 		}catch(ValidationFailure e){
-			uiController.setColor(conditionMessageLabel, Thinlet.FOREGROUND, new Color(184,0,0));
-			uiController.setIcon(conditionMessageLabel, "/icons/cross.png");
-			uiController.setText(conditionMessageLabel,e.getMessage());
+			ui.setColor(conditionMessageLabel, Thinlet.FOREGROUND, new Color(184,0,0));
+			ui.setIcon(conditionMessageLabel, "/icons/cross.png");
+			ui.setText(conditionMessageLabel,e.getMessage());
 			return;
 		}
-		uiController.setColor(conditionMessageLabel, Thinlet.FOREGROUND, new Color(0,168,0));
-		uiController.setIcon(conditionMessageLabel, "/icons/tick.png");
-		uiController.setText(conditionMessageLabel,"Condition is valid");
+		ui.setColor(conditionMessageLabel, Thinlet.FOREGROUND, new Color(0,168,0));
+		ui.setIcon(conditionMessageLabel, "/icons/tick.png");
+		ui.setText(conditionMessageLabel,"Condition is valid");
 		getCurrentlySelectedFlagDefinition().setFlagCondition(text);
 		flagDefinitionDao.updateFlagDefinition(getCurrentlySelectedFlagDefinition());
 	}
 	
 	private FlagDefinition getCurrentlySelectedFlagDefinition(){
-		return uiController.getAttachedObject(uiController.getSelectedItem(flagList),FlagDefinition.class);
+		return ui.getAttachedObject(ui.getSelectedItem(flagList),FlagDefinition.class);
 	}
 	
+	@Override
 	public void viewWillAppear() {}
 
+	@Override
+	public void viewWillDisappear() {}
+	
+	
 }

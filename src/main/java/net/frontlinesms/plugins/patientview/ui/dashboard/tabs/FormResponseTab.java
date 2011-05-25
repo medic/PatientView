@@ -11,7 +11,7 @@ import net.frontlinesms.plugins.patientview.data.domain.people.Person;
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormResponse;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;
 import net.frontlinesms.plugins.patientview.search.impl.FormResponseResultSet;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableActionDelegate;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedAdvancedTableController;
 import net.frontlinesms.plugins.patientview.ui.detailview.panels.FormResponseDetailViewPanelController;
@@ -21,7 +21,7 @@ import net.frontlinesms.plugins.patientview.ui.thinletformfields.ThinletFormFiel
 import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
-public class FormResponseTab<P extends Person> extends TabController implements AdvancedTableActionDelegate, FormFieldDelegate {
+public class FormResponseTab<P extends Person> extends TabController implements TableActionDelegate, FormFieldDelegate {
 
 	protected PagedAdvancedTableController formResponseTable;
 	protected FormResponseDetailViewPanelController formResponsePanel;

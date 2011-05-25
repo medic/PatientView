@@ -1,13 +1,8 @@
 package net.frontlinesms.plugins.patientview.ui.administration.tabs;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
-
 import java.util.Collection;
 
 import net.frontlinesms.data.events.DatabaseEntityNotification;
-import net.frontlinesms.data.events.EntityDeletedNotification;
-import net.frontlinesms.data.events.EntitySavedNotification;
-import net.frontlinesms.data.events.EntityUpdatedNotification;
 import net.frontlinesms.events.EventBus;
 import net.frontlinesms.events.EventObserver;
 import net.frontlinesms.events.FrontlineEventNotification;
@@ -19,7 +14,6 @@ import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormFieldDao;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormResponseDao;
 import net.frontlinesms.plugins.patientview.ui.administration.AdministrationTabPanel;
-import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
@@ -27,33 +21,29 @@ import org.hibernate.Hibernate;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.context.ApplicationContext;
 
-public class FormAdministrationPanelController implements AdministrationTabPanel, ThinletUiEventHandler, EventObserver{
+public class FormAdministrationPanelController extends AdministrationTabPanel implements EventObserver{
 
 	private EventBus eventNotifier;
 	
+	/* i18n */
 	private static final String FORM_PANEL_TITLE = "admin.tabs.form.panel.title";
 	private static final String FIELDS_ON_FORM_PREFIX = "admin.forms.fields.on.form.prefix";
 	private static final String FORM_ALREADY_RESPONDED_TO_DIALG = "admin.forms.form.already.responded.to.dialog";
 	
 	private static final String FORM_PANEL_XML = "/ui/plugins/patientview/administration/formAdministrationPanel.xml";
-
-	private UiGeneratorController uiController;
-	private ApplicationContext appCon;
 	
-	//Thinlet objects
+	/* Thinlet objects */
 	/**The main Thinlet container for this panel */
 	private Object mainPanel;
 	/**The list second from the left, with all patient view forms in it */
 	private Object patientViewFormList;
 	/** The list farthest to the right, with the fields of the currently selected medic form in it*/
 	private Object fieldList;
-	/** The panel that displays information about the field that is selected in the field list*/
-	private Object fieldInfoPanel;
 	
 	/** The combo box that holds the choices for the form field -> patient field mapping*/
 	private Object mappingComboBox;
 	
-	//Daos
+	/* Daos */
 	MedicFormDao patientViewFormDao;
 	MedicFormFieldDao patientViewFieldDao;
 	
@@ -62,17 +52,14 @@ public class FormAdministrationPanelController implements AdministrationTabPanel
 	}
 
 	public FormAdministrationPanelController(UiGeneratorController uiController, ApplicationContext appCon){
-		this.uiController = uiController;
-		this.appCon = appCon;
+		super(uiController, appCon, FORM_PANEL_XML);
 		init();
 	}
 	
 	private void init(){
-		mainPanel = uiController.loadComponentFromFile(FORM_PANEL_XML, this);
-		patientViewFormList = uiController.find(mainPanel,"patientViewFormList");
-		fieldList = uiController.find(mainPanel,"fieldList");
-		fieldInfoPanel = uiController.find(mainPanel,"fieldInfoPanel");
-		mappingComboBox = uiController.find(mainPanel,"mappingComboBox");
+		patientViewFormList = find("patientViewFormList");
+		fieldList = find("fieldList");
+		mappingComboBox = find("mappingComboBox");
 		//initialize the daos
 		patientViewFormDao = (MedicFormDao) appCon.getBean("MedicFormDao");
 		patientViewFieldDao = (MedicFormFieldDao) appCon.getBean("MedicFormFieldDao");
@@ -106,12 +93,12 @@ public class FormAdministrationPanelController implements AdministrationTabPanel
 	 */
 	private void populatePatientViewFormList(){
 		Collection<MedicForm> pvForms = patientViewFormDao.getAllMedicForms();
-		uiController.removeAll(patientViewFormList);
+		removeAll(patientViewFormList);
 		for(MedicForm f: pvForms){
-			Object item = uiController.createListItem(f.getName(), f);
-			uiController.add(patientViewFormList,item);
+			Object item = ui.createListItem(f.getName(), f);
+			add(patientViewFormList,item);
 		}
-		uiController.setSelectedIndex(patientViewFormList, 0);
+		ui.setSelectedIndex(patientViewFormList, 0);
 		patientViewFormListSelectionChanged();
 	}
 	
@@ -121,7 +108,7 @@ public class FormAdministrationPanelController implements AdministrationTabPanel
 	 * and changes the fields that are displayed in the field list
 	 */
 	public void patientViewFormListSelectionChanged(){
-		MedicForm selectedForm = (MedicForm) uiController.getAttachedObject(uiController.getSelectedItem(patientViewFormList));
+		MedicForm selectedForm = (MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList));
 		if(selectedForm != null)
 			populateFieldList(selectedForm);
 	}
@@ -130,7 +117,7 @@ public class FormAdministrationPanelController implements AdministrationTabPanel
 	 * Called when the field list selection is changed.
 	 */
 	public void fieldListSelectionChanged(){
-		MedicFormField field = (MedicFormField) uiController.getAttachedObject(uiController.getSelectedItem(fieldList));
+		MedicFormField field = (MedicFormField) ui.getAttachedObject(ui.getSelectedItem(fieldList));
 		populateFieldMappingPanel(field);
 	}
 	
@@ -140,16 +127,16 @@ public class FormAdministrationPanelController implements AdministrationTabPanel
 	 * @param form
 	 */
 	private void populateFieldList(MedicForm form){
-		uiController.setText(uiController.find(mainPanel,"fieldListTitle"),getI18nString(FIELDS_ON_FORM_PREFIX)+ " \"" + form.getName()+"\"");
-		uiController.removeAll(fieldList);
+		ui.setText(find("fieldListTitle"), getI18nString(FIELDS_ON_FORM_PREFIX)+ " \"" + form.getName()+"\"");
+		removeAll(fieldList);
 		for(MedicFormField mff: patientViewFieldDao.getFieldsOnForm(form)){
-			Object item = uiController.createListItem(mff.getLabel(), mff);
+			Object item = ui.createListItem(mff.getLabel(), mff);
 			if(mff.getMapping() != null){
-				uiController.setIcon(item, mff.getMapping().getIconPath());
+				ui.setIcon(item, mff.getMapping().getIconPath());
 			}
-			uiController.add(fieldList,item);
+			add(fieldList,item);
 		}
-		uiController.setSelectedIndex(fieldList, 0);
+		ui.setSelectedIndex(fieldList, 0);
 		fieldListSelectionChanged();
 	}
 	
@@ -159,26 +146,26 @@ public class FormAdministrationPanelController implements AdministrationTabPanel
 	 * @param field
 	 */
 	private void populateFieldMappingPanel(MedicFormField field){
-		uiController.removeAll(mappingComboBox);
-		uiController.setAction(mappingComboBox, "mappingComboBoxSelectionChanged()", null, this);
-		uiController.add(mappingComboBox,uiController.createComboboxChoice(getI18nString("common.blank"),null));
-		uiController.setSelectedIndex(mappingComboBox,0);
-		uiController.setText(mappingComboBox, getI18nString("common.blank"));
+		removeAll(mappingComboBox);
+		ui.setAction(mappingComboBox, "mappingComboBoxSelectionChanged()", null, this);
+		add(mappingComboBox,ui.createComboboxChoice(getI18nString("common.blank"),null));
+		ui.setSelectedIndex(mappingComboBox,0);
+		ui.setText(mappingComboBox, getI18nString("common.blank"));
 		for(int i = 0; i < PatientFieldMapping.values().length; i++){
 			PatientFieldMapping m = PatientFieldMapping.values()[i];
-			Object choice = uiController.createComboboxChoice(m.toString(), m);
-			uiController.setIcon(choice, m.getIconPath());
-			uiController.add(mappingComboBox,choice);
+			Object choice = ui.createComboboxChoice(m.toString(), m);
+			ui.setIcon(choice, m.getIconPath());
+			add(mappingComboBox,choice);
 			if(field.getMapping() == m){
-				uiController.setSelectedIndex(mappingComboBox, i+1);
-				uiController.setText(mappingComboBox, m.toString());
+				ui.setSelectedIndex(mappingComboBox, i+1);
+				ui.setText(mappingComboBox, m.toString());
 			}
 			
 		}
 		if(field.getMapping() != null){
-			uiController.setIcon(mappingComboBox, field.getMapping().getIconPath());
+			ui.setIcon(mappingComboBox, field.getMapping().getIconPath());
 		}else{
-			uiController.setIcon(mappingComboBox, "");
+			ui.setIcon(mappingComboBox, "");
 		}
 	}
 	
@@ -186,15 +173,15 @@ public class FormAdministrationPanelController implements AdministrationTabPanel
 	 * Called when the mapping combo box selection is changed. It saves the new mapping selection
 	 */
 	public void mappingComboBoxSelectionChanged(){
-		PatientFieldMapping mapping = (PatientFieldMapping) uiController.getAttachedObject(uiController.getSelectedItem(mappingComboBox));
-		MedicFormField field = (MedicFormField) uiController.getAttachedObject(uiController.getSelectedItem(fieldList));
+		PatientFieldMapping mapping = (PatientFieldMapping) ui.getAttachedObject(ui.getSelectedItem(mappingComboBox));
+		MedicFormField field = (MedicFormField) ui.getAttachedObject(ui.getSelectedItem(fieldList));
 		field.setMapping(mapping);
 		patientViewFieldDao.updateField(field);
-		Object item = uiController.getSelectedItem(fieldList);
+		Object item = ui.getSelectedItem(fieldList);
 		if(field.getMapping() != null){
-			uiController.setIcon(item, field.getMapping().getIconPath());
+			ui.setIcon(item, field.getMapping().getIconPath());
 		}else{
-			uiController.setIcon(item, "");
+			ui.setIcon(item, "");
 		}
 	}
 
@@ -203,13 +190,13 @@ public class FormAdministrationPanelController implements AdministrationTabPanel
 	}
 	
 	public void removeButtonClicked() {
-		MedicForm mf = (MedicForm) uiController.getAttachedObject(uiController .getSelectedItem(patientViewFormList));
+		MedicForm mf = (MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList));
 		if (mf != null) {
 			if (((MedicFormResponseDao) appCon.getBean("MedicFormResponseDao")) .getFormResponsesForForm(mf).size() == 0) {
 				patientViewFormDao.deleteMedicForm(mf);
 				populatePatientViewFormList();
 			} else {
-				uiController.alert(getI18nString(FORM_ALREADY_RESPONDED_TO_DIALG));
+				ui.alert(getI18nString(FORM_ALREADY_RESPONDED_TO_DIALG));
 			}
 		}
 	}
@@ -228,8 +215,12 @@ public class FormAdministrationPanelController implements AdministrationTabPanel
 		return "/icons/big_form.png";
 	}
 	
+	@Override
 	public void viewWillAppear() {
 		populatePatientViewFormList();
 	}
+
+	@Override
+	public void viewWillDisappear() {}
 
 }

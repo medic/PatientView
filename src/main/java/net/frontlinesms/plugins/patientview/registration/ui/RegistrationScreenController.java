@@ -8,7 +8,7 @@ import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.repository.PatientDao;
 import net.frontlinesms.plugins.patientview.security.UserSessionManager;
 import net.frontlinesms.plugins.patientview.ui.PatientViewThinletTabController;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableActionDelegate;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
 import net.frontlinesms.plugins.patientview.ui.personpanel.PatientPanel;
@@ -19,7 +19,7 @@ import net.frontlinesms.ui.UiGeneratorController;
 import org.springframework.context.ApplicationContext;
 
 import thinlet.Thinlet;
-public class RegistrationScreenController implements ThinletUiEventHandler, AdvancedTableActionDelegate, PersonPanelDelegate {
+public class RegistrationScreenController implements ThinletUiEventHandler, TableActionDelegate, PersonPanelDelegate {
 
 	private UiGeneratorController uiController;
 	private ApplicationContext appCon;

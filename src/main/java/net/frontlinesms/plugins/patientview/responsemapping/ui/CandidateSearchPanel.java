@@ -14,7 +14,7 @@ import net.frontlinesms.plugins.patientview.data.repository.MedicFormResponseDao
 import net.frontlinesms.plugins.patientview.data.repository.PatientDao;
 import net.frontlinesms.plugins.patientview.responsemapping.Candidate;
 import net.frontlinesms.plugins.patientview.responsemapping.IncomingFormMatcher;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableActionDelegate;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
 import net.frontlinesms.plugins.patientview.ui.personpanel.PatientPanel;
@@ -27,7 +27,7 @@ import org.springframework.context.ApplicationContext;
  * This is the panel in the form mapping screen that allows you to search through
  * candidates and patients to map forms to
  */
-public class CandidateSearchPanel implements ThinletUiEventHandler, AdvancedTableActionDelegate{
+public class CandidateSearchPanel implements ThinletUiEventHandler, TableActionDelegate{
 
 	private UiGeneratorController uiController;
 	private ApplicationContext appCon;

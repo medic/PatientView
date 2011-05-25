@@ -31,7 +31,7 @@ public class AdvancedTableController implements ThinletUiEventHandler{
 	/** the headers for the table **/
 	protected Map<Class,Object> headers;
 		
-	protected AdvancedTableActionDelegate delegate;
+	protected TableActionDelegate delegate;
 	
 	/** the message displayed when there are no results**/
 	protected String noResultsMessage;
@@ -74,7 +74,7 @@ public class AdvancedTableController implements ThinletUiEventHandler{
 	 * @param uiController
 	 * @param useTableMethod
 	 */
-	public AdvancedTableController(AdvancedTableActionDelegate delegate, UiGeneratorController uiController){
+	public AdvancedTableController(TableActionDelegate delegate, UiGeneratorController uiController){
 		this.uiController = uiController;
 		this.delegate = delegate;
 		table = uiController.create("table");
@@ -94,7 +94,7 @@ public class AdvancedTableController implements ThinletUiEventHandler{
 	 * @param uiController
 	 * @param table The table you want to control
 	 */
-	public AdvancedTableController(AdvancedTableActionDelegate delegate, UiGeneratorController uiController, Object table){
+	public AdvancedTableController(TableActionDelegate delegate, UiGeneratorController uiController, Object table){
 		this.uiController = uiController;
 		this.delegate = delegate;
 		this.table = table;

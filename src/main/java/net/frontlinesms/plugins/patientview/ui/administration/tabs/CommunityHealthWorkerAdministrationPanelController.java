@@ -5,7 +5,6 @@ import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.frontlinesms.events.FrontlineEventNotification;
 import net.frontlinesms.plugins.patientview.data.domain.people.CommunityHealthWorker;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
 import net.frontlinesms.plugins.patientview.data.repository.CommunityHealthWorkerDao;
@@ -47,15 +46,17 @@ public class CommunityHealthWorkerAdministrationPanelController extends PersonAd
 				 new String[]{"getName", "getStringBirthdate", "getStringID",}));	
 	}
 
+	@Override
 	public String getListItemTitle() {
 		return getI18nString("admin.actionlist.manage.chws");
 	}
 
 	@Override
-	protected PersonPanel getPersonPanelForPerson(Person person) {
-		return new CommunityHealthWorkerPanel(uiController,appCon,(CommunityHealthWorker) person);
+	protected PersonPanel<CommunityHealthWorker> getPersonPanelForPerson(Person person) {
+		return new CommunityHealthWorkerPanel(ui,appCon,(CommunityHealthWorker) person);
 	}
 
+	@Override
 	public String getIconPath() {
 		return "/icons/big_users.png";
 	}
@@ -73,12 +74,13 @@ public class CommunityHealthWorkerAdministrationPanelController extends PersonAd
 	protected Class<CommunityHealthWorker> getPersonClass() {
 		return CommunityHealthWorker.class;
 	}
+	
+	@Override
 	public void viewWillAppear() {}
 
 	@Override
-	public void removeButtonClicked() {
-		// TODO Auto-generated method stub
-		
-	}
-
+	public void viewWillDisappear() {}
+	
+	@Override
+	public void removeButtonClicked() {	}
 }

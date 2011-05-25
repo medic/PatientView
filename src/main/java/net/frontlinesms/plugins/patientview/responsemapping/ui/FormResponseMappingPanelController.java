@@ -1,7 +1,5 @@
 package net.frontlinesms.plugins.patientview.responsemapping.ui;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
-
 import java.util.Date;
 import java.util.List;
 
@@ -14,24 +12,22 @@ import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormRespon
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;
 import net.frontlinesms.plugins.patientview.search.impl.FormMappingResultSet;
 import net.frontlinesms.plugins.patientview.ui.administration.AdministrationTabPanel;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedAdvancedTableController;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.DateField;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.FormFieldDelegate;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.ThinletFormField;
-import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
-public class FormResponseMappingPanelController implements AdministrationTabPanel, ThinletUiEventHandler, AdvancedTableActionDelegate, EventObserver, FormFieldDelegate{
 
-	private UiGeneratorController uiController;
-	private ApplicationContext appCon;
-	
-	private Object mainPanel;
+import thinlet.Thinlet;
+public class FormResponseMappingPanelController extends AdministrationTabPanel implements TableActionDelegate, EventObserver, FormFieldDelegate{
+
 	private Object actionPanel;
 	private Object comboBox;
+	
 	private PagedAdvancedTableController tableController;
 	private FormMappingResultSet resultSet;
 	private MedicFormResponse currentResponse;
@@ -44,17 +40,15 @@ public class FormResponseMappingPanelController implements AdministrationTabPane
 	private static final String UI_FILE ="/ui/plugins/patientview/administration/responsemapping/formResponseMappingAdministrationPanel.xml";
 		
 	public FormResponseMappingPanelController(UiGeneratorController uiController, ApplicationContext appCon) {
-		this.uiController = uiController;
-		this.appCon = appCon;
+		super(uiController,appCon,UI_FILE);
 		((EventBus) appCon.getBean("eventBus")).registerObserver(this);
 		init();
 	}
 
 	private void init(){
-		this.mainPanel = uiController.loadComponentFromFile(UI_FILE,this);
-		actionPanel = uiController.find(mainPanel,"actionPanel");
+		actionPanel = find("actionPanel");
 		//set up the table
-		tableController = new PagedAdvancedTableController(this,uiController, uiController.find(mainPanel,"tablePanel"));
+		tableController = new PagedAdvancedTableController(this,ui, find("tablePanel"));
 		tableController.putHeader(MedicFormResponse.class, HeaderColumn.createColumnList(new String[]{getI18nString("medic.common.labels.form.name"),getI18nString("medic.common.labels.date.submitted"),getI18nString("medic.common.labels.submitter")}, 
 				 																		 new String[]{"/icons/form.png","/icons/date_sent.png","/icons/user_sender.png"},
 				 																		 new String[]{"getFormName","getStringDateSubmitted","getSubmitterName"}));
@@ -65,25 +59,24 @@ public class FormResponseMappingPanelController implements AdministrationTabPane
 		resultSet.setSearchingMapped(false);
 		tableController.setResultsSet(resultSet);
 		//set up the control panel
-		DateField dateField = new DateField(uiController,getI18nString("medic.common.labels.date.submitted"),this);
+		DateField dateField = new DateField(ui,getI18nString("medic.common.labels.date.submitted"),this);
 		dateField.setLabelIcon("/icons/date.png");
-		uiController.add(uiController.find(mainPanel,"controlPanel"),dateField.getThinletPanel());
-		//uiController.add(uiController.find(mainPanel,"controlPanel"),uiController.createLabel("   "));
+		add(find("controlPanel"),dateField.getThinletPanel());
 		//create the form combo box
 		List<MedicForm> forms = ((MedicFormDao) appCon.getBean("MedicFormDao")).getAllMedicForms();
-		comboBox = uiController.create("combobox");
-		uiController.add(comboBox,uiController.createComboboxChoice(getI18nString("medic.common.all.forms"), null));
+		comboBox = Thinlet.create("combobox");
+		add(comboBox,ui.createComboboxChoice(getI18nString("medic.common.all.forms"), null));
 		for(MedicForm mf: forms){
-			uiController.add(comboBox,uiController.createComboboxChoice(mf.getName(), mf));
+			add(comboBox,ui.createComboboxChoice(mf.getName(), mf));
 		}
-		uiController.setAction(comboBox, "formChanged(this.selected)", null, this);
-		uiController.setWeight(comboBox,1,0);
-		Object label = uiController.createLabel(getI18nString("medic.common.form"));
-		uiController.setIcon(label, "/icons/form.png");
-		uiController.add(uiController.find(mainPanel,"controlPanel"),label);
-		uiController.add(uiController.find(mainPanel,"controlPanel"),comboBox);
+		ui.setAction(comboBox, "formChanged(this.selected)", null, this);
+		ui.setWeight(comboBox,1,0);
+		Object label = ui.createLabel(getI18nString("medic.common.form"));
+		ui.setIcon(label, "/icons/form.png");
+		add(find("controlPanel"),label);
+		add(find("controlPanel"),comboBox);
 		dateField.setRawResponse(new Date());
-		uiController.setText(comboBox, getI18nString("medic.common.all.forms"));
+		ui.setText(comboBox, getI18nString("medic.common.all.forms"));
 		tableController.updateTable();
 	}
 	
@@ -91,18 +84,14 @@ public class FormResponseMappingPanelController implements AdministrationTabPane
 		return getI18nString("admin.actionlist.map.form.responses");
 	}
 
-	public Object getPanel() {
-		return mainPanel;
-	}
-
 	public void selectionChanged(Object selectedObject) {
-		uiController.removeAll(actionPanel);
+		ui.removeAll(actionPanel);
 		if(selectedObject == null){
 			return;
 		}
 		currentResponse = (MedicFormResponse) selectedObject;
-		uiController.add(actionPanel,new FlexibleFormResponsePanel(uiController, appCon,currentResponse).getMainPanel());
-		uiController.add(actionPanel, new CandidateSearchPanel(uiController,appCon,currentResponse,this).getMainPanel());
+		add(actionPanel,new FlexibleFormResponsePanel(ui, appCon,currentResponse).getMainPanel());
+		add(actionPanel, new CandidateSearchPanel(ui,appCon,currentResponse,this).getMainPanel());
 	}
 	
 	public void toggleChanged(Object button){
@@ -113,9 +102,9 @@ public class FormResponseMappingPanelController implements AdministrationTabPane
 			unmappedPageNumber = resultSet.getCurrentPage();
 		}
 		//switch the mapping type
-		if(uiController.getName(button).equals("mappedToggle")){
+		if(ui.getName(button).equals("mappedToggle")){
 			resultSet.setSearchingMapped(true);
-		}else if(uiController.getName(button).equals("unmappedToggle")){
+		}else if(ui.getName(button).equals("unmappedToggle")){
 			resultSet.setSearchingMapped(false);
 		}
 		if(resultSet.isSearchingMapped()){
@@ -146,7 +135,7 @@ public class FormResponseMappingPanelController implements AdministrationTabPane
 	 */
 	public void currentResponseMappingChanged(){
 		//if we're in the 'unmapped' panel and the 
-		if(uiController.isSelected(uiController.find(mainPanel,"unmappedToggle")) && currentResponse.getSubject() != null){
+		if(ui.isSelected(find("unmappedToggle")) && currentResponse.getSubject() != null){
 			tableController.updateTable();
 			tableController.setSelected(0);
 			if(tableController.getResultsSet().getTotalResults() == 0){
@@ -175,10 +164,15 @@ public class FormResponseMappingPanelController implements AdministrationTabPane
 	 * @param selectedIndex
 	 */
 	public void formChanged(int selectedIndex){
-		MedicForm mf = (MedicForm) uiController.getAttachedObject(uiController.getItem(comboBox, selectedIndex));
+		MedicForm mf = (MedicForm) ui.getAttachedObject(ui.getItem(comboBox, selectedIndex));
 		resultSet.setForm(mf);
 		tableController.updateTable();
 	}
 	
+	@Override
 	public void viewWillAppear() {}
+
+	@Override
+	public void viewWillDisappear() {}
+	
 }

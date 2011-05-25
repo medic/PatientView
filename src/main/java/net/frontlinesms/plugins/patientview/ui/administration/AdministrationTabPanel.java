@@ -1,19 +1,24 @@
 package net.frontlinesms.plugins.patientview.ui.administration;
 
-public interface AdministrationTabPanel {
+import org.springframework.context.ApplicationContext;
+
+import net.frontlinesms.plugins.patientview.ui.ViewHandler;
+import net.frontlinesms.ui.UiGeneratorController;
+
+public abstract class AdministrationTabPanel extends ViewHandler{
+
+	public AdministrationTabPanel(UiGeneratorController ui, ApplicationContext appCon) {
+		super(ui, appCon);
+	}
+	
+	public AdministrationTabPanel(UiGeneratorController ui, ApplicationContext appCon,String xmlPath) {
+		super(ui, appCon, xmlPath);
+	}
 
 	/**
 	 * @return The desired title for the panel's list item in the action list
 	 */
-	public String getListItemTitle();
+	public abstract String getListItemTitle();
 	
-	/**
-	 * Should return the main Thinlet panel of the administration tab item
-	 * @return the thinlet panel
-	 */
-	public Object getPanel();
-	
-	public String getIconPath();
-	
-	public void viewWillAppear();
+	public abstract String getIconPath();
 }

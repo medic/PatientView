@@ -14,7 +14,7 @@ import net.frontlinesms.plugins.patientview.data.repository.MedicFormFieldDao;
 import net.frontlinesms.plugins.patientview.data.repository.PersonAttributeDao;
 import net.frontlinesms.plugins.patientview.data.repository.PersonAttributeResponseDao;
 import net.frontlinesms.plugins.patientview.ui.administration.AdministrationTabPanel;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableActionDelegate;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
 import net.frontlinesms.ui.ThinletUiEventHandler;
@@ -22,65 +22,61 @@ import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
 
-public class AttributeAdministrationPanelController implements AdministrationTabPanel, ThinletUiEventHandler, AdvancedTableActionDelegate {
-
+public class AttributeAdministrationPanelController extends AdministrationTabPanel implements ThinletUiEventHandler, TableActionDelegate {
 	
 	private static final String PANEL_TITLE = "admin.attributes.panel.title";
 	
 	public String getListItemTitle() {
 		return getI18nString(PANEL_TITLE);
 	}
-
-	public Object getPanel() {
-		return mainPanel;
+	
+	@Override
+	public String getIconPath() {
+		return "/icons/patient_data_card.png";
 	}
 
-	/**boolean to signify whether we are editing the screen for patients (true) or chws(false) **/
+	/**
+	 * Boolean to signify whether we are 
+	 * editing the screen for patients (true) 
+	 * or chws (false) 
+	 **/
 	private boolean currentlyEditingPatient;
 	
-	/**Thinlet Objects**/
+	/*Thinlet Objects*/
 	private Object fieldSearchTable;
 	private Object fieldSearchBar;
 	private Object labelTextField;
 	private Object currentItemTable;
 	private Object dataTypeComboBox;
 	
-	private Object mainPanel;
-	
+	/*Table Controllers*/
 	private AdvancedTableController fieldSearchTableController;
 	private AdvancedTableController currentItemTableController;
 	
 	
-	//DAOs
+	/*DAOs*/
 	private PersonAttributeDao attributeDao;
 	private PersonAttributeResponseDao attributeResponseDao;
 	private MedicFormFieldDao formFieldDao;
 	
-	//resource files containing ui components
+	/*resource files containing ui components*/
 	private static final String UI_FILE_AAG_VIEW_EDITOR = "/ui/plugins/patientview/administration/attributeAdministrationPanel.xml";
 	
-	/** the Ui Controller**/
-	private UiGeneratorController uiController;
-	
-	//i18n
+	/*i18n*/
 	private static final String LABEL_COLUMN = "medic.common.labels.label";
 	private static final String PARENT_FORM_COLUMN = "medic.common.labels.parent.form";
 	private static final String DATA_TYPE_COLUMN = "datatype.datatype";
-
 	private static final String ALREADY_RESPONDED_TO_DIALOG = "admin.attributes.responses.already.present.dialog";
-
 	private static final String ATTRIBUTE_INFO_MISSING_DIALOG = "admin.attributes.fields.not.filled.out.dialog";
 	
 	public AttributeAdministrationPanelController(UiGeneratorController uiController, ApplicationContext appContext){
-		this.uiController = uiController;
-		//load resources from files
-		mainPanel = uiController.loadComponentFromFile(UI_FILE_AAG_VIEW_EDITOR, this);
+		super(uiController, appContext,UI_FILE_AAG_VIEW_EDITOR);
 		//initialize all the uiController components
-		fieldSearchTable = uiController.find(mainPanel,"fieldSearchTable");
-		fieldSearchBar = uiController.find(mainPanel,"fieldSearchBar");
-		labelTextField = uiController.find(mainPanel,"labelTextField");
-		currentItemTable = uiController.find(mainPanel,"currentItemList");
-		dataTypeComboBox = uiController.find(mainPanel,"dataTypeComboBox");
+		fieldSearchTable = find("fieldSearchTable");
+		fieldSearchBar = find("fieldSearchBar");
+		labelTextField = find("labelTextField");
+		currentItemTable = find("currentItemList");
+		dataTypeComboBox = find("dataTypeComboBox");
 		
 		//initialize the advanced tables
 		fieldSearchTableController = new AdvancedTableController(this,uiController,fieldSearchTable);
@@ -95,7 +91,7 @@ public class AttributeAdministrationPanelController implements AdministrationTab
 														  new String[]{"getLabel","getDataTypeName"}));
 		currentItemTableController.setNoResultsMessage(getI18nString("admin.attributes.advancedtable.no.results.message"));
 		//initialize the combo box choices
-		uiController.removeAll(dataTypeComboBox);
+		removeAll(dataTypeComboBox);
 		for(DataType d: DataType.values()){
 			if(!(d.equals(DataType.CURRENCY_FIELD) || 
 				d.equals(DataType.EMAIL_FIELD) || 
@@ -103,18 +99,18 @@ public class AttributeAdministrationPanelController implements AdministrationTab
 				d.equals(DataType.WRAPPED_TEXT) || 
 				d.equals(DataType.TRUNCATED_TEXT))){
 			Object choice = uiController.createComboboxChoice(d.toString(), d);
-			uiController.setIcon(choice, d.getIconPath());
-			uiController.add(dataTypeComboBox,choice);
+			ui.setIcon(choice, d.getIconPath());
+			add(dataTypeComboBox,choice);
 			}
 		}
 		//initialize the DAOs
-		attributeResponseDao = (PersonAttributeResponseDao) appContext.getBean("PersonAttributeResponseDao");
-		attributeDao = (PersonAttributeDao) appContext.getBean("PersonAttributeDao");
-		formFieldDao = (MedicFormFieldDao) appContext.getBean("MedicFormFieldDao");
+		attributeResponseDao = (PersonAttributeResponseDao) appCon.getBean("PersonAttributeResponseDao");
+		attributeDao = (PersonAttributeDao) appCon.getBean("PersonAttributeDao");
+		formFieldDao = (MedicFormFieldDao) appCon.getBean("MedicFormFieldDao");
 		//setting up the toggle button
 		patientToggleButtonClicked();
-		uiController.setSelected(uiController.find(mainPanel,"patientToggle"), true);
-		uiController.setSelected(uiController.find(mainPanel,"chwToggle"), false);
+		ui.setSelected(find("patientToggle"), true);
+		ui.setSelected(find("chwToggle"), false);
 		fieldSearchBarKeyPress("");
 	}
 	
@@ -123,9 +119,9 @@ public class AttributeAdministrationPanelController implements AdministrationTab
 	 */
 	public void patientToggleButtonClicked(){
 		currentlyEditingPatient=true;
-		uiController.setEnabled(fieldSearchTable,true);
-		uiController.setEnabled(fieldSearchBar,true);
-		uiController.setEnabled(uiController.find(mainPanel,"fieldSearchLabel"),true);
+		ui.setEnabled(fieldSearchTable,true);
+		ui.setEnabled(fieldSearchBar,true);
+		ui.setEnabled(find("fieldSearchLabel"),true);
 		updateCurrentItemTable();
 	}
 	
@@ -134,10 +130,10 @@ public class AttributeAdministrationPanelController implements AdministrationTab
 	 */
 	public void chwToggleButtonClicked(){
 		currentlyEditingPatient=false;
-		uiController.setEnabled(fieldSearchTable,false);
-		uiController.setEnabled(fieldSearchBar,false);
-		uiController.setEnabled(uiController.find("fieldSearchLabel"),false);
-		uiController.setText(fieldSearchBar, "");
+		ui.setEnabled(fieldSearchTable,false);
+		ui.setEnabled(fieldSearchBar,false);
+		ui.setEnabled(find("fieldSearchLabel"),false);
+		ui.setText(fieldSearchBar, "");
 		updateCurrentItemTable();
 	}
 	
@@ -148,9 +144,9 @@ public class AttributeAdministrationPanelController implements AdministrationTab
 	 */
 	public void fieldSearchBarKeyPress(String text){
 		updateFieldSearchTable(formFieldDao.findFieldsByLabel(text));
-		uiController.setText(labelTextField, "");
-		uiController.setText(dataTypeComboBox, "");
-		uiController.setSelectedIndex(dataTypeComboBox, -1);
+		ui.setText(labelTextField, "");
+		ui.setText(dataTypeComboBox, "");
+		ui.setSelectedIndex(dataTypeComboBox, -1);
 	}
 	
 	private void updateFieldSearchTable(List<MedicFormField> fields){
@@ -163,9 +159,9 @@ public class AttributeAdministrationPanelController implements AdministrationTab
 	 * then adds the attribute, or directs the user to enter more data
 	 */
 	public void addItemButtonPressed(){
-		String label = uiController.getText(labelTextField);
-		if((label != "" && label !=null) && uiController.getSelectedItem(dataTypeComboBox) != null){
-			DataType dataType = (DataType) uiController.getAttachedObject(uiController.getSelectedItem(dataTypeComboBox));
+		String label = ui.getText(labelTextField);
+		if((label != "" && label !=null) && ui.getSelectedItem(dataTypeComboBox) != null){
+			DataType dataType = (DataType) ui.getAttachedObject(ui.getSelectedItem(dataTypeComboBox));
 			PersonType personType = (currentlyEditingPatient) ? PersonType.PATIENT : PersonType.CHW;
 			PersonAttribute newAttribute = new PersonAttribute(label,dataType);
 			newAttribute.setPersonType(personType);
@@ -175,18 +171,18 @@ public class AttributeAdministrationPanelController implements AdministrationTab
 			field.setIsAttributePanelField(true);
 			formFieldDao.updateField(field);
 		}else{
-			uiController.createDialog(getI18nString(ATTRIBUTE_INFO_MISSING_DIALOG));
+			ui.createDialog(getI18nString(ATTRIBUTE_INFO_MISSING_DIALOG));
 		}
 		updateCurrentItemTable();
 		clearInputs();
 	}
 	
 	private void clearInputs(){
-		uiController.setText(labelTextField, "");
-		uiController.setText(dataTypeComboBox, "");
-		uiController.setSelectedIndex(dataTypeComboBox, -1);
-		uiController.setText(fieldSearchBar, "");
-		uiController.setIcon(dataTypeComboBox,"");
+		ui.setText(labelTextField, "");
+		ui.setText(dataTypeComboBox, "");
+		ui.setSelectedIndex(dataTypeComboBox, -1);
+		ui.setText(fieldSearchBar, "");
+		ui.setIcon(dataTypeComboBox,"");
 		fieldSearchBarKeyPress("");
 	}
 	
@@ -199,7 +195,7 @@ public class AttributeAdministrationPanelController implements AdministrationTab
 			if(attributeResponseDao.getResponsesForAttribute((PersonAttribute) field).size() == 0){
 				attributeDao.deleteAttribute((PersonAttribute) field);
 			}else{
-				uiController.alert(getI18nString(ALREADY_RESPONDED_TO_DIALOG));
+				ui.alert(getI18nString(ALREADY_RESPONDED_TO_DIALOG));
 			}
 		}
 		updateCurrentItemTable();
@@ -217,22 +213,17 @@ public class AttributeAdministrationPanelController implements AdministrationTab
 	}
 	
 	public void fieldSearchTableSelectionChanged(){
-		uiController.setText(fieldSearchBar, ((MedicFormField) uiController.getAttachedObject(uiController.getSelectedItem(fieldSearchTable))).getLabel());
+		ui.setText(fieldSearchBar, ((MedicFormField) ui.getAttachedObject(ui.getSelectedItem(fieldSearchTable))).getLabel());
 	}
 
-	public void doubleClickAction(Object selectedObject) {/*do nothing*/}
-
-	public Object getTable() {
-		return null;
-	}
-
-	public void resultsChanged() {/*do nothing*/}
-
-	public void selectionChanged(Object selectedObject) {/*do nothing*/}
+	/* TableActionDelegate methods */
+	public void doubleClickAction(Object selectedObject) {}
+	public void resultsChanged() {}
+	public void selectionChanged(Object selectedObject) {}
 	
-	public String getIconPath() {
-		return "/icons/patient_data_card.png";
-	}
-
+	/* ViewHandler methods*/
+	@Override
 	public void viewWillAppear() {}
+	@Override
+	public void viewWillDisappear() {}
 }
