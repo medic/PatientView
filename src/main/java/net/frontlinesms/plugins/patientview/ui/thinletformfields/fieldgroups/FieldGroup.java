@@ -35,7 +35,6 @@ public class FieldGroup implements FormFieldDelegate {
 	
 	public void addField(String label, DataType datatype){
 		addField(ThinletFormField.getThinletFormFieldForDataType(datatype, ui, appCon, label, this));
-		
 	}
 	
 	public void addField(ThinletFormField<?> field){

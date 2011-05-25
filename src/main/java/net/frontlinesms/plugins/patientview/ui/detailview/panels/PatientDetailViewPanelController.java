@@ -27,6 +27,7 @@ public class PatientDetailViewPanelController implements DetailViewPanelControll
 	private static final String SAVE_ICON = "/icons/tick.png";
 	private static final String CANCEL_ICON = "/icons/cross.png";
 	private static final String EXPAND_DETAIL_VIEW_ICON = "/icons/patient_file.png";
+	
 	private Object mainPanel;
 	private Patient currentPatient;
 	private UiGeneratorController uiController;
