@@ -2,10 +2,6 @@ package net.frontlinesms.plugins.patientview.ui.administration.tabs;
 
 import java.util.Collection;
 
-import net.frontlinesms.data.events.DatabaseEntityNotification;
-import net.frontlinesms.events.EventBus;
-import net.frontlinesms.events.EventObserver;
-import net.frontlinesms.events.FrontlineEventNotification;
 import net.frontlinesms.plugins.forms.data.domain.Form;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField;
@@ -21,9 +17,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.context.ApplicationContext;
 
-public class FormAdministrationPanelController extends AdministrationTabPanel implements EventObserver{
-
-	private EventBus eventNotifier;
+public class FormAdministrationPanelController extends AdministrationTabPanel{
 	
 	/* i18n */
 	private static final String FORM_PANEL_TITLE = "admin.tabs.form.panel.title";
@@ -63,8 +57,6 @@ public class FormAdministrationPanelController extends AdministrationTabPanel im
 		//initialize the daos
 		patientViewFormDao = (MedicFormDao) appCon.getBean("MedicFormDao");
 		patientViewFieldDao = (MedicFormFieldDao) appCon.getBean("MedicFormFieldDao");
-		eventNotifier = (EventBus) appCon.getBean("eventBus");
-		eventNotifier.registerObserver(this);
 		//initialize the lists, etc..
 		populatePatientViewFormList();
 	}
@@ -199,16 +191,6 @@ public class FormAdministrationPanelController extends AdministrationTabPanel im
 				ui.alert(getI18nString(FORM_ALREADY_RESPONDED_TO_DIALG));
 			}
 		}
-	}
-
-	public void notify(FrontlineEventNotification event) {
-		if(event instanceof DatabaseEntityNotification){
-			DatabaseEntityNotification castEvent = (DatabaseEntityNotification) event;
-			if(castEvent.getDatabaseEntity() instanceof Form || castEvent.getDatabaseEntity() instanceof MedicForm){
-				populatePatientViewFormList();
-			}
-		}
-		
 	}
 
 	public String getIconPath() {

@@ -1,7 +1,5 @@
 package net.frontlinesms.plugins.patientview.ui.administration.tabs;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
-
 import java.security.GeneralSecurityException;
 import java.util.List;
 
