@@ -20,6 +20,8 @@ public class PagedAdvancedTableController extends AdvancedTableController implem
 	
 	protected Object pagingControls;
 	
+	private boolean refreshOnAppear = false;
+	
 	private final static String PAGING_CONTROLS_XML = "/ui/plugins/patientview/components/pagingControls.xml";
 		
 	protected Map<Class<?>,Boolean> refreshButtonStates = Collections.synchronizedMap(new HashMap<Class<?>,Boolean>());
@@ -144,5 +146,15 @@ public class PagedAdvancedTableController extends AdvancedTableController implem
 			}
 		}
 		updatePagingControls();
+	}
+
+	public void setRefreshOnAppear(boolean refreshOnAppear) {
+		this.refreshOnAppear = refreshOnAppear;
+	}
+	
+	@Override
+	public void willAppear(){
+		if(refreshOnAppear) refresh();
+		subviewsWillAppear();
 	}
 }
