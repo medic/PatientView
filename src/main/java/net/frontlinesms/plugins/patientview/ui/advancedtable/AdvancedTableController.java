@@ -1,7 +1,5 @@
 package net.frontlinesms.plugins.patientview.ui.advancedtable;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
-
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -14,8 +12,9 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-import net.frontlinesms.ui.ThinletUiEventHandler;
+import net.frontlinesms.plugins.patientview.ui.ViewHandler;
 import net.frontlinesms.ui.UiGeneratorController;
+import thinlet.Thinlet;
 
 /**
  * This class provides a controller for a thinlet table that can handle creating
@@ -23,22 +22,20 @@ import net.frontlinesms.ui.UiGeneratorController;
  * @author Dieterich
  *
  */
-public class AdvancedTableController implements ThinletUiEventHandler{
+public class AdvancedTableController extends ViewHandler{
 	
 	/** the thinlet table**/
 	protected Object table;
 	
 	/** the headers for the table **/
-	protected Map<Class,Object> headers;
+	protected Map<Class<?>,Object> headers;
 		
 	protected TableActionDelegate delegate;
 	
 	/** the message displayed when there are no results**/
 	protected String noResultsMessage;
-
-	protected UiGeneratorController uiController;
 	
-	protected Class currentClass;
+	protected Class<?> currentClass;
 	
 	/** The size of the results array */
 	protected int resultsSize;
@@ -75,15 +72,16 @@ public class AdvancedTableController implements ThinletUiEventHandler{
 	 * @param useTableMethod
 	 */
 	public AdvancedTableController(TableActionDelegate delegate, UiGeneratorController uiController){
-		this.uiController = uiController;
+		super(uiController,null);
 		this.delegate = delegate;
-		table = uiController.create("table");
-		uiController.setInteger(table, "weightx", 1);
-		uiController.setInteger(table, "weighty", 1);
-		uiController.setAction(table, "tableSelectionChange()", null, this);
-		uiController.setPerform(table, "doubleClick()",null,this);
-		uiController.setChoice(table, "selection", "single");
-		headers = new HashMap<Class, Object>();
+		this.table = Thinlet.create("table");
+		ui.setInteger(table, "weightx", 1);
+		ui.setInteger(table, "weighty", 1);
+		ui.setAction(table, "tableSelectionChange()", null, this);
+		ui.setPerform(table, "doubleClick()",null,this);
+		ui.setChoice(table, "selection", "single");
+		add(table);
+		headers = new HashMap<Class<?>, Object>();
 		methods = new Object[3][2];
 	}
 	
@@ -95,13 +93,14 @@ public class AdvancedTableController implements ThinletUiEventHandler{
 	 * @param table The table you want to control
 	 */
 	public AdvancedTableController(TableActionDelegate delegate, UiGeneratorController uiController, Object table){
-		this.uiController = uiController;
+		super(uiController,null);
 		this.delegate = delegate;
 		this.table = table;
-		uiController.setAction(table, "tableSelectionChange()", null, this);
-		uiController.setPerform(table, "doubleClick()",null,this);
-		uiController.setChoice(table, "selection", "single");
-		headers = new HashMap<Class, Object>();
+		ui.setAction(table, "tableSelectionChange()", null, this);
+		ui.setPerform(table, "doubleClick()",null,this);
+		ui.setChoice(table, "selection", "single");
+		add(this.table);
+		headers = new HashMap<Class<?>, Object>();
 		methods = new Object[3][2];
 	}
 	
@@ -109,15 +108,14 @@ public class AdvancedTableController implements ThinletUiEventHandler{
 	 * @param headerClass the class for this header
 	 * @param columns the list of column headings
 	*/
-	@SuppressWarnings("static-access")
-	public void putHeader(Class headerClass, List<HeaderColumn> columns){
-		Object header = uiController.create("header");
+	public void putHeader(Class<?> headerClass, List<HeaderColumn> columns){
+		Object header = Thinlet.create("header");
 		for(HeaderColumn column: columns){
-			Object c = uiController.createColumn(column.getLabel(), column.getMethod());
-			uiController.setIcon(c, column.getIcon());
-			uiController.add(header, c);
+			Object c = ui.createColumn(column.getLabel(), column.getMethod());
+			ui.setIcon(c, column.getIcon());
+			ui.add(header, c);
 		}
-		uiController.setAction(header,"headerClicked()",null,this);
+		ui.setAction(header,"headerClicked()",null,this);
 		headers.put(getRealClass(headerClass), header);
 	}
 	
@@ -128,28 +126,28 @@ public class AdvancedTableController implements ThinletUiEventHandler{
 	 * header and autofit the columns to the width of the results
 	 * @param results
 	 */
-	public void setResults(List results){
+	public void setResults(List<?> results){
 		resultsSize = results.size();
 		if(results.size() == 0){
-			uiController.removeAll(table);
-			Object header = uiController.create("header");
-			uiController.add(header,uiController.createColumn(getI18nString("advancedtable.no.results.to.display"), null));
-			uiController.add(table,header);
-			Object row = uiController.createTableRow(null);
-			uiController.add(row, uiController.createTableCell(noResultsMessage==null?getI18nString("advancedtable.no.search.results"):noResultsMessage));
-			uiController.add(table,row);
+			removeAll(table);
+			Object header = Thinlet.create("header");
+			add(header,ui.createColumn(getI18nString("advancedtable.no.results.to.display"), null));
+			add(table,header);
+			Object row = ui.createTableRow(null);
+			add(row, ui.createTableCell(noResultsMessage==null?getI18nString("advancedtable.no.search.results"):noResultsMessage));
+			add(table,row);
 			resultsChanged();
 			return;
 		}
-		uiController.removeAll(table);
+		removeAll(table);
 		currentClass = getRealClass(results.get(0).getClass());
 		if(findSuperClass(currentClass)!=null && findSuperClass(currentClass)!= currentClass){
 			currentClass = findSuperClass(currentClass);
 		}
-		uiController.add(table,getAutoFitHeader(results));
+		add(table,getAutoFitHeader(results));
 		List<Method> methods = getMethodsForClass(currentClass);
 		for(Object result: results){
-			Object row = uiController.createTableRow(result);
+			Object row = ui.createTableRow(result);
 			for(Method m:methods){
 				String value;
 				try {
@@ -157,10 +155,10 @@ public class AdvancedTableController implements ThinletUiEventHandler{
 				} catch (Exception e) {
 					value = "";
 				}
-				Object cell = uiController.createTableCell(value);
-				uiController.add(row,cell);
+				Object cell = ui.createTableCell(value);
+				add(row,cell);
 			}
-			uiController.add(table,row);
+			add(table,row);
 		}
 		resultsChanged();
 	}
@@ -172,7 +170,7 @@ public class AdvancedTableController implements ThinletUiEventHandler{
 	 * @param c
 	 * @return
 	 */
-	private static Class getRealClass(Class c){
+	private static Class<?> getRealClass(Class<?> c){
 		String s = c.getName();
 		if(s.indexOf("_$$_javassist") != -1){
 			s = s.substring(0, s.indexOf("_$$_javassist"));
@@ -185,7 +183,7 @@ public class AdvancedTableController implements ThinletUiEventHandler{
 		}
 	}
 	
-	private Class findSuperClass(Class ce){
+	private Class<?> findSuperClass(Class<?> ce){
 		if(ce == null){
 			return ce;
 		}
@@ -200,12 +198,12 @@ public class AdvancedTableController implements ThinletUiEventHandler{
 	 * @param c
 	 * @return
 	 */
-	private List<Method> getMethodsForClass(Class c){
+	private List<Method> getMethodsForClass(Class<?> c){
 		ArrayList<Method> results = new ArrayList<Method>();
-		Object [] columns = uiController.getItems(headers.get(c));
+		Object [] columns = ui.getItems(headers.get(c));
 		for(Object column : columns){
 			try {
-				results.add(c.getMethod((String) uiController.getAttachedObject(column), null));
+				results.add(c.getMethod((String) ui.getAttachedObject(column), null));
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			} catch (NoSuchMethodException e) {
@@ -221,19 +219,19 @@ public class AdvancedTableController implements ThinletUiEventHandler{
 	 * @return
 	 */
 	private Object getAutoFitHeader(List results){
-		Class c = getRealClass(results.get(0).getClass());
+		Class<?> c = getRealClass(results.get(0).getClass());
 		Object tempHeader = headers.get(currentClass);
-		for(Object column :uiController.getItems(tempHeader)){
-			uiController.setWidth(column, getColumnWidth(column,results,currentClass));
+		for(Object column :ui.getItems(tempHeader)){
+			ui.setWidth(column, getColumnWidth(column,results,currentClass));
 		}
 		return tempHeader;
 	}
 	
-	private int getColumnWidth(Object column, List results, Class c){
-		int result = getStringWidth(uiController.getText(column))+20;
+	private int getColumnWidth(Object column, List<?> results, Class<?> c){
+		int result = getStringWidth(ui.getText(column))+20;
 		Method m=null;
 		try {
-			m = c.getMethod((String) uiController.getAttachedObject(column), null);
+			m = c.getMethod((String) ui.getAttachedObject(column), null);
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (NoSuchMethodException e) {
@@ -263,17 +261,17 @@ public class AdvancedTableController implements ThinletUiEventHandler{
 	}
 	
 	public void setTable(Object table){
-		uiController.removeAll(table);
+		removeAll(table);
 		this.table = table;
-		uiController.setAction(table, "tableSelectionChange()", null, this);
-		uiController.setPerform(table, "doubleClick()",null,this);
+		ui.setAction(table, "tableSelectionChange()", null, this);
+		ui.setPerform(table, "doubleClick()",null,this);
 	}
 	
 	/**
 	 * Called by thinlet when the table selection changes
 	 */
 	public void tableSelectionChange(){
-		Object entity = uiController.getAttachedObject(uiController.getSelectedItem(table));
+		Object entity = ui.getAttachedObject(ui.getSelectedItem(table));
 		if(methods[SELECTION_CHANGED_INDEX][METHOD_INDEX] == null){
 			delegate.selectionChanged(entity);
 		}else{
@@ -290,7 +288,7 @@ public class AdvancedTableController implements ThinletUiEventHandler{
 	 * Called by thinlet when a row on the table is double clicked
 	 */
 	public void doubleClick(){		
-		Object entity = uiController.getAttachedObject(uiController.getSelectedItem(table));
+		Object entity = ui.getAttachedObject(ui.getSelectedItem(table));
 		if(methods[DOUBLE_CLICK_ACTION_INDEX][METHOD_INDEX] == null){
 			delegate.doubleClickAction(entity);
 		}else{
@@ -314,17 +312,13 @@ public class AdvancedTableController implements ThinletUiEventHandler{
 		}
 	}
 	
-	public Object getTable(){
-		return table;
-	}
-	
 	/**
 	 * Selects the row at "index"
 	 * @param index
 	 */
 	public void setSelected(int index){
 		if(index < resultsSize){
-			uiController.setSelectedIndex(table,index);
+			ui.setSelectedIndex(table,index);
 			tableSelectionChange();
 		}
 	}
@@ -333,7 +327,7 @@ public class AdvancedTableController implements ThinletUiEventHandler{
 	 * @return The object attached to the currently selected row
 	 */
 	public Object getCurrentlySelectedObject(){
-		return uiController.getAttachedObject(uiController.getSelectedItem(table));
+		return ui.getAttachedObject(ui.getSelectedItem(table));
 	}
 	
 	/**
@@ -351,7 +345,7 @@ public class AdvancedTableController implements ThinletUiEventHandler{
 	}
 	
 	public void clearResults(){
-		uiController.removeAll(table);
+		removeAll(table);
 	}
 	
 	public void setNoResultsMessage(String message){

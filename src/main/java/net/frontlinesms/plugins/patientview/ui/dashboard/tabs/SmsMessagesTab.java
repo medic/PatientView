@@ -59,7 +59,7 @@ public class SmsMessagesTab extends TabController implements TableActionDelegate
 		uiController.add(controlPanel,uiController.createLabel("   "));
 		uiController.add(controlPanel,fromCheckBox.getThinletPanel());
 		//create the table
-		tableController = new PagedAdvancedTableController(this, uiController, null);
+		tableController = new PagedAdvancedTableController(this, uiController);
 		tableController.putHeader(MedicMessageResponse.class, HeaderColumn.createColumnList(new String[]{getI18nString("common.status"),getI18nString("medic.common.labels.date"), getI18nString("medic.common.labels.sender"),getI18nString("medic.common.labels.recipient"),getI18nString("medic.common.labels.message")}, 
 				new String[]{"/icons/status.png","", "/icons/user_sender.png","/icons/user_receiver.png","/icons/description.png"},
 				new String[]{"getStatus","getStringDateSubmitted","getSenderMsisdn","getRecipientMsisdn","getMessageContent"}));

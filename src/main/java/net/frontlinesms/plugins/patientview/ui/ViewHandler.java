@@ -24,6 +24,7 @@ public abstract class ViewHandler implements ThinletUiEventHandler{
 		this.ui = ui;
 		this.appCon = appCon;
 		mainPanel = Thinlet.create("panel");
+		ui.setWeight(mainPanel, 1, 1);
 		subviews= new ArrayList<ViewHandler>();
 	}
 	
@@ -38,6 +39,16 @@ public abstract class ViewHandler implements ThinletUiEventHandler{
 	
 	public Object getMainPanel() {
 		return mainPanel;
+	}
+	
+	protected void setMainPanel(Object mainPanel){
+		if(this.mainPanel !=null){
+			Object[] children = ui.getItems(this.mainPanel);
+			for(Object o: children){
+				ui.add(mainPanel,o);
+			}
+		}
+		this.mainPanel = mainPanel;
 	}
 	
 	public void add(Object thinletObject){
