@@ -71,6 +71,10 @@ public abstract class ViewHandler implements ThinletUiEventHandler{
 		add(thinletContainer,view.getMainPanel());
 	}
 	
+	public void remove(Object thinletObject){
+		ui.remove(thinletObject);
+	}
+	
 	public boolean removeSubview(ViewHandler view){
 		view.willDisappear();
 		ui.remove(view.getMainPanel());

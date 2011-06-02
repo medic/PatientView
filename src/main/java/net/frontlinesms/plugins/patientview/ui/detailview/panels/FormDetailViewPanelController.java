@@ -4,81 +4,69 @@ import net.frontlinesms.plugins.patientview.data.domain.framework.DataType;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField;
 import net.frontlinesms.plugins.patientview.ui.detailview.DetailViewPanelController;
-import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
 import thinlet.Thinlet;
 
-public class FormDetailViewPanelController implements DetailViewPanelController<MedicForm>, ThinletUiEventHandler {
-
-	private UiGeneratorController uiController;
-	private Object mainPanel;
+public class FormDetailViewPanelController extends DetailViewPanelController<MedicForm> {
 	
 	private static final String FORM_PANEL = "/ui/plugins/patientview/components/formPanel.xml";
 	
 	public FormDetailViewPanelController(UiGeneratorController uiController){
-		this.uiController = uiController;
-		mainPanel = uiController.loadComponentFromFile(FORM_PANEL, this);
-		uiController.remove(uiController.find(mainPanel,"submitterLabel"));
-		uiController.remove(uiController.find(mainPanel,"subjectLabel"));
-		uiController.remove(uiController.find(mainPanel,"dateSubmittedLabel"));
+		super(uiController,null,FORM_PANEL);
+		remove(find("submitterLabel"));
+		remove(find("subjectLabel"));
+		remove(find("dateSubmittedLabel"));
 	}
 	/**
 	 * @see net.frontlinesms.plugins.patientview.ui.detailview.DetailViewPanelController#getEntityClass()
 	 */
-	public Class getEntityClass() {
+	@Override
+	public Class<MedicForm> getEntityClass() {
 		return MedicForm.class;
 	}
 	
 	/**
-	 * @see net.frontlinesms.plugins.patientview.ui.detailview.DetailViewPanelController#getPanel()
-	 */
-	public Object getPanel() {
-		return mainPanel;
-	}
-
-	/**
 	 * Populates the main panel with a picture of the form. 
-	 * @see net.frontlinesms.plugins.patientview.ui.detailview.DetailViewPanelController#viewWillAppear(java.lang.Object)
+	 * @see net.frontlinesms.plugins.patientview.ui.detailview.DetailViewPanelController#willAppear(java.lang.Object)
 	 */
-	public void viewWillAppear(MedicForm form) {
-		uiController.setText(uiController.find(mainPanel,"nameLabel"), form.getName());
-		Object fieldContainer = uiController.find(mainPanel,"fieldPanel");
-		uiController.removeAll(fieldContainer);
+	@Override
+	public void willAppear(MedicForm form) {
+		ui.setText(find("nameLabel"), form.getName());
+		Object fieldContainer = find("fieldPanel");
+		removeAll(fieldContainer);
 		for(MedicFormField ff: form.getFields()){
 			Object field = null;
 			if(ff.getDatatype() == DataType.CHECK_BOX){
-				field =uiController.createCheckbox(null, ff.getLabel(), false);
-				uiController.add(fieldContainer,field);
-				uiController.setEnabled(field,false);
-				uiController.setInteger(field, "weightx", 1);
-				uiController.setChoice(field, "halign", "fill");
+				field =ui.createCheckbox(null, ff.getLabel(), false);
+				ui.add(fieldContainer,field);
+				ui.setEnabled(field,false);
+				ui.setInteger(field, "weightx", 1);
+				ui.setChoice(field, "halign", "fill");
 			}else if(ff.getDatatype() == DataType.TEXT_AREA){
 				field = Thinlet.create("textarea");
-				Object field2 = uiController.createLabel(ff.getLabel());
-				uiController.add(fieldContainer,field2);
-				uiController.add(fieldContainer,field);
-				uiController.setEditable(field,false);
-				uiController.setInteger(field, "weightx", 1);
-				uiController.setChoice(field, "halign", "fill");
-				uiController.setChoice(field2, "halign","left");
+				Object field2 = ui.createLabel(ff.getLabel());
+				ui.add(fieldContainer,field2);
+				ui.add(fieldContainer,field);
+				ui.setEditable(field,false);
+				ui.setInteger(field, "weightx", 1);
+				ui.setChoice(field, "halign", "fill");
+				ui.setChoice(field2, "halign","left");
 			}else if(ff.getDatatype() == DataType.TRUNCATED_TEXT ||
 					ff.getDatatype() == DataType.WRAPPED_TEXT){
-				field = uiController.createLabel(ff.getLabel());
-				uiController.add(fieldContainer,field);
-				uiController.setChoice(field, "halign", "center");
+				field = ui.createLabel(ff.getLabel());
+				ui.add(fieldContainer,field);
+				ui.setChoice(field, "halign", "center");
 			}else{
-				field = uiController.createTextfield(null, "");
-				Object field2 = uiController.createLabel(ff.getLabel());
-				uiController.add(fieldContainer,field2);
-				uiController.add(fieldContainer,field);
-				uiController.setEditable(field,false);
-				uiController.setInteger(field, "weightx", 1);
-				uiController.setChoice(field, "halign", "fill");
-				uiController.setChoice(field2, "halign", "center");
+				field = ui.createTextfield(null, "");
+				Object field2 = ui.createLabel(ff.getLabel());
+				ui.add(fieldContainer,field2);
+				ui.add(fieldContainer,field);
+				ui.setEditable(field,false);
+				ui.setInteger(field, "weightx", 1);
+				ui.setChoice(field, "halign", "fill");
+				ui.setChoice(field2, "halign", "center");
 			}
 		}
+		subviewsWillAppear();
 	}
-
-	public void viewWillDisappear() {/*do nothing*/}
-
 }

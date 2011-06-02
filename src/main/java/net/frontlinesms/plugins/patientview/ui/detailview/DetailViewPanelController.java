@@ -1,6 +1,9 @@
 package net.frontlinesms.plugins.patientview.ui.detailview;
 
-import java.util.HashMap;
+import org.springframework.context.ApplicationContext;
+
+import net.frontlinesms.plugins.patientview.ui.ViewHandler;
+import net.frontlinesms.ui.UiGeneratorController;
 
 /**
  * An interface that all Detail View panels should implement
@@ -13,27 +16,24 @@ import java.util.HashMap;
  *
  * @param <E> The class that this panel is linked to (This panel will be shown when this class is selected).
  */
-public interface DetailViewPanelController<E> {
+public abstract class DetailViewPanelController<E> extends ViewHandler{
+
+	public DetailViewPanelController(UiGeneratorController ui, ApplicationContext appCon) {
+		super(ui, appCon);
+	}
+	
+	public DetailViewPanelController(UiGeneratorController ui, ApplicationContext appCon, String xmlFilePath) {
+		super(ui, appCon,xmlFilePath);
+	}
 
 	/**
 	 * @return The class that this panel is linked to
 	 */
-	public Class getEntityClass();
-	
-	/**
-	 * Should return the main panel, which will be added into a panel with 1 column
-	 * @return
-	 */
-	public Object getPanel();
+	public abstract Class<E> getEntityClass();
 	
 	/**
 	 * Method that notifies the controller before it appears
 	 * @param entity The entity that has been selected
 	 */
-	public void viewWillAppear(E entity);
-	
-	/**
-	 * Notifies the object just before it disappears
-	 */
-	public void viewWillDisappear();
+	public abstract void willAppear(E entity);
 }

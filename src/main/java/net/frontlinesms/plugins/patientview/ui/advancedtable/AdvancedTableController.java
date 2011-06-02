@@ -281,7 +281,6 @@ public class AdvancedTableController extends ViewHandler{
 				e.printStackTrace();
 			}
 		}
-		
 	}
 	
 	/**

@@ -1,10 +1,7 @@
 package net.frontlinesms.plugins.patientview.ui.detailview.panels;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
-
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,18 +12,17 @@ import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormRespon
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormFieldDao;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormFieldResponseDao;
 import net.frontlinesms.plugins.patientview.ui.detailview.DetailViewPanelController;
-import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
 import org.springframework.context.ApplicationContext;
 
-public class FormResponseDetailViewPanelController implements DetailViewPanelController<MedicFormResponse>, ThinletUiEventHandler {
+import thinlet.Thinlet;
 
-	private UiGeneratorController uiController;
+public class FormResponseDetailViewPanelController extends DetailViewPanelController<MedicFormResponse> {
+
 	private MedicFormFieldResponseDao fieldResponseDao;
 	private MedicFormFieldDao formFieldDao;
-	private Object mainPanel;
 	
 	private static final String FORM_RESPONSE_PANEL = "/ui/plugins/patientview/components/formPanel.xml";
 	//i18n
@@ -36,21 +32,16 @@ public class FormResponseDetailViewPanelController implements DetailViewPanelCon
 	private static final String DATE_SUBMITTED = "medic.common.labels.date.submitted";
 	
 	public FormResponseDetailViewPanelController(UiGeneratorController uiController, ApplicationContext appCon){
-		this.uiController = uiController;
+		super(uiController,appCon,FORM_RESPONSE_PANEL);
 		this.fieldResponseDao = (MedicFormFieldResponseDao) appCon.getBean("MedicFormFieldResponseDao");
 		this.formFieldDao = (MedicFormFieldDao) appCon.getBean("MedicFormFieldDao");
-		mainPanel = uiController.loadComponentFromFile(FORM_RESPONSE_PANEL, this);
 	}
 	
-	public Class getEntityClass() {
+	public Class<MedicFormResponse> getEntityClass() {
 		return MedicFormResponse.class;
 	}
 
-	public Object getPanel() {
-		return mainPanel;
-	}
-
-	public void viewWillAppear(MedicFormResponse response) {
+	public void willAppear(MedicFormResponse response) {
 		//set the header information
 		if(response == null){
 			return;
@@ -60,7 +51,7 @@ public class FormResponseDetailViewPanelController implements DetailViewPanelCon
 		try{
 			submitter = getI18nString(SUBMITTER) + ": " + response.getSubmitter().getName();
 		}catch(Exception e){
-			submitter = submitter = getI18nString(SUBMITTER) + ": "+ getI18nString("medic.common.labels.unknown");
+			submitter = getI18nString(SUBMITTER) + ": "+ getI18nString("medic.common.labels.unknown");
 		}
 		String subject;
 		try{
@@ -70,12 +61,12 @@ public class FormResponseDetailViewPanelController implements DetailViewPanelCon
 		}
 		DateFormat df = InternationalisationUtils.getDateFormat();
 		String date = getI18nString(DATE_SUBMITTED) + " " + df.format(response.getDateSubmitted());
-		uiController.setText(uiController.find(mainPanel,"nameLabel"),  form);
-		uiController.setText(uiController.find(mainPanel,"submitterLabel"),  submitter);
-		uiController.setText(uiController.find(mainPanel,"dateSubmittedLabel"),  date);
-		uiController.setText(uiController.find(mainPanel,"subjectLabel"), subject);
-		Object fieldContainer = uiController.find(mainPanel,"fieldPanel");
-		uiController.removeAll(fieldContainer);
+		ui.setText(find("nameLabel"),  form);
+		ui.setText(find("submitterLabel"),  submitter);
+		ui.setText(find("dateSubmittedLabel"),  date);
+		ui.setText(find("subjectLabel"), subject);
+		Object fieldContainer = find("fieldPanel");
+		removeAll(fieldContainer);
 		//get all the responses
 		ArrayList<String> responses = new ArrayList<String>();
 		List<MedicFormFieldResponse> fieldResponses = fieldResponseDao.getResponsesForFormResponse(response);
@@ -88,44 +79,43 @@ public class FormResponseDetailViewPanelController implements DetailViewPanelCon
 		for(MedicFormField ff: fields){
 			Object field = null;
 			if(ff.getDatatype() == DataType.CHECK_BOX){
-				field =uiController.createCheckbox(null, ff.getLabel(), false);
-				uiController.add(fieldContainer,field);
-				uiController.setEnabled(field, false);
-				uiController.setInteger(field, "weightx", 1);
-				uiController.setChoice(field, "halign", "fill");
+				field =ui.createCheckbox(null, ff.getLabel(), false);
+				add(fieldContainer,field);
+				ui.setEnabled(field, false);
+				ui.setInteger(field, "weightx", 1);
+				ui.setChoice(field, "halign", "fill");
 				String r = responseIt.next();
 				if(r.equalsIgnoreCase("true")){
-					uiController.setSelected(field, true);
+					ui.setSelected(field, true);
 				}
 			}else if(ff.getDatatype() == DataType.TEXT_AREA){
-				field = uiController.create("textarea");
-				Object field2 = uiController.createLabel(ff.getLabel());
-				uiController.add(fieldContainer,field2);
-				uiController.add(fieldContainer,field);
-				uiController.setEditable(field, false);
-				uiController.setInteger(field, "weightx", 1);
-				uiController.setChoice(field, "halign", "fill");
-				uiController.setChoice(field2, "halign","left");
-				uiController.setText(field,responseIt.next());
+				field = Thinlet.create("textarea");
+				Object field2 = ui.createLabel(ff.getLabel());
+				add(fieldContainer,field2);
+				add(fieldContainer,field);
+				ui.setEditable(field, false);
+				ui.setInteger(field, "weightx", 1);
+				ui.setChoice(field, "halign", "fill");
+				ui.setChoice(field2, "halign","left");
+				ui.setText(field,responseIt.next());
 			}else if(ff.getDatatype() == DataType.TRUNCATED_TEXT ||
 					ff.getDatatype() == DataType.WRAPPED_TEXT){
-				field = uiController.createLabel(ff.getLabel());
-				uiController.add(fieldContainer,field);
-				uiController.setChoice(field, "halign", "center");
+				field = ui.createLabel(ff.getLabel());
+				add(fieldContainer,field);
+				ui.setChoice(field, "halign", "center");
 			}else{
-				field = uiController.createTextfield(null, "");
-				Object field2 = uiController.createLabel(ff.getLabel());
-				uiController.add(fieldContainer,field2);
-				uiController.add(fieldContainer,field);
-				uiController.setEditable(field, false);
-				uiController.setInteger(field, "weightx", 1);
-				uiController.setChoice(field, "halign", "fill");
-				uiController.setChoice(field2, "halign", "center");
-				uiController.setText(field, responseIt.next());
+				field = ui.createTextfield(null, "");
+				Object field2 = ui.createLabel(ff.getLabel());
+				add(fieldContainer,field2);
+				add(fieldContainer,field);
+				ui.setEditable(field, false);
+				ui.setInteger(field, "weightx", 1);
+				ui.setChoice(field, "halign", "fill");
+				ui.setChoice(field2, "halign", "center");
+				ui.setText(field, responseIt.next());
 			}
 		}
+		subviewsWillAppear();
 	}
-
-	public void viewWillDisappear() {/* do nothing*/}
 
 }

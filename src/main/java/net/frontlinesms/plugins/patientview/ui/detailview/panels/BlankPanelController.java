@@ -2,32 +2,33 @@ package net.frontlinesms.plugins.patientview.ui.detailview.panels;
 
 import java.util.HashMap;
 
+import org.springframework.context.ApplicationContext;
+
 import net.frontlinesms.plugins.patientview.ui.detailview.DetailViewPanelController;
+import net.frontlinesms.ui.UiGeneratorController;
 
-public class BlankPanelController implements DetailViewPanelController<Object>{
+public class BlankPanelController extends DetailViewPanelController<Object>{
 
-	public Class getEntityClass() {
+	public BlankPanelController(UiGeneratorController ui, ApplicationContext appCon) {
+		super(ui, appCon);
+	}
+
+	public Class<Object> getEntityClass() {
 		return null;
 	}
 
 	public HashMap<String, String> getFurtherOptions() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Object getPanel() {
-		// TODO Auto-generated method stub
+	public Object getMainPanel() {
+
 		return null;
 	}
-
-	public void viewWillAppear(Object entity) {
+	
+	@Override
+	public void willAppear(Object entity) {
 		// TODO Auto-generated method stub
 		
 	}
-
-	public void viewWillDisappear() {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

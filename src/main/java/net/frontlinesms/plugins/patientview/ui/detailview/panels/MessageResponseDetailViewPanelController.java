@@ -4,52 +4,42 @@ import java.text.DateFormat;
 
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicMessageResponse;
 import net.frontlinesms.plugins.patientview.ui.detailview.DetailViewPanelController;
-import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
+import thinlet.Thinlet;
 
-public class MessageResponseDetailViewPanelController implements
-		DetailViewPanelController<MedicMessageResponse>, ThinletUiEventHandler {
+public class MessageResponseDetailViewPanelController extends DetailViewPanelController<MedicMessageResponse> {
 
-	private UiGeneratorController uiController;
-	private Object mainPanel;
-	
 	private static final String MESSAGE_RESPONSE_PANEL = "/ui/plugins/patientview/components/formPanel.xml";
 	//i18n
 	private static final String SUBMITTED_BY = "detailview.labels.submitted.by";
 	private static final String ON = "detailview.labels.on";
 	
 	public MessageResponseDetailViewPanelController(UiGeneratorController uiController){
-		this.uiController = uiController;
-		mainPanel = uiController.loadComponentFromFile(MESSAGE_RESPONSE_PANEL, this);
+		super(uiController, null, MESSAGE_RESPONSE_PANEL);
 	}
 	
 	public Class<MedicMessageResponse> getEntityClass() {
 		return MedicMessageResponse.class;
 	}
 
-	public Object getPanel() {
-		return mainPanel;
-	}
-
-	public void viewWillAppear(MedicMessageResponse message) {
-		uiController.removeAll(mainPanel);
+	@Override
+	public void willAppear(MedicMessageResponse message) {
+		removeAll();
 		DateFormat df = InternationalisationUtils.getDateFormat();
-		Object submitterLabel = uiController.createLabel(InternationalisationUtils.getI18nString(SUBMITTED_BY)+" "+ message.getSubmitter().getName());
-		Object dateLabel = uiController.createLabel(InternationalisationUtils.getI18nString(ON)+" " +  df.format(message.getDateSubmitted()));
-		Object textarea = uiController.create("textarea");
-		uiController.setText(textarea, message.getMessageContent());
-		uiController.setEditable (textarea,false);
-		uiController.setInteger(textarea, "weightx", 1);
-		uiController.setInteger(submitterLabel,"weightx",1);
-		uiController.setInteger(dateLabel,"weightx",1);
-		uiController.setChoice(submitterLabel,"halign","center");
-		uiController.setChoice(dateLabel,"halign","center");
-		uiController.add(mainPanel,submitterLabel);
-		uiController.add(mainPanel,dateLabel);
-		uiController.add(mainPanel,textarea);
+		Object submitterLabel = ui.createLabel(getI18nString(SUBMITTED_BY)+" "+ message.getSubmitter().getName());
+		Object dateLabel = ui.createLabel(getI18nString(ON)+" " +  df.format(message.getDateSubmitted()));
+		Object textarea = Thinlet.create("textarea");
+		ui.setText(textarea, message.getMessageContent());
+		ui.setEditable (textarea,false);
+		ui.setInteger(textarea, "weightx", 1);
+		ui.setInteger(submitterLabel,"weightx",1);
+		ui.setInteger(dateLabel,"weightx",1);
+		ui.setChoice(submitterLabel,"halign","center");
+		ui.setChoice(dateLabel,"halign","center");
+		add(submitterLabel);
+		add(dateLabel);
+		add(textarea);
 	}
-
-	public void viewWillDisappear() {/* do nothing*/}
 
 }

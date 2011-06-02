@@ -54,7 +54,7 @@ public class FormResponseTab<P extends Person> extends TabController implements 
 		uiController.add(super.getMainPanel(),uiController.loadComponentFromFile(UI_FILE));
 		//set up right panel, the form response panel
 		formResponsePanel = new FormResponseDetailViewPanelController(uiController, appCon);
-		uiController.add(uiController.find(super.getMainPanel(),"formPanel"),formResponsePanel.getPanel());
+		uiController.add(uiController.find(super.getMainPanel(),"formPanel"),formResponsePanel.getMainPanel());
 		//set up the table, starting with the result set
 		resultSet = new FormResponseResultSet(appCon);
 		if(isCHW()){
@@ -108,7 +108,7 @@ public class FormResponseTab<P extends Person> extends TabController implements 
 
 
 	public void selectionChanged(Object selectedObject) {
-			formResponsePanel.viewWillAppear((MedicFormResponse) selectedObject);
+		formResponsePanel.willAppear((MedicFormResponse) selectedObject);
 	}
 
 	public void doubleClickAction(Object selectedObject) {}

@@ -2,6 +2,7 @@ package net.frontlinesms.plugins.patientview.ui.detailview;
 
 import java.util.HashMap;
 
+import net.frontlinesms.plugins.patientview.ui.ViewHandler;
 import net.frontlinesms.plugins.patientview.ui.detailview.panels.CommunityHealthWorkerDetailViewPanelController;
 import net.frontlinesms.plugins.patientview.ui.detailview.panels.FormDetailViewPanelController;
 import net.frontlinesms.plugins.patientview.ui.detailview.panels.FormResponseDetailViewPanelController;
@@ -10,21 +11,15 @@ import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
 
-public class DetailViewController {
-
-	private Object mainPanel;
-	private Object detailViewPanel;
+public class DetailViewController extends ViewHandler{
 	
 	private HashMap<Class,DetailViewPanelController> controllers;
 
-	private DetailViewPanelController currentViewController;
-	
-	private UiGeneratorController uiController;
+	private DetailViewPanelController<?> currentViewController;
 	
 	public DetailViewController(Object panel, UiGeneratorController uiController, ApplicationContext appCon){
+		super(uiController,appCon);
 		this.mainPanel = panel;
-		this.uiController = uiController;
-		this.detailViewPanel = uiController.find(mainPanel,"detailViewPanel");
 		CommunityHealthWorkerDetailViewPanelController chwPanel = new CommunityHealthWorkerDetailViewPanelController(uiController, appCon);
 		FormDetailViewPanelController formPanel = new FormDetailViewPanelController(uiController);
 	//	FormFieldDetailViewPanelController fieldPanel = new FormFieldDetailViewPanelController(uiController);
@@ -47,14 +42,17 @@ public class DetailViewController {
 	 * @param entity The entity that was selected in the table
 	 */
 	public void selectionChanged(Object entity){
+		
 		if(entity == null)
 			return;
-		if(currentViewController !=null)
-			currentViewController.viewWillDisappear();
+		if(currentViewController !=null){
+			removeSubview(currentViewController);
+		}else{
+			removeAll();
+		}
 		if(controllers.get(entity.getClass()) !=null){
-			uiController.removeAll(detailViewPanel);
-			controllers.get(entity.getClass()).viewWillAppear(entity);
-			uiController.add(detailViewPanel,controllers.get(entity.getClass()).getPanel());
+			controllers.get(entity.getClass()).willAppear(entity);
+			addSubview(controllers.get(entity.getClass()));
 			currentViewController = controllers.get(entity.getClass());
 		}
 	}
