@@ -208,7 +208,11 @@ public class IncomingFormMatcher implements EventObserver{
 			}
 		}
 		Collections.sort(candidates);
-		return candidates.subList(0, 5);
+		if (candidates.size() > 5) {
+			return candidates.subList(0, 5);
+		}else{
+			return candidates;
+		}
 	}
 	
 	public float getConfidence(Patient subject, MedicFormResponse mfr){
