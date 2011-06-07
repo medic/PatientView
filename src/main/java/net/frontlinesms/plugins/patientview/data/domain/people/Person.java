@@ -1,6 +1,5 @@
 package net.frontlinesms.plugins.patientview.data.domain.people;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.awt.image.BufferedImage;
 import java.util.Date;
@@ -28,37 +27,13 @@ import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
 import org.hibernate.annotations.IndexColumn;
 
-
 @Entity
 @Table(name="medic_people")
 @DiscriminatorColumn(name="person_type", discriminatorType=DiscriminatorType.STRING)
 @DiscriminatorValue(value="per")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-public abstract class Person{
+public abstract class Person implements Deletable{
 	
-	
-	public static enum Gender{ MALE("medic.common.male"),FEMALE("medic.common.female"),TRANSGENDER("medic.common.transgender"); 	
-
-		private Gender(String name){
-			this.name = name;
-		}
-	
-		private String name;
-	
-		@Override
-		public String toString(){
-			return getI18nString(name);
-		}
-
-		public static Gender getGenderForName(String name){
-			for(Gender g : Gender.values()){
-				if(name.equalsIgnoreCase(g.toString())){
-					return g;
-				}
-			}
-			return null;
-		}
-	}
 	
 	/** Unique id for this entity.  This is for hibernate usage. */
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)

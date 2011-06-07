@@ -5,8 +5,8 @@ import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 
+import net.frontlinesms.plugins.patientview.data.domain.people.Gender;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
-import net.frontlinesms.plugins.patientview.data.domain.people.Person.Gender;
 import net.frontlinesms.plugins.patientview.ui.imagechooser.ImageChooser;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.fieldgroups.PersonFieldGroup;
 import net.frontlinesms.ui.ThinletUiEventHandler;

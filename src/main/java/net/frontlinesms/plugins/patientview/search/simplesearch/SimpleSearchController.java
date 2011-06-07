@@ -2,7 +2,7 @@ package net.frontlinesms.plugins.patientview.search.simplesearch;
 
 import java.util.Date;
 
-import net.frontlinesms.plugins.patientview.data.domain.people.Person.Gender;
+import net.frontlinesms.plugins.patientview.data.domain.people.Gender;
 import net.frontlinesms.plugins.patientview.search.FieldDescriptor;
 import net.frontlinesms.plugins.patientview.search.QueryGenerator;
 import net.frontlinesms.plugins.patientview.search.SearchController;

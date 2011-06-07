@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import net.frontlinesms.plugins.forms.data.repository.FormDao;
+import net.frontlinesms.plugins.patientview.data.domain.people.Gender;
 import net.frontlinesms.plugins.patientview.data.domain.people.User;
-import net.frontlinesms.plugins.patientview.data.domain.people.Person.Gender;
 import net.frontlinesms.plugins.patientview.data.domain.people.User.Role;
 import net.frontlinesms.plugins.patientview.data.repository.CommunityHealthWorkerDao;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;

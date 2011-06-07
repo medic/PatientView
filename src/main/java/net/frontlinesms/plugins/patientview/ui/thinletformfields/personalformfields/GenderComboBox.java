@@ -2,8 +2,8 @@ package net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfi
 
 import org.hibernate.classic.ValidationFailure;
 
+import net.frontlinesms.plugins.patientview.data.domain.people.Gender;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
-import net.frontlinesms.plugins.patientview.data.domain.people.Person.Gender;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.FormFieldDelegate;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.ThinletFormField;
 import net.frontlinesms.ui.ExtendedThinlet;

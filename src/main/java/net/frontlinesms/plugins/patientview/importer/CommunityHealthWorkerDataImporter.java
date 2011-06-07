@@ -10,7 +10,7 @@ import java.util.List;
 
 import net.frontlinesms.FrontlineSMSConstants;
 import net.frontlinesms.plugins.patientview.data.domain.people.CommunityHealthWorker;
-import net.frontlinesms.plugins.patientview.data.domain.people.Person.Gender;
+import net.frontlinesms.plugins.patientview.data.domain.people.Gender;
 import net.frontlinesms.plugins.patientview.data.repository.CommunityHealthWorkerDao;
 import net.frontlinesms.plugins.patientview.importer.validation.CommunityHealthWorkerCsvValidator;
 import net.frontlinesms.plugins.patientview.importer.validation.CsvValidationException;
