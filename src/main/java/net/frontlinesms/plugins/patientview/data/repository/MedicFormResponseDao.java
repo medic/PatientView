@@ -1,5 +1,6 @@
 package net.frontlinesms.plugins.patientview.data.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
@@ -55,4 +56,11 @@ public interface MedicFormResponseDao {
 	 */
 	public List<MedicFormResponse> getMappedResponses();
 	
+	public int countFindFormResponses(boolean searchingMappedForms, MedicForm form);
+	
+	public List<MedicFormResponse> findFormResponses(boolean searchingMappedForms, MedicForm form, Date aroundDate, int startIndex, int maxResults);
+	
+	public int countFindFormResponsesWithPeople(Person submitter, Person subject, MedicForm form);
+	
+	public List<MedicFormResponse> findFormResponsesWithPeople(Person submitter, Person subject, MedicForm form, Date aroundDate, int startIndex, int maxResults);
 }

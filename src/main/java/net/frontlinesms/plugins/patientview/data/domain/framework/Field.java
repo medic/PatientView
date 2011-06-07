@@ -24,7 +24,7 @@ import javax.persistence.Table;
 @DiscriminatorColumn(name="field_type", discriminatorType=DiscriminatorType.STRING)
 @DiscriminatorValue(value="field")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-public abstract class Field{
+public abstract class Field {
 
 	/** Unique id for this entity.  This is for hibernate usage. */
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)

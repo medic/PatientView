@@ -6,15 +6,9 @@ import java.util.List;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormResponse;
-import net.frontlinesms.plugins.patientview.data.repository.CriteriaExecutor;
-import net.frontlinesms.plugins.patientview.search.OrderBySQL;
+import net.frontlinesms.plugins.patientview.data.repository.MedicFormResponseDao;
 import net.frontlinesms.plugins.patientview.search.PagedResultSet;
 
-import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.context.ApplicationContext;
 
 
@@ -30,18 +24,15 @@ public class FormResponseResultSet extends PagedResultSet {
 	 */
 	private Date aroundDate;
 	
-	
 	/**
 	 * Limits the results to form responses submitted by this person
 	 */
 	private Person submitter;
 	
-	
 	/**
 	 * Limits the results to form responses about this persom
 	 */
 	private Person subject;
-	
 	
 	/**
 	 * Limits the results to form responses for this form
@@ -53,40 +44,17 @@ public class FormResponseResultSet extends PagedResultSet {
 	 */
 	private List<MedicFormResponse> results;
 	
-	private CriteriaExecutor executor;
+	private MedicFormResponseDao formResponseDao;
 
 	public FormResponseResultSet(ApplicationContext appCon){
-		this.executor= (CriteriaExecutor) appCon.getBean("CriteriaExecutor");
+		this.formResponseDao = (MedicFormResponseDao) appCon.getBean("MedicFormResponseDao");
 		super.pageSize = 28;
 	}
 	
 	@Override
 	public List<MedicFormResponse> getFreshResultsPage() {
-		DetachedCriteria c = DetachedCriteria.forClass(MedicFormResponse.class);
-		c.setFetchMode("form.fields", FetchMode.SELECT);
-		//create the criteria
-		if(submitter != null){
-			c.add(Restrictions.eq("submitter", submitter));
-		}
-		//search by subject
-		if(subject != null){
-			c.add(Restrictions.eq("subject", subject));
-		}
-		if(form != null){
-			c.add(Restrictions.eq("form", form));
-		}
-		//count before we order
-		c.setProjection(Projections.rowCount());
-		super.setTotalResults(executor.getUnique(c, Integer.class)); 
-		//clean up after counting
-		c.setProjection(null);
-		c.setResultTransformer(Criteria.ROOT_ENTITY);
-		//order
-		if(aroundDate != null){
-			c.addOrder(OrderBySQL.sqlFormula("abs(dateSubmitted - " + aroundDate.getTime() + ") asc"));
-		}
-		//get the results
-		this.results = executor.executePagedCriteria(c, super.getFirstResultOnPage()-1, pageSize, MedicFormResponse.class);
+		super.setTotalResults(formResponseDao.countFindFormResponsesWithPeople(submitter, subject, form));
+		this.results = formResponseDao.findFormResponsesWithPeople(submitter, subject, form, aroundDate, getFirstResultOnPage() -1 , pageSize);
 		return results;
 	}
 
@@ -118,6 +86,5 @@ public class FormResponseResultSet extends PagedResultSet {
 	public List getResultsPage(){
 		return results;
 	}
-
 
 }

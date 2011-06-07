@@ -3,14 +3,9 @@ package net.frontlinesms.plugins.patientview.search.impl;
 import java.util.List;
 
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
-import net.frontlinesms.plugins.patientview.data.repository.CriteriaExecutor;
+import net.frontlinesms.plugins.patientview.data.repository.PersonDao;
 import net.frontlinesms.plugins.patientview.search.PagedResultSet;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.context.ApplicationContext;
 
 public class PersonResultSet<P extends Person> extends PagedResultSet {
@@ -21,25 +16,17 @@ public class PersonResultSet<P extends Person> extends PagedResultSet {
 		
 	private String nameString;
 	
-	private CriteriaExecutor executor;
+	private PersonDao personDao;
 
 	@Override
-	public List getFreshResultsPage() {
-		DetachedCriteria c = DetachedCriteria.forClass(personClass);
-		if(nameString != null){
-			c.add(Restrictions.ilike("name",nameString,MatchMode.ANYWHERE));
-		}
-		c.setProjection(Projections.rowCount());
-		super.setTotalResults(executor.getUnique(c, Integer.class)); 
-		//clean up after counting
-		c.setProjection(null);
-		c.setResultTransformer(Criteria.ROOT_ENTITY);
-		this.results = executor.executePagedCriteria(c, super.getFirstResultOnPage()-1, pageSize, personClass);
+	public List<P> getFreshResultsPage() {
+		super.setTotalResults(personDao.countFindPeople(nameString, personClass));
+		this.results = (List<P>) personDao.findPeople(nameString, personClass, getFirstResultOnPage() -1 , pageSize);
 		return results;
 	}
 
 	@Override
-	public List getResultsPage() {
+	public List<P> getResultsPage() {
 		return results;
 	}
 
@@ -49,7 +36,7 @@ public class PersonResultSet<P extends Person> extends PagedResultSet {
 	}
 	
 	public PersonResultSet(ApplicationContext appCon, Class<P> personClass){
-		this.executor = ((CriteriaExecutor) appCon.getBean("CriteriaExecutor"));
+		this.personDao = ((PersonDao) appCon.getBean("PersonDao"));
 		super.pageSize = 28;
 		this.personClass = personClass;
 	}
