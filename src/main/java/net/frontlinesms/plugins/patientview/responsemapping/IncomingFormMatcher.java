@@ -171,7 +171,7 @@ public class IncomingFormMatcher implements EventObserver{
 		//get the CHW that submitted the form
 		CommunityHealthWorker chw = (CommunityHealthWorker) response.getSubmitter();
 		//get the list of patients that the CHW cares for
-		ArrayList<Patient> patients = (ArrayList<Patient>) patientDao.getPatientsForCHW(chw);
+		ArrayList<Patient> patients = (ArrayList<Patient>) patientDao.getPatientsForCHW(chw,false);
 		ArrayList<Candidate> candidates = new ArrayList<Candidate>();
 		//iterate through all fields on the form, seeing if they are mapped to patient identifying fields
 		//e.g. Birthdate, Name, and Patient ID

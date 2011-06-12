@@ -1,7 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.administration;
 
-import thinlet.Thinlet;
-import net.frontlinesms.ui.ThinletUiEventHandler;
+import net.frontlinesms.plugins.patientview.ui.ViewHandler;
 import net.frontlinesms.ui.UiGeneratorController;
 
 /**
@@ -9,9 +8,7 @@ import net.frontlinesms.ui.UiGeneratorController;
  * @author dieterichlawson
  *
  */
-public class DeleteDialogController implements ThinletUiEventHandler {
-
-	private UiGeneratorController uiController;
+public class DeleteDialogController extends ViewHandler{
 	
 	private final static String UI_XML = "/ui/plugins/patientview/administration/deleteDialog.xml";
 	
@@ -21,42 +18,37 @@ public class DeleteDialogController implements ThinletUiEventHandler {
 	private DeleteDialogDelegate parentController;
 	
 	/** Top level thinlet object*/
-	private Object dialog;
-	private Object keepVisibleCheckbox;
 	private Object reasonTextArea;
 	
 	/** The name of the entity, e.g. Patient, CHW, etc..*/
 	private String entityName;
 	
 	public DeleteDialogController(UiGeneratorController uiController, DeleteDialogDelegate parentController, String entityName){
-		this.uiController = uiController;
+		super(uiController,null,UI_XML);
 		this.parentController = parentController;
 		this.entityName = entityName;
 		init();
 	}
 	
 	private void init(){
-		dialog = uiController.loadComponentFromFile(UI_XML, this);
-		keepVisibleCheckbox = uiController.find(dialog,"keepVisibleCheckbox");
-		reasonTextArea  = uiController.find(dialog,"reasonArea");
-		uiController.setText(dialog, "Delete " + entityName);
-		uiController.setText(keepVisibleCheckbox, "Keep " + entityName + " visible (in search results, etc..)");
-		uiController.add(dialog);
-		uiController.setVisible(dialog, true);
+		reasonTextArea  = find("reasonArea");
+		ui.setText(mainPanel, "Delete " + entityName);
+		ui.add(mainPanel);
+		ui.setVisible(mainPanel, true);
 	}
 	
 	public void deleteClicked(){
 		closeDialog();
-		parentController.dialogReturned(true, uiController.getBoolean(keepVisibleCheckbox, Thinlet.SELECTED), uiController.getText(reasonTextArea));
+		parentController.dialogReturned(true, ui.getText(reasonTextArea));
 	}
 	
 	public void cancelClicked(){
 		closeDialog();
-		parentController.dialogReturned(false,null,null);
+		parentController.dialogReturned(false,null);
 	}
 
 	private void closeDialog(){
-		uiController.setVisible(dialog,false);
-		uiController.remove(dialog);
+		ui.setVisible(mainPanel,false);
+		ui.remove(mainPanel);
 	}
 }

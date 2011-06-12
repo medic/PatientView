@@ -56,7 +56,7 @@ public class RegistrationScreenController implements ThinletUiEventHandler, Tabl
 	
 	public void searchKeyPressed(){
 		ArrayList<Patient> results = new ArrayList<Patient>();
-		results.addAll(patientDao.findPatientsByName(uiController.getText(uiController.find(mainPanel,"searchBox")),15));
+		results.addAll(patientDao.findPatientsByName(uiController.getText(uiController.find(mainPanel,"searchBox")),15,false));
 		patientTable.setResults(results);
 		patientTable.setSelected(0);
 	}

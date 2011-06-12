@@ -100,7 +100,7 @@ public class LoginScreen implements ThinletUiEventHandler {
 		Object usernameField = ui.find(mainPanel, "usernameField");
 		String username = ui.getText(usernameField);
 		if (username != null) {
-			user = userDao.getUserByUsername(username);
+			user = userDao.getUserByUsername(username,false);
 			if (user != null) {
 				changeModeRecoverPassword();
 			} else {

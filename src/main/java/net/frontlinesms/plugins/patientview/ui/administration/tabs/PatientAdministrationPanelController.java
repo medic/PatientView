@@ -1,7 +1,5 @@
 package net.frontlinesms.plugins.patientview.ui.administration.tabs;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +29,7 @@ public class PatientAdministrationPanelController extends PersonAdministrationPa
 
 	@Override
 	protected List<Patient> getPeopleForString(String s) {
-		return new ArrayList<Patient>(patientDao.findPatientsByName(s, 30));
+		return new ArrayList<Patient>(patientDao.findPatientsByName(s, 30,false));
 	}
 
 	@Override
@@ -73,5 +71,11 @@ public class PatientAdministrationPanelController extends PersonAdministrationPa
 		return Patient.class;
 	}
 	
-	public void removeButtonClicked(){}	
+	public void dialogReturned(Boolean delete, String reason) {
+		if(delete){
+			Patient patient = ((Patient) super.advancedTableController.getCurrentlySelectedObject());
+			patientDao.deletePatient(patient, reason);
+			super.advancedTableController.refresh();
+		}
+	}
 }

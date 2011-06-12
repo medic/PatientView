@@ -16,20 +16,25 @@ public class HibernatePersonDao extends BaseHibernateDao<Person> implements Pers
 		super(Person.class);
 	}
 
-	public int countFindPeople(String nameFragment, Class<? extends Person> personClass) {
+	public int countFindPeople(String nameFragment, Class<? extends Person> personClass, boolean includeDeleted) {
 		DetachedCriteria c = DetachedCriteria.forClass(personClass);
 		if(nameFragment != null && !nameFragment.trim().equals("")){
 			c.add(Restrictions.ilike("name",nameFragment,MatchMode.ANYWHERE));
+		}
+		if(!includeDeleted){
+			c.add(Restrictions.or(Restrictions.isNull("deleted"), Restrictions.eq("deleted",false)));
 		}
 		return super.getCount(c);
 	}
 
-	public List<Person> findPeople(String nameFragment, Class<? extends Person> personClass, int startIndex, int maxResults) {
+	public List<Person> findPeople(String nameFragment, Class<? extends Person> personClass, int startIndex, int maxResults, boolean includeDeleted) {
 		DetachedCriteria c = DetachedCriteria.forClass(personClass);
 		if(nameFragment != null && !nameFragment.trim().equals("")){
 			c.add(Restrictions.ilike("name",nameFragment,MatchMode.ANYWHERE));
 		}
+		if(!includeDeleted){
+			c.add(Restrictions.or(Restrictions.isNull("deleted"), Restrictions.eq("deleted",false)));
+		}
 		return super.getHibernateTemplate().findByCriteria(c, startIndex, maxResults);
 	}
-
 }

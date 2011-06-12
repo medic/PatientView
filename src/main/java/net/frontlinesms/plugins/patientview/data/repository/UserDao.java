@@ -17,12 +17,11 @@ public interface UserDao {
 	public void saveUser(User s);
 
 	/**
-	 * Permanently deletes a user's record. Should not be used - use void
-	 * instead.
+	 * Soft deletes a user's record.
 	 * 
-	 * @param s
+	 * @param user
 	 */
-	public void deleteUser(User s);
+	public void deleteUser(User user, String reason);
 
 	/**
 	 * Updates an existing User's recprd in the database. This method does NOT
@@ -47,7 +46,7 @@ public interface UserDao {
 	 *            part or all of a username
 	 * @return the list of users
 	 */
-	public List<User> findUsersByUsername(String username);
+	public List<User> findUsersByUsername(String username, boolean includeDeleted);
 
 	/**
 	 * Returns the user with the supplied username, or null if there is no user
@@ -58,7 +57,7 @@ public interface UserDao {
 	 * @param username
 	 * @return the user
 	 */
-	public User getUserByUsername(String username);
+	public User getUserByUsername(String username, boolean includeDeleted);
 
 	/**
 	 * Returns the user with the supplied ID, or null if there is none
@@ -66,7 +65,7 @@ public interface UserDao {
 	 * @param id
 	 * @return
 	 */
-	public User getUsersById(long id);
+	public User getUserById(long id);
 
 	/**
 	 * Returns a list of users that have 'nameFragment' in their name by running
@@ -79,6 +78,6 @@ public interface UserDao {
 	 *            The maximum number of results returned
 	 * @return
 	 */
-	public List<User> getUsersByName(String nameFragment, int limit);
+	public List<User> findUsersByName(String nameFragment, int limit, boolean includeDeleted);
 
 }

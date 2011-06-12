@@ -31,7 +31,7 @@ public class CommunityHealthWorkerAdministrationPanelController extends PersonAd
 
 	@Override
 	protected List<CommunityHealthWorker> getPeopleForString(String s) {
-		return new ArrayList<CommunityHealthWorker>(chwDao.findCommunityHealthWorkerByName(s, 30));
+		return new ArrayList<CommunityHealthWorker>(chwDao.findCommunityHealthWorkerByName(s, 30,false));
 	}
 
 	@Override
@@ -75,6 +75,11 @@ public class CommunityHealthWorkerAdministrationPanelController extends PersonAd
 		return CommunityHealthWorker.class;
 	}
 	
-	@Override
-	public void removeButtonClicked() {	}
+	public void dialogReturned(Boolean delete, String reason) {
+		if(delete){
+			CommunityHealthWorker chw = ((CommunityHealthWorker) super.advancedTableController.getCurrentlySelectedObject());
+			chwDao.deleteCommunityHealthWorker(chw,reason);
+			super.advancedTableController.refresh();
+		}
+	}
 }

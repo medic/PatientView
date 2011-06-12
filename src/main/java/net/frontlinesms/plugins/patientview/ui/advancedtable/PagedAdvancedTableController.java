@@ -33,7 +33,7 @@ public class PagedAdvancedTableController extends AdvancedTableController implem
 		ui.setGap(mainPanel, 6);
 		pagingControls = ui.loadComponentFromFile(PAGING_CONTROLS_XML, this);
 		add(pagingControls);			
-}
+	}
 	
 	public PagedAdvancedTableController(TableActionDelegate delegate,UiGeneratorController uiController, Object panel) {
 			super(delegate, uiController);
@@ -82,7 +82,7 @@ public class PagedAdvancedTableController extends AdvancedTableController implem
 			return;
 		}
 		//set the paging buttons
-		ui.setEnabled(find(pagingControls, "refreshButton"),refreshButtonStates.get(currentClass));
+		ui.setEnabled(find(pagingControls, "refreshButton"),refreshButtonStates.get(currentClass)!=null?refreshButtonStates.get(currentClass):false);
 		ui.setEnabled(find(pagingControls, "leftPageButton"),resultSet.hasPreviousPage());
 		ui.setEnabled(find(pagingControls, "rightPageButton"),resultSet.hasNextPage());
 		String pagingLabel = getI18nString("pagingcontrols.results")+" " + getResultsSet().getFirstResultOnPage() + " "+getI18nString("pagingcontrols.to")+" " +

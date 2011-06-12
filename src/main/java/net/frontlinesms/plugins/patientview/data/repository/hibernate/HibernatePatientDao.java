@@ -29,8 +29,9 @@ public class HibernatePatientDao extends BaseHibernateDao<Patient> implements Pa
 		super.updateWithoutDuplicateHandling(p);
 	}
 
-	public void deletePatient(Patient p) {
-		super.delete(p);
+	public void deletePatient(Patient p, String reason) {
+		p.delete(reason);
+		updatePatient(p);
 	}
 
 	public List<Patient> getAllPatients() {
@@ -38,15 +39,21 @@ public class HibernatePatientDao extends BaseHibernateDao<Patient> implements Pa
 		return super.getList(c);
 	}
 	
-	public List<Patient> getPatientsForCHW(CommunityHealthWorker chw) {
+	public List<Patient> getPatientsForCHW(CommunityHealthWorker chw, boolean includeDeleted) {
 		DetachedCriteria criteria = getBaseCriterion();
 		criteria.add(Restrictions.eq("chw", chw));
+		if(!includeDeleted){
+			criteria.add(Restrictions.or(Restrictions.isNull("deleted"), Restrictions.eq("deleted",false)));
+		}
 		return super.getList(criteria);
 	}
 
-	public List<Patient> findPatientsByName(String nameFragment, int resultsLimit) {
+	public List<Patient> findPatientsByName(String nameFragment, int resultsLimit, boolean includeDeleted) {
 		DetachedCriteria c= getBaseCriterion();
 		c.add(Restrictions.like("name", nameFragment, MatchMode.ANYWHERE));
+		if(!includeDeleted){
+			c.add(Restrictions.eq("deleted",false));
+		}
 		if(resultsLimit > 0)
 			return super.getList(c, 0, resultsLimit);
 		else{
@@ -54,8 +61,8 @@ public class HibernatePatientDao extends BaseHibernateDao<Patient> implements Pa
 		}
 	}
 	
-	public List<Patient> findPatientsByName(String nameFragment){
-		return findPatientsByName(nameFragment,-1);
+	public List<Patient> findPatientsByName(String nameFragment, boolean includeDeleted){
+		return findPatientsByName(nameFragment,-1,includeDeleted);
 	}
 	
 	public Patient getPatientById(Long id){
@@ -64,7 +71,7 @@ public class HibernatePatientDao extends BaseHibernateDao<Patient> implements Pa
 		return super.getUnique(c);
 	}
 	
-	public Patient findPatient(String name, String birthdate, String id){
+	public Patient findPatient(String name, String birthdate, String id, boolean includeDeleted){
 		DetachedCriteria c = getBaseCriterion();
 		//add the name restriction
 		if(name !=null && !name.equals("")){
@@ -86,6 +93,9 @@ public class HibernatePatientDao extends BaseHibernateDao<Patient> implements Pa
 		if(id != null && !id.equals("")){
 			long longId = Long.parseLong(id);
 			c.add(Restrictions.eq("id", longId));
+		}
+		if(!includeDeleted){
+			c.add(Restrictions.or(Restrictions.isNull("deleted"), Restrictions.eq("deleted",false)));
 		}
 		return super.getUnique(c);
 	}

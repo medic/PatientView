@@ -21,6 +21,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
+import net.frontlinesms.plugins.patientview.domain.Deletable;
 import net.frontlinesms.plugins.patientview.ui.imagechooser.ImageUtils;
 import net.frontlinesms.plugins.patientview.utils.TimeUtils;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
@@ -32,7 +33,7 @@ import org.hibernate.annotations.IndexColumn;
 @DiscriminatorColumn(name="person_type", discriminatorType=DiscriminatorType.STRING)
 @DiscriminatorValue(value="per")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-public abstract class Person implements Deletable{
+public abstract class Person extends Deletable{
 	
 	
 	/** Unique id for this entity.  This is for hibernate usage. */

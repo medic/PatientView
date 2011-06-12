@@ -1,7 +1,5 @@
 package net.frontlinesms.plugins.patientview.ui.administration.tabs;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
-
 import java.util.List;
 
 import net.frontlinesms.data.events.DatabaseEntityNotification;
@@ -11,6 +9,8 @@ import net.frontlinesms.events.FrontlineEventNotification;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
 import net.frontlinesms.plugins.patientview.search.impl.PersonResultSet;
 import net.frontlinesms.plugins.patientview.ui.administration.AdministrationTabPanel;
+import net.frontlinesms.plugins.patientview.ui.administration.DeleteDialogController;
+import net.frontlinesms.plugins.patientview.ui.administration.DeleteDialogDelegate;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedAdvancedTableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.personpanel.PersonPanel;
@@ -18,7 +18,7 @@ import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
 
-public abstract class PersonAdministrationPanelController<E extends Person> extends AdministrationTabPanel implements TableActionDelegate, EventObserver{
+public abstract class PersonAdministrationPanelController<E extends Person> extends AdministrationTabPanel implements TableActionDelegate, EventObserver, DeleteDialogDelegate{
 
 	/**
 	 * The main panel of the person administration screen
@@ -85,7 +85,9 @@ public abstract class PersonAdministrationPanelController<E extends Person> exte
 		add(find(FIELDS_PANEL), currentPersonPanel.getMainPanel());
 	}
 	
-	public abstract void removeButtonClicked();
+	public void removeButtonClicked(){
+		DeleteDialogController deleteDialog = new DeleteDialogController(ui,this,"Person");
+	}
 	
 	protected abstract String[] getIcons();
 	

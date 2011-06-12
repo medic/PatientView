@@ -17,11 +17,13 @@ public class PersonResultSet<P extends Person> extends PagedResultSet {
 	private String nameString;
 	
 	private PersonDao personDao;
+	
+	private boolean includeDeleted = false;
 
 	@Override
 	public List<P> getFreshResultsPage() {
-		super.setTotalResults(personDao.countFindPeople(nameString, personClass));
-		this.results = (List<P>) personDao.findPeople(nameString, personClass, getFirstResultOnPage() -1 , pageSize);
+		super.setTotalResults(personDao.countFindPeople(nameString, personClass,includeDeleted));
+		this.results = (List<P>) personDao.findPeople(nameString, personClass, getFirstResultOnPage() -1 , pageSize,false);
 		return results;
 	}
 

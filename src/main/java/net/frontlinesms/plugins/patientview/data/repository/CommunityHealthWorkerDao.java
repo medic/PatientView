@@ -29,7 +29,7 @@ public interface CommunityHealthWorkerDao {
 	 * @param chw
 	 *            CHW to save
 	 */
-	public void deleteCommunityHealthWorker(CommunityHealthWorker chw);
+	public void deleteCommunityHealthWorker(CommunityHealthWorker chw, String reason);
 
 	/** @return all CHWs saved in the data source */
 	public Collection<CommunityHealthWorker> getAllCommunityHealthWorkers();
@@ -56,7 +56,7 @@ public interface CommunityHealthWorkerDao {
 	 * @return
 	 */
 	public List<CommunityHealthWorker> findCommunityHealthWorkerByName(
-			String nameFragment);
+			String nameFragment, boolean includeDeleted);
 
 	/**
 	 * Returns community health workers that have string nameFragment anywhere
@@ -70,7 +70,7 @@ public interface CommunityHealthWorkerDao {
 	 * @return
 	 */
 	public List<CommunityHealthWorker> findCommunityHealthWorkerByName(
-			String nameFragment, int limit);
+			String nameFragment, int limit, boolean includeDeleted);
 
 	/**
 	 * Returns the CHW with the id specified. If there is no such CHW, null is

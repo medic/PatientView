@@ -19,6 +19,9 @@ public class SimpleSearchQueryGenerator extends QueryGenerator{
 		SimpleSearchEntity sEntity = searchController.getCurrentEntity();
 		FieldDescriptor field = searchController.getCurrentField();
 		String query = "select " + sEntity.getTableAlias() + " from "  + sEntity.getDatabaseName() + " "  + sEntity.getTableAlias() + " where ";
+		if(sEntity ==SimpleSearchEntity.PATIENT || sEntity == SimpleSearchEntity.CHW){
+			query +="deleted = false and ";
+		}
 		if(field.getDataType() == SimpleSearchDataType.STRING){
 			query +=  "lower(" +sEntity.getTableAlias() + "." + field.getDatabaseName()+")";
 			query += " like '%" + searchController.getTextInput().toLowerCase() + "%'";

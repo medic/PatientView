@@ -3,6 +3,7 @@ package net.frontlinesms.plugins.patientview.ui.administration.tabs;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
+import net.frontlinesms.plugins.patientview.data.domain.people.CommunityHealthWorker;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
 import net.frontlinesms.plugins.patientview.data.domain.people.User;
 import net.frontlinesms.plugins.patientview.data.repository.UserDao;
@@ -62,7 +63,7 @@ public class UserAdministrationPanelController extends PersonAdministrationPanel
 
 	@Override
 	protected List<User> getPeopleForString(String s) {
-		return userDao.getUsersByName(s,30);
+		return userDao.findUsersByName(s,30,false);
 	}
 
 	@Override
@@ -148,6 +149,11 @@ public class UserAdministrationPanelController extends PersonAdministrationPanel
 		return User.class;
 	}
 	
-	@Override
-	public void removeButtonClicked() {}
+	public void dialogReturned(Boolean delete, String reason) {
+		if(delete){
+			User user = ((User) super.advancedTableController.getCurrentlySelectedObject());
+			userDao.deleteUser(user,reason);
+			super.advancedTableController.refresh();
+		}
+	}
 }

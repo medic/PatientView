@@ -5,9 +5,7 @@ import java.util.List;
 
 import net.frontlinesms.data.repository.hibernate.BaseHibernateDao;
 import net.frontlinesms.plugins.patientview.data.domain.people.User;
-import net.frontlinesms.plugins.patientview.data.domain.response.Response;
 import net.frontlinesms.plugins.patientview.data.repository.UserDao;
-import net.frontlinesms.plugins.patientview.security.UserSessionManager;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
@@ -21,13 +19,17 @@ public class HibernateUserDao extends BaseHibernateDao<User> implements UserDao 
 		super(User.class);
 	}
 
-	public void deleteUser(User u) {
-		super.delete(u);
+	public void deleteUser(User u, String reason) {
+		u.delete(reason);
+		updateUser(u);
 	}
 
-	public List<User> findUsersByUsername(String s) {
+	public List<User> findUsersByUsername(String s, boolean includeDeleted) {
 		DetachedCriteria c = super.getCriterion();
 		c.add(Restrictions.like("username", "%" + s + "%"));
+		if(!includeDeleted){
+			c.add(Restrictions.or(Restrictions.isNull("deleted"), Restrictions.eq("deleted",false)));
+		}
 		return super.getList(c);
 	}
 
@@ -35,25 +37,27 @@ public class HibernateUserDao extends BaseHibernateDao<User> implements UserDao 
 		return super.getAll();
 	}
 
-	public User getUserByUsername(String username) {
+	public User getUserByUsername(String username, boolean includeDeleted) {
 		DetachedCriteria c = super.getCriterion();
 		c.add(Restrictions.eq("username", username));
-		List<User> users = super.getList(c);
-		if (users.size() >= 1) {
-			return users.get(0);
+		if(!includeDeleted){
+			c.add(Restrictions.eq("deleted",false));
 		}
-		return null;
+		return super.getUnique(c);
 	}
 
-	public User getUsersById(long id) {
+	public User getUserById(long id) {
 		DetachedCriteria c = super.getCriterion();
 		c.add(Restrictions.eq("pid", id));
 		return super.getUnique(c);
 	}
 
-	public List<User> getUsersByName(String nameFragment, int limit) {
+	public List<User> findUsersByName(String nameFragment, int limit, boolean includeDeleted) {
 		DetachedCriteria c = super.getCriterion();
 		c.add(Restrictions.like("name", "%" + nameFragment + "%"));
+		if(!includeDeleted){
+			c.add(Restrictions.or(Restrictions.isNull("deleted"), Restrictions.eq("deleted",false)));
+		}
 		if (limit > 0)
 			return super.getList(c, 0, limit);
 		else {

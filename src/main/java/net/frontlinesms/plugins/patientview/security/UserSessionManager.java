@@ -44,7 +44,7 @@ public class UserSessionManager {
 	}
 
 	public AuthenticationResult login(String username, String password) {
-		User user = userDao.getUserByUsername(username);
+		User user = userDao.getUserByUsername(username, false);
 		if (user != null && user.verifyPassword(password)) {
 			currentUser = user;
 			isLoggedIn = true;

@@ -113,17 +113,17 @@ public class FormResponseDataImporter implements CsvDataImporter{
 					while((currLine = reader.readNext()) != null){
 						//determine the submitter of the form
 						Person submitter = null;
-						List<CommunityHealthWorker> chws  = chwDao.findCommunityHealthWorkerByName(currLine[0], -1);
+						List<CommunityHealthWorker> chws  = chwDao.findCommunityHealthWorkerByName(currLine[0], -1,true);
 						if(chws.size() != 1){
-							List<User> users = userDao.getUsersByName(currLine[0], -1);
+							List<User> users = userDao.findUsersByName(currLine[0], -1,true);
 							if(users.size() != 1){
-								List<User> usernames = userDao.findUsersByUsername(currLine[0]);
+								List<User> usernames = userDao.findUsersByUsername(currLine[0],true);
 								if(usernames.size() != 1){
 									try{
 										long id=Long.parseLong(currLine[0]);
 										CommunityHealthWorker chwById = chwDao.getCommunityHealthWorkerById(id);
 										if(chwById == null){
-											User userById = userDao.getUsersById(id);
+											User userById = userDao.getUserById(id);
 											if(userById == null){
 												exceptions.add(new CsvValidationException(lineNumber,getI18nString("medic.importer.unknown.submitter.error") + " \""+currLine[0]+"\""));
 											}else{
@@ -166,7 +166,7 @@ public class FormResponseDataImporter implements CsvDataImporter{
 							mfr.addFieldResponse(mffr);
 						}
 						try{
-							Patient p = patientDao.findPatient(name, birthdate, id);
+							Patient p = patientDao.findPatient(name, birthdate, id,true);
 							if(p == null){
 								exceptions.add(new CsvValidationException(lineNumber,getI18nString("medic.importer.unknown.subject.error")));
 							}else{

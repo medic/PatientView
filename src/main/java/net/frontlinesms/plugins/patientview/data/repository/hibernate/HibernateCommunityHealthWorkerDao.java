@@ -25,23 +25,27 @@ public class HibernateCommunityHealthWorkerDao extends BaseHibernateDao<Communit
 		super.updateWithoutDuplicateHandling(chw);
 	}
 	
-	public void deleteCommunityHealthWorker(CommunityHealthWorker chw) {
-		super.delete(chw);
+	public void deleteCommunityHealthWorker(CommunityHealthWorker chw, String reason) {
+		chw.delete(reason);
+		updateCommunityHealthWorker(chw);
 	}
 
 	public Collection<CommunityHealthWorker> getAllCommunityHealthWorkers() {
 		return super.getAll();
 	}
 
-	public List<CommunityHealthWorker> findCommunityHealthWorkerByName(String nameFragment, int limit){
+	public List<CommunityHealthWorker> findCommunityHealthWorkerByName(String nameFragment, int limit, boolean includeDeleted){
 		DetachedCriteria c= super.getCriterion();
 		c.add(Restrictions.like("name", nameFragment,MatchMode.ANYWHERE));
+		if(!includeDeleted){
+			c.add(Restrictions.or(Restrictions.isNull("deleted"), Restrictions.eq("deleted",false)));
+		}
 		if(limit > 0) return super.getList(c, 0, limit);
 		else return super.getList(c);
 	}
 
-	public List<CommunityHealthWorker> findCommunityHealthWorkerByName(String nameFragment){
-		return findCommunityHealthWorkerByName(nameFragment,-1);
+	public List<CommunityHealthWorker> findCommunityHealthWorkerByName(String nameFragment, boolean includeDeleted){
+		return findCommunityHealthWorkerByName(nameFragment,-1, includeDeleted);
 	}
 	
 	public CommunityHealthWorker getCommunityHealthWorkerByPhoneNumber(String phoneNumber){
