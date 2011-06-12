@@ -1,12 +1,17 @@
 package net.frontlinesms.plugins.patientview.data.domain.people;
 
 import java.util.Date;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose;
 
 @Entity
 @DiscriminatorValue(value = "pat")
@@ -19,6 +24,9 @@ public class Patient extends Person {
 	@JoinColumn(name="chw_id", nullable=true)
 	private CommunityHealthWorker chw;
 
+	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY,mappedBy="patient")
+	private Set<ScheduledDose> scheduledDoses;
+	
 	/** Default constructor for Hibernate. */
 	public Patient() {}
 

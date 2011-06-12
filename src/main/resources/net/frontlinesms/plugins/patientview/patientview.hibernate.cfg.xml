@@ -17,5 +17,8 @@
 		<mapping class="net.frontlinesms.plugins.patientview.data.domain.response.Response" />
 		<mapping class="net.frontlinesms.plugins.patientview.data.domain.flag.FlagDefinition" />
 		<mapping class="net.frontlinesms.plugins.patientview.data.domain.flag.PatientFlag" />
+		<mapping class="net.frontlinesms.plugins.patientview.data.domain.vaccine.Vaccine" />
+		<mapping class="net.frontlinesms.plugins.patientview.data.domain.vaccine.VaccineDose" />
+		<mapping class="net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose" />
 	</session-factory>
 </hibernate-configuration>
