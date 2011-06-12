@@ -136,7 +136,7 @@ public class LoginScreen implements ThinletUiEventHandler {
 		}
 	}
 
-	/**
+ 	/**
 	 * The callback function for when a user attempts to recover their security
 	 * questions by answering their security questions.
 	 * 

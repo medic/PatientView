@@ -21,7 +21,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
-import net.frontlinesms.plugins.patientview.domain.Deletable;
+import net.frontlinesms.plugins.patientview.data.domain.Deletable;
 import net.frontlinesms.plugins.patientview.ui.imagechooser.ImageUtils;
 import net.frontlinesms.plugins.patientview.utils.TimeUtils;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;

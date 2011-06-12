@@ -1,4 +1,4 @@
-package net.frontlinesms.plugins.patientview.domain;
+package net.frontlinesms.plugins.patientview.data.domain;
 
 import java.util.Date;
 

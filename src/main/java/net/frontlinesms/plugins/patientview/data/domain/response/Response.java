@@ -16,8 +16,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import net.frontlinesms.plugins.patientview.data.domain.Deletable;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
-import net.frontlinesms.plugins.patientview.domain.Deletable;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
 
