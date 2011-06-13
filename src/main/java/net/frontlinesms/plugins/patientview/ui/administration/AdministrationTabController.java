@@ -2,7 +2,6 @@ package net.frontlinesms.plugins.patientview.ui.administration;
 
 import java.util.ArrayList;
 
-import net.frontlinesms.plugins.patientview.flags.ui.FlagAdministrationPanelController;
 import net.frontlinesms.plugins.patientview.importer.ui.CsvImporterPanelController;
 import net.frontlinesms.plugins.patientview.responsemapping.ui.FormResponseMappingPanelController;
 import net.frontlinesms.plugins.patientview.ui.ViewHandler;
@@ -11,6 +10,7 @@ import net.frontlinesms.plugins.patientview.ui.administration.tabs.CommunityHeal
 import net.frontlinesms.plugins.patientview.ui.administration.tabs.FormAdministrationPanelController;
 import net.frontlinesms.plugins.patientview.ui.administration.tabs.PatientAdministrationPanelController;
 import net.frontlinesms.plugins.patientview.ui.administration.tabs.UserAdministrationPanelController;
+import net.frontlinesms.plugins.patientview.ui.administration.tabs.VaccineAdministrationPanelController;
 import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
@@ -52,7 +52,8 @@ public class AdministrationTabController extends ViewHandler{
 		panels.add(new AttributeAdministrationPanelController(ui,appCon));
 		panels.add(new FormResponseMappingPanelController(ui,appCon));
 		panels.add(new CsvImporterPanelController(ui,appCon));
-		panels.add(new FlagAdministrationPanelController(ui, appCon));
+		panels.add(new VaccineAdministrationPanelController(ui,appCon));
+		//panels.add(new FlagAdministrationPanelController(ui, appCon));
 		//create all the list items
 		for(AdministrationTabPanel panel: panels){
 			Object listItem = ui.createListItem(panel.getListItemTitle(), panel);

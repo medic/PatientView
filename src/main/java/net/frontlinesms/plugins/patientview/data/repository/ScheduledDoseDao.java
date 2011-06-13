@@ -5,6 +5,7 @@ import java.util.List;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose;
+import net.frontlinesms.plugins.patientview.data.domain.vaccine.Vaccine;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.VaccineDose;
 
 public interface ScheduledDoseDao {
@@ -17,7 +18,9 @@ public interface ScheduledDoseDao {
 	
 	public ScheduledDose getSchedledDose(long scheduledDoseId);
 	
-	public List<ScheduledDose> getScheduledDose(Patient patient, VaccineDose dose);
+	public List<ScheduledDose> getScheduledDoses(Patient patient, VaccineDose dose);
+	
+	public List<ScheduledDose> getScheduledDosesByVaccine(Vaccine vaccine);
 	
 	public void administerDose(ScheduledDose dose, Person administeredBy);
 }

@@ -1,0 +1,4 @@
+<panel columns="1" gap="5" weightx="1">
+	<button action="addVaccine()" name="addVaccineButton" text="Add Vaccine" weightx="1"/>
+	<button action="removeVaccine()" name="removeVaccineButton" text="Remove Vaccine" weightx="1"/>
+</panel>

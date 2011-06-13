@@ -1,0 +1,11 @@
+<panel weightx="1" columns="1" gap="5">
+<panel weightx="1">
+	<label text="Vaccine Name: " />
+	<textfield name="vaccineNameField" weightx="1" />
+</panel>
+<panel weightx="1">
+	<button name="confirmAddVaccineButton" text="Add Vaccine" action="addVaccineConfirmed()" />
+	<label weightx="1" />
+	<button halign="right" name="cancelAddVaccineButton" text="Cancel" action="addVaccineCanceled()"/>
+</panel>
+</panel>

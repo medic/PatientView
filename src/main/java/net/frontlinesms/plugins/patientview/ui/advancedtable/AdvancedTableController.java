@@ -322,6 +322,9 @@ public class AdvancedTableController extends ViewHandler{
 		}
 	}
 	
+	public int getSelectedIndex(){
+		return ui.getSelectedIndex(table);
+	}
 	/**
 	 * @return The object attached to the currently selected row
 	 */

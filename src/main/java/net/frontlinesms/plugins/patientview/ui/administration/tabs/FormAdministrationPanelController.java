@@ -176,10 +176,6 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 			ui.setIcon(item, "");
 		}
 	}
-
-	public Object getPanel() {
-		return mainPanel;
-	}
 	
 	public void removeButtonClicked() {
 		MedicForm mf = (MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList));

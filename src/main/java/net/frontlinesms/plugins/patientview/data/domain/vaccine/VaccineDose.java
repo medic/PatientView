@@ -34,21 +34,91 @@ public class VaccineDose {
 	
 	private int position;
 	
-	private int windowStartDate;
+	private int startDateMonths;
 	
-	private int windowEndDate;
+	private int startDateDays;
+
+	private int endDateMonths;
 	
-	private int minimumInterval;
+	private int endDateDays;
 	
-	public VaccineDose(){}
+	private int minIntervalMonths;
 	
-	public VaccineDose(String name, int windowStartDate, int windowEndDate, int minimumInterval) {
+	private int minIntervalDays;
+	
+	public VaccineDose(String name, Vaccine vaccine, int startDateMonths, int startDateDays, int endDateMonths, int endDateDays, int minIntervalMonths, int minIntervalDays) {
 		super();
 		this.name = name;
-		this.windowStartDate = windowStartDate;
-		this.windowEndDate = windowEndDate;
-		this.minimumInterval = minimumInterval;
+		this.vaccine = vaccine;
+		this.startDateMonths = startDateMonths;
+		this.startDateDays = startDateDays;
+		this.endDateMonths = endDateMonths;
+		this.endDateDays = endDateDays;
+		this.minIntervalMonths = minIntervalMonths;
+		this.minIntervalDays = minIntervalDays;
 	}
+
+	public String getStringStartDate(){
+		return startDateMonths + " months " + startDateDays + " days";
+	}
+	
+	public String getStringEndDate(){
+		return endDateMonths + " months " + endDateDays + " days";
+	}
+	
+	public String getStringMinimumInterval(){
+		return minIntervalMonths+ " months " +minIntervalDays+ " days";
+	}
+	
+	public int getStartDateMonths() {
+		return startDateMonths;
+	}
+
+	public void setStartDateMonths(int startDateMonths) {
+		this.startDateMonths = startDateMonths;
+	}
+
+	public int getStartDateDays() {
+		return startDateDays;
+	}
+
+	public void setStartDateDays(int startDateDays) {
+		this.startDateDays = startDateDays;
+	}
+
+	public int getEndDateMonths() {
+		return endDateMonths;
+	}
+
+	public void setEndDateMonths(int endDateMonths) {
+		this.endDateMonths = endDateMonths;
+	}
+
+	public int getEndDateDays() {
+		return endDateDays;
+	}
+
+	public void setEndDateDays(int endDateDays) {
+		this.endDateDays = endDateDays;
+	}
+
+	public int getMinIntervalMonths() {
+		return minIntervalMonths;
+	}
+
+	public void setMinIntervalMonths(int minIntervalMonths) {
+		this.minIntervalMonths = minIntervalMonths;
+	}
+
+	public int getMinIntervalDays() {
+		return minIntervalDays;
+	}
+
+	public void setMinIntervalDays(int minIntervalDays) {
+		this.minIntervalDays = minIntervalDays;
+	}
+
+	public VaccineDose(){}
 
 	public String getName() {
 		return name;
@@ -72,30 +142,6 @@ public class VaccineDose {
 
 	public void setPosition(int position) {
 		this.position = position;
-	}
-
-	public int getWindowStartDate() {
-		return windowStartDate;
-	}
-
-	public void setWindowStartDate(int windowStartDate) {
-		this.windowStartDate = windowStartDate;
-	}
-
-	public int getWindowEndDate() {
-		return windowEndDate;
-	}
-
-	public void setWindowEndDate(int windowEndDate) {
-		this.windowEndDate = windowEndDate;
-	}
-
-	public int getMinimumInterval() {
-		return minimumInterval;
-	}
-
-	public void setMinimumInterval(int minimumInterval) {
-		this.minimumInterval = minimumInterval;
 	}
 
 	public long getDoseId() {

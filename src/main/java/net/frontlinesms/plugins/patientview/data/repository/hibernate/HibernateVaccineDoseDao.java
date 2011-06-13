@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import net.frontlinesms.data.repository.hibernate.BaseHibernateDao;
@@ -35,6 +36,7 @@ public class HibernateVaccineDoseDao extends BaseHibernateDao<VaccineDose>
 	public List<VaccineDose> getDosesForVaccine(Vaccine vaccine) {
 		DetachedCriteria c = super.getCriterion();
 		c.add(Restrictions.eq("vaccine", vaccine));
+		c.addOrder(Order.asc("position"));
 		return super.getList(c);
 	}
 

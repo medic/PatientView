@@ -65,7 +65,7 @@ public class Vaccine {
 	public void addDose(VaccineDose dose){
 		dose.setVaccine(this);
 		doses.add(dose);
-		dose.setPosition(doses.size()-1);
+		updateDosePositions();
 	}
 	
 	public void insertDose(int position, VaccineDose dose){

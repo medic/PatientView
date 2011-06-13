@@ -6,6 +6,7 @@ import net.frontlinesms.data.repository.hibernate.BaseHibernateDao;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose;
+import net.frontlinesms.plugins.patientview.data.domain.vaccine.Vaccine;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.VaccineDose;
 import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
 
@@ -37,10 +38,16 @@ public class HibernateScheduledDoseDao extends BaseHibernateDao<ScheduledDose> i
 		return super.getUnique(c);
 	}
 
-	public List<ScheduledDose> getScheduledDose(Patient patient, VaccineDose dose) {
+	public List<ScheduledDose> getScheduledDoses(Patient patient, VaccineDose dose) {
 		DetachedCriteria c = super.getCriterion();
-		c.add(Restrictions.eq("patient",patient));
-		c.add(Restrictions.eq("dose",dose));
+		if(patient != null) c.add(Restrictions.eq("patient",patient));
+		if(dose != null) c.add(Restrictions.eq("dose",dose));
+		return super.getList(c);
+	}
+	
+	public List<ScheduledDose> getScheduledDosesByVaccine(Vaccine vaccine) {
+		DetachedCriteria c = super.getCriterion();
+		c.createCriteria("dose").add(Restrictions.eq("vaccine",vaccine));
 		return super.getList(c);
 	}
 

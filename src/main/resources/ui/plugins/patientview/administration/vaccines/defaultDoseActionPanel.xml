@@ -1,0 +1,10 @@
+<panel weightx="1" weighty="1">
+	<checkbox name="enrollNewbornsCheckbox" text="Automatically enroll newborns"
+		action="enrollNewbornsChanged()" />
+	<panel gap="7" halign="right" name="actionButtonPanel" right="6"
+		weightx="1">
+		<button name="addDoseButton" text="Add Dose" action="addDose()" />
+		<button name="editDoseButton" text="Edit Dose" action="editDose()" />
+		<button name="deleteDoseButton" text="Remove Dose" action="removeDose()" />
+	</panel>
+</panel>
