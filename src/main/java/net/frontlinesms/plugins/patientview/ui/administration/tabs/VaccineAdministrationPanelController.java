@@ -20,18 +20,24 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 
 	private AdvancedTableController doseTableController;
 	
+	/**
+	 * The vaccine dose that is currently being edited, if any 
+	 */
 	private VaccineDose currentlyEditingDose;
 	
+	//Thinlet XML files
 	private static final String MAIN_THINLET_XML = "/ui/plugins/patientview/administration/vaccines/vaccineAdministrationPanel.xml";
 	private static final String ADD_VACCINE_XML = "/ui/plugins/patientview/administration/vaccines/addVaccinePanel.xml";
 	private static final String VACCINE_BUTTONS_XML = "/ui/plugins/patientview/administration/vaccines/vaccineButtonsPanel.xml";
 	private static final String EDIT_DOSE_XML = "/ui/plugins/patientview/administration/vaccines/editDosePanel.xml";
 	private static final String DEFAULT_DOSE_PANEL_XML = "/ui/plugins/patientview/administration/vaccines/defaultDoseActionPanel.xml";
 	
+	//DAOS
 	private VaccineDao vaccineDao;
 	private VaccineDoseDao vaccineDoseDao;
 	private ScheduledDoseDao scheduledDoseDao;
 	
+	//Thinlet UI element names
 	private static final String VACCINE_LIST= "vaccineList";
 	private static final String VACCINE_BUTTON_PANEL = "vaccineButtonPanel";
 	private static final String VACCINE_NAME_FIELD = "vaccineNameField";
@@ -48,20 +54,19 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	private static final String MIN_INTERVAL_DAYS_BOX = "minIntervalDays";
 	private static final String DOSE_NAME_FIELD = "doseNameField";
 	private static final String CONFIRMATION_DIALOG = "confirmDialog";
-	
-	
-	private static final String ADD_VACCINE_BUTTON = "addVaccineButton";
+	//Thinlet button names
 	private static final String REMOVE_VACCINE_BUTTON = "removeVaccineButton";
 	private static final String ADD_DOSE_BUTTON = "addDoseButton";
 	private static final String DELETE_DOSE_BUTTON = "deleteDoseButton";
 	private static final String EDIT_DOSE_BUTTON = "editDoseButton";
-	private boolean firstShow = true;
 	
 	public VaccineAdministrationPanelController(UiGeneratorController uiController, ApplicationContext appCon) {
 		super(uiController,appCon, MAIN_THINLET_XML);
+		//init the daos
 		this.vaccineDao = (VaccineDao) appCon.getBean("VaccineDao");
 		this.vaccineDoseDao = (VaccineDoseDao) appCon.getBean("VaccineDoseDao");
 		this.scheduledDoseDao = (ScheduledDoseDao) appCon.getBean("ScheduledDoseDao");
+		//create the dose table
 		doseTableController = new AdvancedTableController(this, uiController);
 		doseTableController.setNoResultsMessage("No doses");
 		List<HeaderColumn> columnList = new ArrayList<HeaderColumn>();
@@ -70,6 +75,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		columnList.add(new HeaderColumn("getStringEndDate", "", "End Date"));
 		columnList.add(new HeaderColumn("getStringMinimumInterval", "", "Minimum Interval To Next Dose"));
 		doseTableController.putHeader(VaccineDose.class, columnList);
+		//add the dose table to the view
 		add(find(DOSE_TABLE_PANEL),doseTableController.getMainPanel());
 	}
 	
@@ -88,8 +94,14 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		refreshVaccines();
 	}
 
+	/**
+	 * Refreshes the list of vaccines and enables/disables
+	 * the related buttons as needed.
+	 */
 	private void refreshVaccines(){
+		//save the current selection index
 		int selectedIndex =ui.getSelectedIndex(find(VACCINE_LIST));
+		//refresh the view
 		removeAll(find(VACCINE_LIST));
 		List<Vaccine> vaccines = vaccineDao.getAllVaccines();
 		if(vaccines.size() == 0){
@@ -99,41 +111,24 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 				add(find(VACCINE_LIST),ui.createListItem(v.getName(), v));
 			}
 		}
+		//if the old selected index is still within the table size, use it
 		if(selectedIndex < vaccines.size() && selectedIndex >=0){
 			setVaccineListSelectedIndex(selectedIndex);
-		}else{
+		}else{// otherwise, set it to the last element in the table
 			setVaccineListSelectedIndex(vaccines.size()-1);
 		}
+		//if there are no vaccines, disable these buttons
 		if(vaccines.size() == 0){
 			ui.setEnabled(find(REMOVE_VACCINE_BUTTON), false);
 			ui.setEnabled(find(ADD_DOSE_BUTTON), false);
 			ui.setEnabled(find(EDIT_DOSE_BUTTON), false);
 			ui.setEnabled(find(DELETE_DOSE_BUTTON), false);
 			ui.setEnabled(find(ENROLL_NEWBORNS_CHECKBOX), false);
-		}else{
+		}else{//otherwise, enable these buttons
 			ui.setEnabled(find(REMOVE_VACCINE_BUTTON), true);
 			ui.setEnabled(find(ADD_DOSE_BUTTON), true);
 			ui.setEnabled(find(ENROLL_NEWBORNS_CHECKBOX), true);
 		}
-	}
-	
-	public void addVaccine(){
-		removeAll(find(VACCINE_BUTTON_PANEL));
-		add(find(VACCINE_BUTTON_PANEL),ui.loadComponentFromFile(ADD_VACCINE_XML,this));
-		ui.requestFocus(find(VACCINE_NAME_FIELD));
-	}
-	
-	public void addVaccineConfirmed(){
-		Vaccine v = new Vaccine(ui.getText(find(VACCINE_NAME_FIELD)),true);
-		vaccineDao.saveOrUpdateVaccine(v);
-		removeAll(find(VACCINE_BUTTON_PANEL));
-		add(find(VACCINE_BUTTON_PANEL),ui.loadComponentFromFile(VACCINE_BUTTONS_XML,this));
-		refreshVaccines();
-	}
-	
-	public void addVaccineCanceled(){
-		removeAll(find(VACCINE_BUTTON_PANEL));
-		add(find(VACCINE_BUTTON_PANEL),ui.loadComponentFromFile(VACCINE_BUTTONS_XML,this));
 	}
 	
 	private void setVaccineListSelectedIndex(int index){
@@ -141,12 +136,18 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		vaccineListSelectionChanged();
 	}
 	
+	/**
+	 * Called when the selection in the vaccine list changes.
+	 * This method handles the updating of the dose table, the enabling
+	 * and the disabling of the appropriate buttons. 
+	 */
 	public void vaccineListSelectionChanged(){
 		//add the standard dose panel
 		removeAll(find(DOSE_ACTION_PANEL));
 		add(find(DOSE_ACTION_PANEL),ui.loadComponentFromFile(DEFAULT_DOSE_PANEL_XML, this));
 		//get the selected vaccine
 		Vaccine v = getCurrentlySelectedVaccine();
+		//if the vaccine is null, disable some buttons and return
 		if(v == null){
 			doseTableController.setResults(new ArrayList<VaccineDose>());
 			ui.setEnabled(find(ADD_DOSE_BUTTON), false);
@@ -161,6 +162,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		int selectedIndex = doseTableController.getSelectedIndex();
 		List<VaccineDose> doses = vaccineDoseDao.getDosesForVaccine(v);
 		doseTableController.setResults(doses);
+		//enable/disable buttons
 		if(doses.size() == 0){
 			ui.setEnabled(find(EDIT_DOSE_BUTTON), false);
 			ui.setEnabled(find(DELETE_DOSE_BUTTON), false);
@@ -175,14 +177,90 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		}
 	}
 	
+	/**
+	 * @return the currently selected vaccine in the vaccine list
+	 */
 	private Vaccine getCurrentlySelectedVaccine(){
 		return (Vaccine) ui.getAttachedObject(ui.getSelectedItem(find(VACCINE_LIST)));
 	}
+	
+	//Button event handler methods
+
+	/**
+	 * Called when the "Add Vaccine" button is clicked 
+	 */
+	public void addVaccine(){
+		removeAll(find(VACCINE_BUTTON_PANEL));
+		add(find(VACCINE_BUTTON_PANEL),ui.loadComponentFromFile(ADD_VACCINE_XML,this));
+		ui.requestFocus(find(VACCINE_NAME_FIELD));
+	}
+	
+	/**
+	 * Called after a name has been given and the add vaccine button
+	 * has been clicked for a second time 
+	 */
+	public void addVaccineConfirmed(){
+		Vaccine v = new Vaccine(ui.getText(find(VACCINE_NAME_FIELD)),true);
+		vaccineDao.saveOrUpdateVaccine(v);
+		removeAll(find(VACCINE_BUTTON_PANEL));
+		add(find(VACCINE_BUTTON_PANEL),ui.loadComponentFromFile(VACCINE_BUTTONS_XML,this));
+		refreshVaccines();
+	}
+	
+	/**
+	 * Called if the add vaccine process is cancelled
+	 * partway through (during naming). 
+	 */
+	public void addVaccineCanceled(){
+		removeAll(find(VACCINE_BUTTON_PANEL));
+		add(find(VACCINE_BUTTON_PANEL),ui.loadComponentFromFile(VACCINE_BUTTONS_XML,this));
+	}
+	
+
+	/**
+	 * Called when the "Remove Vaccine" button is clicked
+	 */
+	public void removeVaccine(){
+		if(scheduledDoseDao.getScheduledDosesByVaccine(getCurrentlySelectedVaccine()).size() != 0){
+			ui.alert("You cannot delete a vaccine with scheduled doses.");
+		}else{
+			ui.showConfirmationDialog("removeVaccineConfirmed()", this,"Are you sure you want to delete this vaccine?");
+		}
+	}
+	
+	/**
+	 * Called when the user confirms that they
+	 * wish to remove the vaccine in question
+	 */
+	public void removeVaccineConfirmed(){
+		//deleted the vaccine
+		vaccineDao.deleteVaccine(getCurrentlySelectedVaccine());
+		//refresh the list
+		refreshVaccines();
+		//remove the confirmation dialog
+		ui.remove(ui.find(CONFIRMATION_DIALOG));
+	}
+	
+	/**
+	 * Called when the "Add Dose" button is clicked"
+	 */
+	public void addDose(){
+		removeAll(find(DOSE_ACTION_PANEL));
+		add(find(DOSE_ACTION_PANEL),ui.loadComponentFromFile(EDIT_DOSE_XML, this));
+		ui.requestFocus(find(DOSE_NAME_FIELD));
+		ui.setText(find(EDIT_DOSE_PANEL), "Add a Dose");
+	}
+
+	/**
+	 * Called when the "Edit Dose" button is clicked
+	 */
 	public void editDose(){
 		VaccineDose dose = (VaccineDose) doseTableController.getCurrentlySelectedObject();
 		currentlyEditingDose = dose;
+		//create the panel
 		removeAll(find(DOSE_ACTION_PANEL));
 		add(find(DOSE_ACTION_PANEL),ui.loadComponentFromFile(EDIT_DOSE_XML, this));
+		//populate the panel
 		ui.setText(find(START_DATE_MONTHS_BOX),String.valueOf(dose.getStartDateMonths()));
 		ui.setText(find(START_DATE_DAYS_BOX),String.valueOf(dose.getStartDateDays()));
 		ui.setText(find(END_DATE_MONTHS_BOX),String.valueOf(dose.getEndDateMonths()));
@@ -191,17 +269,25 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		ui.setText(find(MIN_INTERVAL_DAYS_BOX),String.valueOf(dose.getMinIntervalDays()));
 		ui.setText(find(DOSE_NAME_FIELD),dose.getName());
 		ui.setText(find(EDIT_DOSE_PANEL), "Editing "+ dose.getName());
+		//focus on the first field
 		ui.requestFocus(find(DOSE_NAME_FIELD));
 	}
 	
-	public void addDose(){
-		removeAll(find(DOSE_ACTION_PANEL));
-		add(find(DOSE_ACTION_PANEL),ui.loadComponentFromFile(EDIT_DOSE_XML, this));
-		ui.requestFocus(find(DOSE_NAME_FIELD));
-		ui.setText(find(EDIT_DOSE_PANEL), "Add a Dose");
+	/**
+	 * Called when editing is cancelled
+	 */
+	public void cancelEditingDose(){
+		currentlyEditingDose = null;
+		vaccineListSelectionChanged();
 	}
 	
-	
+	/**
+	 * Called when the "Remove Dose" button is clicked.
+	 * This method checks to see if the Dose can be removed
+	 * by seeing if there are any SchedledDoses attached to it,
+	 * and then asking the user whether they really want to delete
+	 * the dose.
+	 */
 	public void removeDose(){
 		if(scheduledDoseDao.getScheduledDoses(null, (VaccineDose) doseTableController.getCurrentlySelectedObject()).size() != 0){
 			ui.alert("You cannot delete a dose that has appointments scheduled.");
@@ -210,6 +296,10 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		}
 	}
 	
+	/**
+	 * Called when the user confirms that they
+	 * would like to delete a VaccineDose.
+	 */
 	public void removeDoseConfirmed(){
 		getCurrentlySelectedVaccine().removeDose((VaccineDose) doseTableController.getCurrentlySelectedObject());
 		vaccineDao.saveOrUpdateVaccine(getCurrentlySelectedVaccine());
@@ -220,7 +310,11 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		ui.remove(ui.find(CONFIRMATION_DIALOG));
 	}
 	
+	/**
+	 * Called when the addDose or saveDose processes are done
+	 */
 	public void saveDose(){
+		//prepare all the data
 		String name = ui.getText(find(DOSE_NAME_FIELD));
 		int startDateMonths = Integer.parseInt(ui.getText(find(START_DATE_MONTHS_BOX)));
 		int startDateDays = Integer.parseInt(ui.getText(find(START_DATE_DAYS_BOX)));
@@ -228,10 +322,11 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		int endDateDays = Integer.parseInt(ui.getText(find(END_DATE_DAYS_BOX)));
 		int minIntervalMonths = Integer.parseInt(ui.getText(find(MIN_INTERVAL_MONTHS_BOX)));
 		int minIntervalDays = Integer.parseInt(ui.getText(find(MIN_INTERVAL_DAYS_BOX)));
+		//if we're not currently editing a dose, create a new one
 		if(currentlyEditingDose == null){
 			getCurrentlySelectedVaccine().addDose(new VaccineDose(name,getCurrentlySelectedVaccine(),startDateMonths,startDateDays,endDateMonths,endDateDays,minIntervalMonths,minIntervalDays));
 			vaccineDao.saveOrUpdateVaccine(getCurrentlySelectedVaccine());
-		}else{
+		}else{ // otherwise, modify the existing dose
 			currentlyEditingDose.setStartDateDays(startDateDays);
 			currentlyEditingDose.setStartDateMonths(startDateMonths);
 			currentlyEditingDose.setEndDateDays(endDateDays);
@@ -241,41 +336,14 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 			currentlyEditingDose.setName(name);
 			vaccineDoseDao.saveOrUpdateVaccineDose(currentlyEditingDose);
 		}
+		//reset the screen
 		cancelEditingDose();
 	}
 	
-	public void cancelEditingDose(){
-		currentlyEditingDose = null;
-		vaccineListSelectionChanged();
-	}
-	
-	public void moveDoseUp(){
-		
-	}
-	
-	public void moveDoseDown(){
-		
-	}
-	
-	
-	public void removeVaccine(){
-		if(scheduledDoseDao.getScheduledDosesByVaccine(getCurrentlySelectedVaccine()).size() != 0){
-			ui.alert("You cannot delete a vaccine with scheduled doses.");
-		}else{
-			ui.showConfirmationDialog("removeVaccineConfirmed()", this,"Are you sure you want to delete this vaccine?");
-		}
-	}
-	
-	public void removeVaccineConfirmed(){
-		vaccineDao.deleteVaccine(getCurrentlySelectedVaccine());
-		refreshVaccines();
-		ui.remove(ui.find(CONFIRMATION_DIALOG));
-	}
-	
-	public void selectionChanged(Object selectedObject) {
-		
-	}
-	
+	/**
+	 * Called when the value of the 'enroll newborns' checkbox
+	 * changes. This method saves the value to the database.
+	 */
 	public void enrollNewbornsChanged(){
 		boolean autoEnrollNewborns = ui.isSelected(find(ENROLL_NEWBORNS_CHECKBOX));
 		Vaccine v = getCurrentlySelectedVaccine();
@@ -283,6 +351,8 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		vaccineDao.saveOrUpdateVaccine(v);
 	}
 	
+	// Unused AdvancedTableDeletegate methods
+	public void selectionChanged(Object selectedObject) {}
 	public void doubleClickAction(Object selectedObject) {}
 	public void resultsChanged() {}
 }
