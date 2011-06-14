@@ -51,10 +51,10 @@ public class FormResponseTab<P extends Person> extends TabController implements 
 		super.setTitle(getI18nString(TAB_TITLE));
 		super.setIconPath("/icons/big_form.png");
 		//set up skeleton
-		uiController.add(super.getMainPanel(),uiController.loadComponentFromFile(UI_FILE));
+		ui.add(super.getMainPanel(),ui.loadComponentFromFile(UI_FILE));
 		//set up right panel, the form response panel
-		formResponsePanel = new FormResponseDetailViewPanelController(uiController, appCon);
-		uiController.add(uiController.find(super.getMainPanel(),"formPanel"),formResponsePanel.getMainPanel());
+		formResponsePanel = new FormResponseDetailViewPanelController(ui, appCon);
+		ui.add(ui.find(super.getMainPanel(),"formPanel"),formResponsePanel.getMainPanel());
 		//set up the table, starting with the result set
 		resultSet = new FormResponseResultSet(appCon);
 		if(isCHW()){
@@ -64,7 +64,7 @@ public class FormResponseTab<P extends Person> extends TabController implements 
 		}
 		resultSet.setAroundDate(new Date());
 		// add the form response table
-		formResponseTable = new PagedAdvancedTableController(this, uiController,uiController.find(getMainPanel(),"tablePanel"));
+		formResponseTable = new PagedAdvancedTableController(this, ui,ui.find(getMainPanel(),"tablePanel"));
 		if(isCHW()){
 			formResponseTable.putHeader(MedicFormResponse.class, HeaderColumn.createColumnList(new String[] { getI18nString(FORM_NAME_COLUMN), getI18nString(FORM_SUBJECT_COLUMN), getI18nString(DATE_SUBMITTED_COLUMN) },new String[]{"/icons/form.png","", "/icons/date_sent.png"}, new String[] { "getFormName", "getSubjectName", "getStringDateSubmitted" }));
 		}else{
@@ -76,27 +76,27 @@ public class FormResponseTab<P extends Person> extends TabController implements 
 		formResponseTable.enableRefreshButton(appCon);
 		//set up controls
 		//create the date controls
-		DateField dateField = new DateField(uiController,getI18nString(DATE_SUBMITTED_COLUMN),this);
+		DateField dateField = new DateField(ui,getI18nString(DATE_SUBMITTED_COLUMN),this);
 		dateField.setLabelIcon("/icons/date.png");
-		uiController.add(uiController.find(getMainPanel(),"controlPanel"),dateField.getThinletPanel());
-		uiController.add(uiController.find(getMainPanel(),"controlPanel"),uiController.createLabel("   "));
+		ui.add(ui.find(getMainPanel(),"controlPanel"),dateField.getThinletPanel());
+		ui.add(ui.find(getMainPanel(),"controlPanel"),ui.createLabel("   "));
 		//create the form combo box
 		List<MedicForm> forms = ((MedicFormDao) appCon.getBean("MedicFormDao")).getAllMedicForms();
-		comboBox = uiController.create("combobox");
-		uiController.add(comboBox,uiController.createComboboxChoice(getI18nString(ALL_FORMS), null));
+		comboBox = ui.create("combobox");
+		ui.add(comboBox,ui.createComboboxChoice(getI18nString(ALL_FORMS), null));
 		for(MedicForm mf: forms){
-			uiController.add(comboBox,uiController.createComboboxChoice(mf.getName(), mf));
+			ui.add(comboBox,ui.createComboboxChoice(mf.getName(), mf));
 		}
-		uiController.setAction(comboBox, "formChanged(this.selected)", null, this);
-		uiController.setWeight(comboBox,1,0);
-		Object label = uiController.createLabel(getI18nString(FORM_COMBOBOX_LABEL));
-		uiController.setIcon(label, "/icons/form.png");
-		uiController.add(uiController.find(getMainPanel(),"controlPanel"),label);
-		uiController.add(uiController.find(getMainPanel(),"controlPanel"),comboBox);
+		ui.setAction(comboBox, "formChanged(this.selected)", null, this);
+		ui.setWeight(comboBox,1,0);
+		Object label = ui.createLabel(getI18nString(FORM_COMBOBOX_LABEL));
+		ui.setIcon(label, "/icons/form.png");
+		ui.add(ui.find(getMainPanel(),"controlPanel"),label);
+		ui.add(ui.find(getMainPanel(),"controlPanel"),comboBox);
 		//add the spacer
-		Object spacer = uiController.createLabel("");
-		uiController.setWeight(spacer, 1, 0);
-		uiController.add(uiController.find(getMainPanel(),"controlPanel"),spacer);
+		Object spacer = ui.createLabel("");
+		ui.setWeight(spacer, 1, 0);
+		ui.add(ui.find(getMainPanel(),"controlPanel"),spacer);
 		formResponseTable.setSelected(0);
 	}
 	
@@ -120,7 +120,7 @@ public class FormResponseTab<P extends Person> extends TabController implements 
 	}
 	
 	public void formChanged(int selectedIndex){
-		MedicForm mf = (MedicForm) uiController.getAttachedObject(uiController.getItem(comboBox, selectedIndex));
+		MedicForm mf = (MedicForm) ui.getAttachedObject(ui.getItem(comboBox, selectedIndex));
 		resultSet.setForm(mf);
 		formResponseTable.updateTable();
 	}

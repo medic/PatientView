@@ -6,14 +6,14 @@ import org.springframework.context.ApplicationContext;
 
 public class TabController {
 
-	protected UiGeneratorController uiController;
+	protected UiGeneratorController ui;
 	protected ApplicationContext appCon;
 	private Object tab;
 	protected Object mainPanel;
 	
 	public TabController(UiGeneratorController uiController, ApplicationContext appCon) {
 		super();
-		this.uiController = uiController;
+		this.ui = uiController;
 		this.appCon = appCon;
 		this.tab = uiController.create("tab");
 		this.mainPanel = uiController.create("panel");
@@ -34,11 +34,10 @@ public class TabController {
 	}
 	
 	protected void setTitle(String title){
-		uiController.setText(tab, title);
+		ui.setText(tab, title);
 	}
 	
 	protected void setIconPath(String iconPath){
-		uiController.setIcon(tab,iconPath);
+		ui.setIcon(tab,iconPath);
 	}
-	
 }

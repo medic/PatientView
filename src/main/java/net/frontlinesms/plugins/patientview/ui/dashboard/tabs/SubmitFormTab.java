@@ -80,9 +80,9 @@ public class SubmitFormTab extends TabController implements ThinletUiEventHandle
 	
 	public void updateFormPanel(){
 			//clear the panel
-		uiController.removeAll(formPanel);
-		fieldGroup = new FormFieldGroup(uiController, appCon, currentForm, null);
-		uiController.add(formPanel,fieldGroup.getMainPanel());
+		ui.removeAll(formPanel);
+		fieldGroup = new FormFieldGroup(ui, appCon, currentForm, null);
+		ui.add(formPanel,fieldGroup.getMainPanel());
 		fieldGroup.autoFillWithPatient(currentPatient);
 		clearWarningLabel();
 	}
@@ -113,23 +113,23 @@ public class SubmitFormTab extends TabController implements ThinletUiEventHandle
 	}
 	
 	public void setSuccessLabel(String s){
-		uiController.setIcon(warningLabel, "/icons/thumb_up.png");
+		ui.setIcon(warningLabel, "/icons/thumb_up.png");
 		setLabel(s);
 	}
 	
 	public void setWarningLabel(String s){
-		uiController.setIcon(warningLabel, "/icons/cross.png");
+		ui.setIcon(warningLabel, "/icons/cross.png");
 		setLabel(s);
 	}
 	
 	public void setLabel(String s){
-		uiController.setText(warningLabel, s);
-		uiController.setVisible(warningLabel, true);
+		ui.setText(warningLabel, s);
+		ui.setVisible(warningLabel, true);
 	}
 	
 	public void clearWarningLabel(){
-		uiController.setText(warningLabel, "");
-		uiController.setVisible(warningLabel, false);
+		ui.setText(warningLabel, "");
+		ui.setVisible(warningLabel, false);
 	}
 
 	public void selectionChanged(MedicForm selectedObject) {

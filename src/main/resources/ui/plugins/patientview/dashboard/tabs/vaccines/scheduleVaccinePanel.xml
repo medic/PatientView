@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<panel columns="1" gap="5" name="scheduleVaccinePanel" weightx="1">
+    <panel border="true" bottom="5" left="5" name="vaccineSelectPanel" right="5" text="Vaccine" top="5">
+        <combobox name="vaccineSelect" weightx="1"/>
+    </panel>
+    <panel border="true" bottom="5" columns="1" left="5" name="scheduleFromPanel" right="5" text="Schedule From" top="5">
+        <checkbox group="scheduleFrom" name="fromBirthRadio" selected="true" text="Birth"/>
+        <checkbox group="scheduleFrom" name="fromTodayRadio" text="Today"/>
+        <checkbox group="scheduleFrom" name="firstShotTodayRadio" text="First shot given today"/>
+    </panel>
+    <panel name="bottomButtonPanel" weightx="1">
+        <button name="confirmScheduleButton" action="scheduleVaccineConfirmed()" text="Schedule Vaccine"/>
+        <label weightx="1"/>
+        <button name="cancelScheduleButton" action="scheduleVaccineCanceled()" text="Cancel"/>
+    </panel>
+</panel>

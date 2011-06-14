@@ -1,0 +1,4 @@
+<panel gap="5" name="doseButtonPanel">
+	<button action="rescheduleDose()" name="rescheduleDoseButton" text="Reschedule" />
+	<button action="administerDose()" name="adminsterDoseButton" text="Administer" />
+</panel>

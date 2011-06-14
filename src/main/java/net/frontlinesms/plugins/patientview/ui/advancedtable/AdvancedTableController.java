@@ -319,6 +319,9 @@ public class AdvancedTableController extends ViewHandler{
 		if(index < resultsSize){
 			ui.setSelectedIndex(table,index);
 			tableSelectionChange();
+		}else{
+			ui.setSelectedIndex(table,resultsSize-1);
+			tableSelectionChange();
 		}
 	}
 	

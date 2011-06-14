@@ -1,5 +1,6 @@
 package net.frontlinesms.plugins.patientview.data.repository.hibernate;
 
+import java.util.Date;
 import java.util.List;
 
 import net.frontlinesms.data.repository.hibernate.BaseHibernateDao;
@@ -11,28 +12,39 @@ import net.frontlinesms.plugins.patientview.data.domain.vaccine.VaccineDose;
 import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.DistinctRootEntityResultTransformer;
+import org.hibernate.transform.ResultTransformer;
 
 public class HibernateScheduledDoseDao extends BaseHibernateDao<ScheduledDose> implements ScheduledDoseDao {
 
 	protected HibernateScheduledDoseDao(){
 		super(ScheduledDose.class);
 	}
-
-	public void administerDose(ScheduledDose dose, Person administeredBy) {
-		dose.administer(administeredBy);
+	
+	public void administerDose(ScheduledDose dose, Person administeredBy, Date dateAdministered) {
+		dose.administer(administeredBy,dateAdministered);
 		saveOrUpdateScheduledDose(dose);
 	}
 
 	public void deleteScheduledDose(ScheduledDose dose) {
 		super.delete(dose);
 	}
+	
+	public void deleteScheduledDosesForVaccine(Vaccine vaccine, Patient patient) {
+		List<ScheduledDose> toDelete = getScheduledDoses(vaccine, patient);
+		for(ScheduledDose sd: toDelete){
+			delete(sd);
+		}
+	}
 
 	public List<ScheduledDose> getAllScheduledDoses() {
 		return super.getAll();
 	}
 
-	public ScheduledDose getSchedledDose(long scheduledDoseId) {
+	public ScheduledDose getScheduledDose(long scheduledDoseId) {
 		DetachedCriteria c = super.getCriterion();
 		c.add(Restrictions.eq("scheduledDoseId",scheduledDoseId));
 		return super.getUnique(c);
@@ -45,14 +57,23 @@ public class HibernateScheduledDoseDao extends BaseHibernateDao<ScheduledDose> i
 		return super.getList(c);
 	}
 	
-	public List<ScheduledDose> getScheduledDosesByVaccine(Vaccine vaccine) {
+	public List<ScheduledDose> getScheduledDoses(Vaccine vaccine, Patient patient) {
 		DetachedCriteria c = super.getCriterion();
 		c.createCriteria("dose").add(Restrictions.eq("vaccine",vaccine));
+		if(patient != null){
+			c.add(Restrictions.eq("patient",patient));
+		}
 		return super.getList(c);
 	}
+	
 
 	public void saveOrUpdateScheduledDose(ScheduledDose dose) {
 		super.getHibernateTemplate().saveOrUpdate(dose);
 	}
 
+	public void saveScheduledDoses(List<ScheduledDose> doses) {
+		for(ScheduledDose dose:doses){
+			saveOrUpdateScheduledDose(dose);
+		}
+	}
 }

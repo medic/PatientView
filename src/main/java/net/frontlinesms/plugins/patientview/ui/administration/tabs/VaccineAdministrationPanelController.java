@@ -117,7 +117,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		}else{// otherwise, set it to the last element in the table
 			setVaccineListSelectedIndex(vaccines.size()-1);
 		}
-		//if there are no vaccines, disable these buttons
+		//if there are no vaccines, disable some buttons
 		if(vaccines.size() == 0){
 			ui.setEnabled(find(REMOVE_VACCINE_BUTTON), false);
 			ui.setEnabled(find(ADD_DOSE_BUTTON), false);
@@ -221,7 +221,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	 * Called when the "Remove Vaccine" button is clicked
 	 */
 	public void removeVaccine(){
-		if(scheduledDoseDao.getScheduledDosesByVaccine(getCurrentlySelectedVaccine()).size() != 0){
+		if(scheduledDoseDao.getScheduledDoses(getCurrentlySelectedVaccine(),null).size() != 0){
 			ui.alert("You cannot delete a vaccine with scheduled doses.");
 		}else{
 			ui.showConfirmationDialog("removeVaccineConfirmed()", this,"Are you sure you want to delete this vaccine?");
