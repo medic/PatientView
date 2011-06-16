@@ -84,4 +84,16 @@ public class TimeUtils {
 			return cal1.get(Calendar.DAY_OF_MONTH) - cal2.get(Calendar.DAY_OF_MONTH);
 		}
 	}
+	
+	public static Calendar cloneCalendar(Calendar input){
+		Calendar c = Calendar.getInstance();
+		c.set(input.get(Calendar.YEAR), input.get(Calendar.MONTH),input.get(Calendar.DAY_OF_MONTH), input.get(Calendar.HOUR_OF_DAY), 0);
+		return c;
+	}
+	
+
+	public static boolean windowIsOpen(Pair<Calendar,Calendar> window){
+		Calendar today = Calendar.getInstance();
+		return TimeUtils.compareCalendars(today, window.one) >= 0 && TimeUtils.compareCalendars(today, window.two) <= 0; 
+	}
 }

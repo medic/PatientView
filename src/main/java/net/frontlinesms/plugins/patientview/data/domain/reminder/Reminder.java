@@ -45,16 +45,12 @@ public abstract class Reminder {
 	
 	//abstract methods
 
-	public abstract String getMessageForPerson(Patient p);
+	public abstract String getMessageForPatient(Patient p);
 	
-	public abstract List<ReminderEvent> getSupportedEvents();
+	public abstract boolean supportsEvent(ReminderEvent<?> event);
 
 	//getters and setters
 	
-	public void setReminderId(long reminderId) {
-		this.reminderId = reminderId;
-	}
-
 	public long getReminderId() {
 		return reminderId;
 	}
@@ -81,6 +77,22 @@ public abstract class Reminder {
 
 	public String getName() {
 		return name;
+	}
+	
+	/**
+	 * Returns the ReminderEvent for the class name that is passed in.
+	 * Return null if the string is not a the name of class that implements 
+	 * ReminderEvent.
+	 * @param eventClass
+	 * @return
+	 */
+	protected ReminderEvent<?> getEvent(String eventClass){
+		try {
+			ReminderEvent<?> event = (ReminderEvent<?>) Class.forName(eventClass).newInstance();
+			return event;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 	
 }
