@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		<mapping class="net.frontlinesms.plugins.patientview.data.domain.people.Person" />
+		<mapping class="net.frontlinesms.plugins.patientview.data.domain.people.Patient" /> 
+		<mapping class="net.frontlinesms.plugins.patientview.data.domain.people.CommunityHealthWorker" />
+		<mapping class="net.frontlinesms.plugins.patientview.data.domain.people.User" />
+		<mapping class="net.frontlinesms.plugins.patientview.data.domain.security.SecurityQuestion" />
+        <mapping class="net.frontlinesms.plugins.patientview.data.domain.vaccine.Vaccine" />
+		<mapping class="net.frontlinesms.plugins.patientview.data.domain.vaccine.VaccineDose" />
+		<mapping class="net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose" />
+		<mapping class="net.frontlinesms.plugins.patientview.data.domain.reminder.impl.RecurringReminder" />
+	</session-factory>
+</hibernate-configuration>

@@ -2,6 +2,7 @@ package net.frontlinesms.plugins.patientview.utils;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 
 import net.frontlinesms.junit.BaseTestCase;
@@ -92,5 +93,42 @@ public class TimeUtilsTest extends BaseTestCase {
 			fail();
 		}
 	}
-
+	
+	public void test_compareCalendars_firstDateLater_positiveNumberReturned(){
+		Calendar first = Calendar.getInstance();
+		Calendar second = Calendar.getInstance();
+		second.set(1970, 1, 1);
+		assertTrue(TimeUtils.compareCalendars(first, second) >0);
+	}
+	
+	public void test_compareCalendars_secondDateLater_negativeNumberReturned(){
+		Calendar first = Calendar.getInstance();
+		Calendar second = Calendar.getInstance();
+		first.set(1970, 1, 1);
+		assertTrue(TimeUtils.compareCalendars(first, second) < 0);
+	}
+	
+	public void test_compareCalendars_sameDatesDifferentSeconds_positiveNumberReturned(){
+		Calendar first = Calendar.getInstance();
+		Calendar second = Calendar.getInstance();
+		assertTrue(TimeUtils.compareCalendars(first, second) == 0);
+	}
+	
+	public void test_compareCalendars_sameYearDifferentMonth_correctNumberReturned(){
+		Calendar first = Calendar.getInstance();
+		Calendar second = Calendar.getInstance();
+		first.set(Calendar.MONTH, second.get(Calendar.MONTH)+1);
+		assertTrue(TimeUtils.compareCalendars(first, second) > 0);
+		second.set(Calendar.MONTH, first.get(Calendar.MONTH)+1);
+		assertTrue(TimeUtils.compareCalendars(first, second) < 0);
+	}
+	
+	public void test_compareCalendars_sameYearAndMonthDifferentDay_correctNumberReturned(){
+		Calendar first = Calendar.getInstance();
+		Calendar second = Calendar.getInstance();
+		first.set(Calendar.DAY_OF_MONTH, second.get(Calendar.DAY_OF_MONTH)+1);
+		assertTrue(TimeUtils.compareCalendars(first, second) > 0);
+		second.set(Calendar.DAY_OF_MONTH, first.get(Calendar.DAY_OF_MONTH)+1);
+		assertTrue(TimeUtils.compareCalendars(first, second) < 0);
+	}
 }

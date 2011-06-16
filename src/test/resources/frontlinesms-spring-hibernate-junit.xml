@@ -12,6 +12,8 @@
 	<context:annotation-config/>
 	<tx:annotation-driven />
 	
+	<bean id="eventBus" class="net.frontlinesms.events.impl.FrontlineEventBus"/>
+	
 	<bean id="baseHibernateDao" abstract="true">
 		<property name="sessionFactory" ref="sessionFactory"/>
 		<property name="eventBus" ref="eventBus"/>
@@ -23,7 +25,7 @@
 		<property name="configLocations">
 			<list>
 				<value>classpath:frontlinesms.hibernate.cfg.xml</value>
-				<value>classpath:net/frontlinesms/plugins/patientview/patientview.hibernate.cfg.xml</value>
+				<value>classpath:net/frontlinesms/plugins/patientview/patientview.hibernate.junit.cfg.xml</value>
 			</list>
 		</property>
 		<property name="configurationClass">

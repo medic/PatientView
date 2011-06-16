@@ -20,5 +20,6 @@
 		<mapping class="net.frontlinesms.plugins.patientview.data.domain.vaccine.Vaccine" />
 		<mapping class="net.frontlinesms.plugins.patientview.data.domain.vaccine.VaccineDose" />
 		<mapping class="net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose" />
+		<mapping class="net.frontlinesms.plugins.patientview.data.domain.reminder.impl.RecurringReminder" />
 	</session-factory>
 </hibernate-configuration>

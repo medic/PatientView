@@ -1,0 +1,19 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:p="http://www.springframework.org/schema/p"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<!-- import an in-memory database and related hibernate paraphenalia -->
+	<import resource="classpath:frontlinesms-spring-hibernate-junit.xml" />
+
+	<!-- DAO declarations -->	
+	<bean id="CHWDao" class="net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernateCommunityHealthWorkerDao" parent="baseHibernateDao"/>
+	<bean id="PatientDao" class="net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernatePatientDao" parent="baseHibernateDao"/>
+	
+	<bean id="ScheduledDoseDao" class="net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernateScheduledDoseDao" parent="baseHibernateDao"/>
+	<bean id="VaccineDao" class="net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernateVaccineDao" parent="baseHibernateDao">
+			<property name="scheduledDoseDao" ref="ScheduledDoseDao"/>
+	</bean>
+	<bean id="VaccineDoseDao" class="net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernateVaccineDoseDao" parent="baseHibernateDao"/>
+	
+</beans>

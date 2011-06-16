@@ -1,5 +1,6 @@
 package net.frontlinesms.plugins.patientview.utils;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -64,5 +65,23 @@ public class TimeUtils {
 	 */
 	public static int getAge(long birthdate){
 		return getYearsBetweenDates(birthdate, new Date().getTime());
+	}
+	
+	/**
+	 * Returns a positive integer if cal1 is later than cal2.
+	 * Returns a negative integer if cal1 is earlier than cal2.
+	 * Returns 0 if they are the same.
+	 * @param cal1
+	 * @param cal2
+	 * @return
+	 */
+	public static int compareCalendars(Calendar cal1, Calendar cal2){
+		if(cal1.get(Calendar.YEAR) - cal2.get(Calendar.YEAR) != 0){
+			return cal1.get(Calendar.YEAR) - cal2.get(Calendar.YEAR);
+		}else if(cal1.get(Calendar.MONTH) - cal2.get(Calendar.MONTH) != 0){
+			return cal1.get(Calendar.MONTH) - cal2.get(Calendar.MONTH);
+		}else{
+			return cal1.get(Calendar.DAY_OF_MONTH) - cal2.get(Calendar.DAY_OF_MONTH);
+		}
 	}
 }

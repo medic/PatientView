@@ -47,7 +47,7 @@ public class MedicForm{
 	/**
 	 * The FrontlineSMS form that this Medic form is linked to
 	 */
-	@OneToOne(fetch = FetchType.LAZY, cascade = {})
+	@OneToOne(fetch = FetchType.LAZY, cascade = {},targetEntity=Form.class)
 	@JoinColumn(name = "vanilla_form_id", nullable = true)
 	private Form vanillaForm;
 
