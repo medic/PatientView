@@ -1,0 +1,17 @@
+<panel bottom="5" columns="1" gap="5" left="5" name="actionPanel"
+	right="5" top="5" weightx="4" weighty="1">
+	<label name="reminderNameLabel" text="Appointment Missed Reminder" />
+	<separator weightx="1" />
+	<panel border="true" bottom="4" gap="5" left="5" name="timingPanel"
+		right="5" text="Timing" top="5" weightx="1" icon="/icons/time.png">
+		<textarea border="false" editable="false" name="timingTextArea"
+			weightx="1" />
+	</panel>
+	<panel border="true" bottom="5" gap="5" left="5" name="messagePanel"
+		right="5" text="Message" top="5" weightx="1" icon="/icons/sms.png">
+		<textarea border="false" editable="false" name="messageTextArea"
+			weightx="1" />
+	</panel>
+	<button action="editReminder()" halign="left" name="editReminderButton"
+		text="Edit Reminder" valign="top" weightx="1" weighty="1" icon="/icons/edit_reminder.png"/>
+</panel>

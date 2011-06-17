@@ -19,7 +19,7 @@ public class VaccineAppointmentMissedEvent implements ReminderEvent<ScheduledDos
 	
 	private ScheduledDoseDao scheduledDoseDao;
 	
-	private static final List<EventTimingOption> supportedTimingOptions;
+	public static final List<EventTimingOption> supportedTimingOptions;
 	
 	static{
 		supportedTimingOptions = new ArrayList<EventTimingOption>();
@@ -34,7 +34,7 @@ public class VaccineAppointmentMissedEvent implements ReminderEvent<ScheduledDos
 	}
 
 	public String getSnippet() {
-		return "an outstanding missed vaccination appointment";
+		return "a missed vaccine appointment";
 	}
 
 	public Calendar getDateForContext(Patient patient, ScheduledDose context) {
@@ -69,6 +69,14 @@ public class VaccineAppointmentMissedEvent implements ReminderEvent<ScheduledDos
 	}
 
 	public boolean compatibileWithEvent(ReminderEvent event){
+		return true;
+	}
+
+	public boolean canBeEndEvent() {
+		return false;
+	}
+
+	public boolean canBeStartEvent() {
 		return true;
 	}
 }

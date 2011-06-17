@@ -46,11 +46,7 @@ public class OneTimeReminder extends Reminder{
 	}
 
 	private String generateMessage(Patient p, List<Object> context) {
-		StringBuilder b = new StringBuilder("Hello, " + p.getName()+ "! ");
-		for(Object o: context){
-			b.append(o.toString());
-		}
-		return b.toString();
+		return messageFormat;
 	}
 	
 	/**
@@ -98,5 +94,31 @@ public class OneTimeReminder extends Reminder{
 	
 	public boolean supportsEvent(ReminderEvent event) {
 		return true;
+	}
+
+	@Override
+	public String getTimingString() {
+		StringBuilder timing = new StringBuilder();
+		if(startDays !=0){
+			timing.append(Math.abs(startDays)+ (Math.abs(startDays)==1?" day ":" days "));
+		}
+		if(startMonths !=0){
+			timing.append(Math.abs(startMonths)+ (Math.abs(startMonths)==1?" month ":" months "));
+		}
+		if(startDays + startMonths > 0){
+			timing.append("after ");
+		}else if(startDays + startMonths < 0){
+			timing.append("before ");
+		}else if(startDays + startMonths == 0){
+			timing.append("the day of ");
+		}
+		timing.append(getStartEvent().getSnippet());
+		
+		return timing.toString();
+	}
+
+	@Override
+	public String getTypeName() {
+		return "One-Time";
 	}
 }

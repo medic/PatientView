@@ -1,7 +1,5 @@
 package net.frontlinesms.plugins.patientview.data.domain.reminder;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
@@ -14,6 +12,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
+import net.frontlinesms.plugins.patientview.data.domain.reminder.event.ReminderEventDirectory;
 
 @Entity
 @Table(name="medic_reminders")
@@ -49,6 +48,7 @@ public abstract class Reminder {
 	
 	public abstract boolean supportsEvent(ReminderEvent<?> event);
 
+	public abstract String getTypeName();
 	//getters and setters
 	
 	public long getReminderId() {
@@ -79,6 +79,8 @@ public abstract class Reminder {
 		return name;
 	}
 	
+	public abstract String getTimingString();
+	
 	/**
 	 * Returns the ReminderEvent for the class name that is passed in.
 	 * Return null if the string is not a the name of class that implements 
@@ -87,12 +89,7 @@ public abstract class Reminder {
 	 * @return
 	 */
 	protected ReminderEvent<?> getEvent(String eventClass){
-		try {
-			ReminderEvent<?> event = (ReminderEvent<?>) Class.forName(eventClass).newInstance();
-			return event;
-		} catch (Exception e) {
-			return null;
-		}
+		return ReminderEventDirectory.getEventForClassName(eventClass);
 	}
 	
 }

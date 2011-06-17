@@ -21,6 +21,7 @@ public class RecurringReminder extends OneTimeReminder {
 
 	private String endEvent;
 	private int endDays;
+
 	private int endMonths;
 	
 	@Enumerated(EnumType.ORDINAL)
@@ -56,11 +57,7 @@ public class RecurringReminder extends OneTimeReminder {
 	}
 	
 	private String generateMessage(Patient patient, List<Object> context){
-		StringBuilder b = new StringBuilder("Hello, " + patient.getName()+ "! ");
-		for(Object o: context){
-			b.append(o.toString());
-		}
-		return b.toString();
+		return messageFormat;
 	}
 	
 	/**
@@ -113,12 +110,61 @@ public class RecurringReminder extends OneTimeReminder {
 	}
 	
 	/** @return The ReminderEvent that ends this reminder */
-	private ReminderEvent getEndEvent(){
+	public ReminderEvent getEndEvent(){
 		return getEvent(endEvent);
 	}
 	
 	@Override
 	public boolean supportsEvent(ReminderEvent event) {
 		return true;
+	}
+	
+	@Override
+	public String getTimingString() {
+		StringBuilder timing = new StringBuilder(frequency.getName() + " from ");
+		if(startDays !=0){
+			timing.append(Math.abs(startDays) + (Math.abs(startDays)==1?" day ":" days "));
+		}
+		if(startMonths !=0){
+			timing.append(Math.abs(startMonths)+ (Math.abs(startMonths)==1?" month ":" months "));
+		}
+		if(startDays + startMonths > 0){
+			timing.append("after ");
+		}else if(startDays + startMonths < 0){
+			timing.append("before ");
+		}else if(startDays + startMonths == 0){
+			timing.append("the day of ");
+		}
+		timing.append(getStartEvent().getSnippet()+ " ");
+		
+		timing.append("to ");
+		if(endDays !=0){
+			timing.append(Math.abs(endDays) + (Math.abs(endDays)==1?" day ":" days "));
+		}
+		if(endMonths !=0){
+			timing.append(Math.abs(endMonths)+ (Math.abs(endMonths)==1?" month ":" months "));
+		}
+		if(endDays + endMonths > 0){
+			timing.append("after ");
+		}else if(endDays + endMonths < 0){
+			timing.append("before ");
+		}else if(endDays + endMonths == 0){
+			timing.append("the day of ");
+		}
+		timing.append(getEndEvent().getSnippet());
+		return timing.toString();
+	}
+	
+	@Override
+	public String getTypeName() {
+		return "Recurring";
+	}
+	
+	public int getEndDays() {
+		return endDays;
+	}
+
+	public int getEndMonths() {
+		return endMonths;
 	}
 }

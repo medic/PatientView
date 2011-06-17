@@ -7,6 +7,7 @@ import java.util.TimerTask;
 
 import net.frontlinesms.FrontlineUtils;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
+import net.frontlinesms.plugins.patientview.data.domain.reminder.event.ReminderEventDirectory;
 import net.frontlinesms.plugins.patientview.data.repository.PatientDao;
 import net.frontlinesms.plugins.patientview.data.repository.ReminderDao;
 import net.frontlinesms.ui.UiGeneratorController;
@@ -33,11 +34,13 @@ public class ReminderDispatcher extends TimerTask{
 		this.ui = ui;
 		this.patientDao = (PatientDao) appCon.getBean("PatientDao");
 		this.reminderDao = (ReminderDao) appCon.getBean("ReminderDao");
+		ReminderEventDirectory directory = new ReminderEventDirectory(appCon);
 	}
 	
 	@Override
 	public void run() {
 		LOG.info("Beginning reminder dispatch");
+		System.out.println("Beginning reminder dispatch");
 		List<Reminder> reminders = reminderDao.getAllReminders();
 		List<Reminder> activeReminders = new ArrayList<Reminder>();
 		Calendar currentTime = Calendar.getInstance();
@@ -48,6 +51,7 @@ public class ReminderDispatcher extends TimerTask{
 			}
 		}
 		LOG.info(activeReminders.size()+ " active reminders");
+		System.out.println(activeReminders.size()+ " active reminders");
 		if(activeReminders.size() > 0){
 			List<Patient> patients = patientDao.getAllPatients();
 			for(Reminder reminder: activeReminders){
@@ -57,6 +61,7 @@ public class ReminderDispatcher extends TimerTask{
 					if(mess != null && !mess.equals("")){
 						ui.getFrontlineController().sendTextMessage(p.getChw().getPhoneNumber(), mess);
 						LOG.info("Reminder dispatched: " + mess);
+						System.out.println("Reminder dispatched: " + mess);
 					}
 				}
 			}

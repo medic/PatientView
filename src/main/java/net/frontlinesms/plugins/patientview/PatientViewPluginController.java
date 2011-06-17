@@ -1,9 +1,12 @@
 package net.frontlinesms.plugins.patientview;
 
+import java.util.Timer;
+
 import net.frontlinesms.FrontlineSMS;
 import net.frontlinesms.plugins.BasePluginController;
 import net.frontlinesms.plugins.PluginControllerProperties;
 import net.frontlinesms.plugins.PluginInitialisationException;
+import net.frontlinesms.plugins.patientview.data.domain.reminder.ReminderDispatcher;
 import net.frontlinesms.plugins.patientview.listener.PatientViewFormListener;
 import net.frontlinesms.plugins.patientview.listener.PatientViewMessageListener;
 import net.frontlinesms.plugins.patientview.responsemapping.IncomingFormMatcher;
@@ -28,6 +31,10 @@ public class PatientViewPluginController extends BasePluginController{
 	private PatientViewMessageListener messageListener;
 	private PatientViewFormListener formListener; 
 	private PatientViewThinletTabController tabController;
+	private ReminderDispatcher reminderDispatch;
+	
+	/** the number of minutes to delay */
+	private static final int DISPATCH_DELAY_MINUTES = 15;
 	
 	/** 
 	 * @see net.frontlinesms.plugins.BasePluginController#initThinletTab(net.frontlinesms.ui.UiGeneratorController)
@@ -36,6 +43,9 @@ public class PatientViewPluginController extends BasePluginController{
 	protected Object initThinletTab(UiGeneratorController uiController) {
 		//PatientFlagListener flagListener = new PatientFlagListener(applicationContext, uiController);
 		tabController = new PatientViewThinletTabController(this,uiController);
+		reminderDispatch = new ReminderDispatcher(uiController, applicationContext);
+		Timer t = new Timer();
+		t.scheduleAtFixedRate(reminderDispatch, 1000 , 30 * 1000);
 		return tabController.getTab();
 	}
 

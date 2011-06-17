@@ -14,6 +14,10 @@ public interface ReminderEvent<C> {
 	
 	public boolean compatibileWithEvent(ReminderEvent event);
 	
+	public boolean canBeStartEvent();
+	
+	public boolean canBeEndEvent();
+	
 	public Map<Calendar,C> getEventDatesWithContext(Patient patient);
 	
 	public Calendar getDateForContext(Patient patient, C context);

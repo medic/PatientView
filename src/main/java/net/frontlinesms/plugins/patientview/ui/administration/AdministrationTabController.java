@@ -9,6 +9,7 @@ import net.frontlinesms.plugins.patientview.ui.administration.tabs.AttributeAdmi
 import net.frontlinesms.plugins.patientview.ui.administration.tabs.CommunityHealthWorkerAdministrationPanelController;
 import net.frontlinesms.plugins.patientview.ui.administration.tabs.FormAdministrationPanelController;
 import net.frontlinesms.plugins.patientview.ui.administration.tabs.PatientAdministrationPanelController;
+import net.frontlinesms.plugins.patientview.ui.administration.tabs.ReminderAdministrationPanelController;
 import net.frontlinesms.plugins.patientview.ui.administration.tabs.UserAdministrationPanelController;
 import net.frontlinesms.plugins.patientview.ui.administration.tabs.VaccineAdministrationPanelController;
 import net.frontlinesms.ui.UiGeneratorController;
@@ -53,6 +54,7 @@ public class AdministrationTabController extends ViewHandler{
 		panels.add(new FormResponseMappingPanelController(ui,appCon));
 		panels.add(new CsvImporterPanelController(ui,appCon));
 		panels.add(new VaccineAdministrationPanelController(ui,appCon));
+		panels.add(new ReminderAdministrationPanelController(ui,appCon));
 		//panels.add(new FlagAdministrationPanelController(ui, appCon));
 		//create all the list items
 		for(AdministrationTabPanel panel: panels){

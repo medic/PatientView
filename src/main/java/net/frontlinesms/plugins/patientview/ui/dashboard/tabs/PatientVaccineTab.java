@@ -85,10 +85,10 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		//setup table
 		scheduledDoseController = new AdvancedTableController(this, uiController);
 		List<HeaderColumn> doseColumns = new ArrayList<HeaderColumn>();
-		doseColumns.add(new HeaderColumn("getDoseName", "", "Dose Name"));
-		doseColumns.add(new HeaderColumn("getWindowStartDateString", "", "Date Scheduled"));
-		doseColumns.add(new HeaderColumn("getAdministeredString", "", "Date Administered"));
-		doseColumns.add(new HeaderColumn("getWindowEndDateString", "", "Window End Date"));
+		doseColumns.add(new HeaderColumn("getDoseName", "/icons/syringe_small.png", "Dose Name"));
+		doseColumns.add(new HeaderColumn("getWindowStartDateString", "/icons/date_add.png", "Date Scheduled"));
+		doseColumns.add(new HeaderColumn("getAdministeredString", "/icons/tick.png", "Date Administered"));
+		doseColumns.add(new HeaderColumn("getWindowEndDateString", "/icons/date_delete.png", "Window End Date"));
 		scheduledDoseController.putHeader(ScheduledDose.class, doseColumns);
 		scheduledDoseController.setNoResultsMessage("No Scheduled Vaccines");
 		scheduledDoseController.setResults(new ArrayList<ScheduledDose>());
@@ -190,6 +190,8 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		ui.setName(removeButton, REMOVE_VACCINE_BUTTON);
 		ui.setWeight(scheduleButton, 1, 0);
 		ui.setWeight(removeButton, 1, 0);
+		ui.setIcon(scheduleButton, "/icons/schedule_vaccine.png");
+		ui.setIcon(removeButton, "/icons/delete_vaccine_large.png");
 		ui.add(ui.find(mainPanel,VACCINE_LIST_BUTTON_PANEL),scheduleButton);
 		ui.add(ui.find(mainPanel,VACCINE_LIST_BUTTON_PANEL),removeButton);
 		populateVaccineList();

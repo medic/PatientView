@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <panel name="vaccineAdministrationPanel" weightx="1" weighty="1">
-    <panel border="true" bottom="5" columns="1" gap="5" left="5" name="vaccineListPanel" right="5" text="Vaccines" top="5" weightx="1" weighty="1">
+    <panel border="true" bottom="5" columns="1" gap="5" left="5" name="vaccineListPanel" right="5" text="Vaccines" top="5" weightx="1" weighty="1" icon="/icons/syringe_small.png">
         <list name="vaccineList" weightx="1" weighty="1" action="vaccineListSelectionChanged()"/>
         <panel columns="1" gap="5" name="vaccineButtonPanel" weightx="1">
-            <button name="addVaccineButton" text="Add Vaccine" weightx="1" action="addVaccine()"/>
-            <button name="removeVaccineButton" text="Remove Vaccine" weightx="1" action="removeVaccine()"/>
+            <button name="addVaccineButton" text="Add Vaccine" weightx="1" action="addVaccine()" icon="/icons/add_vaccine_large.png"/>
+            <button name="removeVaccineButton" text="Remove Vaccine" weightx="1" action="removeVaccine()" icon="/icons/delete_vaccine_large.png"/>
         </panel>
     </panel>
     <panel bottom="5" columns="1" gap="5" left="5" name="vaccineActionPanel" right="5" top="5" weightx="3" weighty="1">
@@ -14,9 +14,9 @@
         <panel name="doseActionPanel" weightx="1" weighty="1">
             <checkbox name="enrollNewbornsCheckbox" text="Automatically enroll newborns" action="enrollNewbornsChanged()"/>
             <panel gap="7" halign="right" name="actionButtonPanel" right="6" weightx="1">
-                <button name="addDoseButton" text="Add Dose" action="addDose()"/>
-                <button name="editDoseButton" text="Edit Dose" action="editDose()"/>
-                <button name="deleteDoseButton" text="Remove Dose" action="removeDose()"/>
+                <button name="addDoseButton" text="Add Dose" action="addDose()" icon="/icons/add.png"/>
+                <button name="editDoseButton" text="Edit Dose" action="editDose()" icon="/icons/pencil.png"/>
+                <button name="deleteDoseButton" text="Remove Dose" action="removeDose()" icon="/icons/delete.png"/>
             </panel>
         </panel>
     </panel>

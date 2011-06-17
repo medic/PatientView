@@ -2,17 +2,16 @@ package net.frontlinesms.plugins.patientview.data.domain.reminder;
 
 public enum EventTimingOption{
 
-	BEFORE("Before"),
-	AFTER("After"),
-	DAY_OF("Day Of");
+	BEFORE("before", -1),
+	AFTER("after", 1),
+	DAY_OF("the day of", 0);
 	
-	private String name;
+	public final String name;
 	
-	public String getName(){
-		return name;
-	}
+	public final int multiplier;
 	
-	private EventTimingOption(String name){
+	private EventTimingOption(String name, int multiplier){
 		this.name = name;
+		this.multiplier = multiplier;
 	}
 }

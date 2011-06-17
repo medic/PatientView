@@ -70,10 +70,10 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		doseTableController = new AdvancedTableController(this, uiController);
 		doseTableController.setNoResultsMessage("No doses");
 		List<HeaderColumn> columnList = new ArrayList<HeaderColumn>();
-		columnList.add(new HeaderColumn("getName", "", "Dose Name"));
-		columnList.add(new HeaderColumn("getStringStartDate", "", "Start Date"));
-		columnList.add(new HeaderColumn("getStringEndDate", "", "End Date"));
-		columnList.add(new HeaderColumn("getStringMinimumInterval", "", "Minimum Interval To Next Dose"));
+		columnList.add(new HeaderColumn("getName", "/icons/syringe_small.png", "Dose Name"));
+		columnList.add(new HeaderColumn("getStringStartDate", "/icons/date_add.png", "Start Date"));
+		columnList.add(new HeaderColumn("getStringEndDate", "/icons/date_delete.png", "End Date"));
+		columnList.add(new HeaderColumn("getStringMinimumInterval", "/icons/time.png", "Minimum Interval To Next Dose"));
 		doseTableController.putHeader(VaccineDose.class, columnList);
 		//add the dose table to the view
 		add(find(DOSE_TABLE_PANEL),doseTableController.getMainPanel());
@@ -101,6 +101,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	private void refreshVaccines(){
 		//save the current selection index
 		int selectedIndex =ui.getSelectedIndex(find(VACCINE_LIST));
+		if(selectedIndex < 0) selectedIndex = 0;
 		//refresh the view
 		removeAll(find(VACCINE_LIST));
 		List<Vaccine> vaccines = vaccineDao.getAllVaccines();
@@ -278,7 +279,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	 */
 	public void cancelEditingDose(){
 		currentlyEditingDose = null;
-		vaccineListSelectionChanged();
+		refreshVaccines();
 	}
 	
 	/**
@@ -334,7 +335,8 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 			currentlyEditingDose.setMinIntervalDays(minIntervalDays);
 			currentlyEditingDose.setMinIntervalMonths(minIntervalMonths);
 			currentlyEditingDose.setName(name);
-			vaccineDoseDao.saveOrUpdateVaccineDose(currentlyEditingDose);
+			vaccineDao.saveOrUpdateVaccine(currentlyEditingDose.getVaccine());
+//			vaccineDoseDao.saveOrUpdateVaccineDose(currentlyEditingDose);
 		}
 		//reset the screen
 		cancelEditingDose();

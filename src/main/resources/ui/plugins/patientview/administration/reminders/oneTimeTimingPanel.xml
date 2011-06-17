@@ -1,0 +1,18 @@
+<panel columns="1" gap="10" name="timingSubPanel" weightx="1">
+	<panel gap="5" name="fromTimingPanel" weightx="1">
+		<panel gap="5" name="extendedFromPanel">
+			<spinbox columns="4" name="fromMonthsField" text="0"/>
+			<label name="fromMonthsLabel" text="months" />
+			<spinbox columns="4" name="fromDaysField" text="0"/>
+			<label name="fromDaysLabel" text="days" />
+		</panel>
+		<combobox action="fromDateOptionChanged()" columns="15"
+			name="fromDateOptionSelect" editable="false"/>
+		<combobox action="fromEventOptionChanged()" columns="25"
+			name="fromEventSelect" editable="false"/>
+	</panel>
+	<panel gap="5" name="extraTimingOptionPanel" weightx="1">
+		<label name="timeOfDayLabel" text="Time of day" />
+		<textfield columns="6" name="timeOfDayField" text="10:00"/>
+	</panel>
+</panel>

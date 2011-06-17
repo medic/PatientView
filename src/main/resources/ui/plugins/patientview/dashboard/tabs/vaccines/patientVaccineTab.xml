@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <panel columns="2" gap="5" name="patientVaccinePanel" weightx="1" weighty="1" top="5" bottom="5" left="5" right="5">
-    <panel border="true" bottom="5" columns="1" gap="5" left="5" name="vaccineListPanel" right="5" text="Patient's Vaccines" top="5" weightx="1" weighty="1">
+    <panel border="true" bottom="5" columns="1" gap="5" left="5" name="vaccineListPanel" right="5" text="Patient's Vaccines" top="5" weightx="1" weighty="1" icon="/icons/syringe_small.png">
         <list name="vaccineList" weightx="1" weighty="1"/>
         <panel columns="1" gap="5" name="vaccineButtonPanel" weightx="1">
-            <button action="scheduleVaccine()" name="scheduleVaccineButton" text="Schedule Vaccine" weightx="1"/>
-            <button action="removeVaccine()" name="removeVaccineButton" text="Remove Vaccine" weightx="1"/>
+            <button action="scheduleVaccine()" name="scheduleVaccineButton" text="Schedule Vaccine" weightx="1" icon="/icons/schedule_vaccine.png"/>
+            <button action="removeVaccine()" name="removeVaccineButton" text="Remove Vaccine" weightx="1" icon="/icons/delete_vaccine_large.png"/>
         </panel>
     </panel>
     <panel columns="1" gap="5" name="scheduledDosePanel" weightx="4" weighty="1">
         <panel name="scheduledDoseTablePanel" weightx="1" weighty="1"/>
         <panel gap="5" name="doseButtonPanel">
-            <button action="rescheduleDose()" name="rescheduleDoseButton" text="Reschedule"/>
-            <button action="administerDose()" name="adminsterDoseButton" text="Administer"/>
+            <button action="rescheduleDose()" name="rescheduleDoseButton" text="Reschedule" icon="/icons/reschedule.png"/>
+            <button action="administerDose()" name="adminsterDoseButton" text="Administer" icon="/icons/administer_vaccine.png"/>
         </panel>
     </panel>
 </panel>
