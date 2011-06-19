@@ -7,6 +7,9 @@
     <textfield name="usernameField"/>
     <label text="i18n.login.password"/>
     <passwordfield name="passwordField" perform="attemptLogin()"/>
-    <label/>
-    <button action="attemptForgotPassword()" halign="right" text="i18n.login.forgot" type="link"/>
+    <panel colspan="2" weightx="1">
+    	<button action="attemptForgotPassword()" halign = "left" text="i18n.login.forgot" type="link"/>
+    	<label weightx="3"/>
+    	<button action="attemptLogin()" text="Login" weightx="1" icon="/icons/door_in.png"/>
+    </panel>
 </panel>
