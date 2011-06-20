@@ -55,7 +55,6 @@ public class AdministrationTabController extends ViewHandler{
 		panels.add(new CsvImporterPanelController(ui,appCon));
 		panels.add(new VaccineAdministrationPanelController(ui,appCon));
 		panels.add(new ReminderAdministrationPanelController(ui,appCon));
-		//panels.add(new FlagAdministrationPanelController(ui, appCon));
 		//create all the list items
 		for(AdministrationTabPanel panel: panels){
 			Object listItem = ui.createListItem(panel.getListItemTitle(), panel);
