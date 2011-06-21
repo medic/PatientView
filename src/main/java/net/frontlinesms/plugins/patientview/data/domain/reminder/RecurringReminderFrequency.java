@@ -19,14 +19,20 @@ public enum RecurringReminderFrequency {
 		return name;
 	}
 	
-	private RecurringReminderFrequency(String name, int calendarField, int modificationAmount){
+	private RecurringReminderFrequency(String name, int calendarField, int stepAmount){
 		this.name = name;
+		this.calendarField = calendarField;
+		this.stepAmount = stepAmount;
 	}
 	
 	public boolean shouldAlert(Pair<Calendar,Calendar> window){
+		return shouldAlert(window,Calendar.getInstance());
+	}
+	
+	public boolean shouldAlert(Pair<Calendar,Calendar> window, Calendar currentDate){
 		Calendar tempCal = TimeUtils.cloneCalendar(window.one);
 		while(TimeUtils.compareCalendars(tempCal, window.two) <=0){
-			if(TimeUtils.compareCalendars(tempCal, Calendar.getInstance()) == 0){
+			if(TimeUtils.compareCalendars(tempCal, currentDate) == 0){
 				return true;
 			}else{
 				tempCal.add(calendarField, stepAmount);
