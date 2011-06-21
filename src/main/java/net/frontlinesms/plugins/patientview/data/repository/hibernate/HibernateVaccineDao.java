@@ -1,6 +1,5 @@
 package net.frontlinesms.plugins.patientview.data.repository.hibernate;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -72,12 +71,18 @@ public class HibernateVaccineDao extends BaseHibernateDao<Vaccine> implements Va
 	public List<Vaccine> getUnscheduledVaccinesForPatient(Patient patient) {
 		Set<Vaccine> scheduledVaccines = getScheduledVaccinesForPatient(patient);
 		List<Vaccine> allVaccines = getAll();
-		List<Vaccine> toRemove = new ArrayList<Vaccine>();
+		Set<Vaccine> toRemove = new HashSet<Vaccine>();
 		for(Vaccine schedV: scheduledVaccines){
 			for(Vaccine vacc: allVaccines){
+				//if the vaccine has already been scheduled or the vaccine has no doses, remove it
 				if(schedV.getVaccineId() == vacc.getVaccineId()){
 					toRemove.add(vacc);
 				}
+			}
+		}
+		for(Vaccine vaccine: allVaccines){
+			if(vaccine.getDoses().size() == 0){
+				toRemove.add(vaccine);
 			}
 		}
 		allVaccines.removeAll(toRemove);
