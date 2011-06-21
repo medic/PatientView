@@ -28,4 +28,6 @@ public interface ScheduledDoseDao {
 	public List<ScheduledDose> getScheduledDoses(Vaccine vaccine, Patient patient);
 	
 	public void administerDose(ScheduledDose dose, Person administeredBy, Date dateAdministered);
+	
+	public boolean patientHasAdministeredDosesForVaccine(Patient patient, Vaccine vaccine);
 }

@@ -76,4 +76,14 @@ public class HibernateScheduledDoseDao extends BaseHibernateDao<ScheduledDose> i
 			saveOrUpdateScheduledDose(dose);
 		}
 	}
+
+	public boolean patientHasAdministeredDosesForVaccine(Patient patient, Vaccine vaccine) {
+		List<ScheduledDose> doses = getScheduledDoses(vaccine, patient);
+		for(ScheduledDose dose:doses){
+			if(dose.isAdministered()){
+				return true;
+			}
+		}
+		return false;
+	}
 }

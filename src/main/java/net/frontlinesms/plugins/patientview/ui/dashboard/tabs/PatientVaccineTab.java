@@ -198,7 +198,12 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 	}
 	
 	public void removeVaccine(){
-		ui.showConfirmationDialog("removeVaccineConfirmed()", this,"medic.vaccine.confirm.remove");
+		Vaccine v = (Vaccine) ui.getAttachedObject(ui.getSelectedItem(ui.find(mainPanel,VACCINE_LIST)));
+		if(scheduledDoseDao.patientHasAdministeredDosesForVaccine(patient, v)){
+			ui.alert("You cannot remove a patient from a scheduled vaccine series once a dose has been administered");
+		}else{
+			ui.showConfirmationDialog("removeVaccineConfirmed()", this,"medic.vaccine.confirm.remove");
+		}
 	}
 	
 	public void removeVaccineConfirmed(){
