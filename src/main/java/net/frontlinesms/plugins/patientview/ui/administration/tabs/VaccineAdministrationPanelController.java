@@ -201,6 +201,12 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	 * has been clicked for a second time 
 	 */
 	public void addVaccineConfirmed(){
+		String name = ui.getText(find(VACCINE_NAME_FIELD));
+		if(name == null || name.trim().equals("")){
+			ui.setText(find(VACCINE_NAME_FIELD), "");
+			ui.alert("You cannot create a vaccine without a name");
+			return;
+		}
 		Vaccine v = new Vaccine(ui.getText(find(VACCINE_NAME_FIELD)),true);
 		vaccineDao.saveOrUpdateVaccine(v);
 		removeAll(find(VACCINE_BUTTON_PANEL));
