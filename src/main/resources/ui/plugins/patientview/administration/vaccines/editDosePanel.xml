@@ -6,23 +6,23 @@
     </panel>
     <panel gap="5">
         <label text="Window Start Date:" />
-        <spinbox columns="4" halign="center" name="startDateMonths" text="0" width="1"/>
+        <spinbox minimum="0" columns="4" halign="center" name="startDateMonths" text="0" width="1"/>
         <label text="months"/>
-        <spinbox columns="4" name="startDateDays" text="0"/>
+        <spinbox minimum="0" columns="4" name="startDateDays" text="0"/>
         <label text="days"/>
     </panel>
     <panel gap="5">
         <label text="Window End Date:" />
-        <spinbox columns="4" halign="center" name="endDateMonths" text="0" width="1"/>
+        <spinbox minimum="0" columns="4" halign="center" name="endDateMonths" text="0" width="1"/>
         <label text="months"/>
-        <spinbox columns="4" name="endDateDays" text="0"/>
+        <spinbox minimum="0" columns="4" name="endDateDays" text="0"/>
         <label text="days"/>
     </panel>
     <panel gap="5">
         <label text="Minimum Interval to Next Dose:"/>
-        <spinbox columns="4" halign="center" name="minIntervalMonths" text="0" width="1"/>
+        <spinbox minimum="0" columns="4" halign="center" name="minIntervalMonths" text="0" width="1"/>
         <label text="months"/>
-        <spinbox columns="4" name="minIntervalDays" text="0"/>
+        <spinbox minimum="0" columns="4" name="minIntervalDays" text="0"/>
         <label text="days"/>
     </panel>
     <panel gap="10" halign="left" valign="center" weightx="1">

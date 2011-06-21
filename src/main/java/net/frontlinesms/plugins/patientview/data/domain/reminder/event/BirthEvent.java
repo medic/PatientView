@@ -21,7 +21,6 @@ public class BirthEvent implements ReminderEvent<Patient>{
 		supportedTimingOptions.add(EventTimingOption.DAY_OF);
 	}
 	
-	
 	public boolean canBeEndEvent() {
 		return false;
 	}
