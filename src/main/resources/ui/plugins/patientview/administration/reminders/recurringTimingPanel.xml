@@ -2,9 +2,9 @@
 	<panel gap="5" name="fromTimingPanel" weightx="1">
 		<label name="fromLabel" text="From" />
 		<panel gap="5" name="extendedFromPanel">
-			<spinbox columns="4" name="fromMonthsField" text="0"/>
+			<spinbox minimum="0" columns="4" name="fromMonthsField" text="0"/>
 			<label name="fromMonthsLabel" text="months" />
-			<spinbox columns="4" name="fromDaysField" text="0"/>
+			<spinbox minimum="0" columns="4" name="fromDaysField" text="0"/>
 			<label name="fromDaysLabel" text="days" />
 		</panel>
 		<combobox action="fromDateOptionChanged()" columns="15"
@@ -15,9 +15,9 @@
 	<panel gap="5" name="toTimingPanel" weightx="1">
 		<label name="toLabel" text="To" />
 		<panel gap="5" name="extendedToPanel">
-			<spinbox columns="4" name="toMonthsField" text="0"/>
+			<spinbox minimum="0" columns="4" name="toMonthsField" text="0"/>
 			<label name="toMonthsLabel" text="months" />
-			<spinbox columns="4" name="toDaysField" text="0"/>
+			<spinbox minimum="0" columns="4" name="toDaysField" text="0"/>
 			<label name="toDaysLabel" text="days" />
 		</panel>
 		<combobox action="toDateOptionChanged()" columns="15"
