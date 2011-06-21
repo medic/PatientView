@@ -225,7 +225,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		if(scheduledDoseDao.getScheduledDoses(getCurrentlySelectedVaccine(),null).size() != 0){
 			ui.alert("You cannot delete a vaccine with scheduled doses.");
 		}else{
-			ui.showConfirmationDialog("removeVaccineConfirmed()", this,"Are you sure you want to delete this vaccine?");
+			ui.showConfirmationDialog("removeVaccineConfirmed()", this,"medic.vaccine.confirm.delete");
 		}
 	}
 	
@@ -293,7 +293,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		if(scheduledDoseDao.getScheduledDoses(null, (VaccineDose) doseTableController.getCurrentlySelectedObject()).size() != 0){
 			ui.alert("You cannot delete a dose that has appointments scheduled.");
 		}else{
-			ui.showConfirmationDialog("removeDoseConfirmed()", this,"Are you sure you want to delete this dose?");
+			ui.showConfirmationDialog("removeDoseConfirmed()", this,"medic.vaccine.dose.confirm.delete");
 		}
 	}
 	

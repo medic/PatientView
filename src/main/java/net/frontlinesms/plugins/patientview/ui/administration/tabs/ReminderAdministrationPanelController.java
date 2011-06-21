@@ -269,7 +269,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 	}
 	
 	public void removeReminder(){
-		ui.showConfirmationDialog("removeReminderConfirmed()", this,"Are you sure you want to delete this Reminder?");
+		ui.showConfirmationDialog("removeReminderConfirmed()", this,"medic.reminder.confirm.delete");
 	}
 	
 	public void saveReminder(){

@@ -198,7 +198,7 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 	}
 	
 	public void removeVaccine(){
-		ui.showConfirmationDialog("removeVaccineConfirmed()", this,"Are you sure you want to delete this vaccine?");
+		ui.showConfirmationDialog("removeVaccineConfirmed()", this,"medic.vaccine.confirm.remove");
 	}
 	
 	public void removeVaccineConfirmed(){
