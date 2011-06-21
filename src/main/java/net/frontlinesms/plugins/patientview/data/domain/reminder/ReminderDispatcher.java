@@ -22,7 +22,7 @@ import org.springframework.context.ApplicationContext;
  */
 public class ReminderDispatcher extends TimerTask{
 
-	public static final int intervalMinutes = 15;
+	public static final int INTERVAL_MINUTES = 15;
 	private PatientDao patientDao;
 	private ReminderDao reminderDao;
 	
@@ -46,7 +46,7 @@ public class ReminderDispatcher extends TimerTask{
 		Calendar currentTime = Calendar.getInstance();
 		int currentHours = currentTime.get(Calendar.HOUR_OF_DAY) * 100 + currentTime.get(Calendar.MINUTE);
 		for(Reminder r: reminders){
-			if(currentHours <= r.getTimeOfDay() && r.getTimeOfDay() < (currentHours + intervalMinutes)){
+			if(currentHours <= r.getTimeOfDay() && r.getTimeOfDay() < (currentHours + INTERVAL_MINUTES)){
 				activeReminders.add(r);
 			}
 		}
