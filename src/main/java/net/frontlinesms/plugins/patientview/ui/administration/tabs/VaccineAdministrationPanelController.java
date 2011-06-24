@@ -314,6 +314,10 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	public void saveDose(){
 		//prepare all the data
 		String name = ui.getText(find(DOSE_NAME_FIELD));
+		if(name == null || name.trim().equals("")){
+			ui.alert("You can't create a dose without a name.");
+			return;
+		}
 		int startDateMonths = Integer.parseInt(ui.getText(find(START_DATE_MONTHS_BOX)));
 		int startDateDays = Integer.parseInt(ui.getText(find(START_DATE_DAYS_BOX)));
 		int endDateMonths = Integer.parseInt(ui.getText(find(END_DATE_MONTHS_BOX)));
