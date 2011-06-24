@@ -94,31 +94,37 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	
 	@Override
 	public void willAppear(){
-		refreshVaccines();
+		refreshVaccines(null);
 	}
 
 	/**
 	 * Refreshes the list of vaccines and enables/disables
 	 * the related buttons as needed.
 	 */
-	private void refreshVaccines(){
+	private void refreshVaccines(Vaccine toSelect){
 		//save the current selection index
 		int selectedIndex =ui.getSelectedIndex(find(VACCINE_LIST));
 		if(selectedIndex < 0) selectedIndex = 0;
 		//refresh the view
 		removeAll(find(VACCINE_LIST));
 		List<Vaccine> vaccines = vaccineDao.getAllVaccines();
+		
 		if(vaccines.size() == 0){
 			add(find(VACCINE_LIST),ui.createListItem("No Vaccines",null));
 		}else{
+			int count = 0;
 			for(Vaccine v: vaccines){
 				add(find(VACCINE_LIST),ui.createListItem(v.getName(), v));
+				if(toSelect != null && v.getVaccineId() == toSelect.getVaccineId()){
+					setVaccineListSelectedIndex(count);
+				}
+				count++;
 			}
 		}
 		//if the old selected index is still within the table size, use it
-		if(selectedIndex < vaccines.size()){
+		if(toSelect == null && selectedIndex < vaccines.size()){
 			setVaccineListSelectedIndex(selectedIndex);
-		}else{// otherwise, set it to the last element in the table
+		}else if(toSelect == null){// otherwise, set it to the last element in the table
 			setVaccineListSelectedIndex(vaccines.size()-1);
 		}
 		//if there are no vaccines, disable some buttons
@@ -207,7 +213,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		vaccineDao.saveOrUpdateVaccine(v);
 		removeAll(find(VACCINE_BUTTON_PANEL));
 		add(find(VACCINE_BUTTON_PANEL),ui.loadComponentFromFile(VACCINE_BUTTONS_XML,this));
-		refreshVaccines();
+		refreshVaccines(v);
 	}
 	
 	/**
@@ -239,7 +245,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		//deleted the vaccine
 		vaccineDao.deleteVaccine(getCurrentlySelectedVaccine());
 		//refresh the list
-		refreshVaccines();
+		refreshVaccines(null);
 		//remove the confirmation dialog
 		ui.remove(ui.find(CONFIRMATION_DIALOG));
 	}
@@ -281,7 +287,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	 */
 	public void cancelEditingDose(){
 		currentlyEditingDose = null;
-		refreshVaccines();
+		refreshVaccines(null);
 	}
 	
 	/**
@@ -308,7 +314,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		vaccineDao.saveOrUpdateVaccine(getCurrentlySelectedVaccine());
 		vaccineDoseDao.deleteVaccineDose((VaccineDose) doseTableController.getCurrentlySelectedObject());
 		int vaccineIndex = ui.getSelectedIndex(find(VACCINE_LIST));
-		refreshVaccines();
+		refreshVaccines(null);
 		setVaccineListSelectedIndex(vaccineIndex);
 		ui.remove(ui.find(CONFIRMATION_DIALOG));
 	}
