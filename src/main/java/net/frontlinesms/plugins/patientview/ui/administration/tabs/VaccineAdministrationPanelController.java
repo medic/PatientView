@@ -2,7 +2,6 @@ package net.frontlinesms.plugins.patientview.ui.administration.tabs;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.Vaccine;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.VaccineDose;
@@ -60,6 +59,9 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	private static final String ADD_DOSE_BUTTON = "addDoseButton";
 	private static final String DELETE_DOSE_BUTTON = "deleteDoseButton";
 	private static final String EDIT_DOSE_BUTTON = "editDoseButton";
+	
+	/** indicates whether or not a new dose was just created*/
+	private boolean newDose = false;
 	
 	public VaccineAdministrationPanelController(UiGeneratorController uiController, ApplicationContext appCon) {
 		super(uiController,appCon, MAIN_THINLET_XML);
@@ -161,7 +163,10 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		}else{
 			ui.setEnabled(find(EDIT_DOSE_BUTTON), true);
 			ui.setEnabled(find(DELETE_DOSE_BUTTON), true);
-			if(selectedIndex < doses.size() && selectedIndex >=0){
+			if(newDose){
+				doseTableController.setSelected(doses.size()-1);
+				newDose = false;
+			}else if(selectedIndex < doses.size() && selectedIndex >=0){
 				doseTableController.setSelected(selectedIndex);
 			}else{
 				doseTableController.setSelected(doses.size()-1);
@@ -328,6 +333,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		if(currentlyEditingDose == null){
 			getCurrentlySelectedVaccine().addDose(new VaccineDose(name,getCurrentlySelectedVaccine(),startDateMonths,startDateDays,endDateMonths,endDateDays,minIntervalMonths,minIntervalDays));
 			vaccineDao.saveOrUpdateVaccine(getCurrentlySelectedVaccine());
+			newDose=true;
 		}else{ // otherwise, modify the existing dose
 			currentlyEditingDose.setStartDateDays(startDateDays);
 			currentlyEditingDose.setStartDateMonths(startDateMonths);
