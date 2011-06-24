@@ -25,7 +25,7 @@ public class VaccineDose {
 	
 	private String name;
 	
-	@ManyToOne(fetch=FetchType.EAGER,optional=false,cascade={})
+	@ManyToOne(fetch=FetchType.EAGER,optional=false,cascade={CascadeType.PERSIST,CascadeType.REFRESH})
 	@JoinColumn(name="vaccine")
 	private Vaccine vaccine;
 	

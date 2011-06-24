@@ -2,6 +2,7 @@ package net.frontlinesms.plugins.patientview.ui.administration.tabs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.Vaccine;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.VaccineDose;
@@ -113,7 +114,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 			}
 		}
 		//if the old selected index is still within the table size, use it
-		if(selectedIndex < vaccines.size() && selectedIndex >=0){
+		if(selectedIndex < vaccines.size()){
 			setVaccineListSelectedIndex(selectedIndex);
 		}else{// otherwise, set it to the last element in the table
 			setVaccineListSelectedIndex(vaccines.size()-1);
@@ -121,10 +122,6 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		//if there are no vaccines, disable some buttons
 		if(vaccines.size() == 0){
 			ui.setEnabled(find(REMOVE_VACCINE_BUTTON), false);
-			ui.setEnabled(find(ADD_DOSE_BUTTON), false);
-			ui.setEnabled(find(EDIT_DOSE_BUTTON), false);
-			ui.setEnabled(find(DELETE_DOSE_BUTTON), false);
-			ui.setEnabled(find(ENROLL_NEWBORNS_CHECKBOX), false);
 		}else{//otherwise, enable these buttons
 			ui.setEnabled(find(REMOVE_VACCINE_BUTTON), true);
 			ui.setEnabled(find(ADD_DOSE_BUTTON), true);
@@ -145,17 +142,11 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	public void vaccineListSelectionChanged(){
 		//add the standard dose panel
 		removeAll(find(DOSE_ACTION_PANEL));
-		add(find(DOSE_ACTION_PANEL),ui.loadComponentFromFile(DEFAULT_DOSE_PANEL_XML, this));
 		//get the selected vaccine
 		Vaccine v = getCurrentlySelectedVaccine();
 		//if the vaccine is null, disable some buttons and return
-		if(v == null){
-			doseTableController.setResults(new ArrayList<VaccineDose>());
-			ui.setEnabled(find(ADD_DOSE_BUTTON), false);
-			ui.setEnabled(find(EDIT_DOSE_BUTTON), false);
-			ui.setEnabled(find(DELETE_DOSE_BUTTON), false);
-			return;
-		}
+		if(v == null) return;
+		add(find(DOSE_ACTION_PANEL),ui.loadComponentFromFile(DEFAULT_DOSE_PANEL_XML, this));
 		//set up the dose panel
 		ui.setText(find(VACCINE_NAME_LABEL), v.getName());
 		ui.setSelected(find(ENROLL_NEWBORNS_CHECKBOX), v.isAutomaticallyEnrollNewborns());
@@ -341,8 +332,8 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 			currentlyEditingDose.setMinIntervalDays(minIntervalDays);
 			currentlyEditingDose.setMinIntervalMonths(minIntervalMonths);
 			currentlyEditingDose.setName(name);
-			vaccineDao.saveOrUpdateVaccine(currentlyEditingDose.getVaccine());
-//			vaccineDoseDao.saveOrUpdateVaccineDose(currentlyEditingDose);
+	//		vaccineDao.saveOrUpdateVaccine(currentlyEditingDose.getVaccine());
+			vaccineDoseDao.saveOrUpdateVaccineDose(currentlyEditingDose);
 		}
 		//reset the screen
 		cancelEditingDose();

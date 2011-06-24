@@ -13,7 +13,6 @@ import net.frontlinesms.plugins.patientview.data.repository.VaccineDao;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 public class HibernateVaccineDao extends BaseHibernateDao<Vaccine> implements VaccineDao {
@@ -21,6 +20,7 @@ public class HibernateVaccineDao extends BaseHibernateDao<Vaccine> implements Va
 	private ScheduledDoseDao scheduledDoseDao;
 	public void setScheduledDoseDao(ScheduledDoseDao scheduledDoseDao) {this.scheduledDoseDao = scheduledDoseDao;}
 	public ScheduledDoseDao getScheduledDoseDao() {return scheduledDoseDao;}
+	String hqlQuery = "select distinct v from Vaccine v order by v.name asc";
 	
 	protected HibernateVaccineDao() {
 		super(Vaccine.class);
@@ -37,9 +37,7 @@ public class HibernateVaccineDao extends BaseHibernateDao<Vaccine> implements Va
 	}
 
 	public List<Vaccine> getAllVaccines() {
-		DetachedCriteria c = super.getCriterion();
-		c.addOrder(Order.asc("vaccineId"));
-		return super.getList(c);
+		return super.getList(hqlQuery, null);
 	}
 
 	public Vaccine getVaccine(long vaccineId) {
