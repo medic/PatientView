@@ -83,7 +83,9 @@ public class FormResponseTab<P extends Person> extends TabController implements 
 		//create the form combo box
 		List<MedicForm> forms = ((MedicFormDao) appCon.getBean("MedicFormDao")).getAllMedicForms();
 		comboBox = ui.create("combobox");
+		ui.setEditable(comboBox, false);
 		ui.add(comboBox,ui.createComboboxChoice(getI18nString(ALL_FORMS), null));
+		ui.setSelectedIndex(comboBox, 0);
 		for(MedicForm mf: forms){
 			ui.add(comboBox,ui.createComboboxChoice(mf.getName(), mf));
 		}

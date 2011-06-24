@@ -6,7 +6,7 @@
     <panel icon="/icons/page_white_gear.png" border="true" bottom="5" columns="1" gap="5" left="5" right="5" top="5" name="optionsPanel" text="i18n.medic.common.labels.options">
         <panel gap="5" weightx="1">
             <label icon="/icons/page_white_star.png" halign="right" text="i18n.medic.importer.type.of.data.label"/>
-            <combobox action="datatypeChanged" name="dataTypeComboBox" selected="0" weightx="1"/>
+            <combobox editable="false" action="datatypeChanged" name="dataTypeComboBox" selected="0" weightx="1"/>
             <label weightx="4"/>
         </panel>
         <panel colspan="2" columns="3" gap="5" weightx="1">

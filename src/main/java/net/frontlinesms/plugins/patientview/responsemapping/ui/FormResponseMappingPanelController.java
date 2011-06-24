@@ -65,6 +65,7 @@ public class FormResponseMappingPanelController extends AdministrationTabPanel i
 		//create the form combo box
 		List<MedicForm> forms = ((MedicFormDao) appCon.getBean("MedicFormDao")).getAllMedicForms();
 		comboBox = Thinlet.create("combobox");
+		ui.setEditable(comboBox,false);
 		add(comboBox,ui.createComboboxChoice(getI18nString("medic.common.all.forms"), null));
 		for(MedicForm mf: forms){
 			add(comboBox,ui.createComboboxChoice(mf.getName(), mf));

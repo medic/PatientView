@@ -15,7 +15,7 @@
                 <label icon="/icons/tag_purple.png" text="i18n.medic.common.labels.label"/>
                 <textfield name="labelTextField" weightx="1"/>
                 <label icon="/icons/page_white_star.png" text="i18n.medic.common.labels.type"/>
-                <combobox name="dataTypeComboBox"/>
+                <combobox editable="false" name="dataTypeComboBox"/>
             </panel>
             <label name="fieldSearchLabel" text="i18n.editdetailview.labels.add.existing.field"/>
             <textfield action="fieldSearchBarKeyPress(this.text)" name="fieldSearchBar"/>

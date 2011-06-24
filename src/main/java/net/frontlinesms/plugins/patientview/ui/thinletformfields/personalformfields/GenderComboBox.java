@@ -21,6 +21,7 @@ public class GenderComboBox extends ThinletFormField<Gender> implements Personal
 			thinlet.add(comboBox,thinlet.createComboboxChoice(g.toString(), g));
 		}
 		thinlet.setAction(comboBox, "selectionChanged(this.selected)", null, this);
+		thinlet.setEditable(comboBox, false);
 		thinlet.add(mainPanel,comboBox);
 		thinlet.setWeight(comboBox, 5, 0);
 		//initialize the comboBox

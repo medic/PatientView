@@ -103,6 +103,7 @@ public class AttributeAdministrationPanelController extends AdministrationTabPan
 			add(dataTypeComboBox,choice);
 			}
 		}
+		ui.setSelectedIndex(dataTypeComboBox, 0);
 		//initialize the DAOs
 		attributeResponseDao = (PersonAttributeResponseDao) appCon.getBean("PersonAttributeResponseDao");
 		attributeDao = (PersonAttributeDao) appCon.getBean("PersonAttributeDao");
