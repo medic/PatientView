@@ -57,6 +57,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	private static final String DOSE_NAME_FIELD = "doseNameField";
 	private static final String CONFIRMATION_DIALOG = "confirmDialog";
 	//Thinlet button names
+	private static final String ADD_VACCINE_BUTTON = "addVaccineButton";
 	private static final String REMOVE_VACCINE_BUTTON = "removeVaccineButton";
 	private static final String ADD_DOSE_BUTTON = "addDoseButton";
 	private static final String DELETE_DOSE_BUTTON = "deleteDoseButton";
@@ -129,6 +130,8 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		}else if(toSelect == null && selectedIndex >= vaccines.size()){// otherwise, set it to the last element in the table
 			setVaccineListSelectedIndex(vaccines.size()-1);
 		}
+		//enable/disable the proper buttons
+		ui.setEnabled(find(ADD_VACCINE_BUTTON), true);
 		//if there are no vaccines, disable some buttons
 		if(vaccines.size() == 0){
 			ui.setEnabled(find(REMOVE_VACCINE_BUTTON), false);
@@ -202,6 +205,9 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		removeAll(find(VACCINE_BUTTON_PANEL));
 		add(find(VACCINE_BUTTON_PANEL),ui.loadComponentFromFile(ADD_VACCINE_XML,this));
 		ui.requestFocus(find(VACCINE_NAME_FIELD));
+		ui.setEnabled(find(ADD_DOSE_BUTTON), false);
+		ui.setEnabled(find(EDIT_DOSE_BUTTON), false);
+		ui.setEnabled(find(DELETE_DOSE_BUTTON), false);
 	}
 	
 	/**
@@ -229,8 +235,16 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	public void addVaccineCanceled(){
 		removeAll(find(VACCINE_BUTTON_PANEL));
 		add(find(VACCINE_BUTTON_PANEL),ui.loadComponentFromFile(VACCINE_BUTTONS_XML,this));
+		ui.setEnabled(find(ADD_DOSE_BUTTON), true);
+		List<VaccineDose> doses = vaccineDoseDao.getDosesForVaccine(getCurrentlySelectedVaccine());
+		if(doses.size() == 0){
+			ui.setEnabled(find(EDIT_DOSE_BUTTON), false);
+			ui.setEnabled(find(DELETE_DOSE_BUTTON), false);
+		}else{
+			ui.setEnabled(find(EDIT_DOSE_BUTTON), true);
+			ui.setEnabled(find(DELETE_DOSE_BUTTON), true);
+		}
 	}
-	
 
 	/**
 	 * Called when the "Remove Vaccine" button is clicked
@@ -264,6 +278,9 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		add(find(DOSE_ACTION_PANEL),ui.loadComponentFromFile(EDIT_DOSE_XML, this));
 		ui.requestFocus(find(DOSE_NAME_FIELD));
 		ui.setText(find(EDIT_DOSE_PANEL), "Add a Dose");
+		//disable the vaccine action buttons
+		ui.setEnabled(find(ADD_VACCINE_BUTTON), false);
+		ui.setEnabled(find(REMOVE_VACCINE_BUTTON), false);
 	}
 
 	/**
@@ -286,6 +303,9 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		ui.setText(find(EDIT_DOSE_PANEL), "Editing "+ dose.getName());
 		//focus on the first field
 		ui.requestFocus(find(DOSE_NAME_FIELD));
+		//disable the vaccine action buttons
+		ui.setEnabled(find(ADD_VACCINE_BUTTON), false);
+		ui.setEnabled(find(REMOVE_VACCINE_BUTTON), false);
 	}
 	
 	/**
