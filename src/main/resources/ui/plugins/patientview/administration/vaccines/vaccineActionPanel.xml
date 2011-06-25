@@ -1,0 +1,6 @@
+<panel weightx="1" weighty="1" columns="1" gap="5">
+	<label name="vaccineNameLabel" text="" />
+	<separator weightx="1" />
+	<panel name="doseTable" weightx="1" weighty="1" />
+	<panel name="doseActionPanel" weightx="1" weighty="1"/>
+</panel>

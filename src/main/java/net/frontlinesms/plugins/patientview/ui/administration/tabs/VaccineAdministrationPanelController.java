@@ -31,6 +31,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	private static final String VACCINE_BUTTONS_XML = "/ui/plugins/patientview/administration/vaccines/vaccineButtonsPanel.xml";
 	private static final String EDIT_DOSE_XML = "/ui/plugins/patientview/administration/vaccines/editDosePanel.xml";
 	private static final String DEFAULT_DOSE_PANEL_XML = "/ui/plugins/patientview/administration/vaccines/defaultDoseActionPanel.xml";
+	private static final String VACCINE_ACTION_PANEL_XML = "/ui/plugins/patientview/administration/vaccines/vaccineActionPanel.xml";
 	
 	//DAOS
 	private VaccineDao vaccineDao;
@@ -42,6 +43,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	private static final String VACCINE_BUTTON_PANEL = "vaccineButtonPanel";
 	private static final String VACCINE_NAME_FIELD = "vaccineNameField";
 	private static final String VACCINE_NAME_LABEL= "vaccineNameLabel";
+	private static final String VACCINE_ACTION_PANEL = "vaccineActionPanel";
 	private static final String DOSE_ACTION_PANEL = "doseActionPanel";
 	private static final String DOSE_TABLE_PANEL = "doseTable";
 	private static final String EDIT_DOSE_PANEL = "editDosePanel";
@@ -78,8 +80,6 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		columnList.add(new HeaderColumn("getStringEndDate", "/icons/date_delete.png", "End Date"));
 		columnList.add(new HeaderColumn("getStringMinimumInterval", "/icons/time.png", "Minimum Interval To Next Dose"));
 		doseTableController.putHeader(VaccineDose.class, columnList);
-		//add the dose table to the view
-		add(find(DOSE_TABLE_PANEL),doseTableController.getMainPanel());
 	}
 	
 	@Override
@@ -103,28 +103,30 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	 */
 	private void refreshVaccines(Vaccine toSelect){
 		//save the current selection index
-		int selectedIndex =ui.getSelectedIndex(find(VACCINE_LIST));
+		int selectedIndex = ui.getSelectedIndex(find(VACCINE_LIST));
 		if(selectedIndex < 0) selectedIndex = 0;
 		//refresh the view
 		removeAll(find(VACCINE_LIST));
 		List<Vaccine> vaccines = vaccineDao.getAllVaccines();
-		
+		//put the vaccines in the list
+		//if there aren't any vaccines
 		if(vaccines.size() == 0){
 			add(find(VACCINE_LIST),ui.createListItem("No Vaccines",null));
-		}else{
+		}else{ //otherwise, add them all
 			int count = 0;
 			for(Vaccine v: vaccines){
 				add(find(VACCINE_LIST),ui.createListItem(v.getName(), v));
+				//if this is the vaccine that we shold select, select it
 				if(toSelect != null && v.getVaccineId() == toSelect.getVaccineId()){
 					setVaccineListSelectedIndex(count);
 				}
 				count++;
 			}
 		}
-		//if the old selected index is still within the table size, use it
-		if(toSelect == null && selectedIndex < vaccines.size()){
+		//select the proper vaccine
+		if(toSelect == null && selectedIndex < vaccines.size()){//if the old selected index is still within the table size, use it
 			setVaccineListSelectedIndex(selectedIndex);
-		}else if(toSelect == null){// otherwise, set it to the last element in the table
+		}else if(toSelect == null && selectedIndex >= vaccines.size()){// otherwise, set it to the last element in the table
 			setVaccineListSelectedIndex(vaccines.size()-1);
 		}
 		//if there are no vaccines, disable some buttons
@@ -148,12 +150,16 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	 * and the disabling of the appropriate buttons. 
 	 */
 	public void vaccineListSelectionChanged(){
-		//add the standard dose panel
+		removeAll(find(VACCINE_ACTION_PANEL));
 		removeAll(find(DOSE_ACTION_PANEL));
 		//get the selected vaccine
 		Vaccine v = getCurrentlySelectedVaccine();
-		//if the vaccine is null, disable some buttons and return
+		//if the vaccine is null, return
 		if(v == null) return;
+		//add the vaccine action panel and the table
+		add(find(VACCINE_ACTION_PANEL),ui.loadComponentFromFile(VACCINE_ACTION_PANEL_XML, this));
+		add(find(DOSE_TABLE_PANEL),doseTableController.getMainPanel());
+		//add the dose action panel
 		add(find(DOSE_ACTION_PANEL),ui.loadComponentFromFile(DEFAULT_DOSE_PANEL_XML, this));
 		//set up the dose panel
 		ui.setText(find(VACCINE_NAME_LABEL), v.getName());
