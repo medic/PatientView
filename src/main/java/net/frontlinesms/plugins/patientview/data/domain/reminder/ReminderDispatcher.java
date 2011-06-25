@@ -66,6 +66,5 @@ public class ReminderDispatcher extends TimerTask{
 				}
 			}
 		}
-	}
-	
+	}	
 }

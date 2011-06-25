@@ -34,18 +34,16 @@ public class PatientViewPluginController extends BasePluginController{
 	private ReminderDispatcher reminderDispatch;
 	
 	/** the number of minutes to delay */
-	private static final int DISPATCH_DELAY_MINUTES = 15;
 	
 	/** 
 	 * @see net.frontlinesms.plugins.BasePluginController#initThinletTab(net.frontlinesms.ui.UiGeneratorController)
 	 */
 	@Override
 	protected Object initThinletTab(UiGeneratorController uiController) {
-		//PatientFlagListener flagListener = new PatientFlagListener(applicationContext, uiController);
 		tabController = new PatientViewThinletTabController(this,uiController);
 		reminderDispatch = new ReminderDispatcher(uiController, applicationContext);
 		Timer t = new Timer();
-		t.scheduleAtFixedRate(reminderDispatch, 1000 , 30 * 1000);
+		t.scheduleAtFixedRate(reminderDispatch, 1000 , ReminderDispatcher.INTERVAL_MINUTES * 60 * 1000);
 		return tabController.getTab();
 	}
 
