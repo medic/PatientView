@@ -48,7 +48,7 @@ public class DateSelectorDialog {
 	private static final String COMPONENT_LB_MONTH = "lbMonth";
 	private static final String COMPONENT_BT_NEXT = "btNext";
 	private static final String COMPONENT_BT_PREVIOUS = "btPrevious";
-	private static final String UI_FILE_DATE_SELECTER_FORM = "/ui/dialog/dateSelecter.xml";
+	private static final String UI_FILE_DATE_SELECTER_FORM = "/ui/core/util/dgDate.xml";
 	
 	/** Logger for this class */
 	private static Logger LOG = FrontlineUtils.getLogger(DateSelectorDialog.class);
