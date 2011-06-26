@@ -27,9 +27,6 @@ public class FormResponseDetailViewPanelController extends DetailViewPanelContro
 	private static final String FORM_RESPONSE_PANEL = "/ui/plugins/patientview/components/formPanel.xml";
 	//i18n
 	private static final String FORM = "medic.common.form";
-	private static final String SUBJECT = "medic.common.labels.subject";
-	private static final String SUBMITTER = "medic.common.labels.submitter";
-	private static final String DATE_SUBMITTED = "medic.common.labels.date.submitted";
 	
 	public FormResponseDetailViewPanelController(UiGeneratorController uiController, ApplicationContext appCon){
 		super(uiController,appCon,FORM_RESPONSE_PANEL);
@@ -49,22 +46,15 @@ public class FormResponseDetailViewPanelController extends DetailViewPanelContro
 		String form = getI18nString(FORM) + ": " + response.getForm().getName();
 		String submitter;
 		try{
-			submitter = getI18nString(SUBMITTER) + ": " + response.getSubmitter().getName();
+			submitter = "Submitted by " + response.getSubmitter().getName();
 		}catch(Exception e){
-			submitter = getI18nString(SUBMITTER) + ": "+ getI18nString("medic.common.labels.unknown");
-		}
-		String subject;
-		try{
-			subject = getI18nString(SUBJECT) + ": " + response.getSubjectName();
-		}catch(Exception e){
-			subject = getI18nString(SUBJECT) + ": " + getI18nString("medic.common.labels.unknown");
+			submitter = "Submitted by "+ getI18nString("medic.common.labels.unknown");
 		}
 		DateFormat df = InternationalisationUtils.getDateFormat();
-		String date = getI18nString(DATE_SUBMITTED) + " " + df.format(response.getDateSubmitted());
+		String date = df.format(response.getDateSubmitted());
 		ui.setText(find("nameLabel"),  form);
 		ui.setText(find("submitterLabel"),  submitter);
 		ui.setText(find("dateSubmittedLabel"),  date);
-		ui.setText(find("subjectLabel"), subject);
 		Object fieldContainer = find("fieldPanel");
 		removeAll(fieldContainer);
 		//get all the responses
