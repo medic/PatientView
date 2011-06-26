@@ -120,6 +120,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 		add(find(ACTION_PANEL),ui.loadComponentFromFile(EDIT_REMINDER_XML, this));
 		populateReminderTypeSelect(null,true);
 		populateNewReminderTimingPanel();
+		ui.requestFocus(find(REMINDER_NAME_FIELD));
 	}
 	
 	private void populateReminderTypeSelect(Class<?> toSelect , boolean enabled){
