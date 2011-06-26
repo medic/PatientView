@@ -175,7 +175,7 @@ public class PatientViewThinletTabController implements ThinletUiEventHandler, T
 			String responseLabel =getI18nString(RESPONSE_COLUMN);
 			//create all the table headers
 			tableController.putHeader(CommunityHealthWorker.class, HeaderColumn.createColumnList(new String[]{nameLabel, bdayLabel, idLabel,phoneNumberLabel},
-																								 new String[]{"/icons/user.png", "/icons/cake.png", "/icons/key.png","/icons/phone_number.png"},
+																								 new String[]{"/icons/user.png", "/icons/cake.png", "/icons/key.png","/icons/phone.png"},
 																								 new String[]{"getName", "getStringBirthdate", "getStringID","getPhoneNumber"}));
 			tableController.putHeader(Patient.class, HeaderColumn.createColumnList(new String[]{nameLabel, bdayLabel, idLabel,chwLabel},
 					 																			 new String[]{"/icons/user.png", "/icons/cake.png", "/icons/key.png","/icons/user_phone.png"},
