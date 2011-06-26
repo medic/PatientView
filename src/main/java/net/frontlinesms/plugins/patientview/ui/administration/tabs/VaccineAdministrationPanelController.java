@@ -205,9 +205,11 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		removeAll(find(VACCINE_BUTTON_PANEL));
 		add(find(VACCINE_BUTTON_PANEL),ui.loadComponentFromFile(ADD_VACCINE_XML,this));
 		ui.requestFocus(find(VACCINE_NAME_FIELD));
-		ui.setEnabled(find(ADD_DOSE_BUTTON), false);
-		ui.setEnabled(find(EDIT_DOSE_BUTTON), false);
-		ui.setEnabled(find(DELETE_DOSE_BUTTON), false);
+		if(find(ADD_DOSE_BUTTON) != null){
+			ui.setEnabled(find(ADD_DOSE_BUTTON), false);
+			ui.setEnabled(find(EDIT_DOSE_BUTTON), false);
+			ui.setEnabled(find(DELETE_DOSE_BUTTON), false);
+		}
 	}
 	
 	/**
