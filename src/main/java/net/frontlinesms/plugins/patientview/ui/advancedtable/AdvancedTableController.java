@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,8 @@ public class AdvancedTableController extends ViewHandler{
 	
 	protected Class<?> currentClass;
 	
+	protected List<?> results;
+	
 	/** The size of the results array */
 	protected int resultsSize;
 	
@@ -44,7 +47,7 @@ public class AdvancedTableController extends ViewHandler{
 	protected static FontMetrics metrics;
 	
 	/**
-	 *  an array containing methods and handlers,
+	 * an array containing methods and handlers,
 	 * allowing for non-default method calls
 	 */
 	protected Object[][] methods;
@@ -54,6 +57,9 @@ public class AdvancedTableController extends ViewHandler{
 	protected static final int RESULTS_CHANGED_INDEX = 2;
 	protected static final int METHOD_INDEX = 0;
 	protected static final int HANDLER_INDEX = 1;
+	
+	protected int sortColumn = -1;
+	protected boolean sortAscending;
 	
 	static{
 		//initialize stuff for determining font width
@@ -128,6 +134,7 @@ public class AdvancedTableController extends ViewHandler{
 	 */
 	public void setResults(List<?> results){
 		resultsSize = results.size();
+		this.results = results;
 		if(results.size() == 0){
 			removeAll(table);
 			Object header = Thinlet.create("header");
@@ -145,6 +152,10 @@ public class AdvancedTableController extends ViewHandler{
 			currentClass = findSuperClass(currentClass);
 		}
 		add(table,getAutoFitHeader(results));
+		//sort
+		if(sortColumn>=0){
+			Collections.sort(results, new TableSorter(getMethod(sortColumn), sortAscending,null));
+		}
 		List<Method> methods = getMethodsForClass(currentClass);
 		for(Object result: results){
 			Object row = ui.createTableRow(result);
@@ -211,6 +222,10 @@ public class AdvancedTableController extends ViewHandler{
 			}
 		}
 		return results;
+	}
+	
+	protected Method getMethod(int index){
+		return getMethodsForClass(currentClass).get(index);
 	}
 	
 	/**
@@ -335,20 +350,6 @@ public class AdvancedTableController extends ViewHandler{
 		return ui.getAttachedObject(ui.getSelectedItem(table));
 	}
 	
-	/**
-	 * @return the header object that is currently in use
-	 */
-	private Object getCurrentHeader(){
-		return headers.get(currentClass);
-	}
-	
-	public void headerClicked(){
-//		int index = uiController.getSelectedIndex(getCurrentHeader());
-//		String sort = uiController.getChoice(uiController.getSelectedItem(getCurrentHeader()), "sort");
-//		boolean sortOrder = (sort.equals("ascent"))? true:false;
-//		delegate.getQueryGenerator().setSort(, sortOrder);
-	}
-	
 	public void clearResults(){
 		removeAll(table);
 	}
@@ -388,5 +389,19 @@ public class AdvancedTableController extends ViewHandler{
 		}
 		methods[RESULTS_CHANGED_INDEX][METHOD_INDEX] = m;
 		methods[RESULTS_CHANGED_INDEX][HANDLER_INDEX] = handler;
+	}
+	
+	public void headerClicked(){
+		sortColumn = ui.getSelectedIndex(getCurrentHeader());
+		String sort = ui.getChoice(ui.getSelectedItem(getCurrentHeader()), "sort");
+		sortAscending = (sort.equals("ascent"));
+		setResults(results);
+	}
+	
+	/**
+	 * @return the header object that is currently in use
+	 */
+	private Object getCurrentHeader(){
+		return headers.get(currentClass);
 	}
 }
