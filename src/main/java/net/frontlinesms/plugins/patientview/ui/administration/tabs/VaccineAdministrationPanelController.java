@@ -237,14 +237,19 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	public void addVaccineCanceled(){
 		removeAll(find(VACCINE_BUTTON_PANEL));
 		add(find(VACCINE_BUTTON_PANEL),ui.loadComponentFromFile(VACCINE_BUTTONS_XML,this));
-		ui.setEnabled(find(ADD_DOSE_BUTTON), true);
-		List<VaccineDose> doses = vaccineDoseDao.getDosesForVaccine(getCurrentlySelectedVaccine());
-		if(doses.size() == 0){
-			ui.setEnabled(find(EDIT_DOSE_BUTTON), false);
-			ui.setEnabled(find(DELETE_DOSE_BUTTON), false);
-		}else{
-			ui.setEnabled(find(EDIT_DOSE_BUTTON), true);
-			ui.setEnabled(find(DELETE_DOSE_BUTTON), true);
+		if(vaccineDao.getAllVaccines().size() == 0){
+			ui.setEnabled(find(REMOVE_VACCINE_BUTTON),false);
+		}
+		if (find(ADD_DOSE_BUTTON) != null) {
+			ui.setEnabled(find(ADD_DOSE_BUTTON), true);
+			List<VaccineDose> doses = vaccineDoseDao.getDosesForVaccine(getCurrentlySelectedVaccine());
+			if (doses.size() == 0) {
+				ui.setEnabled(find(EDIT_DOSE_BUTTON), false);
+				ui.setEnabled(find(DELETE_DOSE_BUTTON), false);
+			} else {
+				ui.setEnabled(find(EDIT_DOSE_BUTTON), true);
+				ui.setEnabled(find(DELETE_DOSE_BUTTON), true);
+			}
 		}
 	}
 
