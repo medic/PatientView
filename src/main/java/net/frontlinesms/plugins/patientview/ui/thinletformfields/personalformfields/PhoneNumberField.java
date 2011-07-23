@@ -42,16 +42,6 @@ public class PhoneNumberField extends TextField implements PersonalFormField {
 	 * @see net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.PersonalFormField#setFieldForPerson(net.frontlinesms.plugins.patientview.data.domain.people.Person)
 	 */
 	public void setFieldForPerson(Person p) {
-		CommunityHealthWorker chw;
-		try {
-			chw = (CommunityHealthWorker) p;
-		} catch (Throwable t) {
-			return;
-		}
-		try {
-			chw.setPhoneNumber(getRawResponse());
-		} catch (Exception e) {
-			// these exceptions aren't actually thrown
-		}
+		p.setPhoneNumber(getRawResponse());
 	}
 }

@@ -35,7 +35,6 @@ import org.hibernate.annotations.IndexColumn;
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 public abstract class Person extends Deletable{
 	
-	
 	/** Unique id for this entity.  This is for hibernate usage. */
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(unique=true,nullable=false,updatable=false)
@@ -51,6 +50,11 @@ public abstract class Person extends Deletable{
 	 * Birthdate of this person
 	 */
 	protected long birthdate;
+	
+	/**
+	 * Phone number of this person
+	 */
+	protected String phoneNumber;
 	
 	/**
 	 * Gender of this person. Right now, possibilities are m,f,t.
@@ -155,5 +159,12 @@ public abstract class Person extends Deletable{
 	    unscaledImageContent = ImageUtils.getByteArrayForImage(ImageUtils.getLargeImage(image), type);
 	    thumbnailImageContent = ImageUtils.getByteArrayForImage(ImageUtils.getThumbnailImage(image), type);
 	 }
-	
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
 }

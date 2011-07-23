@@ -9,6 +9,7 @@ import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfie
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.GenderComboBox;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.NameField;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.PersonalFormField;
+import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.PhoneNumberField;
 import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
@@ -30,9 +31,11 @@ public abstract class PersonFieldGroup<P extends Person> extends FieldGroup {
 		NameField name = new NameField(ui, isNewPersonGroup ? "" : getPerson().getName(),null);
 		GenderComboBox gender = new GenderComboBox(ui,isNewPersonGroup? null : getPerson().getGender(),null);
 		BirthdateField bday = new BirthdateField(ui, isNewPersonGroup? new Date() : getPerson().getBirthdate(),null);
+		PhoneNumberField phoneNumber = new PhoneNumberField(ui,isNewPersonGroup? "":getPerson().getPhoneNumber(),null, appCon);
 		super.addField(name);
 		super.addField(gender);
 		super.addField(bday);
+		super.addField(phoneNumber);
 		addAdditionalFields();
 	}
 	

@@ -124,10 +124,6 @@ public class DataGeneratorThread extends Thread{
 			} catch (DuplicateKeyException e1) {
 				e1.printStackTrace();
 			}
-			GroupMembershipDao gmd = (GroupMembershipDao) appCon.getBean("groupMembershipDao");
-			for(CommunityHealthWorker chw:chws){
-				gmd.addMember(chwgroup, chw.getContactInfo());
-			}
 			
 			log("Group created.");
 			ArrayList<MedicForm> forms = new ArrayList<MedicForm>();

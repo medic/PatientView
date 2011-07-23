@@ -4,6 +4,8 @@ import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.frontlinesms.plugins.patientview.data.domain.people.Gender;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
@@ -11,6 +13,7 @@ import net.frontlinesms.plugins.patientview.ui.imagechooser.ImageChooser;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.fieldgroups.PersonFieldGroup;
 import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
+import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
 import org.springframework.context.ApplicationContext;
 
@@ -206,6 +209,17 @@ public abstract class PersonPanel<E extends Person> implements ThinletUiEventHan
 		addLabelToLabelPanel(getI18nString(ID_LABEL) + ": " + getPerson().getPid());
 		addLabelToLabelPanel(getPerson().getGender().toString());
 		addLabelToLabelPanel(getI18nString(BDAY_LABEL) + ": " + getPerson().getStringBirthdate());
+		//add the phone number label
+		if(getPerson().getPhoneNumber()!=null && !getPerson().getPhoneNumber().trim().equals("")){
+			Object panel = uiController.createPanel("");
+			uiController.setGap(panel, 5);
+			uiController.add(panel,uiController.createLabel(InternationalisationUtils.getI18nString("medic.common.labels.phone.number")+":"));
+			Object button = uiController.createButton(getPerson().getPhoneNumber());
+			uiController.setChoice(button, "type", "link");
+			uiController.setAction(button, "showSendMessageDialog", null, this);
+			uiController.add(panel,button);
+			uiController.add(getLabelPanel(),panel);
+		}
 		// let the subclasses add additional fields
 		addAdditionalFields();
 		uiController.add(mainPanelContainer, mainPanel);
@@ -356,4 +370,9 @@ public abstract class PersonPanel<E extends Person> implements ThinletUiEventHan
 		return person;
 	}
 
+	public void showSendMessageDialog(){
+		Set<Object> number= new HashSet<Object>();
+		number.add(getPerson().getPhoneNumber());
+		uiController.show_composeMessageForm(number);
+	}
 }

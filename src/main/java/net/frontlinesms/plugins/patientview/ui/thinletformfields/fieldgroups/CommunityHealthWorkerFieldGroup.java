@@ -1,12 +1,11 @@
 package net.frontlinesms.plugins.patientview.ui.thinletformfields.fieldgroups;
 
-import org.springframework.context.ApplicationContext;
-
 import net.frontlinesms.plugins.patientview.data.domain.people.CommunityHealthWorker;
 import net.frontlinesms.plugins.patientview.data.repository.CommunityHealthWorkerDao;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.FormFieldDelegate;
-import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.PhoneNumberField;
 import net.frontlinesms.ui.UiGeneratorController;
+
+import org.springframework.context.ApplicationContext;
 
 public class CommunityHealthWorkerFieldGroup extends PersonFieldGroup<CommunityHealthWorker> {
 
@@ -18,10 +17,7 @@ public class CommunityHealthWorkerFieldGroup extends PersonFieldGroup<CommunityH
 	}
 
 	@Override
-	protected void addAdditionalFields() {
-		PhoneNumberField phoneNumber = new PhoneNumberField(ui,isNewPersonGroup? "":getPerson().getPhoneNumber(),null, appCon);
-		super.addField(phoneNumber);
-	}
+	protected void addAdditionalFields() {}
 
 	@Override
 	protected void saveOrUpdatePerson() {
