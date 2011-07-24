@@ -91,5 +91,4 @@ public abstract class Reminder {
 	protected ReminderEvent<?> getEvent(String eventClass){
 		return ReminderEventDirectory.getEventForClassName(eventClass);
 	}
-	
 }

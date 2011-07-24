@@ -36,18 +36,14 @@ public class VaccineAppointmentEvent implements ReminderEvent<ScheduledDose>{
 	}
 
 	public Calendar getDateForContext(Patient patient, ScheduledDose context) {
-		Calendar c = Calendar.getInstance();
-		c.setTime(context.getWindowEndDate());
-		return c;
+		return context.getWindowEndDate();
 	}
 
 	public Map<Calendar, ScheduledDose> getEventDatesWithContext(Patient patient) {
 		List<ScheduledDose> doses = scheduledDoseDao.getScheduledDoses(patient, null);
 		Map<Calendar,ScheduledDose> dates = new HashMap<Calendar, ScheduledDose>();
 		for(ScheduledDose dose:doses){
-			Calendar c = Calendar.getInstance();
-			c.setTime(dose.getWindowEndDate());
-			dates.put(c,dose);
+			dates.put(dose.getWindowEndDate(),dose);
 		}
 		return dates;
 	}

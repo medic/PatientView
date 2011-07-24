@@ -1,5 +1,7 @@
 package net.frontlinesms.plugins.patientview.data.repository.hibernate;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -12,11 +14,7 @@ import net.frontlinesms.plugins.patientview.data.domain.vaccine.VaccineDose;
 import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
 
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.DistinctRootEntityResultTransformer;
-import org.hibernate.transform.ResultTransformer;
 
 public class HibernateScheduledDoseDao extends BaseHibernateDao<ScheduledDose> implements ScheduledDoseDao {
 
@@ -63,7 +61,9 @@ public class HibernateScheduledDoseDao extends BaseHibernateDao<ScheduledDose> i
 		if(patient != null){
 			c.add(Restrictions.eq("patient",patient));
 		}
-		return super.getList(c);
+		List<ScheduledDose> doses = super.getList(c);
+		Collections.sort(doses);
+		return doses;
 	}
 	
 

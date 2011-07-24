@@ -12,6 +12,7 @@ import net.frontlinesms.plugins.patientview.listener.PatientViewMessageListener;
 import net.frontlinesms.plugins.patientview.responsemapping.IncomingFormMatcher;
 import net.frontlinesms.plugins.patientview.security.UserSessionManager;
 import net.frontlinesms.plugins.patientview.ui.PatientViewThinletTabController;
+import net.frontlinesms.plugins.patientview.vaccine.VaccineScheduler;
 import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
@@ -77,6 +78,7 @@ public class PatientViewPluginController extends BasePluginController{
 		incomingFormMatcher = new IncomingFormMatcher(applicationContext);
 		messageListener = new PatientViewMessageListener(applicationContext);
 		formListener = new PatientViewFormListener(applicationContext);
+		VaccineScheduler.instance().init(applicationContext);
 	}
 	
 	public void stopListening(){

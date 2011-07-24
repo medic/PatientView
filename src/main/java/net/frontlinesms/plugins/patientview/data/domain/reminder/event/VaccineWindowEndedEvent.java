@@ -38,17 +38,13 @@ public class VaccineWindowEndedEvent implements ReminderEvent<ScheduledDose>{
 		Map<Calendar, ScheduledDose> results = new HashMap<Calendar,ScheduledDose>();
 		List<ScheduledDose> doses = scheduledDoseDao.getScheduledDoses(patient, null);
 		for(ScheduledDose dose:doses){
-				Calendar c = Calendar.getInstance();
-				c.setTime(dose.getWindowEndDate());
-				results.put(c, dose);
+				results.put(dose.getWindowEndDate(), dose);
 		}
 		return results;
 	}
 
 	public Calendar getDateForContext(Patient patient, ScheduledDose context) {
-			Calendar c = Calendar.getInstance();
-			c.setTime(context.getWindowEndDate());
-			return c;
+			return context.getWindowEndDate();
 	}
 	
 	public List<EventTimingOption> getSupportedTimingOptions() {

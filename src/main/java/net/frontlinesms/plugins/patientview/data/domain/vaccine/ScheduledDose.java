@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.data.domain.vaccine;
 
-import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -19,7 +19,7 @@ import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
 @Entity
 @Table(name = "medic_scheduled_doses")
-public class ScheduledDose {
+public class ScheduledDose implements Comparable{
 	
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(unique=true,nullable=false,updatable=false)
@@ -64,28 +64,32 @@ public class ScheduledDose {
 		return patient;
 	}
 
-	public Date getWindowStartDate() {
-		return new Date(windowStartDate);
+	public Calendar getWindowStartDate() {
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(windowStartDate);
+		return c;
 	}
 	
 	public String getWindowStartDateString(){
-		return DateFormat.getDateInstance(DateFormat.SHORT).format(getWindowStartDate());
+		return InternationalisationUtils.getDateFormat().format(getWindowStartDate().getTime());
 	}
 
-	public void setWindowStartDate(Date windowStartDate) {
-		this.windowStartDate = windowStartDate.getTime();
+	public void setWindowStartDate(Calendar windowStartDate) {
+		this.windowStartDate = windowStartDate.getTimeInMillis();
 	}
 
-	public Date getWindowEndDate() {
-		return new Date(windowEndDate);
-	}
-
-	public String getWindowEndDateString(){
-		return DateFormat.getDateInstance(DateFormat.SHORT).format(getWindowEndDate());
+	public Calendar getWindowEndDate() {
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(windowEndDate);
+		return c;
 	}
 	
-	public void setWindowEndDate(Date windowEndDate) {
-		this.windowEndDate = windowEndDate.getTime();
+	public String getWindowEndDateString(){
+		return InternationalisationUtils.getDateFormat().format(getWindowEndDate().getTime());
+	}
+	
+	public void setWindowEndDate(Calendar windowEndDate) {
+		this.windowEndDate = windowEndDate.getTimeInMillis();
 	}
 
 	public boolean isAdministered() {
@@ -95,6 +99,12 @@ public class ScheduledDose {
 	public Date getDateAdministered() {
 		return new Date(dateAdministered);
 	}
+	
+	public Calendar getDateAdministeredCal(){
+		Calendar c = Calendar.getInstance();
+		c.setTimeInMillis(dateAdministered);
+		return c;
+	}
 
 	public Person getAdministeredBy() {
 		return administeredBy;
@@ -103,7 +113,7 @@ public class ScheduledDose {
 	public String getAdministeredString(){
 		long currentTime = System.currentTimeMillis();
 		if(administered){
-			return "Administered by "+ administeredBy.getName() + " on " + InternationalisationUtils.getDateFormat().format(getDateAdministered());
+			return "Administered by "+ administeredBy.getName() + " on " + InternationalisationUtils.getDateFormat().format(getDateAdministered().getTime());
 		}else if(currentTime > windowStartDate && currentTime < windowEndDate){
 			return "-----";
 		}else if(currentTime < windowStartDate){
@@ -128,7 +138,11 @@ public class ScheduledDose {
 		}
 	}
 	
-	public long getScheduledDoseId() {
+	public long getId() {
 		return scheduledDoseId;
+	}
+
+	public int compareTo(Object arg0) {
+		return this.getDose().getPosition() - ((ScheduledDose) arg0).getDose().getPosition();
 	}
 }

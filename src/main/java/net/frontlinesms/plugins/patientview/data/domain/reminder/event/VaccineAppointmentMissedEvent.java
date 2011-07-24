@@ -38,10 +38,8 @@ public class VaccineAppointmentMissedEvent implements ReminderEvent<ScheduledDos
 	}
 
 	public Calendar getDateForContext(Patient patient, ScheduledDose context) {
-		if(context.getWindowStartDate().compareTo(new Date()) < 0 && !context.isAdministered()){
-			Calendar c = Calendar.getInstance();
-			c.setTime(context.getWindowStartDate());
-			return c;
+		if(context.getWindowStartDate().compareTo(Calendar.getInstance()) < 0 && !context.isAdministered()){
+			return context.getWindowStartDate();
 		}
 		return null;
 	}
@@ -51,10 +49,8 @@ public class VaccineAppointmentMissedEvent implements ReminderEvent<ScheduledDos
 		Map<Calendar,ScheduledDose> dates = new HashMap<Calendar, ScheduledDose>();
 		for(ScheduledDose dose:doses){
 			//TODO: figure out if this should be < or <=
-			if(dose.getWindowStartDate().compareTo(new Date()) < 0 && !dose.isAdministered()){
-				Calendar c = Calendar.getInstance();
-				c.setTime(dose.getWindowStartDate());
-				dates.put(c,dose);
+			if(dose.getWindowStartDate().compareTo(Calendar.getInstance()) < 0 && !dose.isAdministered()){
+				dates.put(dose.getWindowStartDate(),dose);
 			}
 		}
 		return dates;

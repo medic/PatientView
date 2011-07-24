@@ -171,9 +171,9 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 	public void scheduleVaccineConfirmed(){
 		Vaccine v = (Vaccine) ui.getAttachedObject(ui.getSelectedItem(ui.find(mainPanel,VACCINE_SELECT)));
 		if(ui.isSelected(ui.find(FROM_BIRTH_RADIO))){
-			scheduledDoseDao.saveScheduledDoses(VaccineScheduler.scheduleVaccinesFromBirth(patient, v));
+			scheduledDoseDao.saveScheduledDoses(VaccineScheduler.instance().scheduleVaccinesFromBirth(patient, v));
 		}else if(ui.isSelected(ui.find(FROM_TODAY_RADIO))){
-			scheduledDoseDao.saveScheduledDoses(VaccineScheduler.scheduleVaccinesFromToday(patient, v));
+			scheduledDoseDao.saveScheduledDoses(VaccineScheduler.instance().scheduleVaccinesFromToday(patient, v));
 		}else if(ui.isSelected(ui.find(FIRST_SHOT_TODAY_RADIO))){
 			
 		}
@@ -222,23 +222,22 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		toBeRescheduled = (ScheduledDose) scheduledDoseController.getCurrentlySelectedObject();
 		//setup the date fields
 		rescheduledStartDateField = new DateField(ui, "Date Scheduled", this,false);
-		rescheduledStartDateField.setRawResponse(toBeRescheduled.getWindowStartDate());
-		rescheduledEndDateField = new DateField(ui, "End Date", this,false);
-		rescheduledEndDateField.setRawResponse(toBeRescheduled.getWindowEndDate());
+		rescheduledStartDateField.setRawResponse(toBeRescheduled.getWindowStartDate().getTime());
 		//add the date fields to the UI
 		ui.add(ui.find(reschedulePanel,RESCHEDULE_DOSE_DATE_SCHEDULED_PANEL),rescheduledStartDateField.getThinletPanel());
-		ui.add(ui.find(reschedulePanel,RESCHEDULE_DOSE_END_DATE_PANEL),rescheduledEndDateField.getThinletPanel());
 		//add the panel to the UI
 		ui.add(ui.find(mainPanel,DOSE_BUTTON_PANEL),reschedulePanel);
 	}
 	
 	public void rescheduleDoseConfirmed(){
-		toBeRescheduled.setWindowStartDate(rescheduledStartDateField.getRawResponse());
-		toBeRescheduled.setWindowEndDate(rescheduledEndDateField.getRawResponse());
+		//reschedule the doses
+		List<ScheduledDose> toSave = VaccineScheduler.instance().rescheduleDose(toBeRescheduled, rescheduledStartDateField.getRawResponse());
+		//save the doses
 		scheduledDoseDao.saveOrUpdateScheduledDose(toBeRescheduled);
+		scheduledDoseDao.saveScheduledDoses(toSave);
+		//clean up
 		toBeRescheduled = null;
 		rescheduledStartDateField = null;
-		rescheduledEndDateField = null;
 		rescheduleDoseCancelled();
 		refreshDoseTable();
 	}
@@ -262,6 +261,8 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 	
 	public void administerDoseConfirmed(){
 		scheduledDoseDao.administerDose(toBeAdministered, null,administeredDateField.getRawResponse());
+		List<ScheduledDose> doses = VaccineScheduler.instance().rescheduleRemainingDoses(toBeAdministered);
+		scheduledDoseDao.saveScheduledDoses(doses);
 		toBeAdministered = null;
 		administeredDateField = null;
 		administerDoseCancelled();
