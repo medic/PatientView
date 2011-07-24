@@ -81,7 +81,7 @@ public class VaccineScheduler {
 		earliestWindowEnd.setTime(apptDate);
 		earliestWindowEnd.add(Calendar.MONTH, toReschedule.getDose().getMinIntervalMonths());
 		earliestWindowEnd.add(Calendar.DAY_OF_MONTH, toReschedule.getDose().getMinIntervalDays());
-		if(TimeUtils.compareCalendars(earliestWindowEnd, toReschedule.getWindowEndCal())>-1){
+		if(TimeUtils.compareCalendars(earliestWindowEnd, toReschedule.getWindowEndDate())>-1){
 			toReschedule.setWindowEndDate(earliestWindowEnd);
 		}
 		return rescheduleRemainingDoses(toReschedule);
@@ -113,7 +113,7 @@ public class VaccineScheduler {
 				earliestWindowEndDate.add(Calendar.MONTH, dose.getDose().getMinIntervalMonths());
 				earliestWindowEndDate.add(Calendar.DAY_OF_MONTH, dose.getDose().getMinIntervalDays());
 				//get the window end time
-				Calendar windowEnd = dose.getWindowEndCal();
+				Calendar windowEnd = dose.getWindowEndDate();
 				if(TimeUtils.compareCalendars(earliestWindowEndDate, windowEnd)>-1){
 					//set the date
 					dose.setWindowEndDate(earliestWindowEndDate);

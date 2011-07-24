@@ -29,7 +29,8 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 	private static final String REMINDER_NAME_LABEL = "reminderNameLabel";
 	private static final String TIMING_TEXT_AREA = "timingTextArea";
 	private static final String MESSAGE_TEXT_AREA = "messageTextArea";
-	private static final String MESSAGE_PANEL= "messagePanel";
+	private static final String MESSAGE_PANEL = "messagePanel";
+	private static final String RECIPIENT_SELECT = "recipientSelect";
 	private static final String TIMING_PANEL = "timingPanel";
 	private static final String REMINDER_TYPE_SELECT = "typeSelect";
 	private static final String FROM_EVENT_SELECT = "fromEventSelect";
@@ -100,7 +101,9 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 			add(find(ACTION_PANEL),ui.loadComponentFromFile(DISPLAY_REMINDER_XML, this));
 			ui.setText(find(REMINDER_NAME_LABEL), getSelectedReminder().getName());
 			ui.setText(find(TIMING_TEXT_AREA), getSelectedReminder().getTimingString());
-			ui.setText(find(MESSAGE_TEXT_AREA), getSelectedReminder().getMessageFormat());
+			ui.setText(find(MESSAGE_TEXT_AREA), "To the "+ 
+				(getSelectedReminder().isSendToPatient()?"patient:\n\n":"patient's CHW:\n\n") +
+				getSelectedReminder().getMessageFormat());
 		}
 	}
 
@@ -275,6 +278,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 	
 	public void saveReminder(){
 		String name=null,fromMonthsString=null,fromDaysString=null,timeOfDayString=null,message = null;
+		boolean sendToPatient=false;
 		Reminder r = getSelectedReminderInstance();
 		//create and check all the field data
 		if(checkField(REMINDER_NAME_FIELD, "The name field")){
@@ -292,6 +296,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 		if(checkField(MESSAGE_TEXT_AREA, "The \"Message\" field")){
 			message = ui.getText(find(MESSAGE_TEXT_AREA));
 		}else return;
+		sendToPatient = (ui.getSelectedIndex(find(RECIPIENT_SELECT))==0);
 		//get the from event
 		Class<?> fromEvent = ui.getAttachedObject(ui.getSelectedItem(find(FROM_EVENT_SELECT))).getClass();
 		//correctly create the time of day, start days, and start months
@@ -312,6 +317,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 			oneTime.setName(name);
 			oneTime.setTimeOfDay(timeOfDay);
 			oneTime.setStartCriteria(fromEvent, fromDays, fromMonths);
+			oneTime.setSendToPatient(sendToPatient);
 			reminderDao.saveOrUpdateReminder(oneTime);
 		}else if(r instanceof RecurringReminder){
 			String toMonthsString=null,toDaysString=null;
@@ -342,6 +348,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 			recur.setStartCriteria(fromEvent, fromDays, fromMonths);
 			recur.setEndCriteria(toEvent, toDays, toMonths);
 			recur.setFrequency(frequency);
+			recur.setSendToPatient(sendToPatient);
 			reminderDao.saveOrUpdateReminder(recur);
 		}
 		isEditing = false;
@@ -404,6 +411,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 			ui.setText(find(TIME_OF_DAY_FIELD),timeOfDay);
 			//set the message
 			ui.setText(find(MESSAGE_TEXT_AREA),recur.getMessageFormat());
+			ui.setSelectedIndex(find(RECIPIENT_SELECT), recur.isSendToPatient()?0:1);
 			ui.requestFocus(find(REMINDER_NAME_FIELD));
 		}else if(getSelectedReminderType().equals(OneTimeReminder.class)){
 			OneTimeReminder oneTime = (OneTimeReminder) r;
@@ -433,6 +441,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 			ui.setText(find(TIME_OF_DAY_FIELD),timeOfDay);
 			//set the message
 			ui.setText(find(MESSAGE_TEXT_AREA),oneTime.getMessageFormat());
+			ui.setSelectedIndex(find(RECIPIENT_SELECT), oneTime.isSendToPatient()?0:1);
 			ui.requestFocus(find(REMINDER_NAME_FIELD));
 		}
 	}

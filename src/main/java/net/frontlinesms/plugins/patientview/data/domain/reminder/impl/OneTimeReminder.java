@@ -22,8 +22,8 @@ public class OneTimeReminder extends Reminder{
 	
 	public OneTimeReminder(){super();}
 
-	public OneTimeReminder(String messageFormat, String name, int timeOfDay, Class<?> startEvent, int startDays, int startMonths) {
-		super(timeOfDay,messageFormat,name);
+	public OneTimeReminder(String messageFormat,String name, int timeOfDay, Class<?> startEvent, int startDays, int startMonths, boolean sendToPatient) {
+		super(timeOfDay,messageFormat,name,sendToPatient);
 		this.startEvent = startEvent.getCanonicalName();
 		this.startDays = startDays;
 		this.startMonths = startMonths;

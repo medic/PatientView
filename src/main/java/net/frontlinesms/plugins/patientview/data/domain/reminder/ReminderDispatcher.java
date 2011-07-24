@@ -59,7 +59,8 @@ public class ReminderDispatcher extends TimerTask{
 				for(Patient p: patients){
 					mess = reminder.getMessageForPatient(p);
 					if(mess != null && !mess.equals("")){
-						ui.getFrontlineController().sendTextMessage(p.getChw().getPhoneNumber(), mess);
+						String phoneNumber = reminder.isSendToPatient()?p.getPhoneNumber():p.getChw().getPhoneNumber();
+						ui.getFrontlineController().sendTextMessage(phoneNumber, mess);
 						LOG.info("Reminder dispatched: " + mess);
 						System.out.println("Reminder dispatched: " + mess);
 					}

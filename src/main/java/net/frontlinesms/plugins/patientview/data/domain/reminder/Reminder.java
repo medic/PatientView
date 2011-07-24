@@ -34,12 +34,19 @@ public abstract class Reminder {
 	
 	protected String name;
 	
+	/**
+	 * Represents whether the reminder should be sent
+	 * to the patient or their health worker
+	 */
+	private boolean sendToPatient;
+	
 	public Reminder(){}
 	
-	public Reminder(int timeOfDay, String messageFormat, String name) {
+	public Reminder(int timeOfDay, String messageFormat, String name, boolean sendToPatient) {
 		this.timeOfDay = timeOfDay;
 		this.messageFormat = messageFormat;
 		this.name = name;
+		this.setSendToPatient(sendToPatient);
 	}
 	
 	//abstract methods
@@ -90,5 +97,13 @@ public abstract class Reminder {
 	 */
 	protected ReminderEvent<?> getEvent(String eventClass){
 		return ReminderEventDirectory.getEventForClassName(eventClass);
+	}
+
+	public void setSendToPatient(boolean sendToPatient) {
+		this.sendToPatient = sendToPatient;
+	}
+
+	public boolean isSendToPatient() {
+		return sendToPatient;
 	}
 }

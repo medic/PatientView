@@ -13,6 +13,13 @@
 		right="5" text="Timing" top="5" weightx="1" icon="/icons/time.png"/>
 	<panel border="true" bottom="5" columns="1" gap="5" left="5"
 		name="messagePanel" right="5" text="Message" top="5" weightx="1" icon="/icons/sms.png">
+		<panel gap="5" weightx="1" name="recipientPanel">
+			<label text="Send to:"/>
+			<combobox editable="false" columns="30" name="recipientSelect" selected="0">
+				<choice text="Patient"/>
+				<choice text="Patient's CHW"/>
+			</combobox>
+		</panel>
 		<textarea name="messageTextArea" weightx="1" />
 		<panel gap="5" name="variablePanel" weightx="1">
 			<label name="variableLabel" text="Insert:" />

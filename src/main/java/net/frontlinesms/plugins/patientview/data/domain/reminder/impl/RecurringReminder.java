@@ -32,8 +32,8 @@ public class RecurringReminder extends OneTimeReminder {
 	public RecurringReminder(Class<?> startEvent, int startDays, int startMonths,
 			Class<?> endEvent, int endDays, int endMonths,
 			RecurringReminderFrequency frequency, int timeOfDay,
-			String messageFormat, String name) {
-		super(messageFormat,name, timeOfDay,startEvent,startDays,startMonths);
+			String messageFormat, String name, boolean sendToPatient) {
+		super(messageFormat,name, timeOfDay,startEvent,startDays,startMonths, sendToPatient);
 		this.endEvent = endEvent.getCanonicalName();
 		this.endDays = endDays;
 		this.endMonths = endMonths;
