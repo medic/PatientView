@@ -93,6 +93,7 @@ public class DataGeneratorThread extends Thread{
 					Gender gender2 = (rand.nextBoolean()) ? Gender.MALE:Gender.FEMALE;
 					String name2 = firsts[rand.nextInt(firsts.length)] + " " + lasts[rand.nextInt(lasts.length)];
 					Patient p = new Patient(chw, name2, gender2, getRandomDate());
+					p.setPhoneNumber(getRandomNumber());
 					patients.add(p);
 					ps.add(p);
 				}

@@ -88,6 +88,20 @@ public abstract class Person extends Deletable{
 		this.birthdate = birthdate.getTime();
 	}
 	
+	/**
+	 * Protected constructor for person, used only by subclasses
+	 * @param name Name of the person
+	 * @param gender Gender of the Person (options are m,f,t)
+	 * @param birthdate birthdate of the person
+	 * @param phoneNumber the phone number of the person
+	 */
+	protected Person(String name, Gender gender, Date birthdate, String phoneNumber){
+		this.name = name;
+		this.gender = gender;
+		this.birthdate = birthdate.getTime();
+		this.phoneNumber = phoneNumber;
+	}
+	
 	public long getPid() {
 		return pid;
 	}
