@@ -175,7 +175,7 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		}else if(ui.isSelected(ui.find(FROM_TODAY_RADIO))){
 			scheduledDoseDao.saveScheduledDoses(VaccineScheduler.instance().scheduleVaccinesFromToday(patient, v));
 		}else if(ui.isSelected(ui.find(FIRST_SHOT_TODAY_RADIO))){
-			
+			scheduledDoseDao.saveScheduledDoses(VaccineScheduler.instance().scheduleVaccinesFirstDoseToday(patient,v));
 		}
 		refreshDoseTable();
 		scheduleVaccineCanceled();

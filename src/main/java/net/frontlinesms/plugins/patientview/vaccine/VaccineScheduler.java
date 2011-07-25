@@ -72,6 +72,44 @@ public class VaccineScheduler {
 		return scheduledDoses;
 	}
 	
+	public List<ScheduledDose> scheduleVaccinesFirstDoseToday(Patient patient, Vaccine vaccine){
+		//get all the doses that we are about to schedule
+		List<VaccineDose> doses = vaccine.getDoses();
+		//create a list to hold all the scheduled doses
+		List<ScheduledDose> scheduledDoses  = new ArrayList<ScheduledDose>();
+		//create the date from which all the other doses will be scheduled
+		Calendar dateTemplate = Calendar.getInstance();
+		dateTemplate.add(Calendar.MONTH, -doses.get(0).getStartDateMonths());
+		dateTemplate.add(Calendar.DAY_OF_MONTH, -doses.get(0).getStartDateDays());
+		//create the first dose's end date
+		Calendar firstEndDate = TimeUtils.cloneCalendar(dateTemplate);
+		firstEndDate.add(Calendar.MONTH,doses.get(0).getEndDateMonths());
+		firstEndDate.add(Calendar.DAY_OF_MONTH,doses.get(0).getEndDateDays());
+		//create the first dose
+		ScheduledDose firstDose = new ScheduledDose(doses.get(0), patient, Calendar.getInstance().getTimeInMillis(), firstEndDate.getTimeInMillis());
+		scheduledDoses.add(firstDose);
+		
+		//schedule the rest of the doses
+		for(int i = 1; i <doses.size();i++){
+			//retrieve the dose that is about to be scheduled
+			VaccineDose dose = doses.get(i);
+			//create this dose's start date
+			Calendar startDate = TimeUtils.cloneCalendar(dateTemplate);
+			startDate.add(Calendar.MONTH, dose.getStartDateMonths());
+			startDate.add(Calendar.DAY_OF_MONTH, dose.getStartDateDays());
+			long windowStartDate = startDate.getTimeInMillis();
+			//create this dose's end date
+			Calendar endDate = TimeUtils.cloneCalendar(dateTemplate);
+			endDate.add(Calendar.MONTH, dose.getEndDateMonths());
+			endDate.add(Calendar.DAY_OF_MONTH, dose.getEndDateDays());
+			long windowEndDate = endDate.getTimeInMillis();
+			//schedule the dose
+			ScheduledDose sched = new ScheduledDose(dose, patient, windowStartDate, windowEndDate);
+			scheduledDoses.add(sched);
+		}
+		return scheduledDoses;
+	}
+	
 	
 	public List<ScheduledDose> rescheduleDose(ScheduledDose toReschedule, Date apptDate){
 		Calendar c = Calendar.getInstance();
