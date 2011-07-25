@@ -110,7 +110,6 @@ public class VaccineScheduler {
 		return scheduledDoses;
 	}
 	
-	
 	public List<ScheduledDose> rescheduleDose(ScheduledDose toReschedule, Date apptDate){
 		Calendar c = Calendar.getInstance();
 		c.setTime(apptDate);

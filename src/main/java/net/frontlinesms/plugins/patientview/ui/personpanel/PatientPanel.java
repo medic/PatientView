@@ -55,14 +55,17 @@ public class PatientPanel extends PersonPanel<Patient> {
 	 */
 	@Override
 	protected void addAdditionalFields() {
-		Object panel = uiController.createPanel("");
-		uiController.setGap(panel, 5);
-		uiController.add(panel,uiController.createLabel(InternationalisationUtils.getI18nString("medic.common.chw")+":"));
-		Object button = uiController.createButton(getPerson().getCHWName());
-		uiController.setChoice(button, "type", "link");
-		uiController.setAction(button, "showCHWPanel", null, this);
-		uiController.add(panel,button);
-		uiController.add(super.getLabelPanel(),panel);
+		
+		if(getPerson().getChw()!= null){
+			Object panel = uiController.createPanel("");
+			uiController.setGap(panel, 5);
+			uiController.add(panel,uiController.createLabel(InternationalisationUtils.getI18nString("medic.common.chw")+":"));
+			Object chw = uiController.createButton(getPerson().getCHWName());
+			uiController.setChoice(chw, "type", "link");
+			uiController.setAction(chw, "showCHWPanel", null, this);
+			uiController.add(panel,chw);
+			uiController.add(super.getLabelPanel(),panel);
+		}
 	}
 
 	/**

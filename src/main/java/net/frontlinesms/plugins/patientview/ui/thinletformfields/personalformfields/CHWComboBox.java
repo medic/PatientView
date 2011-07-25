@@ -1,6 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields;
 
-import java.util.Collection;
+import java.util.List;
 
 import net.frontlinesms.plugins.patientview.data.domain.people.CommunityHealthWorker;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
@@ -24,33 +24,31 @@ public class CHWComboBox extends ThinletFormField<CommunityHealthWorker> impleme
 	public CHWComboBox(ExtendedThinlet thinlet, ApplicationContext appCon, CommunityHealthWorker chw, FormFieldDelegate delegate) {
 		super(thinlet, InternationalisationUtils.getI18nString("medic.common.chw")+":", delegate);
 		comboBox =ExtendedThinlet.create("combobox");
-		thinlet.setInsert(comboBox,"textChanged(this.text)", null, this);
-		thinlet.setRemove(comboBox, "textChanged(this.text)", null, this);
 		thinlet.setAction(comboBox, "selectionChanged(this.selected)", null, this);
+		thinlet.setEditable(comboBox, false);
 		chwDao = (HibernateCommunityHealthWorkerDao) appCon.getBean("CHWDao");
-		if(chw != null){
-			thinlet.setText(comboBox, chw.getName());
-			response = chw;
-			textChanged(chw.getName());
-		}
+		fillComboBox(chw);
 		thinlet.add(mainPanel,comboBox);
 		thinlet.setWeight(comboBox, 5, 0);
 		thinlet.setColspan(mainPanel, 2);
-		textChanged("");
 	}
 
-	public void textChanged(String text){
+	public void fillComboBox(CommunityHealthWorker toSelect){
 		thinlet.removeAll(comboBox);
-		Collection<CommunityHealthWorker> chws = chwDao.findCommunityHealthWorkerByName(text, 30,false);
-		for(CommunityHealthWorker chw: chws){
+		List<CommunityHealthWorker> chws = chwDao.getAllCommunityHealthWorkers();
+		Object nullChoice = thinlet.createComboboxChoice("No CHW", null);
+		thinlet.add(comboBox,nullChoice);
+		int indexToSelect = 0;
+		for(int i = 0; i < chws.size(); i++){
+			CommunityHealthWorker chw = chws.get(i);
 			Object choice = thinlet.createComboboxChoice(chw.getName(), chw);
 			thinlet.add(comboBox,choice);
+			if(toSelect != null && chw.getPid() == toSelect.getPid()){
+				indexToSelect = i+1;
+			}
 		}
-		if(chws.size() != 0){
-			thinlet.setSelectedIndex(comboBox, 0);
-			response = (CommunityHealthWorker) thinlet.getAttachedObject(thinlet.getSelectedItem(comboBox));
-		}
-		
+		thinlet.setSelectedIndex(comboBox, indexToSelect);
+		response = (CommunityHealthWorker) thinlet.getAttachedObject(thinlet.getSelectedItem(comboBox));
 	}
 	
 	public void selectionChanged(int index){
@@ -65,9 +63,6 @@ public class CHWComboBox extends ThinletFormField<CommunityHealthWorker> impleme
 
 	@Override
 	public void validate() throws ValidationFailure{
-		if(!hasResponse()){
-			throw new ValidationFailure("\""+ getLabel().replace(":", "")+ "\" does not have a selected CHW.");
-		}
 	}
 
 	public boolean hasChanged() {
@@ -76,9 +71,8 @@ public class CHWComboBox extends ThinletFormField<CommunityHealthWorker> impleme
 
 	@Override
 	public void setRawResponse(CommunityHealthWorker chw) {
-		thinlet.setText(comboBox, chw.getName());
 		response = chw;
-		textChanged(chw.getName());
+		fillComboBox(chw);
 	}
 	
 	@Override
@@ -92,7 +86,7 @@ public class CHWComboBox extends ThinletFormField<CommunityHealthWorker> impleme
 	}
 	
 	public boolean hasResponse(){
-		return getStringResponse()!=null;
+		return true;
 	}
 	
 	@Override
@@ -100,7 +94,7 @@ public class CHWComboBox extends ThinletFormField<CommunityHealthWorker> impleme
 		if(response!=null){
 			return response.getName();
 		}else{
-			return null;
+			return "";
 		}
 	}
 

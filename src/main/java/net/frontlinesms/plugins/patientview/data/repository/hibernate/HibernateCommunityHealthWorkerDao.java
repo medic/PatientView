@@ -1,6 +1,5 @@
 package net.frontlinesms.plugins.patientview.data.repository.hibernate;
 
-import java.util.Collection;
 import java.util.List;
 
 import net.frontlinesms.data.repository.hibernate.BaseHibernateDao;
@@ -30,7 +29,7 @@ public class HibernateCommunityHealthWorkerDao extends BaseHibernateDao<Communit
 		updateCommunityHealthWorker(chw);
 	}
 
-	public Collection<CommunityHealthWorker> getAllCommunityHealthWorkers() {
+	public List<CommunityHealthWorker> getAllCommunityHealthWorkers() {
 		return super.getAll();
 	}
 
