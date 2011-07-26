@@ -96,11 +96,7 @@ public class ScheduledDose implements Comparable{
 		return administered;
 	}
 
-	public Date getDateAdministered() {
-		return new Date(dateAdministered);
-	}
-	
-	public Calendar getDateAdministeredCal(){
+	public Calendar getDateAdministered() {
 		Calendar c = Calendar.getInstance();
 		c.setTimeInMillis(dateAdministered);
 		return c;

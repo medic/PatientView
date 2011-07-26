@@ -5,14 +5,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.context.ApplicationContext;
-
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.Vaccine;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.VaccineDose;
 import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
 import net.frontlinesms.plugins.patientview.utils.TimeUtils;
+
+import org.springframework.context.ApplicationContext;
 
 /**
  * Contains the business logic for scheduling vaccines
@@ -130,7 +130,7 @@ public class VaccineScheduler {
 		for(ScheduledDose dose:doses){
 			Calendar earliestApptDate = null;
 			if(previousDose.isAdministered()){
-				earliestApptDate = previousDose.getDateAdministeredCal();
+				earliestApptDate = previousDose.getDateAdministered();
 			}else{
 				earliestApptDate = previousDose.getWindowStartDate();
 			}
@@ -170,5 +170,32 @@ public class VaccineScheduler {
 			}
 		}
 		return doses.subList(i+1, doses.size());
+	}
+	
+	public boolean doseWillViolatePreviousWindow(ScheduledDose dose, Date proposedDate){
+		//if it's the first dose in the series, return false
+		if(dose.getDose().getPosition() == 0) return false;
+		//get the previous dose
+		List<ScheduledDose> doses = scheduledDoseDao.getScheduledDoses(dose.getDose().getVaccine(), dose.getPatient());
+		ScheduledDose previousDose = null;
+		for(int i = 0; i < doses.size()-1; i++){
+			if(doses.get(i+1).getId() == dose.getId()){
+				previousDose = doses.get(i);
+				break;
+			}
+		}
+		if(previousDose == null) return false;
+		if(!previousDose.isAdministered()) return false;
+		//get the absolute earliest date that the dose could be scheduled
+		Calendar administrationDate = previousDose.getDateAdministered();
+		administrationDate.add(Calendar.MONTH, previousDose.getDose().getMinIntervalMonths());
+		administrationDate.add(Calendar.DAY_OF_MONTH, previousDose.getDose().getMinIntervalDays());
+		Calendar proposedCal = Calendar.getInstance();
+		proposedCal.setTime(proposedDate);
+		if(TimeUtils.compareCalendars(administrationDate, proposedCal)>-1){
+			return true;
+		}else{
+			return false;
+		}
 	}
 }

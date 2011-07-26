@@ -10,7 +10,7 @@
     <panel columns="1" gap="5" name="scheduledDosePanel" weightx="4" weighty="1">
         <panel name="scheduledDoseTablePanel" weightx="1" weighty="1"/>
         <panel gap="5" name="doseButtonPanel">
-            <button action="rescheduleDose()" name="rescheduleDoseButton" text="Reschedule" icon="/icons/reschedule.png"/>
+            <button action="showRescheduleDosePanel()" name="rescheduleDoseButton" text="Reschedule" icon="/icons/reschedule.png"/>
             <button action="administerDose()" name="adminsterDoseButton" text="Administer" icon="/icons/administer_vaccine.png"/>
         </panel>
     </panel>
