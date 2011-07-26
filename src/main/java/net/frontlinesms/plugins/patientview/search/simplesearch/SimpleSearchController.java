@@ -129,6 +129,7 @@ public class SimpleSearchController implements ThinletUiEventHandler, SearchCont
 			textField = uiController.createTextfield("textField", "");
 			uiController.setInteger(textField,"weightx",1);
 			uiController.setAction(textField, "textEntryChanged()", null, this);
+			uiController.setPerform(textField,"searchButtonPressed()", null,this);
 		}
 		uiController.setText(textField,"");
 		return textField;
@@ -136,9 +137,10 @@ public class SimpleSearchController implements ThinletUiEventHandler, SearchCont
 	
 	public Object getNumberFieldEntry(){
 		if(numberField == null){
-		numberField = uiController.createTextfield("numberField", "");
-		uiController.setInteger(numberField,"weightx",1);
-		uiController.setAction(numberField, "textEntryChanged()", null, this);
+			numberField = uiController.createTextfield("numberField", "");
+			uiController.setInteger(numberField,"weightx",1);
+			uiController.setAction(numberField, "textEntryChanged()", null, this);
+			uiController.setPerform(numberField,"searchButtonPressed()", null,this);
 		}
 		uiController.setText(numberField,"");
 		return numberField;
@@ -196,11 +198,11 @@ public class SimpleSearchController implements ThinletUiEventHandler, SearchCont
 		queryGenerator.startSearch();
 		tableController.setResults(queryGenerator.getResultsPage());
 	}
-	
+
 	public void textEntryChanged(){
 		if(currentField.getDataType().equals(SimpleSearchDataType.NUMBER)){
 			searchButtonPressed();
-		}else if(getTextInput().length() >= 3 && !getTextInput().trim().equals("")){
+		}else if(getTextInput().length() >= 3 || getTextInput().trim().equals("")){
 			searchButtonPressed();
 		}
 	}
