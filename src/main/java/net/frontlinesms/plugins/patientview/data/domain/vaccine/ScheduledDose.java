@@ -39,6 +39,8 @@ public class ScheduledDose implements Comparable{
 	
 	private long dateAdministered;
 	
+	private String placeAdministered;
+	
 	@ManyToOne(cascade={},fetch=FetchType.EAGER,optional=true)
 	private Person administeredBy;
 	
@@ -109,7 +111,7 @@ public class ScheduledDose implements Comparable{
 	public String getAdministeredString(){
 		long currentTime = System.currentTimeMillis();
 		if(administered){
-			return "Administered by "+ administeredBy.getName() + " on " + InternationalisationUtils.getDateFormat().format(getDateAdministered().getTime());
+			return "Administered by "+ administeredBy.getName() + " on " + InternationalisationUtils.getDateFormat().format(getDateAdministered().getTime())+ " at "+ placeAdministered;
 		}else if(currentTime > windowStartDate && currentTime < windowEndDate){
 			return "-----";
 		}else if(currentTime < windowStartDate){
@@ -120,7 +122,7 @@ public class ScheduledDose implements Comparable{
 		return "";
 	}
 	
-	public void administer(Person adminsteredBy, Date dateAdministered){
+	public void administer(Person adminsteredBy, Date dateAdministered, String placeAdministered){
 		this.administered = true;
 		if(dateAdministered == null){
 			this.dateAdministered = new Date().getTime();
@@ -132,6 +134,7 @@ public class ScheduledDose implements Comparable{
 		}else{
 			this.administeredBy = adminsteredBy;
 		}
+		this.placeAdministered = placeAdministered;
 	}
 	
 	public long getId() {
@@ -140,5 +143,13 @@ public class ScheduledDose implements Comparable{
 
 	public int compareTo(Object arg0) {
 		return this.getDose().getPosition() - ((ScheduledDose) arg0).getDose().getPosition();
+	}
+
+	public void setPlaceAdministered(String placeAdministered) {
+		this.placeAdministered = placeAdministered;
+	}
+
+	public String getPlaceAdministered() {
+		return placeAdministered;
 	}
 }

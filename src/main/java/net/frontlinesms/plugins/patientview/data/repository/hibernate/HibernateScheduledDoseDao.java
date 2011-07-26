@@ -1,7 +1,6 @@
 package net.frontlinesms.plugins.patientview.data.repository.hibernate;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -22,8 +21,8 @@ public class HibernateScheduledDoseDao extends BaseHibernateDao<ScheduledDose> i
 		super(ScheduledDose.class);
 	}
 	
-	public void administerDose(ScheduledDose dose, Person administeredBy, Date dateAdministered) {
-		dose.administer(administeredBy,dateAdministered);
+	public void administerDose(ScheduledDose dose, Person administeredBy, Date dateAdministered,String placeAdministered) {
+		dose.administer(administeredBy,dateAdministered, placeAdministered);
 		saveOrUpdateScheduledDose(dose);
 	}
 
