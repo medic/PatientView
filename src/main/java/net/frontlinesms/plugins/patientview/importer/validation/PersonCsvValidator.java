@@ -16,10 +16,6 @@ public abstract class PersonCsvValidator extends CsvValidator{
 																getI18nString("medic.common.female"),
 																getI18nString("medic.common.transgender")};
 	
-	protected static final int NAME_INDEX = 0;
-	protected static final int BDAY_INDEX = 1;
-	protected static final int GENDER_INDEX = 2;
-	
 	@Override
 	public List<CsvValidationException> validate(CSVReader reader) {
 		String[] currLine;
@@ -28,26 +24,33 @@ public abstract class PersonCsvValidator extends CsvValidator{
 		try {
 			while((currLine = reader.readNext()) != null){
 				lineNumber++;
+				if(currLine.length < 2) continue;
 				//check the name
-				if(currLine[NAME_INDEX] == null || currLine[NAME_INDEX].equals("") ){
+				if(currLine[CsvColumns.NAME_INDEX] == null || currLine[CsvColumns.NAME_INDEX].equals("") ){
 					exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.blank.chw.name")));
 				}
 				//check the birthdate
 				try{
-					InternationalisationUtils.getDateFormat().parse(currLine[BDAY_INDEX]);
+					InternationalisationUtils.getDateFormat().parse(currLine[CsvColumns.BDAY_INDEX]);
 				}catch(Exception e){
-					exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.date.format.error")+ ": \""+currLine[BDAY_INDEX]+"\""));
+					exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.date.format.error")+ ": \""+currLine[CsvColumns.BDAY_INDEX]+"\""));
 				}
 				//check gender
 				boolean validGender = false;
 				for(String gender: genderPossibilities){
-					if(currLine[GENDER_INDEX].equalsIgnoreCase(gender)){
+					if(currLine[CsvColumns.GENDER_INDEX].equalsIgnoreCase(gender)){
 						validGender = true;
 					}
 				}
 				if(!validGender){
-					exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.gender.format.error")+": \""+currLine[GENDER_INDEX]+"\""));
+					exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.gender.format.error")+": \""+currLine[CsvColumns.GENDER_INDEX]+"\""));
 				}
+				//check phone number
+				String address = currLine[CsvColumns.PHONE_NUMBER_INDEX].replaceAll("[^0-9]", "");
+				if(!address.trim().equals("") && address.length() < 10){
+					exceptions.add(new CsvValidationException(lineNumber, "Phone number formatted incorrectly: \""+currLine[CsvColumns.PHONE_NUMBER_INDEX]+"\""));
+				}
+
 				doAdditionalValidation(lineNumber,currLine,exceptions);
 			}
 		} catch (IOException e) {

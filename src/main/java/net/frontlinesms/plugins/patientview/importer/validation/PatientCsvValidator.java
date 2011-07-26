@@ -12,8 +12,6 @@ import static net.frontlinesms.ui.i18n.InternationalisationUtils.*;
 public class PatientCsvValidator extends PersonCsvValidator{
 
 	protected CommunityHealthWorkerDao chwDao;
-	 
-	protected static final int CHW_INDEX = 3;
 	
 	public PatientCsvValidator(ApplicationContext appCon) {
 		super();
@@ -22,11 +20,13 @@ public class PatientCsvValidator extends PersonCsvValidator{
 
 	@Override
 	public void doAdditionalValidation(int lineNumber, String[] line, List<CsvValidationException> exceptions) {
-		Collection<CommunityHealthWorker> chws = chwDao.findCommunityHealthWorkerByName(line[CHW_INDEX], -1, true);
-		if(chws.size() == 0){
-			exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.no.chw.association.error")+" \"" + line[CHW_INDEX]+"\""));
-		}else if(chws.size() >1){
-			exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.multiple.chw.association.error")+" \"" + line[CHW_INDEX]+"\""));
+		Collection<CommunityHealthWorker> chws = chwDao.findCommunityHealthWorkerByName(line[CsvColumns.CHW_INDEX], -1, true);
+		if(!line[CsvColumns.CHW_INDEX].trim().equals("")){
+			if(chws.size() == 0){
+				exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.no.chw.association.error")+" \"" + line[CsvColumns.CHW_INDEX]+"\""));
+			}else if(chws.size() >1){
+				exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.multiple.chw.association.error")+" \"" + line[CsvColumns.CHW_INDEX]+"\""));
+			}
 		}
 	}
 }

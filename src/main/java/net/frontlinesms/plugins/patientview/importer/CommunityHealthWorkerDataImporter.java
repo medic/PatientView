@@ -10,7 +10,6 @@ import java.util.List;
 
 import net.frontlinesms.FrontlineSMSConstants;
 import net.frontlinesms.plugins.patientview.data.domain.people.CommunityHealthWorker;
-import net.frontlinesms.plugins.patientview.data.domain.people.Gender;
 import net.frontlinesms.plugins.patientview.data.repository.CommunityHealthWorkerDao;
 import net.frontlinesms.plugins.patientview.importer.validation.CommunityHealthWorkerCsvValidator;
 import net.frontlinesms.plugins.patientview.importer.validation.CsvValidationException;
@@ -22,37 +21,26 @@ import org.springframework.context.ApplicationContext;
 
 import au.com.bytecode.opencsv.CSVReader;
 
-public class CommunityHealthWorkerDataImporter implements CsvDataImporter, ThinletUiEventHandler{
-
-	private UiGeneratorController uiController;
+public class CommunityHealthWorkerDataImporter extends PersonDataImporter implements ThinletUiEventHandler{
 	
 	private CommunityHealthWorkerDao chwDao;
 	
 	private CommunityHealthWorkerCsvValidator validator;
 	
-	private Object messageList;
-	
-	public CommunityHealthWorkerDataImporter(Object messageList, UiGeneratorController uiController,ApplicationContext appCon){
-		this.uiController = uiController;
-		this.messageList = messageList;
+	public CommunityHealthWorkerDataImporter(Object messageList, UiGeneratorController ui,ApplicationContext appCon){
+		super(ui,messageList);
 		this.chwDao = (CommunityHealthWorkerDao) appCon.getBean("CHWDao");
 		validator = new CommunityHealthWorkerCsvValidator();
 	}
-	
-	
-	public Object getAdditionalOptionsPanel() {
-		return uiController.createPanel("");
-	}
 
-	
 	public Object getInformationPanel() {
-		Object panel = uiController.createPanel("");
+		Object panel = ui.createPanel("");
 		String chw = getI18nString("medic.common.chw");
-		uiController.setColumns(panel, 1);
-		uiController.add(panel,uiController.createLabel(getI18nString("medic.importer.labels.column") + " 1: "+chw + " " + getI18nString("simplesearch.fields.name")));
-		uiController.add(panel,uiController.createLabel(getI18nString("medic.importer.labels.column") + " 2: "+chw+ " "+ getI18nString("simplesearch.fields.birthdate")+" ("+getI18nString(FrontlineSMSConstants.DATEFORMAT_YMD)+")"));
-		uiController.add(panel,uiController.createLabel(getI18nString("medic.importer.labels.column") + " 3: "+chw + " "+ getI18nString("simplesearch.fields.gender")+ " (" +getI18nString("medic.common.male")+", " +getI18nString("medic.common.female")+", or " +getI18nString("medic.common.transgender") +")"));
-		uiController.add(panel,uiController.createLabel(getI18nString("medic.importer.labels.column") + " 4: "+chw +  " "+getI18nString("medic.importer.formatting.info.phone.number")));
+		ui.setColumns(panel, 1);
+		ui.add(panel,ui.createLabel(getI18nString("medic.importer.labels.column") + " 1: "+chw + " " + getI18nString("simplesearch.fields.name")));
+		ui.add(panel,ui.createLabel(getI18nString("medic.importer.labels.column") + " 2: "+chw+ " "+ getI18nString("simplesearch.fields.birthdate")+" ("+getI18nString(FrontlineSMSConstants.DATEFORMAT_YMD)+")"));
+		ui.add(panel,ui.createLabel(getI18nString("medic.importer.labels.column") + " 3: "+chw + " "+ getI18nString("simplesearch.fields.gender")+ " (" +getI18nString("medic.common.male")+", " +getI18nString("medic.common.female")+", or " +getI18nString("medic.common.transgender") +")"));
+		ui.add(panel,ui.createLabel(getI18nString("medic.importer.labels.column") + " 4: "+chw +  " "+getI18nString("medic.importer.formatting.info.phone.number")));
 		return panel;
 	}
 
@@ -71,7 +59,7 @@ public class CommunityHealthWorkerDataImporter implements CsvDataImporter, Thinl
 				int lineNumber = 0;
 				try {
 					while((currLine = reader.readNext()) != null){
-						CommunityHealthWorker chw  = new CommunityHealthWorker(currLine[0], currLine[3], parseGender(currLine[2]), InternationalisationUtils.getDateFormat().parse(currLine[1]));
+						CommunityHealthWorker chw  = new CommunityHealthWorker(currLine[0], parsePhoneNumber(currLine[3]), parseGender(currLine[2]), InternationalisationUtils.getDateFormat().parse(currLine[1]));
 						chwDao.saveCommunityHealthWorker(chw);
 						lineNumber ++;
 					}
@@ -81,7 +69,7 @@ public class CommunityHealthWorkerDataImporter implements CsvDataImporter, Thinl
 				}
 				if(exceptions.size() == 0){
 					addMessageToList("====== "+getI18nString("medic.common.chw")+" " +getI18nString("medic.importer.creation.complete")+" ======");
-					addMessageToList(lineNumber + getI18nString("medic.common.chws")+ " " +getI18nString("medic.importer.success.message"));
+					addMessageToList(lineNumber + " " + getI18nString("medic.common.chws")+ " " +getI18nString("medic.importer.success.message"));
 				}
 			}
 		} catch (FileNotFoundException e) {
@@ -91,24 +79,10 @@ public class CommunityHealthWorkerDataImporter implements CsvDataImporter, Thinl
 	}
 	
 	private void addMessageToList(String message){
-		String text = uiController.getText(messageList);
+		String text = ui.getText(messageList);
 		String newLine = "["+getI18nString("medic.common.chw")+ " "+getI18nString("medic.data.importer") +"] "+InternationalisationUtils.getDatetimeFormat().format(new Date()) + " - " + message;
 		text += "\n"+newLine;
-		uiController.setText(messageList, text);
-	}
-	
-	private Gender parseGender(String gender){
-		String male = getI18nString("medic.common.male");
-		String female = getI18nString("medic.common.female");
-		String transGender = getI18nString("medic.common.transgender");
-		if(gender.equalsIgnoreCase(male)){
-			return Gender.MALE;
-		}else if(gender.equalsIgnoreCase(female)){
-			return Gender.FEMALE;
-		}else if(gender.equalsIgnoreCase(transGender)){
-			return Gender.TRANSGENDER;
-		}
-		return null;
+		ui.setText(messageList, text);
 	}
 
 	public String getTypeLabel() {
