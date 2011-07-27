@@ -44,7 +44,7 @@ public class PatientViewPluginController extends BasePluginController{
 		tabController = new PatientViewThinletTabController(this,uiController);
 		reminderDispatch = new ReminderDispatcher(uiController, applicationContext);
 		Timer t = new Timer();
-		t.scheduleAtFixedRate(reminderDispatch, 1000 , ReminderDispatcher.INTERVAL_MINUTES * 60 * 1000);
+		t.scheduleAtFixedRate(reminderDispatch, 1000 , 30 * 1000);
 		return tabController.getTab();
 	}
 

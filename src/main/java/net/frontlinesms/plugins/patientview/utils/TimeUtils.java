@@ -96,4 +96,60 @@ public class TimeUtils {
 		Calendar today = Calendar.getInstance();
 		return TimeUtils.compareCalendars(today, window.one) >= 0 && TimeUtils.compareCalendars(today, window.two) <= 0; 
 	}
+	
+	/**
+	 * Checks if the time 'time' is inside the window defined by 'startTime' and 'interval'.
+	 * If startTime is less than 0, the current time of day is used.
+	 * @param time
+	 * @param startTime
+	 * @param interval
+	 * @return
+	 */
+	public static boolean timeIsInWindow(int time, int startTime, int interval){
+		Calendar timeCal = Calendar.getInstance();
+		timeCal.clear();
+		timeCal.set(Calendar.HOUR_OF_DAY, getHours(time));
+		timeCal.set(Calendar.MINUTE, getMinutes(time));
+		Calendar intervalStartTime = Calendar.getInstance();
+		intervalStartTime.clear();
+		if(startTime >-1){
+			intervalStartTime.set(Calendar.HOUR_OF_DAY, getHours(startTime));
+			intervalStartTime.set(Calendar.MINUTE, getMinutes(startTime));
+		}else{
+			intervalStartTime.set(Calendar.HOUR_OF_DAY, Calendar.getInstance().get(Calendar.HOUR_OF_DAY));
+			intervalStartTime.set(Calendar.MINUTE, Calendar.getInstance().get(Calendar.MINUTE));
+		}
+		Calendar intervalEndTime = Calendar.getInstance();
+		intervalEndTime.clear();
+		intervalEndTime.set(Calendar.HOUR_OF_DAY, getHours(startTime));
+		intervalEndTime.set(Calendar.MINUTE, getMinutes(startTime));
+		intervalEndTime.add(Calendar.HOUR_OF_DAY, getHours(interval));
+		intervalEndTime.add(Calendar.MINUTE, getMinutes(interval));
+		intervalEndTime.clear(Calendar.DAY_OF_YEAR);
+		intervalEndTime.clear(Calendar.DATE);
+		if(intervalStartTime.get(Calendar.HOUR_OF_DAY) == 23 && intervalEndTime.get(Calendar.HOUR_OF_DAY) != 23){
+			return (timeCal.get(Calendar.HOUR_OF_DAY) != 23 && intervalEndTime.compareTo(timeCal) >= 0) ||
+				   (timeCal.get(Calendar.HOUR_OF_DAY) == 23 && intervalStartTime.compareTo(timeCal) <=0);
+		}else{
+			return (intervalStartTime.compareTo(timeCal)<=0 && intervalEndTime.compareTo(timeCal) >=0);
+		}
+	}
+	
+	/**
+	 * Extract the hours from a 4 hour time
+	 * @param time
+	 * @return
+	 */
+	public static int getHours(int time){
+		return (time - (time % 100))/100; 
+	}
+	
+	/**
+	 * Extract the minutes from a 4 hour time
+	 * @param time
+	 * @return
+	 */
+	public static int getMinutes(int time){
+		return time % 100;
+	}
 }
