@@ -2,6 +2,8 @@ package net.frontlinesms.plugins.patientview.ui.administration.tabs;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import net.frontlinesms.plugins.patientview.data.domain.reminder.EventTimingOption;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.RecurringReminderFrequency;
@@ -15,6 +17,8 @@ import net.frontlinesms.plugins.patientview.ui.administration.AdministrationTabP
 import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
+
+import thinlet.Thinlet;
 
 public class ReminderAdministrationPanelController extends AdministrationTabPanel{
 
@@ -30,6 +34,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 	private static final String TIMING_TEXT_AREA = "timingTextArea";
 	private static final String MESSAGE_TEXT_AREA = "messageTextArea";
 	private static final String MESSAGE_PANEL = "messagePanel";
+	private static final String MESSAGE_VARIABLE_PANEL = "variableButtonPanel";
 	private static final String RECIPIENT_SELECT = "recipientSelect";
 	private static final String TIMING_PANEL = "timingPanel";
 	private static final String REMINDER_TYPE_SELECT = "typeSelect";
@@ -192,6 +197,29 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 		}	
 		if(!selected){
 			ui.setSelectedIndex(find(eventSelect), 0);
+		}
+		populateMessageVariables();
+	}
+	
+	private void populateMessageVariables(){
+		removeAll(find(MESSAGE_VARIABLE_PANEL));
+		ReminderEvent startEvent = (ReminderEvent) ui.getAttachedObject(ui.getSelectedItem(find(FROM_EVENT_SELECT)));
+		Map<String,String> variables = startEvent.getVariables();
+		Object panel = find(MESSAGE_VARIABLE_PANEL);
+		for(Entry<String,String> tuple: variables.entrySet()){
+			Object button = ui.createButton(tuple.getKey(), "insertMessageText('"+tuple.getValue()+"')", null, this);
+			ui.add(panel,button);
+		}
+	}
+	
+	public void insertMessageText(String textToInsert){
+		String messageText= ui.getText(find(MESSAGE_TEXT_AREA));
+		Integer cursorIndex = ui.getCaretPosition(find(MESSAGE_TEXT_AREA));
+		if(messageText == null || messageText.trim().equals("") || cursorIndex == null){
+			ui.setText(find(MESSAGE_TEXT_AREA), textToInsert);
+		}else{
+			String insertText = messageText.substring(0, cursorIndex) + textToInsert + messageText.substring(cursorIndex);
+			ui.setText(find(MESSAGE_TEXT_AREA), insertText);
 		}
 	}
 	

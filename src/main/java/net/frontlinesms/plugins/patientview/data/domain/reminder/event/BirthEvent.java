@@ -54,4 +54,13 @@ public class BirthEvent implements ReminderEvent<Patient>{
 	public List<EventTimingOption> getSupportedTimingOptions() {
 		return supportedTimingOptions;
 	}
+
+	public Map<String, String> getVariables() {
+		return new HashMap<String, String>();
+	}
+
+	public String getVariableValue(Patient patient, Patient Context, String key) {
+		//no variables are supported
+		return "";
+	}
 }

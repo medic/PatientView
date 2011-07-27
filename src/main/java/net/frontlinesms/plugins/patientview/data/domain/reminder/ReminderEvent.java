@@ -22,4 +22,8 @@ public interface ReminderEvent<C> {
 	
 	public Calendar getDateForContext(Patient patient, C context);
 	
+	public Map<String,String> getVariables();
+	
+	public String getVariableValue(Patient patient, C Context, String key);
+	
 }

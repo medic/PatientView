@@ -20,7 +20,12 @@ public class VaccineWindowEndedEvent implements ReminderEvent<ScheduledDose>{
 	
 	public static final List<EventTimingOption> supportedTimingOptions;
 	
+	private static final Map<String,String> variables;
+	
 	static{
+		variables = new HashMap<String, String>();
+		variables.put("Vaccine Name", "{vaccine name}");
+		variables.put("Window End Date", "{window end date}");
 		supportedTimingOptions = new ArrayList<EventTimingOption>();
 		supportedTimingOptions.add(EventTimingOption.AFTER);
 		supportedTimingOptions.add(EventTimingOption.DAY_OF);
@@ -61,5 +66,19 @@ public class VaccineWindowEndedEvent implements ReminderEvent<ScheduledDose>{
 
 	public boolean canBeStartEvent() {
 		return true;
+	}
+	
+	public Map<String, String> getVariables() {
+		return variables;
+	}
+
+	public String getVariableValue(Patient patient, ScheduledDose context, String key) {
+		if(key.equals("{vaccine name}")){
+			return context.getDose().getVaccine().getName();
+		}else if(key.equals("{window end date}")){
+			return context.getWindowEndDateString();
+		}else{
+			return "";
+		}
 	}
 }

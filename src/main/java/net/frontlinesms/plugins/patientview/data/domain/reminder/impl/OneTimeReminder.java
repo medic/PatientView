@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.persistence.Entity;
 
@@ -45,8 +46,8 @@ public class OneTimeReminder extends Reminder{
 		}
 	}
 
-	private String generateMessage(Patient p, List<Object> context) {
-		return messageFormat;
+	private String generateMessage(Patient patient, List<Object> context) {
+		return insertMessageVariables(messageFormat, patient, context.get(0));
 	}
 	
 	/**
@@ -120,5 +121,14 @@ public class OneTimeReminder extends Reminder{
 	@Override
 	public String getTypeName() {
 		return "One-Time";
+	}
+	
+	private String insertMessageVariables(String message, Patient patient, Object context){
+		Map<String,String> variables = getStartEvent().getVariables();
+		for(Entry<String,String> entry: variables.entrySet()){
+			String value = getStartEvent().getVariableValue(patient, context,entry.getValue());
+			message = message.replaceAll(entry.getValue(), value);
+		}
+		return message;
 	}
 }

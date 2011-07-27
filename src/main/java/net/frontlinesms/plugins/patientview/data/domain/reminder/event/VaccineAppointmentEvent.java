@@ -20,11 +20,15 @@ public class VaccineAppointmentEvent implements ReminderEvent<ScheduledDose>{
 	
 	public static final List<EventTimingOption> supportedTimingOptions;
 	
+	private static Map<String,String> variables = new HashMap<String, String>();
+	
 	static{
 		supportedTimingOptions = new ArrayList<EventTimingOption>();
 		supportedTimingOptions.add(EventTimingOption.BEFORE);
 		supportedTimingOptions.add(EventTimingOption.AFTER);
 		supportedTimingOptions.add(EventTimingOption.DAY_OF);
+		variables.put("Vaccine Name", "{vaccine name}");
+		variables.put("Appointment Date", "{appointment date}");
 	}
 
 	public VaccineAppointmentEvent(ApplicationContext appCon){
@@ -62,5 +66,19 @@ public class VaccineAppointmentEvent implements ReminderEvent<ScheduledDose>{
 
 	public boolean canBeStartEvent() {
 		return true;
+	}
+
+	public Map<String, String> getVariables() {
+		return variables;
+	}
+
+	public String getVariableValue(Patient patient, ScheduledDose context, String key) {
+		if(key.equals("{vaccine name}")){
+			return context.getDose().getVaccine().getName();
+		}else if(key.equals("{appointment date}")){
+			return context.getWindowStartDateString();
+		}else{
+			return "";
+		}
 	}
 }
