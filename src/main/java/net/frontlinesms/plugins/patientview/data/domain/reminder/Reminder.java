@@ -56,6 +56,9 @@ public abstract class Reminder {
 	public abstract boolean supportsEvent(ReminderEvent<?> event);
 
 	public abstract String getTypeName();
+
+	public abstract String getTimingString();
+	
 	//getters and setters
 	
 	public long getReminderId() {
@@ -85,8 +88,6 @@ public abstract class Reminder {
 	public String getName() {
 		return name;
 	}
-	
-	public abstract String getTimingString();
 	
 	/**
 	 * Returns the ReminderEvent for the class name that is passed in.

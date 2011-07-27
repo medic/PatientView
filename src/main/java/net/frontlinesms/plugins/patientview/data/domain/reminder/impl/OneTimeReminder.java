@@ -123,7 +123,7 @@ public class OneTimeReminder extends Reminder{
 		return "One-Time";
 	}
 	
-	private String insertMessageVariables(String message, Patient patient, Object context){
+	protected String insertMessageVariables(String message, Patient patient, Object context){
 		Map<String,String> variables = getStartEvent().getVariables();
 		for(Entry<String,String> entry: variables.entrySet()){
 			String value = getStartEvent().getVariableValue(patient, context,entry.getValue());

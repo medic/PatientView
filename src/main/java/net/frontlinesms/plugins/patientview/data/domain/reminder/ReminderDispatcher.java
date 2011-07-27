@@ -37,21 +37,34 @@ public class ReminderDispatcher extends TimerTask{
 		ReminderEventDirectory directory = new ReminderEventDirectory(appCon);
 	}
 	
+	private int getCurrentHours(){
+		Calendar currentTime = Calendar.getInstance();
+		return currentTime.get(Calendar.HOUR_OF_DAY) * 100 + currentTime.get(Calendar.MINUTE);
+	}
+	
+	/**
+	 * Method to determine whether or not it is time to send a reminder.
+	 * If the scheduled reminder time is within the coming INTERVAL_MINUTES
+	 * then it should be sent.
+	 * @param currentHours
+	 * @param reminderTime
+	 * @return
+	 */
+	private boolean shouldRemind(int currentHours, int reminderTime){
+		return (currentHours <= reminderTime && reminderTime < (currentHours + INTERVAL_MINUTES));
+	}
+	
 	@Override
 	public void run() {
 		LOG.info("Beginning reminder dispatch");
-		System.out.println("Beginning reminder dispatch");
 		List<Reminder> reminders = reminderDao.getAllReminders();
 		List<Reminder> activeReminders = new ArrayList<Reminder>();
-		Calendar currentTime = Calendar.getInstance();
-		int currentHours = currentTime.get(Calendar.HOUR_OF_DAY) * 100 + currentTime.get(Calendar.MINUTE);
 		for(Reminder r: reminders){
-			if(currentHours <= r.getTimeOfDay() && r.getTimeOfDay() < (currentHours + INTERVAL_MINUTES)){
+			if(shouldRemind(getCurrentHours(),r.getTimeOfDay())){
 				activeReminders.add(r);
 			}
 		}
 		LOG.info(activeReminders.size()+ " active reminders");
-		System.out.println(activeReminders.size()+ " active reminders");
 		if(activeReminders.size() > 0){
 			List<Patient> patients = patientDao.getAllPatients();
 			for(Reminder reminder: activeReminders){
@@ -67,5 +80,7 @@ public class ReminderDispatcher extends TimerTask{
 				}
 			}
 		}
-	}	
+	}
+	
+	
 }

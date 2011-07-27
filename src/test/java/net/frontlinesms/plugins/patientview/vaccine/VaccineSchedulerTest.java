@@ -38,25 +38,22 @@ public class VaccineSchedulerTest extends BaseTestCase{
 	
 	public void test_scheduleVaccinesFromBirth_justMonths_scheduledProperly(){
 		setup(1980,Calendar.MAY,15,3);
-		List<ScheduledDose> schedDoses = VaccineScheduler.scheduleVaccinesFromBirth(p, v);
+		List<ScheduledDose> schedDoses = VaccineScheduler.instance().scheduleVaccinesFromBirth(p, v);
 		//check the size
 		assertEquals(3, schedDoses.size());
 		//check the first one
-		Calendar first = Calendar.getInstance();
-		first.setTime(schedDoses.get(0).getWindowStartDate());
+		Calendar first = schedDoses.get(0).getWindowStartDate();
 		assertEquals(Calendar.JUNE,first.get(Calendar.MONTH));
 		assertEquals(15,first.get(Calendar.DAY_OF_MONTH));
 		assertEquals(1980,first.get(Calendar.YEAR));
 		//check the second one
-		Calendar second = Calendar.getInstance();
-		second.setTime(schedDoses.get(1).getWindowStartDate());
+		Calendar second = schedDoses.get(1).getWindowStartDate();
 		//assert
 		assertEquals(Calendar.AUGUST,second.get(Calendar.MONTH));
 		assertEquals(15,second.get(Calendar.DAY_OF_MONTH));
 		assertEquals(1980,second.get(Calendar.YEAR));
 		//check the third one
-		Calendar third = Calendar.getInstance();
-		third.setTime(schedDoses.get(2).getWindowStartDate());
+		Calendar third = schedDoses.get(2).getWindowStartDate();
 		//assert
 		assertEquals(Calendar.OCTOBER,third.get(Calendar.MONTH));
 		assertEquals(15,third.get(Calendar.DAY_OF_MONTH));
@@ -79,26 +76,22 @@ public class VaccineSchedulerTest extends BaseTestCase{
 		doses.add(vd2);
 		doses.add(vd3);
 		v.setDoses(doses);
-		List<ScheduledDose> schedDoses = VaccineScheduler.scheduleVaccinesFromBirth(p, v);
+		List<ScheduledDose> schedDoses = VaccineScheduler.instance().scheduleVaccinesFromBirth(p, v);
 		//check the size
 		assertEquals(3, schedDoses.size());
 		//check the first one
-		Calendar first = Calendar.getInstance();
-		//first date should be june 23rd 1980
-		first.setTime(schedDoses.get(0).getWindowStartDate());
+		Calendar first = schedDoses.get(0).getWindowStartDate();
 		assertEquals(Calendar.JULY,first.get(Calendar.MONTH));
 		assertEquals(18,first.get(Calendar.DAY_OF_MONTH));
 		assertEquals(1980,first.get(Calendar.YEAR));
 		//check the second one
-		Calendar second = Calendar.getInstance();
-		second.setTime(schedDoses.get(1).getWindowStartDate());
+		Calendar second = schedDoses.get(1).getWindowStartDate();
 		//second date should be Aug 21st 1980
 		assertEquals(Calendar.SEPTEMBER,second.get(Calendar.MONTH));
 		assertEquals(15,second.get(Calendar.DAY_OF_MONTH));
 		assertEquals(1980,second.get(Calendar.YEAR));
 		//check the third one
-		Calendar third = Calendar.getInstance();
-		third.setTime(schedDoses.get(2).getWindowStartDate());
+		Calendar third = schedDoses.get(2).getWindowStartDate();
 		//third date should be October 16th 1980
 		assertEquals(Calendar.NOVEMBER,third.get(Calendar.MONTH));
 		assertEquals(6,third.get(Calendar.DAY_OF_MONTH));
