@@ -47,7 +47,7 @@ public class VaccineAppointmentEvent implements ReminderEvent<ScheduledDose>{
 		List<ScheduledDose> doses = scheduledDoseDao.getScheduledDoses(patient, null);
 		Map<Calendar,ScheduledDose> dates = new HashMap<Calendar, ScheduledDose>();
 		for(ScheduledDose dose:doses){
-			dates.put(dose.getWindowEndDate(),dose);
+			dates.put(dose.getWindowStartDate(),dose);
 		}
 		return dates;
 	}
