@@ -46,7 +46,7 @@ public class OneTimeReminder extends Reminder{
 		}
 	}
 
-	private String generateMessage(Patient patient, List<Object> context) {
+	protected String generateMessage(Patient patient, List<Object> context) {
 		return insertMessageVariables(messageFormat, patient, context.get(0));
 	}
 	
@@ -127,7 +127,9 @@ public class OneTimeReminder extends Reminder{
 		Map<String,String> variables = getStartEvent().getVariables();
 		for(Entry<String,String> entry: variables.entrySet()){
 			String value = getStartEvent().getVariableValue(patient, context,entry.getValue());
-			message = message.replaceAll(entry.getValue(), value);
+			String regex = entry.getValue().replace("{","\\{");
+			regex = regex.replace("}", "\\}");
+			message = message.replaceAll(regex, value);
 		}
 		return message;
 	}

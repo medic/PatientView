@@ -56,10 +56,6 @@ public class RecurringReminder extends OneTimeReminder {
 		}
 	}
 	
-	private String generateMessage(Patient patient, List<Object> context){
-		return messageFormat;
-	}
-	
 	/**
 	 * Returns all possible windows for this reminder and the person, with the context that caused them.
 	 * @param p

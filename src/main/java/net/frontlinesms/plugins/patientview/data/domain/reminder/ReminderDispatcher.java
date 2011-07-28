@@ -47,7 +47,7 @@ public class ReminderDispatcher extends TimerTask{
 		Calendar c = Calendar.getInstance();
 		int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
 		for(Reminder r: reminders){
-			if(timeOfDay == r.getTimeOfDay()){
+			if(timeOfDay == r.getTimeOfDay()+1){
 				activeReminders.add(r);
 			}
 		}
@@ -62,8 +62,8 @@ public class ReminderDispatcher extends TimerTask{
 					if(mess != null && !mess.equals("")){
 						String phoneNumber = reminder.isSendToPatient()?p.getPhoneNumber():p.getChw().getPhoneNumber();
 						ui.getFrontlineController().sendTextMessage(phoneNumber, mess);
-						LOG.info("Reminder dispatched: " + mess);
-						System.out.println("Reminder dispatched: " + mess);
+						LOG.info("Reminder dispatched for " + p.getName()+ ": " + mess);
+						System.out.println("Reminder dispatched for " + p.getName()+ ": " + mess);
 					}
 				}
 			}
