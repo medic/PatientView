@@ -131,40 +131,4 @@ public class TimeUtilsTest extends BaseTestCase {
 		second.set(Calendar.DAY_OF_MONTH, first.get(Calendar.DAY_OF_MONTH)+1);
 		assertTrue(TimeUtils.compareCalendars(first, second) < 0);
 	}
-	
-	public void test_timeIsInWindow_timeInWindow_returnsTrue(){
-		assertTrue(TimeUtils.timeIsInWindow(1234, 1200, 40));
-	}
-	
-	public void test_timeIsInWindow_timeOutsideWindow_returnsFalse(){
-		assertFalse(TimeUtils.timeIsInWindow(1234, 1200, 33));
-		assertFalse(TimeUtils.timeIsInWindow(1234, 1200, 32));
-		assertFalse(TimeUtils.timeIsInWindow(1234, 1235, 3));
-	}
-	
-	public void test_timeIsInWindow_windowHugsTime_returnsTrue(){
-		assertTrue(TimeUtils.timeIsInWindow(1234, 1234, 1));
-	}
-	
-	public void test_timeIsInWindow_windowHugsTimeIntervalZero_returnsTrue(){
-		assertTrue(TimeUtils.timeIsInWindow(1234, 1234, 0));
-	}
-	
-	public void test_timeIsInWindow_windowOneAwayFromTime_returnsTrue(){
-		assertTrue(TimeUtils.timeIsInWindow(1234, 1233, 1));
-	}
-	
-	public void test_timeIsInWindow_intervalStraddlesHour_returnsTrue(){
-		assertTrue(TimeUtils.timeIsInWindow(1234, 1159, 50));
-		assertTrue(TimeUtils.timeIsInWindow(1200, 1159, 1));
-		assertTrue(TimeUtils.timeIsInWindow(1200, 1159, 2));
-		assertTrue(TimeUtils.timeIsInWindow(1200, 1200, 0));	
-	}
-	
-	public void test_timeIsInWindow_intervalStraddlesDay_returnsTrue(){
-		assertTrue(TimeUtils.timeIsInWindow(0001, 2359, 50));
-		assertTrue(TimeUtils.timeIsInWindow(0023, 2359, 50));
-		assertTrue(TimeUtils.timeIsInWindow(2359, 2340, 50));
-		assertTrue(TimeUtils.timeIsInWindow(2354, 2340, 15));
-	}
 }

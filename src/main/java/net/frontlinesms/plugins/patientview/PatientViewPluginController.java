@@ -1,5 +1,6 @@
 package net.frontlinesms.plugins.patientview;
 
+import java.util.Calendar;
 import java.util.Timer;
 
 import net.frontlinesms.FrontlineSMS;
@@ -44,7 +45,10 @@ public class PatientViewPluginController extends BasePluginController{
 		tabController = new PatientViewThinletTabController(this,uiController);
 		reminderDispatch = new ReminderDispatcher(uiController, applicationContext);
 		Timer t = new Timer();
-		t.scheduleAtFixedRate(reminderDispatch, 1000 , 30 * 1000);
+		int minutes = Calendar.getInstance().get(Calendar.MINUTE);
+		int firstRunWait = (61 - minutes) % 60;
+		System.out.println("Dispatching reminders in " + firstRunWait + " minutes");
+		t.scheduleAtFixedRate(reminderDispatch, firstRunWait * 60 * 1000 , ReminderDispatcher.INTERVAL_MINUTES * 60 * 1000);
 		return tabController.getTab();
 	}
 

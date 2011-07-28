@@ -18,8 +18,6 @@ import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
 
-import thinlet.Thinlet;
-
 public class ReminderAdministrationPanelController extends AdministrationTabPanel{
 
 	private static String THINLET_XML = "/ui/plugins/patientview/administration/reminders/reminderAdministrationPanel.xml";
@@ -305,7 +303,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 	}
 	
 	public void saveReminder(){
-		String name=null,fromMonthsString=null,fromDaysString=null,timeOfDayString=null,message = null;
+		String name=null,fromMonthsString=null,fromDaysString=null,message = null;
 		boolean sendToPatient=false;
 		Reminder r = getSelectedReminderInstance();
 		//create and check all the field data
@@ -318,9 +316,6 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 		if(checkField(FROM_DAYS_FIELD, "The \"From Days\" field")){
 			fromDaysString = ui.getText(find(FROM_DAYS_FIELD));
 		}else return;
-		if(checkField(TIME_OF_DAY_FIELD, "The \"Time of Day\" field")){
-			timeOfDayString = ui.getText(find(TIME_OF_DAY_FIELD));
-		}else return;
 		if(checkField(MESSAGE_TEXT_AREA, "The \"Message\" field")){
 			message = ui.getText(find(MESSAGE_TEXT_AREA));
 		}else return;
@@ -330,7 +325,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 		//correctly create the time of day, start days, and start months
 		int multiplier = ((EventTimingOption) ui.getAttachedObject(ui.getSelectedItem(find(FROM_DATE_OPTION_SELECT)))).multiplier;
 		int timeOfDay, fromDays, fromMonths;
-		timeOfDay = Integer.parseInt(timeOfDayString.replace(":",""));
+		timeOfDay = ui.getSelectedIndex(find(TIME_OF_DAY_FIELD));
 		fromDays = Integer.parseInt(fromDaysString)* multiplier;
 		fromMonths = Integer.parseInt(fromMonthsString)* multiplier;
 		//if its a onetimer, just save it
@@ -429,14 +424,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 				ui.setText(find(TO_MONTHS_FIELD), String.valueOf(Math.abs(recur.getEndMonths())));
 			}
 			//set the time of day
-			String tempTOD = String.valueOf(recur.getTimeOfDay());
-			String timeOfDay=null;
-			if(tempTOD.length() == 4){
-				timeOfDay = tempTOD.substring(0, 2) + ":"+ tempTOD.substring(2,4);
-			}else if(tempTOD.length() == 3){
-				timeOfDay = tempTOD.substring(0, 1) + ":"+ tempTOD.substring(1,3);
-			}
-			ui.setText(find(TIME_OF_DAY_FIELD),timeOfDay);
+			ui.setSelectedIndex(find(TIME_OF_DAY_FIELD),recur.getTimeOfDay());
 			//set the message
 			ui.setText(find(MESSAGE_TEXT_AREA),recur.getMessageFormat());
 			ui.setSelectedIndex(find(RECIPIENT_SELECT), recur.isSendToPatient()?0:1);
@@ -459,14 +447,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 				ui.setText(find(FROM_MONTHS_FIELD), String.valueOf(Math.abs(oneTime.getStartMonths())));
 			}
 			//set the time of day
-			String tempTOD = String.valueOf(oneTime.getTimeOfDay());
-			String timeOfDay=null;
-			if(tempTOD.length() == 4){
-				timeOfDay = tempTOD.substring(0, 2) + ":"+ tempTOD.substring(2,4);
-			}else if(tempTOD.length() == 3){
-				timeOfDay = tempTOD.substring(0, 1) + ":"+ tempTOD.substring(1,3);
-			}
-			ui.setText(find(TIME_OF_DAY_FIELD),timeOfDay);
+			ui.setSelectedIndex(find(TIME_OF_DAY_FIELD),oneTime.getTimeOfDay());
 			//set the message
 			ui.setText(find(MESSAGE_TEXT_AREA),oneTime.getMessageFormat());
 			ui.setSelectedIndex(find(RECIPIENT_SELECT), oneTime.isSendToPatient()?0:1);

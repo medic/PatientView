@@ -13,6 +13,31 @@
 	</panel>
 	<panel gap="5" name="extraTimingOptionPanel" weightx="1">
 		<label name="timeOfDayLabel" text="Time of day" />
-		<textfield columns="6" name="timeOfDayField" text="10:00"/>
+		<combobox editable="false" name="timeOfDayField" selected="10">
+	        <choice text="1:00 AM"/>
+	        <choice text="2:00 AM"/>
+	        <choice text="3:00 AM"/>
+	        <choice text="4:00 AM"/>
+	        <choice text="5:00 AM"/>
+	        <choice text="6:00 AM"/>
+	        <choice text="7:00 AM"/>
+	        <choice text="8:00 AM"/>
+	        <choice text="9:00 AM"/>
+	        <choice text="10:00 AM"/>
+	        <choice text="11:00 AM"/>
+	        <choice text="12:00 PM"/>
+	       	<choice text="1:00 PM"/>
+	        <choice text="2:00 PM"/>
+	        <choice text="3:00 PM"/>
+	        <choice text="4:00 PM"/>
+	        <choice text="5:00 PM"/>
+	        <choice text="6:00 PM"/>
+	        <choice text="7:00 PM"/>
+	        <choice text="8:00 PM"/>
+	        <choice text="9:00 PM"/>
+	        <choice text="10:00 PM"/>
+	        <choice text="11:00 PM"/>
+	        <choice text="12:00 AM"/>
+    	</combobox>
 	</panel>
 </panel>

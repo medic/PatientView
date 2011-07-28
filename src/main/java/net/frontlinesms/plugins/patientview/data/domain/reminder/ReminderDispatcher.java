@@ -1,6 +1,7 @@
 package net.frontlinesms.plugins.patientview.data.domain.reminder;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.TimerTask;
 
@@ -22,7 +23,7 @@ import org.springframework.context.ApplicationContext;
  */
 public class ReminderDispatcher extends TimerTask{
 
-	public static final int INTERVAL_MINUTES = 15;
+	public static final int INTERVAL_MINUTES = 60;
 	private PatientDao patientDao;
 	private ReminderDao reminderDao;
 	
@@ -40,14 +41,18 @@ public class ReminderDispatcher extends TimerTask{
 	@Override
 	public void run() {
 		LOG.info("Beginning reminder dispatch");
+		System.out.println("Beginning reminder dispatch");
 		List<Reminder> reminders = reminderDao.getAllReminders();
 		List<Reminder> activeReminders = new ArrayList<Reminder>();
+		Calendar c = Calendar.getInstance();
+		int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
 		for(Reminder r: reminders){
-			if(TimeUtils.timeIsInWindow(r.getTimeOfDay(),-1,INTERVAL_MINUTES)){
+			if(timeOfDay == r.getTimeOfDay()){
 				activeReminders.add(r);
 			}
 		}
 		LOG.info(activeReminders.size()+ " active reminders");
+		System.out.println(activeReminders.size()+ " active reminders");
 		if(activeReminders.size() > 0){
 			List<Patient> patients = patientDao.getAllPatients();
 			for(Reminder reminder: activeReminders){
