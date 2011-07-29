@@ -10,8 +10,7 @@ import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.EventTimingOption;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.ReminderEvent;
 
-public class BirthEvent implements ReminderEvent<Patient>{
-
+public class BirthEvent extends ReminderEvent<Patient>{
 
 	public static final List<EventTimingOption> supportedTimingOptions;
 	
@@ -21,6 +20,9 @@ public class BirthEvent implements ReminderEvent<Patient>{
 		supportedTimingOptions.add(EventTimingOption.DAY_OF);
 	}
 	
+	public BirthEvent(){
+		super();
+	}
 	public boolean canBeEndEvent() {
 		return false;
 	}
@@ -61,6 +63,6 @@ public class BirthEvent implements ReminderEvent<Patient>{
 
 	public String getVariableValue(Patient patient, Patient Context, String key) {
 		//no variables are supported
-		return "";
+		return super.getVariableValue(patient, key);
 	}
 }

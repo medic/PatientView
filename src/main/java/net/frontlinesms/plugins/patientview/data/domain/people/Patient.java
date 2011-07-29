@@ -56,7 +56,9 @@ public class Patient extends Person {
 	}
 
 	public String getCHWName() {
-		return chw.getName();
+		if(chw != null){
+			return chw.getName();
+		}else return "";
 	}
 
 	public void setChw(CommunityHealthWorker chw) {

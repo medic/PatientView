@@ -14,18 +14,13 @@ import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
 
 import org.springframework.context.ApplicationContext;
 
-public class VaccineAppointmentMissedEvent implements ReminderEvent<ScheduledDose>{
+public class VaccineAppointmentMissedEvent extends ReminderEvent<ScheduledDose>{
 	
 	private ScheduledDoseDao scheduledDoseDao;
 	
 	public static final List<EventTimingOption> supportedTimingOptions;
 	
-	private static final Map<String,String> variables;
-	
 	static{
-		variables = new HashMap<String, String>();
-		variables.put("Vaccine Name", "{vaccine name}");
-		variables.put("Appointment Date", "{appointment date}");
 		supportedTimingOptions = new ArrayList<EventTimingOption>();
 		supportedTimingOptions.add(EventTimingOption.AFTER);
 		supportedTimingOptions.add(EventTimingOption.DAY_OF);
@@ -34,7 +29,10 @@ public class VaccineAppointmentMissedEvent implements ReminderEvent<ScheduledDos
 	public VaccineAppointmentMissedEvent(){}
 	
 	public VaccineAppointmentMissedEvent(ApplicationContext appCon){
+		super();
 		this.setScheduledDoseDao((ScheduledDoseDao) appCon.getBean("ScheduledDoseDao"));
+		variables.put("Vaccine Name", "{vaccine name}");
+		variables.put("Appointment Date", "{appointment date}");
 	}
 
 	public String getSnippet() {
@@ -90,7 +88,7 @@ public class VaccineAppointmentMissedEvent implements ReminderEvent<ScheduledDos
 		}else if(key.equals("{appointment date}")){
 			return context.getWindowStartDateString();
 		}else{
-			return "";
+			return super.getVariableValue(patient, key);
 		}
 	}
 }

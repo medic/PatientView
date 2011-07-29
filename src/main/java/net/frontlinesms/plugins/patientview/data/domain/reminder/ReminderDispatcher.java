@@ -10,7 +10,6 @@ import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.event.ReminderEventDirectory;
 import net.frontlinesms.plugins.patientview.data.repository.PatientDao;
 import net.frontlinesms.plugins.patientview.data.repository.ReminderDao;
-import net.frontlinesms.plugins.patientview.utils.TimeUtils;
 import net.frontlinesms.ui.UiGeneratorController;
 
 import org.apache.log4j.Logger;
@@ -60,7 +59,14 @@ public class ReminderDispatcher extends TimerTask{
 				for(Patient p: patients){
 					mess = reminder.getMessageForPatient(p);
 					if(mess != null && !mess.equals("")){
-						String phoneNumber = reminder.isSendToPatient()?p.getPhoneNumber():p.getChw().getPhoneNumber();
+						String phoneNumber = null;
+						if(reminder.isSendToPatient()){
+							phoneNumber = p.getPhoneNumber();
+						}else if(p.getChw() != null){
+							phoneNumber = p.getChw().getPhoneNumber();
+						}else{
+							phoneNumber=p.getName()+" does not have a CHW";
+						}
 						ui.getFrontlineController().sendTextMessage(phoneNumber, mess);
 						LOG.info("Reminder dispatched for " + p.getName()+ ": " + mess);
 						System.out.println("Reminder dispatched for " + p.getName()+ ": " + mess);
