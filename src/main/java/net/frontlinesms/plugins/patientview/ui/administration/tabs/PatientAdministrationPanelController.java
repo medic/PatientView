@@ -3,6 +3,7 @@ package net.frontlinesms.plugins.patientview.ui.administration.tabs;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.frontlinesms.plugins.patientview.data.domain.people.CommunityHealthWorker;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
 import net.frontlinesms.plugins.patientview.data.repository.PatientDao;
@@ -71,7 +72,7 @@ public class PatientAdministrationPanelController extends PersonAdministrationPa
 		return Patient.class;
 	}
 	
-	public void dialogReturned(Boolean delete, String reason) {
+	public void dialogReturned(Boolean delete, String reason, CommunityHealthWorker newCHW) {
 		if(delete){
 			Patient patient = ((Patient) super.advancedTableController.getCurrentlySelectedObject());
 			patientDao.deletePatient(patient, reason);

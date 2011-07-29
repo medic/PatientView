@@ -1,6 +1,5 @@
 package net.frontlinesms.plugins.patientview.data.repository;
 
-import java.util.Collection;
 import java.util.List;
 
 import net.frontlinesms.plugins.patientview.data.domain.people.CommunityHealthWorker;
@@ -29,10 +28,12 @@ public interface CommunityHealthWorkerDao {
 	 * @param chw
 	 *            CHW to save
 	 */
-	public void deleteCommunityHealthWorker(CommunityHealthWorker chw, String reason);
+	public void deleteCommunityHealthWorker(CommunityHealthWorker chw, String reason, CommunityHealthWorker newChw);
 
 	/** @return all CHWs saved in the data source */
-	public Collection<CommunityHealthWorker> getAllCommunityHealthWorkers();
+	public List<CommunityHealthWorker> getAllCommunityHealthWorkers();
+	
+	public List<CommunityHealthWorker> getAllCommunityHealthWorkers(boolean includeDeleted);
 
 	/**
 	 * Returns the community health worker that has exactly the supplied phone

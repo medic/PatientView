@@ -1,13 +1,12 @@
 package net.frontlinesms.plugins.patientview.ui.administration.tabs;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import net.frontlinesms.plugins.patientview.data.domain.people.CommunityHealthWorker;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
 import net.frontlinesms.plugins.patientview.data.repository.CommunityHealthWorkerDao;
+import net.frontlinesms.plugins.patientview.ui.administration.DeleteDialogController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
 import net.frontlinesms.plugins.patientview.ui.personpanel.CommunityHealthWorkerPanel;
 import net.frontlinesms.plugins.patientview.ui.personpanel.PersonPanel;
@@ -75,10 +74,15 @@ public class CommunityHealthWorkerAdministrationPanelController extends PersonAd
 		return CommunityHealthWorker.class;
 	}
 	
-	public void dialogReturned(Boolean delete, String reason) {
+	@Override
+	public void removeButtonClicked(){
+		DeleteDialogController deleteDialog = new DeleteDialogController(ui,this,"Person",appCon,(CommunityHealthWorker) super.advancedTableController.getCurrentlySelectedObject());
+	}
+	
+	public void dialogReturned(Boolean delete, String reason, CommunityHealthWorker newChw) {
 		if(delete){
 			CommunityHealthWorker chw = ((CommunityHealthWorker) super.advancedTableController.getCurrentlySelectedObject());
-			chwDao.deleteCommunityHealthWorker(chw,reason);
+			chwDao.deleteCommunityHealthWorker(chw,reason,newChw);
 			super.advancedTableController.refresh();
 		}
 	}

@@ -9,9 +9,10 @@
 	<!-- turn on annotation support -->
 	<context:annotation-config />
 	<tx:annotation-driven />
-	
-	<bean id="CHWDao" class="net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernateCommunityHealthWorkerDao" parent="baseHibernateDao"/>
 	<bean id="PatientDao" class="net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernatePatientDao" parent="baseHibernateDao"/>
+	<bean id="CHWDao" class="net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernateCommunityHealthWorkerDao" parent="baseHibernateDao">
+		<property name="patientDao" ref="PatientDao"/>
+	</bean>
 	<bean id="UserDao" class="net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernateUserDao" parent="baseHibernateDao"/>
 	<bean id="PersonDao" class="net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernatePersonDao" parent="baseHibernateDao"/>
 	<bean id="MedicFormDao" class="net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernateMedicFormDao" parent="baseHibernateDao"/>
