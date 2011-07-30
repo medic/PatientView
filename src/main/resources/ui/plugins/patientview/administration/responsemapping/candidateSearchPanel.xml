@@ -13,5 +13,5 @@
         <panel name="personPanel" weightx="1" top="-17" weighty="1"/>
         <button icon="/icons/form_mapped_small.png" action="setSubjectToSelectedCandidate()" halign="center" name="changeButton" text="i18n.medic.candidate.search.panel.change.subject" weightx="1"/>
     </panel>
-    <table name="resultsTable" weightx="1" weighty="1"/>
+    <panel name="resultsTable" weightx="1" weighty="1"/>
 </panel>

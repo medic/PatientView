@@ -127,7 +127,7 @@ public class CandidateSearchPanel implements ThinletUiEventHandler, TableActionD
 			
 			Object panel = uiController.loadComponentFromFile(UI_FILE, this);
 			//create the advanced table controller
-			tableController = new AdvancedTableController(this, uiController, uiController.find(panel,"resultsTable"));
+			tableController = new AdvancedTableController(this, uiController);
 			//if searching patients, we want name, id and chw
 			tableController.putHeader(Patient.class, HeaderColumn.createColumnList(new String[]{getI18nString("medic.common.labels.name"), getI18nString("medic.common.labels.id"), getI18nString("medic.common.chw")},
 					 new String[]{"/icons/user.png", "/icons/key.png","/icons/user_phone.png"},
@@ -146,6 +146,7 @@ public class CandidateSearchPanel implements ThinletUiEventHandler, TableActionD
 				uiController.setIcon(panel, "/icons/users.png");
 				uiController.setText(uiController.find(panel,"changeButton"), getI18nString("medic.candidate.search.panel.set.mapping.to.person"));
 			}
+			uiController.add(uiController.find(panel,"resultsTable"),tableController.getMainPanel());
 			uiController.add(mainPanel,panel);
 			search("");
 			tableController.setSelected(0);

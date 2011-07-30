@@ -8,7 +8,7 @@
             <label icon="/icons/search.png" text="i18n.medic.common.labels.search" colspan="1"/>
             <textfield action="searchKeyPressed" name="searchBox" weightx="1" colspan="1"/>
             <panel name="topPanel" weightx="1" colspan="2"/>
-            <table colspan="2" name="resultsTable" weightx="1" weighty="1"/>
+            <panel colspan="2" name="resultsTable" weightx="1" weighty="1"/>
         </panel>
         <panel bottom="4" columns="1" gap="6" left="4" name="createPatientPanel" right="4" top="4" weightx="1" weighty="1">
             <panel border="true" name="bottomPanel" weightx="1" weighty="1" top="5" left="5" right="5" bottom="5" gap="5" columns="1"/>

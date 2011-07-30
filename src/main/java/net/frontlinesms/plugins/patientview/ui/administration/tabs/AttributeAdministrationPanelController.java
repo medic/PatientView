@@ -1,7 +1,5 @@
 package net.frontlinesms.plugins.patientview.ui.administration.tabs;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,9 +12,9 @@ import net.frontlinesms.plugins.patientview.data.repository.MedicFormFieldDao;
 import net.frontlinesms.plugins.patientview.data.repository.PersonAttributeDao;
 import net.frontlinesms.plugins.patientview.data.repository.PersonAttributeResponseDao;
 import net.frontlinesms.plugins.patientview.ui.administration.AdministrationTabPanel;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
 
@@ -79,17 +77,21 @@ public class AttributeAdministrationPanelController extends AdministrationTabPan
 		dataTypeComboBox = find("dataTypeComboBox");
 		
 		//initialize the advanced tables
-		fieldSearchTableController = new AdvancedTableController(this,uiController,fieldSearchTable);
-		currentItemTableController = new AdvancedTableController(this,uiController,currentItemTable);
+		fieldSearchTableController = new AdvancedTableController(this,uiController);
+		currentItemTableController = new AdvancedTableController(this,uiController);
 		
 		fieldSearchTableController.putHeader(MedicFormField.class, HeaderColumn.createColumnList(new String[]{getI18nString(LABEL_COLUMN), getI18nString(PARENT_FORM_COLUMN)},
 																								 new String[]{"/icons/tag_purple.png", "/icons/form.png"},
 																								 new String[]{"getLabel","getParentFormName" }));
 		
+		fieldSearchTableController.setSelectionChangedMethod("fieldSearchTableSelectionChanged", this);
 		currentItemTableController.putHeader(Field.class, HeaderColumn.createColumnList(new String[]{getI18nString(LABEL_COLUMN), getI18nString(DATA_TYPE_COLUMN)},
 														  new String[]{"/icons/tag_purple.png", "/icons/page_white_star.png"},
 														  new String[]{"getLabel","getDataTypeName"}));
 		currentItemTableController.setNoResultsMessage(getI18nString("admin.attributes.advancedtable.no.results.message"));
+		
+		add(fieldSearchTable,fieldSearchTableController.getMainPanel());
+		add(currentItemTable,currentItemTableController.getMainPanel());
 		//initialize the combo box choices
 		removeAll(dataTypeComboBox);
 		for(DataType d: DataType.values()){
@@ -213,8 +215,8 @@ public class AttributeAdministrationPanelController extends AdministrationTabPan
 		}
 	}
 	
-	public void fieldSearchTableSelectionChanged(){
-		ui.setText(fieldSearchBar, ((MedicFormField) ui.getAttachedObject(ui.getSelectedItem(fieldSearchTable))).getLabel());
+	public void fieldSearchTableSelectionChanged(Object selectedObject){
+//		ui.setText(fieldSearchBar, ((MedicFormField) selectedObject).getLabel());
 	}
 
 	/* TableActionDelegate methods */

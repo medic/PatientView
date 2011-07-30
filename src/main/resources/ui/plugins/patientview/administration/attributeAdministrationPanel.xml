@@ -19,13 +19,13 @@
             </panel>
             <label name="fieldSearchLabel" text="i18n.editdetailview.labels.add.existing.field"/>
             <textfield action="fieldSearchBarKeyPress(this.text)" name="fieldSearchBar"/>
-            <table action="fieldSearchTableSelectionChanged()" name="fieldSearchTable" weightx="1" weighty="1"/>
+            <panel name="fieldSearchTable" weightx="1" weighty="1"/>
             <button icon="/icons/add.png" action="addItemButtonPressed()" halign="center" text="i18n.editdetailview.buttons.add.item"/>
         </panel>
         <panel columns="1" gap="6" weightx="2" weighty="1">
             <panel bottom="5" columns="1" gap="6" left="5" right="5" top="5" weightx="2" weighty="1">
                 <label halign="center" text="i18n.editdetailview.labels.current.aag.items" weightx="1"/>
-                <table name="currentItemList" weightx="1" weighty="1"/>
+                <panel name="currentItemList" weightx="1" weighty="1"/>
                 <button icon="/icons/delete.png" action="removeItemButtonPressed()" halign="center" text="i18n.editdetailview.buttons.remove.item" weightx="1"/>
             </panel>
             <separator weightx="1"/>

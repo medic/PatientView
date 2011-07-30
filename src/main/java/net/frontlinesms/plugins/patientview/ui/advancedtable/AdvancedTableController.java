@@ -61,6 +61,8 @@ public class AdvancedTableController extends ViewHandler{
 	protected int sortColumn = -1;
 	protected boolean sortAscending;
 	
+	protected boolean shouldSort;
+	
 	static{
 		//initialize stuff for determining font width
 		ImageIcon icon = new ImageIcon();
@@ -87,25 +89,6 @@ public class AdvancedTableController extends ViewHandler{
 		ui.setPerform(table, "doubleClick()",null,this);
 		ui.setChoice(table, "selection", "single");
 		add(table);
-		headers = new HashMap<Class<?>, Object>();
-		methods = new Object[3][2];
-	}
-	
-	
-	/**
-	 * Constructor used when you already have the table you want to control
-	 * @param delegate
-	 * @param uiController
-	 * @param table The table you want to control
-	 */
-	public AdvancedTableController(TableActionDelegate delegate, UiGeneratorController uiController, Object table){
-		super(uiController,null);
-		this.delegate = delegate;
-		this.table = table;
-		ui.setAction(table, "tableSelectionChange()", null, this);
-		ui.setPerform(table, "doubleClick()",null,this);
-		ui.setChoice(table, "selection", "single");
-		add(this.table);
 		headers = new HashMap<Class<?>, Object>();
 		methods = new Object[3][2];
 	}

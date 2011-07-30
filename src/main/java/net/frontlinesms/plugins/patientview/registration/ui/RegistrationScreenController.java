@@ -44,11 +44,12 @@ public class RegistrationScreenController implements ThinletUiEventHandler, Tabl
 	private void init(){
 		mainPanel = uiController.loadComponentFromFile(UI_FILE_XML, this);
 		patientDao = (PatientDao) appCon.getBean("PatientDao");
-		patientTable = new AdvancedTableController(this,uiController,uiController.find(mainPanel,"resultsTable"));
+		patientTable = new AdvancedTableController(this,uiController);
 		patientTable.putHeader(Patient.class, HeaderColumn.createColumnList(new String[]{getI18nString("medic.common.labels.name"), getI18nString("thinletformfields.birthdate"), getI18nString("medic.common.labels.id"),getI18nString("medic.common.chw")},
 				 new String[]{"/icons/user.png", "/icons/cake.png", "/icons/key.png",""},
 				 new String[]{"getName", "getStringBirthdate", "getStringID","getCHWName"}));
 		PatientPanel panel = new PatientPanel(uiController,appCon,this);
+		uiController.add(uiController.find(mainPanel,"resultsTable"),patientTable.getMainPanel());
 		uiController.add(uiController.find(mainPanel,"bottomPanel"),panel.getMainPanel());
 		searchKeyPressed();
 		uiController.setText(uiController.find(mainPanel,"loginLabel"), getI18nString("login.logged.in.as")+" "+ UserSessionManager.getUserSessionManager().getCurrentUser().getName());
