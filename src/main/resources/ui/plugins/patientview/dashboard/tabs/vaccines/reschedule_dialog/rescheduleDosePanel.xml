@@ -1,0 +1,5 @@
+<panel gap="22" name="dosePanel">
+	<label name="doseNameLabel" text="" />
+	<panel name="startDatePanel"/>
+	<panel name="endDatePanel"/>
+</panel>

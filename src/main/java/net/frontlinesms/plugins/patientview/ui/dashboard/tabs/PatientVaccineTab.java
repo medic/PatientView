@@ -14,6 +14,7 @@ import net.frontlinesms.plugins.patientview.data.repository.VaccineDoseDao;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
+import net.frontlinesms.plugins.patientview.ui.dashboard.tabs.vaccine.RescheduleVaccinesDialog;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.DateField;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.FormFieldDelegate;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.TextField;
@@ -41,6 +42,7 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 	private static final String RESCHEDULE_DOSE_BUTTON = "rescheduleDoseButton";
 	private static final String ADMINISTER_DOSE_BUTTON = "adminsterDoseButton";
 	private static final String ADMINISTRATION_LOCATION_FIELD = "administrationLocationField";
+	private static final String RESCHEDULE_ALL_DOSES_BUTTON = "rescheduleAllButton";
 	
 	private static final String VACCINE_SELECT = "vaccineSelect";
 	private static final String SCHEDULE_VACCINE_BUTTON = "scheduleVaccineButton";
@@ -131,6 +133,7 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 	
 	private void updateDoseActionButtons(){
 		ScheduledDose dose = (ScheduledDose) scheduledDoseController.getCurrentlySelectedObject();
+		ui.setEnabled(ui.find(mainPanel,RESCHEDULE_ALL_DOSES_BUTTON),scheduledDoseController.getResultsSize() > 0);
 		if(ui.find(mainPanel,RESCHEDULE_DOSE_BUTTON) == null){
 			rescheduleDoseCancelled();
 		}
@@ -157,8 +160,10 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 			ui.setEnabled(ui.find(mainPanel,ADMINISTER_DOSE_BUTTON), false);
 		}
 	}
+	
+	/*Schedule Vaccine action methods */
 
-	public void scheduleVaccine(){
+	public void scheduleVaccineClicked(){
 		ui.removeAll(ui.find(mainPanel,VACCINE_LIST_BUTTON_PANEL));
 		ui.add(ui.find(mainPanel,VACCINE_LIST_BUTTON_PANEL),ui.loadComponentFromFile(SCHEDULE_VACCINE_PANEL_XML, this));
 		List<Vaccine> vaccines = vaccineDao.getUnscheduledVaccinesForPatient(patient);
@@ -190,8 +195,8 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 	public void scheduleVaccineCanceled(){
 		ui.removeAll(ui.find(mainPanel,VACCINE_LIST_BUTTON_PANEL));
 		Object panel = ui.createPanel("");
-		Object scheduleButton = ui.createButton("Schedule Vaccine", "scheduleVaccine()", null, this);
-		Object removeButton = ui.createButton("Remove Vaccine", "removeVaccine()", null, this);
+		Object scheduleButton = ui.createButton("Schedule Vaccine", "scheduleVaccineClicked()", null, this);
+		Object removeButton = ui.createButton("Remove Vaccine", "removeVaccineClicked()", null, this);
 		ui.setName(scheduleButton, SCHEDULE_VACCINE_BUTTON);
 		ui.setName(removeButton, REMOVE_VACCINE_BUTTON);
 		ui.setWeight(scheduleButton, 1, 0);
@@ -203,7 +208,9 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		populateVaccineList();
 	}
 	
-	public void removeVaccine(){
+	/* Remove vaccine action methods */
+	
+	public void removeVaccineClicked(){
 		Vaccine v = (Vaccine) ui.getAttachedObject(ui.getSelectedItem(ui.find(mainPanel,VACCINE_LIST)));
 		if(scheduledDoseDao.patientHasAdministeredDosesForVaccine(patient, v)){
 			ui.alert("You cannot remove a patient from a scheduled vaccine series once a dose has been administered");
@@ -220,7 +227,9 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		refreshDoseTable();
 	}
 	
-	public void showRescheduleDosePanel(){
+	/* Reschedule dose action methods */
+	
+	public void rescheduleDoseClicked(){
 		ui.removeAll(ui.find(mainPanel,DOSE_BUTTON_PANEL));
 		//create the basic panel
 		Object reschedulePanel = ui.loadComponentFromFile(RESCHEDULE_DOSE_PANEL_XML,this);
@@ -235,12 +244,17 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		ui.add(ui.find(mainPanel,DOSE_BUTTON_PANEL),reschedulePanel);
 	}
 	
-	public void rescheduleDoseClicked(){
+	public void rescheduleDoseConfirmed(){
 		if(VaccineScheduler.instance().doseWillViolatePreviousWindow(toBeRescheduled, rescheduledStartDateField.getRawResponse())){
 			Object dialog = ui.showConfirmationDialog("windowViolationAcknowledged()", this, "medic.vaccine.reschedule.will.violate.window");
 		}else{
 			rescheduleDose();
 		}
+	}
+	
+	public void windowViolationAcknowledged(){
+		ui.remove(ui.find(CONFIRMATION_DIALOG));
+		rescheduleDose();
 	}
 	
 	private void rescheduleDose(){
@@ -256,17 +270,20 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		refreshDoseTable();
 	}
 	
-	public void windowViolationAcknowledged(){
-		ui.remove(ui.find(CONFIRMATION_DIALOG));
-		rescheduleDose();
-	}
-	
 	public void rescheduleDoseCancelled(){
 		ui.remove(ui.find(mainPanel,DOSE_BUTTON_PANEL));
 		ui.add(ui.find(mainPanel,SCHEDULED_DOSE_PANEL),ui.loadComponentFromFile(DOSE_BUTTON_PANEL_XML, this));
 	}
 	
-	public void administerDose(){
+	/* Reschedule all doses action method */
+	
+	public void rescheduleAllDosesClicked(){
+		RescheduleVaccinesDialog dialog = new RescheduleVaccinesDialog(ui, appCon, patient,this);
+	}
+	
+	/* Administer dose action methods */
+	
+	public void administerDoseClicked(){
 		ui.removeAll(ui.find(mainPanel,DOSE_BUTTON_PANEL));
 		//create the basic panel
 		Object administerPanel = ui.loadComponentFromFile(ADMINISTER_DOSE_PANEL_XML,this);

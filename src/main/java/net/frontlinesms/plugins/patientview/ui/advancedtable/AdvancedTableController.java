@@ -343,6 +343,10 @@ public class AdvancedTableController extends ViewHandler{
 	public int getSelectedIndex(){
 		return ui.getSelectedIndex(table);
 	}
+	
+	public int getResultsSize(){
+		return results.size();
+	}
 	/**
 	 * @return The object attached to the currently selected row
 	 */

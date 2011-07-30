@@ -20,6 +20,7 @@ public abstract class TextBox<E> extends ThinletFormField<E> {
 		thinlet.add(mainPanel, textBox);
 		thinlet.setWeight(textBox,1,0);
 		thinlet.setColspan(textBox, 1);
+		thinlet.setColumns(textBox, 12);
 		thinlet.setAction(textBox, "textBoxKeyPressed(this.text)", null, this);
 	}
 

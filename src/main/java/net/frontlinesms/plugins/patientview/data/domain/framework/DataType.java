@@ -8,7 +8,6 @@ import net.frontlinesms.ui.i18n.InternationalisationUtils;
  * Should figure out a way to do this other than replicating data
  * that is already in core frontline, as many of these are already in
  * the FormFieldType enum
- *
  */
 public enum DataType { 
 		TRUNCATED_TEXT("plugins.forms.field.truncatedtext", false, null,null,"/icons/components/small/truncatedtext.png"),

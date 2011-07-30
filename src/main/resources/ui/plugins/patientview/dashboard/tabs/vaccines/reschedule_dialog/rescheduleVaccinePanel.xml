@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<panel bottom="10" columns="1" gap="5" left="10" name="vaccinePanel" right="5" weightx="1">
+        <panel columns="1" gap="2" name="vaccineHeaderPanel" weightx="1">
+            <label name="vaccineNameLabel"/>
+            <separator weightx="1"/>
+        </panel>
+        <panel name="doseContainerPanel" columns="1" gap="5"/>
+        <separator/>
+</panel>

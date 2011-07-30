@@ -34,14 +34,14 @@ public class PatientViewPluginController extends BasePluginController{
 	private PatientViewFormListener formListener; 
 	private PatientViewThinletTabController tabController;
 	private ReminderDispatcher reminderDispatch;
-	
-	/** the number of minutes to delay */
-	
+		
 	/** 
 	 * @see net.frontlinesms.plugins.BasePluginController#initThinletTab(net.frontlinesms.ui.UiGeneratorController)
 	 */
 	@Override
 	protected Object initThinletTab(UiGeneratorController uiController) {
+		System.out.println("Beginning PV Tab init");
+		long firstTime = System.currentTimeMillis();
 		tabController = new PatientViewThinletTabController(this,uiController);
 		reminderDispatch = new ReminderDispatcher(uiController, applicationContext);
 		Timer t = new Timer();
@@ -50,6 +50,8 @@ public class PatientViewPluginController extends BasePluginController{
 		System.out.println("Dispatching reminders in " + firstRunWait + " minutes");
 		t.scheduleAtFixedRate(reminderDispatch, firstRunWait * 60 * 1000 , ReminderDispatcher.INTERVAL_MINUTES * 60 * 1000);
 //		t.scheduleAtFixedRate(reminderDispatch, 1000 , 15 * 1000);
+		long lastTime = System.currentTimeMillis();
+		System.out.println("PV Tab init done after" + ((lastTime - firstTime)/1000.0) + " seconds");
 		return tabController.getTab();
 	}
 
@@ -77,6 +79,8 @@ public class PatientViewPluginController extends BasePluginController{
 	 * @see net.frontlinesms.plugins.PluginController#init(net.frontlinesms.FrontlineSMS, org.springframework.context.ApplicationContext)
 	 */
 	public void init(FrontlineSMS frontlineController, ApplicationContext applicationContext) throws PluginInitialisationException {
+		System.out.println("Beginning PV plugin init");
+		long firstTime = System.currentTimeMillis();
 		this.frontlineController = frontlineController;
 		this.applicationContext = applicationContext;
 		UserSessionManager.getUserSessionManager().init(applicationContext);
@@ -84,6 +88,8 @@ public class PatientViewPluginController extends BasePluginController{
 		messageListener = new PatientViewMessageListener(applicationContext);
 		formListener = new PatientViewFormListener(applicationContext);
 		VaccineScheduler.instance().init(applicationContext);
+		long lastTime = System.currentTimeMillis();
+		System.out.println("PV plugin init done after " + ((lastTime - firstTime)/1000.0) + " seconds");
 	}
 	
 	public void stopListening(){
