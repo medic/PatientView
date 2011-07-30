@@ -9,32 +9,32 @@ import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
 
-public class VaccineReschedulingPanel extends ViewHandler{
+public class VaccineDatePanel extends ViewHandler{
 
-	private static final String THINLET_XML = "/ui/plugins/patientview/dashboard/tabs/vaccines/reschedule_dialog/rescheduleVaccinePanel.xml";
+	private static final String THINLET_XML = "/ui/plugins/patientview/dashboard/tabs/vaccines/reschedule_dialog/vaccineDatePanel.xml";
 	
 	private List<ScheduledDose> doses;
 
-	private List<DoseReschedulingPanel> panels;
+	private List<DoseDatePanel> panels;
 	
-	public VaccineReschedulingPanel(UiGeneratorController ui, ApplicationContext appCon, List<ScheduledDose> doses) {
+	public VaccineDatePanel(UiGeneratorController ui, ApplicationContext appCon, List<ScheduledDose> doses) {
 		super(ui, appCon, THINLET_XML);
 		this.doses = doses;
-		panels = new ArrayList<DoseReschedulingPanel>();
+		panels = new ArrayList<DoseDatePanel>();
 		init();
 	}
 	
 	private void init(){
 		ui.setText(find("vaccineNameLabel"), doses.get(0).getDose().getVaccine().getName());
 		for(ScheduledDose dose: doses){
-			DoseReschedulingPanel dosePanel = new DoseReschedulingPanel(ui, appCon, dose);
+			DoseDatePanel dosePanel = new DoseDatePanel(ui, appCon, dose);
 			panels.add(dosePanel);
 			ui.add(find("doseContainerPanel"),dosePanel.getMainPanel());
 		}
 	}
 
 	public void save() throws Exception{
-		for(DoseReschedulingPanel panel: panels){
+		for(DoseDatePanel panel: panels){
 			panel.save();
 		}
 	}

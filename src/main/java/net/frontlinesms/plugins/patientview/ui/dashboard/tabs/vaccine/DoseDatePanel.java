@@ -13,15 +13,15 @@ import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
 
-public class DoseReschedulingPanel extends ViewHandler implements FormFieldDelegate{
+public class DoseDatePanel extends ViewHandler implements FormFieldDelegate{
 
-	private static final String THINLET_XML = "/ui/plugins/patientview/dashboard/tabs/vaccines/reschedule_dialog/rescheduleDosePanel.xml";
+	private static final String THINLET_XML = "/ui/plugins/patientview/dashboard/tabs/vaccines/reschedule_dialog/doseDatePanel.xml";
 	
 	ScheduledDose dose;
 	DateField startDate;
 	DateField endDate;
 	
-	public DoseReschedulingPanel(UiGeneratorController ui,ApplicationContext appCon, ScheduledDose dose) {
+	public DoseDatePanel(UiGeneratorController ui,ApplicationContext appCon, ScheduledDose dose) {
 		super(ui,appCon,THINLET_XML);
 		this.dose = dose;
 		init();
