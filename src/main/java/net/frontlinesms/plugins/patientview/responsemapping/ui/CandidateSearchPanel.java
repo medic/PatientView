@@ -70,7 +70,7 @@ public class CandidateSearchPanel implements ThinletUiEventHandler, TableActionD
 		matcher = PatientViewPluginController.getFormMatcher();
 		mainPanel = uiController.createPanel("");
 		uiController.setWeight(mainPanel,1,1);
-		candidates = matcher.getCandidatesForResponse(response);
+		candidates = matcher.getCandidatesForResponse(response,false);
 		init();
 	}
 	
@@ -112,14 +112,20 @@ public class CandidateSearchPanel implements ThinletUiEventHandler, TableActionD
 				uiController.setText(panel, getI18nString("medic.candidate.search.panel.top.candidate"));
 				uiController.setIcon(panel,"/icons/candidate.png");
 				//initialize the person panel for the top candidate
-				Candidate topCandidate = candidates.get(0);
-				PatientPanel pPanel = new PatientPanel(uiController,appCon,topCandidate.getPatient());
-				pPanel.setPanelTitle("");
-				uiController.add(uiController.find(panel,"pPanel"),pPanel.getMainPanel());
-				uiController.setAttachedObject(uiController.find(panel,"mapButton"), topCandidate.getPatient());
+				if(candidates.size() > 0){
+					Candidate topCandidate = candidates.get(0);
+					PatientPanel pPanel = new PatientPanel(uiController,appCon,topCandidate.getPatient());
+					pPanel.setPanelTitle("");
+					uiController.add(uiController.find(panel,"pPanel"),pPanel.getMainPanel());
+					uiController.setAttachedObject(uiController.find(panel,"mapButton"), topCandidate.getPatient());
+					uiController.setText(uiController.find(panel,"confidenceLabel"),getI18nString("medic.common.confidence")+ ": " + topCandidate.getConfidence());
+					this.currentlySelectedPatient = topCandidate.getPatient();
+				}else{
+					Object noCandidatesLabel = uiController.createLabel("No candidates found");
+					uiController.add(uiController.find(panel,"pPanel"),noCandidatesLabel);
+					uiController.setText(uiController.find(panel,"confidenceLabel"),"---");
+				}
 				//set the confidence label
-				uiController.setText(uiController.find(panel,"confidenceLabel"),getI18nString("medic.common.confidence")+ ": " + topCandidate.getConfidence());
-				this.currentlySelectedPatient = topCandidate.getPatient();
 			}
 			uiController.add(mainPanel,panel);
 		}else{ //if we are searching for candidates

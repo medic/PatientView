@@ -104,4 +104,12 @@ public class HibernatePatientDao extends BaseHibernateDao<Patient> implements Pa
 		DetachedCriteria c= DetachedCriteria.forClass(Patient.class);
 		return c;
 	}
+
+	public List<Patient> getAllPatients(boolean includeDeleted) {
+		DetachedCriteria criteria = getBaseCriterion();
+		if(!includeDeleted){
+			criteria.add(Restrictions.or(Restrictions.isNull("deleted"), Restrictions.eq("deleted",false)));
+		}
+		return super.getList(criteria);
+	}
 }

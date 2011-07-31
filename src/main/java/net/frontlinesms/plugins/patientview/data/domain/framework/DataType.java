@@ -88,5 +88,4 @@ public enum DataType {
 		public String getIconPath() {
 			return iconPath;
 		}
-
-	}
+}

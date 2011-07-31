@@ -35,6 +35,8 @@ public interface PatientDao {
 	 * @return all Patients saved in the data source
 	 **/
 	public List<Patient> getAllPatients();
+	
+	public List<Patient> getAllPatients(boolean includeDeleted);
 
 	/**
 	 * Returns the patients of a CHW

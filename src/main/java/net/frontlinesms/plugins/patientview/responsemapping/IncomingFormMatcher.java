@@ -166,13 +166,18 @@ public class IncomingFormMatcher implements EventObserver{
 		return levenshtein.getSimilarity(stringOne, stringTwo);
 	}
 	
-	public List<Candidate> getCandidatesForResponse(MedicFormResponse response){
+	public List<Candidate> getCandidatesForResponse(MedicFormResponse response, boolean searchAll){
 		Log.info("Attempting to map response");
-		//get the CHW that submitted the form
-		CommunityHealthWorker chw = (CommunityHealthWorker) response.getSubmitter();
-		//get the list of patients that the CHW cares for
-		ArrayList<Patient> patients = (ArrayList<Patient>) patientDao.getPatientsForCHW(chw,false);
-		ArrayList<Candidate> candidates = new ArrayList<Candidate>();
+		List<Patient> patients;
+		List<Candidate> candidates = new ArrayList<Candidate>();
+		if(!searchAll){
+			//get the CHW that submitted the form
+			CommunityHealthWorker chw = (CommunityHealthWorker) response.getSubmitter();
+			//get the list of patients that the CHW cares for
+			patients= patientDao.getPatientsForCHW(chw,false);
+		}else{
+			patients= patientDao.getAllPatients(false);
+		}
 		//iterate through all fields on the form, seeing if they are mapped to patient identifying fields
 		//e.g. Birthdate, Name, and Patient ID
 		for(Patient patient: patients){
@@ -210,6 +215,8 @@ public class IncomingFormMatcher implements EventObserver{
 		Collections.sort(candidates);
 		if (candidates.size() > 5) {
 			return candidates.subList(0, 5);
+		}else if(!searchAll && candidates.size() == 0){
+			return getCandidatesForResponse(response, true);
 		}else{
 			return candidates;
 		}
@@ -250,7 +257,7 @@ public class IncomingFormMatcher implements EventObserver{
 	 * @return
 	 */
 	public Person getFinalCandidate(MedicFormResponse response){
-		List<Candidate> candidates = getCandidatesForResponse(response);
+		List<Candidate> candidates = getCandidatesForResponse(response,false);
 		List<Candidate> finalCandidates = new ArrayList<Candidate>();
 		for(Candidate c: candidates){
 			if(c.getAverageScore()  >= 97F){
