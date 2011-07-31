@@ -16,6 +16,8 @@ public interface VaccineDao {
 	
 	public List<Vaccine> getAllVaccines();
 	
+	public List<Vaccine> getNewbornVaccines();
+	
 	public Vaccine getVaccineByName(String name);
 	
 	public List<Vaccine> findVaccineByName(String nameFragment);
