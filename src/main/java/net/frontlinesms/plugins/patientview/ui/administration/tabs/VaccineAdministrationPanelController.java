@@ -368,6 +368,11 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		int endDateDays = Integer.parseInt(ui.getText(find(END_DATE_DAYS_BOX)));
 		int minIntervalMonths = Integer.parseInt(ui.getText(find(MIN_INTERVAL_MONTHS_BOX)));
 		int minIntervalDays = Integer.parseInt(ui.getText(find(MIN_INTERVAL_DAYS_BOX)));
+		
+		if(startDateMonths > endDateMonths || (startDateMonths == endDateMonths && startDateDays >= endDateDays)){
+			ui.alert("The dose window's end date cannot be before its start date.");
+			return;
+		}
 		//if we're not currently editing a dose, create a new one
 		if(currentlyEditingDose == null){
 			getCurrentlySelectedVaccine().addDose(new VaccineDose(name,getCurrentlySelectedVaccine(),startDateMonths,startDateDays,endDateMonths,endDateDays,minIntervalMonths,minIntervalDays));
