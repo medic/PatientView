@@ -24,7 +24,7 @@ public abstract class PersonCsvValidator extends CsvValidator{
 		try {
 			while((currLine = reader.readNext()) != null){
 				lineNumber++;
-				if(currLine.length < 2) continue;
+				if(currLine.length < 3) continue;
 				//check the name
 				if(currLine[CsvColumns.NAME_INDEX] == null || currLine[CsvColumns.NAME_INDEX].equals("") ){
 					exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.blank.chw.name")));
@@ -46,9 +46,11 @@ public abstract class PersonCsvValidator extends CsvValidator{
 					exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.gender.format.error")+": \""+currLine[CsvColumns.GENDER_INDEX]+"\""));
 				}
 				//check phone number
-				String address = currLine[CsvColumns.PHONE_NUMBER_INDEX].replaceAll("[^0-9]", "");
-				if(!address.trim().equals("") && address.length() < 10){
-					exceptions.add(new CsvValidationException(lineNumber, "Phone number formatted incorrectly: \""+currLine[CsvColumns.PHONE_NUMBER_INDEX]+"\""));
+				if(currLine.length>=4){
+					String address = currLine[CsvColumns.PHONE_NUMBER_INDEX].replaceAll("[^0-9]", "");
+					if(!address.trim().equals("") && address.length() < 10){
+						exceptions.add(new CsvValidationException(lineNumber, "Phone number formatted incorrectly: \""+currLine[CsvColumns.PHONE_NUMBER_INDEX]+"\""));
+					}
 				}
 
 				doAdditionalValidation(lineNumber,currLine,exceptions);

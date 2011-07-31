@@ -6,4 +6,5 @@ public class CsvColumns {
 	public static final int GENDER_INDEX = 2;
 	public static final int PHONE_NUMBER_INDEX = 3;
 	public static final int CHW_INDEX = 4;
+	public static final int NEWBORN_INDEX = 5;
 }
