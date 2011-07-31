@@ -79,27 +79,31 @@ public class PersonAttributePanel {
 		uiController.removeAll(mainPanel);
 		for(PersonAttribute attribute: attributeDao.getAnsweredAttributesForPerson(person)){
 			PersonAttributeResponse response = attributeResponseDao.getMostRecentAttributeResponse(attribute, person);
-			DataType type = attribute.getDatatype();
-			if(type.isBoolean()){
-				String value = response.getValue().equalsIgnoreCase(InternationalisationUtils.getI18nString("datatype.true"))? type.getTrueLabel() :type.getFalseLabel();
-				uiController.add(mainPanel,getFieldDisplayPanel(value,attribute.getLabel()));
-			}else if(type == DataType.TEXT_AREA){
-				uiController.add(mainPanel,getTextAreaDisplayPanel(response.getValue(), attribute.getLabel()));
-			}else{
-				uiController.add(mainPanel,getFieldDisplayPanel(response.getValue(),attribute.getLabel()));
+			if(response.getValue()!= null && !response.getValue().equals("")){
+				DataType type = attribute.getDatatype();
+				if(type.isBoolean()){
+					String value = response.getValue().equalsIgnoreCase(InternationalisationUtils.getI18nString("datatype.true"))? type.getTrueLabel() :type.getFalseLabel();
+					uiController.add(mainPanel,getFieldDisplayPanel(value,attribute.getLabel()));
+				}else if(type == DataType.TEXT_AREA){
+					uiController.add(mainPanel,getTextAreaDisplayPanel(response.getValue(), attribute.getLabel()));
+				}else{
+					uiController.add(mainPanel,getFieldDisplayPanel(response.getValue(),attribute.getLabel()));
+				}
 			}
 		}
 		if(person instanceof Patient){
 			for(MedicFormField field: fieldDao.getAnsweredAttributePanelFieldsForPerson(person)){
 				MedicFormFieldResponse response = fieldResponseDao.getMostRecentFieldResponse(field, person);
-				DataType type = field.getDatatype();
-				if(type.isBoolean()){
-					String value = response.getValue().equalsIgnoreCase(InternationalisationUtils.getI18nString("datatype.true"))? type.getTrueLabel() :type.getFalseLabel();
-					uiController.add(mainPanel,getFieldDisplayPanel(value,field.getLabel()));
-				}else if(type == DataType.TEXT_AREA){
-					uiController.add(mainPanel,getTextAreaDisplayPanel(response.getValue(), field.getLabel()));
-				}else{
-					uiController.add(mainPanel,getFieldDisplayPanel(response.getValue(),field.getLabel()));
+					if(response.getValue()!= null && !response.getValue().equals("")){
+					DataType type = field.getDatatype();
+					if(type.isBoolean()){
+						String value = response.getValue().equalsIgnoreCase(InternationalisationUtils.getI18nString("datatype.true"))? type.getTrueLabel() :type.getFalseLabel();
+						uiController.add(mainPanel,getFieldDisplayPanel(value,field.getLabel()));
+					}else if(type == DataType.TEXT_AREA){
+						uiController.add(mainPanel,getTextAreaDisplayPanel(response.getValue(), field.getLabel()));
+					}else{
+						uiController.add(mainPanel,getFieldDisplayPanel(response.getValue(),field.getLabel()));
+					}
 				}
 			}
 		}

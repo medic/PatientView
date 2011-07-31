@@ -65,6 +65,9 @@ public class DateField extends TextBox<Date> {
 
 	@Override
 	public void validate() throws ValidationFailure{
+		if(!hasResponse()){
+			return;
+		}
 		try {
 			Date date = df.parse(this.getStringResponse());
 		} catch (Exception e) {

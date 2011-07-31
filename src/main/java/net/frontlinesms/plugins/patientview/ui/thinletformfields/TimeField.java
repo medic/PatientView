@@ -19,6 +19,9 @@ public class TimeField extends TextBox<Date> {
 	
 	@Override
 	public void validate() throws ValidationFailure{
+		if(!hasResponse()){
+			return;
+		}
 		if(getRawResponse() == null){
 			throw new ValidationFailure("\""+ getLabel().replace(":", "")+ "\" is formatted incorrectly. Please enter the time in an HH:MM format.");
 		}
