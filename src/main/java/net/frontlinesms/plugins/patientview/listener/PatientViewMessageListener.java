@@ -8,7 +8,6 @@ import net.frontlinesms.data.events.EntityUpdatedNotification;
 import net.frontlinesms.events.EventBus;
 import net.frontlinesms.events.EventObserver;
 import net.frontlinesms.events.FrontlineEventNotification;
-import net.frontlinesms.plugins.patientview.DummyDataGenerator;
 import net.frontlinesms.plugins.patientview.data.domain.people.CommunityHealthWorker;
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicMessageResponse;
 import net.frontlinesms.plugins.patientview.data.repository.CommunityHealthWorkerDao;
@@ -22,14 +21,17 @@ public class PatientViewMessageListener implements EventObserver {
 	private MedicMessageResponseDao messageDao;
 	private CommunityHealthWorkerDao chwDao;
 	private boolean listening=true;
+	private ApplicationContext appCon;
 	
 	private static Logger LOG = FrontlineUtils.getLogger(PatientViewMessageListener.class);
 	
 	public PatientViewMessageListener(ApplicationContext appCon){
+		this.appCon = appCon;
 		((EventBus) appCon.getBean("eventBus")).registerObserver(this);
 		this.messageDao = (MedicMessageResponseDao) appCon.getBean("MedicMessageResponseDao");
 		this.chwDao = (CommunityHealthWorkerDao) appCon.getBean("CHWDao");
 	}
+	
 	public void notify(FrontlineEventNotification notification) {
 		if(!listening){
 			return;
@@ -50,11 +52,16 @@ public class PatientViewMessageListener implements EventObserver {
 				}
 		}
 	}
+	
 	public void setListening(boolean listening) {
 		this.listening = listening;
 	}
 	public boolean isListening() {
 		return listening;
+	}
+	
+	public void deinit(){
+		((EventBus) appCon.getBean("eventBus")).unregisterObserver(this);
 	}
 
 }

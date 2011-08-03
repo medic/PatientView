@@ -55,7 +55,10 @@ public class IncomingFormMatcher implements EventObserver{
 	private SimpleDateFormat shortFormatter;
 	private DateFormat longFormatter;
 	
+	private ApplicationContext appCon;
+	
 	public IncomingFormMatcher(ApplicationContext appCon){
+		this.appCon = appCon;
 		vanillaFormDao = (FormDao) appCon.getBean("formDao");
 		formDao = (MedicFormDao) appCon.getBean("MedicFormDao");
 		formResponseDao = (MedicFormResponseDao) appCon.getBean("MedicFormResponseDao");
@@ -279,4 +282,7 @@ public class IncomingFormMatcher implements EventObserver{
 		}
 	}
 	
+	public void deinit(){
+		((EventBus) appCon.getBean("eventBus")).unregisterObserver(this);
+	}
 }

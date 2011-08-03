@@ -7,7 +7,6 @@ import net.frontlinesms.events.EventBus;
 import net.frontlinesms.events.EventObserver;
 import net.frontlinesms.events.FrontlineEventNotification;
 import net.frontlinesms.plugins.forms.data.domain.Form;
-import net.frontlinesms.plugins.patientview.DummyDataGenerator;
 import net.frontlinesms.plugins.patientview.data.domain.framework.DataType;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField;
@@ -24,7 +23,10 @@ public class PatientViewFormListener implements EventObserver{
 	private boolean listening = true;
 	private static Logger LOG = FrontlineUtils.getLogger(PatientViewFormListener.class);
 	
+	private ApplicationContext appCon;
+	
 	public PatientViewFormListener(ApplicationContext appCon){
+		this.appCon = appCon;
 		this.formDao = (MedicFormDao) appCon.getBean("MedicFormDao");
 		this.userDao = (UserDao) appCon.getBean("UserDao");
 		((EventBus) appCon.getBean("eventBus")).registerObserver(this);
@@ -68,5 +70,9 @@ public class PatientViewFormListener implements EventObserver{
 
 	public boolean isListening() {
 		return listening;
+	}
+	
+	public void deinit(){
+		((EventBus) appCon.getBean("eventBus")).unregisterObserver(this);
 	}
 }

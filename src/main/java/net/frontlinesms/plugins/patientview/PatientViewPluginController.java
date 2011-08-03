@@ -10,6 +10,7 @@ import net.frontlinesms.plugins.PluginInitialisationException;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.ReminderDispatcher;
 import net.frontlinesms.plugins.patientview.listener.PatientViewFormListener;
 import net.frontlinesms.plugins.patientview.listener.PatientViewMessageListener;
+import net.frontlinesms.plugins.patientview.listener.VaccineScheduleListener;
 import net.frontlinesms.plugins.patientview.responsemapping.IncomingFormMatcher;
 import net.frontlinesms.plugins.patientview.security.UserSessionManager;
 import net.frontlinesms.plugins.patientview.ui.PatientViewThinletTabController;
@@ -26,6 +27,8 @@ public class PatientViewPluginController extends BasePluginController{
 	/** the {@link FrontlineSMS} instance that this plugin is attached to */
 	private FrontlineSMS frontlineController;
 	
+	private UiGeneratorController ui;
+	
 	/** The application context used for fetching daos and other spring beans**/
 	private ApplicationContext applicationContext;
 	
@@ -34,31 +37,38 @@ public class PatientViewPluginController extends BasePluginController{
 	private PatientViewFormListener formListener; 
 	private PatientViewThinletTabController tabController;
 	private ReminderDispatcher reminderDispatch;
-		
+	private VaccineScheduleListener vaccineListener;
 	/** 
 	 * @see net.frontlinesms.plugins.BasePluginController#initThinletTab(net.frontlinesms.ui.UiGeneratorController)
 	 */
 	@Override
 	protected Object initThinletTab(UiGeneratorController uiController) {
-		System.out.println("Beginning PV Tab init");
-		long firstTime = System.currentTimeMillis();
-		tabController = new PatientViewThinletTabController(this,uiController);
-		reminderDispatch = new ReminderDispatcher(uiController, applicationContext);
+		this.ui = uiController;
+		//init the thinlet tab
+		tabController = new PatientViewThinletTabController(this,ui);
+		//start the vaccine listener
+		vaccineListener = new VaccineScheduleListener(ui);
+		//start the reminder dispatcher
+		reminderDispatch = new ReminderDispatcher(ui, applicationContext);
 		Timer t = new Timer();
 		int minutes = Calendar.getInstance().get(Calendar.MINUTE);
 		int firstRunWait = (61 - minutes) % 60;
 		System.out.println("Dispatching reminders in " + firstRunWait + " minutes");
 		t.scheduleAtFixedRate(reminderDispatch, firstRunWait * 60 * 1000 , ReminderDispatcher.INTERVAL_MINUTES * 60 * 1000);
 //		t.scheduleAtFixedRate(reminderDispatch, 1000 , 15 * 1000);
-		long lastTime = System.currentTimeMillis();
-		System.out.println("PV Tab init done after" + ((lastTime - firstTime)/1000.0) + " seconds");
 		return tabController.getTab();
 	}
 
 	/**
 	 * @see net.frontlinesms.plugins.PluginController#deinit()
 	 */
-	public void deinit() {	}
+	public void deinit() {
+		reminderDispatch.cancel();
+		vaccineListener.deinit();
+		incomingFormMatcher.deinit();
+		messageListener.deinit();
+		formListener.deinit();
+	}
 
 	/** @return {@link #frontlineController} */
 	public FrontlineSMS getFrontlineController() {
@@ -79,17 +89,14 @@ public class PatientViewPluginController extends BasePluginController{
 	 * @see net.frontlinesms.plugins.PluginController#init(net.frontlinesms.FrontlineSMS, org.springframework.context.ApplicationContext)
 	 */
 	public void init(FrontlineSMS frontlineController, ApplicationContext applicationContext) throws PluginInitialisationException {
-		System.out.println("Beginning PV plugin init");
-		long firstTime = System.currentTimeMillis();
 		this.frontlineController = frontlineController;
 		this.applicationContext = applicationContext;
+		//start some services
 		UserSessionManager.getUserSessionManager().init(applicationContext);
 		incomingFormMatcher = new IncomingFormMatcher(applicationContext);
 		messageListener = new PatientViewMessageListener(applicationContext);
 		formListener = new PatientViewFormListener(applicationContext);
 		VaccineScheduler.instance().init(applicationContext);
-		long lastTime = System.currentTimeMillis();
-		System.out.println("PV plugin init done after " + ((lastTime - firstTime)/1000.0) + " seconds");
 	}
 	
 	public void stopListening(){
