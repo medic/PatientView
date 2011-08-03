@@ -408,4 +408,9 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	public void selectionChanged(Object selectedObject) {}
 	public void doubleClickAction(Object selectedObject) {}
 	public void resultsChanged() {}
+	
+	@Override
+	public void willDisappear(){
+		addVaccineCanceled();
+	}
 }
