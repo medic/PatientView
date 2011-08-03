@@ -48,7 +48,7 @@ public class TableSorter implements Comparator<Object>{
 		}
 		//suggest a compare class if there isn't one already
 		if(compareClass == null){
-			suggestCompareClass();
+			suggestCompareClass(result1,result2);
 		}
 		//compare the results
 		int result;
@@ -67,11 +67,17 @@ public class TableSorter implements Comparator<Object>{
 		}
 	}
 	
-	private void suggestCompareClass(){
+	private void suggestCompareClass(String result1, String result2){
 		if(compareMethod.getName().toLowerCase().contains("date")){
 			compareClass = Date.class;
 		}else if(compareMethod.getName().toLowerCase().contains("id")){
-			compareClass = Integer.class;
+			try{
+				Integer.parseInt(result1);
+				Integer.parseInt(result2);
+				compareClass = Integer.class;
+			}catch(Throwable t){
+				compareClass = String.class;
+			}
 		}else{
 			compareClass = String.class;
 		}
@@ -97,7 +103,11 @@ public class TableSorter implements Comparator<Object>{
 		} catch (ParseException e) {
 			d2 = null;
 		}
-		return d1.compareTo(d2);
+		if(d1 == null || d2 == null){
+			return compareStrings(s1,s2);
+		}else{
+			return d1.compareTo(d2);
+		}
 	}
 	
 	private int compareInts(String s1, String s2){
@@ -108,6 +118,11 @@ public class TableSorter implements Comparator<Object>{
 		try{
 			i2 = Integer.parseInt(s2);
 		}catch(Exception e2){i2 = null;}
-		return i1.compareTo(i2);
+		
+		if(i1 == null || i2 == null){
+			return compareStrings(s1,s2);
+		}else{
+			return i1.compareTo(i2);
+		}
 	}
 }
