@@ -22,6 +22,7 @@ public class VaccineWindowEndedEvent extends ReminderEvent<ScheduledDose>{
 	
 	static{
 		supportedTimingOptions = new ArrayList<EventTimingOption>();
+		supportedTimingOptions.add(EventTimingOption.BEFORE);
 		supportedTimingOptions.add(EventTimingOption.AFTER);
 		supportedTimingOptions.add(EventTimingOption.DAY_OF);
 	}
