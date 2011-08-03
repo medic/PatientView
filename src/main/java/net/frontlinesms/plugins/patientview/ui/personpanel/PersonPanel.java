@@ -206,7 +206,7 @@ public abstract class PersonPanel<E extends Person> implements ThinletUiEventHan
 		}
 		// add the core fields
 		addLabelToLabelPanel(getPerson().getName());
-		addLabelToLabelPanel(getI18nString(ID_LABEL) + ": " + getPerson().getPid());
+		addLabelToLabelPanel(getI18nString(ID_LABEL) + ": " + getPerson().getStringID());
 		addLabelToLabelPanel(getPerson().getGender().toString());
 		addLabelToLabelPanel(getI18nString(BDAY_LABEL) + ": " + getPerson().getStringBirthdate());
 		//add the phone number label

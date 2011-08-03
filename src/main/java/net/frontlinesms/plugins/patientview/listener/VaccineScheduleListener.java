@@ -38,7 +38,7 @@ public class VaccineScheduleListener implements IncomingMessageListener {
 	public boolean shouldReply(String text){
 		int beforeLength = text.length();
 		int afterLength = text.replaceAll("[^0-9]", "").length();
-		return beforeLength >= 8 && (beforeLength - afterLength) < 5;
+		return beforeLength >= 8 && afterLength == 8 && (beforeLength - afterLength) < 5;
 	}
 	
 	public String getReplyForText(String message) {

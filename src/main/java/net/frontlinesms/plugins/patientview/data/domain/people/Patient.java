@@ -13,6 +13,8 @@ import javax.persistence.OneToMany;
 
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose;
 
+import org.springframework.util.StringUtils;
+
 @Entity
 @DiscriminatorValue(value = "pat")
 public class Patient extends Person {
@@ -27,11 +29,11 @@ public class Patient extends Person {
 	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY,mappedBy="patient")
 	private Set<ScheduledDose> scheduledDoses;
 	
+	private String externalId;
+	
 	/** Default constructor for Hibernate. */
 	public Patient() {}
 
-	// FIXME:make all the columns in Person.java match up to this comment with
-	// how I'm describing the nullable and stuff
 	/**
 	 * Constructor for Patient
 	 * 
@@ -63,5 +65,22 @@ public class Patient extends Person {
 
 	public void setChw(CommunityHealthWorker chw) {
 		this.chw = chw;
+	}
+
+	public void setExternalId(String externalId) {
+		this.externalId = externalId;
+	}
+
+	public String getExternalId() {
+		return externalId;
+	}
+	
+	@Override
+	public String getStringID(){
+		if(StringUtils.hasText(externalId)){
+			return externalId;
+		}else{
+			return pid+"";
+		}
 	}
 }

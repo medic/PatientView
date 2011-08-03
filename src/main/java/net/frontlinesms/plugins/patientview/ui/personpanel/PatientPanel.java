@@ -8,6 +8,7 @@ import net.frontlinesms.ui.UiGeneratorController;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.util.StringUtils;
 
 public class PatientPanel extends PersonPanel<Patient> {
 
@@ -55,7 +56,6 @@ public class PatientPanel extends PersonPanel<Patient> {
 	 */
 	@Override
 	protected void addAdditionalFields() {
-		
 		if(getPerson().getChw()!= null){
 			Object panel = uiController.createPanel("");
 			uiController.setGap(panel, 5);

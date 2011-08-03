@@ -8,7 +8,7 @@ import net.frontlinesms.ui.ExtendedThinlet;
  */
 public class TextField extends TextBox<String> {
 
-	public TextField(ExtendedThinlet thinlet, String label,FormFieldDelegate delegate) {
+	public TextField(ExtendedThinlet thinlet, String label, FormFieldDelegate delegate) {
 		super(thinlet, label, delegate);
 	}
 

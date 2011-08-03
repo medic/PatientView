@@ -43,6 +43,12 @@ public class FieldGroup implements FormFieldDelegate {
 		ui.add(mainPanel,field.getThinletPanel());
 	}
 	
+	public void insertField(ThinletFormField<?> field,int index){
+		getFormFields().add(index,field);
+		field.setDelegate(this);
+		ui.add(mainPanel, field.getThinletPanel(), index);
+	}
+	
 	public boolean validate(boolean alert){
 		for(ThinletFormField<?> field: getFormFields()){
 			try{
