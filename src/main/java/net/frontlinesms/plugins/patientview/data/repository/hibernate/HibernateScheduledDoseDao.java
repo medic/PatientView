@@ -56,7 +56,7 @@ public class HibernateScheduledDoseDao extends BaseHibernateDao<ScheduledDose> i
 	
 	public List<ScheduledDose> getScheduledDoses(Vaccine vaccine, Patient patient) {
 		DetachedCriteria c = super.getCriterion();
-		c.createCriteria("dose").add(Restrictions.eq("vaccine",vaccine));
+		if(vaccine != null) c.createCriteria("dose").add(Restrictions.eq("vaccine",vaccine));
 		if(patient != null){
 			c.add(Restrictions.eq("patient",patient));
 		}

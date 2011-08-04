@@ -10,7 +10,6 @@ import net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.Vaccine;
 import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
 import net.frontlinesms.plugins.patientview.data.repository.VaccineDao;
-import net.frontlinesms.plugins.patientview.data.repository.VaccineDoseDao;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
@@ -62,7 +61,6 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 	private Vaccine currentVaccine;
 
 	private VaccineDao vaccineDao;
-	private VaccineDoseDao doseDao;
 	private ScheduledDoseDao scheduledDoseDao;
 	
 	
@@ -78,7 +76,6 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		super(uiController, appCon);
 		//init the Daos
 		this.vaccineDao = (VaccineDao) appCon.getBean("VaccineDao");
-		this.doseDao = (VaccineDoseDao) appCon.getBean("VaccineDoseDao");
 		this.scheduledDoseDao = (ScheduledDoseDao) appCon.getBean("ScheduledDoseDao");
 		this.patient = patient;
 		//setup UI
@@ -98,23 +95,63 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		scheduledDoseController.setNoResultsMessage("No Scheduled Vaccines");
 		scheduledDoseController.setResults(new ArrayList<ScheduledDose>());
 		ui.add(ui.find(mainPanel,SCHEDULED_DOSE_TABLE_PANEL),scheduledDoseController.getMainPanel());
-		populateVaccineList();
+		populateVaccineList(null);
 		refreshDoseTable();
 	}
 	
-	public void populateVaccineList(){
+	public void populateVaccineList(Vaccine toSelect){
 		ui.removeAll(ui.find(mainPanel,VACCINE_LIST));
 		Set<Vaccine> scheduledVaccines = vaccineDao.getScheduledVaccinesForPatient(patient);
+		
+		//if there are 2 or more vaccines, add an 'all vaccines' option
+		if(scheduledVaccines.size()>=2){
+			ui.add(ui.find(mainPanel,VACCINE_LIST),ui.createListItem("All Vaccines", null));
+		}
+		int selectIndex = 0;
+		boolean foundVaccine = false;
+		//add all the vaccines to the list
 		for(Vaccine v: scheduledVaccines){
 			ui.add(ui.find(mainPanel,VACCINE_LIST),ui.createListItem(v.getName(), v));
+			if(!foundVaccine){
+				selectIndex++;
+				 if(toSelect != null && v.getVaccineId() == toSelect.getVaccineId()){
+					 foundVaccine = true;
+				 }
+			}
 		}
+		// if there are no vaccines, add a "No Vaccines" option
 		if(scheduledVaccines.size() == 0){
 			ui.add(ui.find(mainPanel,VACCINE_LIST),ui.createListItem("No Vaccines", null));
-			ui.setEnabled(ui.find(mainPanel,REMOVE_VACCINE_BUTTON), false);
+		}else{// if there are vaccines, select index 1
+			if(toSelect == null){
+				ui.setSelectedIndex(ui.find(mainPanel,VACCINE_LIST),0);
+			}else{
+				if(scheduledVaccines.size()>=2){
+					ui.setSelectedIndex(ui.find(mainPanel,VACCINE_LIST),selectIndex);
+				}else{
+					ui.setSelectedIndex(ui.find(mainPanel,VACCINE_LIST),selectIndex-1);
+				}
+			}
+		}
+		updateVaccineButtons(scheduledVaccines);
+	}
+	
+	public Vaccine getSelectedVaccine(){
+		Object selected = ui.getSelectedItem(ui.find(mainPanel,VACCINE_LIST));
+		if(selected != null){
+			return (Vaccine) ui.getAttachedObject(selected);
 		}else{
-			ui.setEnabled(ui.find(mainPanel,REMOVE_VACCINE_BUTTON), true);
-			ui.setSelectedIndex(ui.find(mainPanel,VACCINE_LIST),0);
-			
+			return null;
+		}
+	}
+	
+	public void updateVaccineButtons(Set<Vaccine> scheduledVaccines){
+		if(scheduledVaccines.size() == 0){
+			ui.setEnabled(ui.find(mainPanel,REMOVE_VACCINE_BUTTON), false);
+		}else if(getSelectedVaccine() != null){
+			ui.setEnabled(ui.find(mainPanel,REMOVE_VACCINE_BUTTON), true);			
+		}else{
+			ui.setEnabled(ui.find(mainPanel,REMOVE_VACCINE_BUTTON), false);
 		}
 		//figure out if we should enable the schedule button
 		if(vaccineDao.getUnscheduledVaccinesForPatient(patient).size() == 0){
@@ -124,10 +161,19 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		}
 	}
 	
+	public void vaccineListSelectionChanged(){
+		Set<Vaccine> scheduledVaccines = vaccineDao.getScheduledVaccinesForPatient(patient);
+		updateVaccineButtons(scheduledVaccines);
+		refreshDoseTable();
+	}
+	
 	public void refreshDoseTable(){
 		int index = scheduledDoseController.getSelectedIndex();
-		List<ScheduledDose> doses = scheduledDoseDao.getScheduledDoses(patient,null);
+		List<ScheduledDose> doses = scheduledDoseDao.getScheduledDoses(getSelectedVaccine(),patient);
 		scheduledDoseController.setResults(doses);
+		if(index >= doses.size()){
+			index = doses.size()-1;
+		}
 		scheduledDoseController.setSelected(index);
 	}
 	
@@ -188,8 +234,9 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		}else if(ui.isSelected(ui.find(FIRST_SHOT_TODAY_RADIO))){
 			scheduledDoseDao.saveScheduledDoses(VaccineScheduler.instance().scheduleVaccinesFirstDoseToday(patient,v));
 		}
-		refreshDoseTable();
 		scheduleVaccineCanceled();
+		populateVaccineList(v);
+		refreshDoseTable();
 	}
 	
 	public void scheduleVaccineCanceled(){
@@ -205,7 +252,7 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		ui.setIcon(removeButton, "/icons/delete_vaccine_large.png");
 		ui.add(ui.find(mainPanel,VACCINE_LIST_BUTTON_PANEL),scheduleButton);
 		ui.add(ui.find(mainPanel,VACCINE_LIST_BUTTON_PANEL),removeButton);
-		populateVaccineList();
+		updateVaccineButtons(vaccineDao.getScheduledVaccinesForPatient(patient));
 	}
 	
 	/* Remove vaccine action methods */
@@ -223,7 +270,7 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		ui.remove(ui.find(CONFIRMATION_DIALOG));
 		Vaccine v = (Vaccine) ui.getAttachedObject(ui.getSelectedItem(ui.find(mainPanel,VACCINE_LIST)));
 		scheduledDoseDao.deleteScheduledDosesForVaccine(v,patient);
-		populateVaccineList();
+		populateVaccineList(null);
 		refreshDoseTable();
 	}
 	
