@@ -10,17 +10,21 @@ import net.frontlinesms.plugins.patientview.importer.CsvDataImporter;
 import net.frontlinesms.plugins.patientview.importer.FormResponseDataImporter;
 import net.frontlinesms.plugins.patientview.importer.PatientDataImporter;
 import net.frontlinesms.plugins.patientview.ui.administration.AdministrationTabPanel;
+import net.frontlinesms.plugins.patientview.ui.thinletformfields.CheckBox;
+import net.frontlinesms.plugins.patientview.ui.thinletformfields.FormFieldDelegate;
+import net.frontlinesms.plugins.patientview.ui.thinletformfields.ThinletFormField;
 import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
 
 
-public class CsvImporterPanelController extends AdministrationTabPanel {
+public class CsvImporterPanelController extends AdministrationTabPanel implements FormFieldDelegate {
 
 	private Object messageList;
 	private Object dataTypeComboBox;
 	private Object fileTextField;
 	private Object additionalOptionsPanel;
+	private CheckBox ignoreHeadersBox;
 	
 	private List<CsvDataImporter> importers;
 
@@ -63,6 +67,9 @@ public class CsvImporterPanelController extends AdministrationTabPanel {
 		removeAll(infoPanel);
 		CsvDataImporter importer = ui.getAttachedObject(ui.getSelectedItem(dataTypeComboBox),CsvDataImporter.class);
 		add(additionalOptionsPanel,importer.getAdditionalOptionsPanel());
+		ignoreHeadersBox = new CheckBox(ui, "Ignore the first line of the CSV file", this);
+		
+		add(additionalOptionsPanel,ignoreHeadersBox.getThinletPanel());
 		add(infoPanel,importer.getInformationPanel());
 	}
 	
@@ -77,7 +84,7 @@ public class CsvImporterPanelController extends AdministrationTabPanel {
 	
 	public void importButtonClicked(){
 		CsvDataImporter importer = ui.getAttachedObject(ui.getSelectedItem(dataTypeComboBox), CsvDataImporter.class);
-		importer.importFile(ui.getText(fileTextField));
+		importer.importFile(ui.getText(fileTextField),ignoreHeadersBox.getRawResponse());
 	}
 	
 	public void clearLog(){
@@ -88,4 +95,5 @@ public class CsvImporterPanelController extends AdministrationTabPanel {
 		return "/icons/import_data.png";
 	}
 
+	public void formFieldChanged(ThinletFormField changedField, String newValue) {/* do nothing*/}
 }

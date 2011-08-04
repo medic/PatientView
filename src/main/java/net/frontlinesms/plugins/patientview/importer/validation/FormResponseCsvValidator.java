@@ -47,7 +47,7 @@ public class FormResponseCsvValidator extends CsvValidator{
 	}
 	
 	@Override
-	public List<CsvValidationException> validate(CSVReader reader) {
+	public List<CsvValidationException> validate(CSVReader reader, boolean ignoreHeader) {
 		int lineNumber = 0;
 		String[] currLine;
 		List<CsvValidationException> exceptions = new ArrayList<CsvValidationException>();

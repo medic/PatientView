@@ -6,7 +6,7 @@ public interface CsvDataImporter {
 	
 	public Object getInformationPanel();
 	
-	public void importFile(String path);
+	public void importFile(String path, boolean ignoreHeader);
 	
 	public String getTypeLabel();
 }

@@ -72,6 +72,7 @@ public class FormResponseDataImporter implements CsvDataImporter{
 		uiController.add(panel,uiController.createLabel(getI18nString("medic.importer.forms.remaining.columns") + " " +getI18nString("medic.importer.forms.form.response.data")));
 		return panel;
 	}
+	
 	public Object getAdditionalOptionsPanel() {
 		Object panel = uiController.createPanel("");
 		uiController.setColumns(panel,3);
@@ -94,12 +95,12 @@ public class FormResponseDataImporter implements CsvDataImporter{
 		return panel;
 	}
 
-	public void importFile(String path) {
+	public void importFile(String path, boolean ignoreHeader) {
 		//set the form for the validator
 		addMessageToList(getI18nString("medic.importer.beginning.message")+ ": " + path);
 		validator.setForm(getCurrentlySelectedForm());
 		try {
-			List<CsvValidationException> exceptions = validator.validateFile(path);
+			List<CsvValidationException> exceptions = validator.validateFile(path,ignoreHeader);
 			if(exceptions.size() != 0){
 				for(CsvValidationException e : exceptions){
 					addMessageToList(e.toString());
@@ -207,6 +208,5 @@ public class FormResponseDataImporter implements CsvDataImporter{
 	public String getTypeLabel() {
 		return "Form Responses";
 	}
-	
 }
 
