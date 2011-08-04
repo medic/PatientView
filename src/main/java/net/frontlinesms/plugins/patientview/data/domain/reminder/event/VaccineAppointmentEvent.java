@@ -68,10 +68,6 @@ public class VaccineAppointmentEvent extends ReminderEvent<ScheduledDose>{
 		return true;
 	}
 
-	public Map<String, String> getVariables() {
-		return variables;
-	}
-
 	public String getVariableValue(Patient patient, ScheduledDose context, String key) {
 		if(key.equals("{vaccine name}")){
 			return context.getDose().getVaccine().getName();

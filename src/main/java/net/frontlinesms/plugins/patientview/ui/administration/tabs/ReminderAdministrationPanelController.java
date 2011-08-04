@@ -196,10 +196,10 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 		if(!selected){
 			ui.setSelectedIndex(find(eventSelect), 0);
 		}
-		populateMessageVariables();
+		updateMessageVariables();
 	}
 	
-	private void populateMessageVariables(){
+	private void updateMessageVariables(){
 		removeAll(find(MESSAGE_VARIABLE_PANEL));
 		ReminderEvent startEvent = (ReminderEvent) ui.getAttachedObject(ui.getSelectedItem(find(FROM_EVENT_SELECT)));
 		Map<String,String> variables = startEvent.getVariables();
@@ -219,16 +219,20 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 			String insertText = messageText.substring(0, cursorIndex) + textToInsert + messageText.substring(cursorIndex);
 			ui.setText(find(MESSAGE_TEXT_AREA), insertText);
 		}
+		ui.setFocus(find(MESSAGE_TEXT_AREA));
+		ui.setCaretPosition(find(MESSAGE_TEXT_AREA), ui.getText(find(MESSAGE_TEXT_AREA)).length());
 	}
 	
 	public void fromEventOptionChanged(){
 		EventTimingOption currentOption = (EventTimingOption) ui.getAttachedObject(ui.getSelectedItem(find(FROM_DATE_OPTION_SELECT)));
 		populateDateOptionSelect(true,currentOption);
+		updateMessageVariables();
 	}
 	
 	public void toEventOptionChanged(){
 		EventTimingOption currentOption = (EventTimingOption) ui.getAttachedObject(ui.getSelectedItem(find(TO_DATE_OPTION_SELECT)));
 		populateDateOptionSelect(false,currentOption);
+		updateMessageVariables();
 	}
 
 	private void populateDateOptionSelect(boolean fromOption,EventTimingOption toSelect) {

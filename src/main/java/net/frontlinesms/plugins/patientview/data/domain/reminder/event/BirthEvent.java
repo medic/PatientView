@@ -16,6 +16,7 @@ public class BirthEvent extends ReminderEvent<Patient>{
 	
 	static{
 		supportedTimingOptions = new ArrayList<EventTimingOption>();
+		supportedTimingOptions.add(EventTimingOption.BEFORE);
 		supportedTimingOptions.add(EventTimingOption.AFTER);
 		supportedTimingOptions.add(EventTimingOption.DAY_OF);
 	}
@@ -24,7 +25,7 @@ public class BirthEvent extends ReminderEvent<Patient>{
 		super();
 	}
 	public boolean canBeEndEvent() {
-		return false;
+		return true;
 	}
 
 	public boolean canBeStartEvent() {
@@ -57,11 +58,7 @@ public class BirthEvent extends ReminderEvent<Patient>{
 		return supportedTimingOptions;
 	}
 
-	public Map<String, String> getVariables() {
-		return new HashMap<String, String>();
-	}
-
-	public String getVariableValue(Patient patient, Patient Context, String key) {
+	public String getVariableValue(Patient patient, Patient context, String key) {
 		//no variables are supported
 		return super.getVariableValue(patient, key);
 	}

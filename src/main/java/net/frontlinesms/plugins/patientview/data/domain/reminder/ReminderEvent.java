@@ -31,7 +31,9 @@ public abstract class ReminderEvent<C> {
 	
 	public abstract Calendar getDateForContext(Patient patient, C context);
 	
-	public abstract Map<String,String> getVariables();
+	public Map<String,String> getVariables(){
+		return variables;
+	}
 	
 	public String getVariableValue(Patient patient, String key){
 		if(key.equals("{patient name}")){

@@ -77,10 +77,6 @@ public class VaccineAppointmentMissedEvent extends ReminderEvent<ScheduledDose>{
 	public boolean canBeStartEvent() {
 		return true;
 	}
-	
-	public Map<String, String> getVariables() {
-		return variables;
-	}
 
 	public String getVariableValue(Patient patient, ScheduledDose context, String key) {
 		if(key.equals("{vaccine name}")){
