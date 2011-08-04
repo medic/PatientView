@@ -46,7 +46,7 @@ public class VaccineScheduleListener implements IncomingMessageListener {
 		int day, month, year;
 		try {
 			day = Integer.parseInt(message.substring(0, 2));
-			month = Integer.parseInt(message.substring(2, 4));
+			month = Integer.parseInt(message.substring(2, 4))-1;
 			year = Integer.parseInt(message.substring(4));
 		} catch (Exception e) {
 			return null;
