@@ -220,7 +220,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 			ui.setText(find(MESSAGE_TEXT_AREA), insertText);
 		}
 		ui.setFocus(find(MESSAGE_TEXT_AREA));
-		ui.setCaretPosition(find(MESSAGE_TEXT_AREA), ui.getText(find(MESSAGE_TEXT_AREA)).length());
+		ui.setCaretPosition(find(MESSAGE_TEXT_AREA), cursorIndex+textToInsert.length());
 	}
 	
 	public void fromEventOptionChanged(){

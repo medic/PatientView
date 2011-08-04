@@ -2,9 +2,7 @@ package net.frontlinesms.plugins.patientview.data.domain.reminder.impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -42,13 +40,17 @@ public class RecurringReminder extends OneTimeReminder {
 	
 	@Override
 	public String getMessageForPatient(Patient p) {
-		Map<Pair<Calendar,Calendar>,Object> windows = getWindowsWithContext(p);
+		//get all the windows for this patient
+		List<RecurringReminderWindow> windows = getWindowsWithContext(p);
+		//prepare a list for the valid windows' context objects
 		List<Object> context = new ArrayList<Object>();
-		for(Pair<Calendar,Calendar> window: windows.keySet()){
-			if(TimeUtils.windowIsOpen(window) && frequency.shouldAlert(window)){
-				context.add(windows.get(window));
+		for(RecurringReminderWindow window: windows){
+			//if the window is open and today is a reminder day, remind!
+			if(TimeUtils.windowIsOpen(window.getWindow()) && frequency.shouldAlert(window.getWindow())){
+				context.add(window.context);
 			}
 		}
+		//generate the messages
 		if(context.size() > 0){
 			return generateMessage(p, context);
 		}else{
@@ -61,14 +63,17 @@ public class RecurringReminder extends OneTimeReminder {
 	 * @param p
 	 * @return
 	 */
-	private Map<Pair<Calendar,Calendar>,Object> getWindowsWithContext(Patient p){
-		Map<Calendar,Object> startDates = getStartDatesWithContext(p);
-		Map<Pair<Calendar,Calendar>,Object> windows = new HashMap<Pair<Calendar,Calendar>, Object>();
-		for(Calendar startDate: startDates.keySet()){
-			Object context = startDates.get(startDate);
-			Calendar endDate = getEndDateForContext(p,context);
+	private List<RecurringReminderWindow> getWindowsWithContext(Patient p){
+		//get the start dates
+		List<ReminderDate> startDates = getStartDatesWithContext(p);
+		//prepare the results list
+		List<RecurringReminderWindow> windows = new ArrayList<RecurringReminderWindow>();
+		for(ReminderDate rDate: startDates){
+			//see if there is an end date for this pair's context
+			Calendar endDate = getEndDateForContext(p,rDate.context);
+			//if there is, create a new window object and store it
 			if(endDate != null){
-				windows.put(new Pair(startDate,endDate), context);
+				windows.add(new RecurringReminderWindow(rDate.date, endDate, rDate.context));
 			}
 		}
 		return windows;
@@ -81,7 +86,9 @@ public class RecurringReminder extends OneTimeReminder {
 	 * @return
 	 */
 	private Calendar getEndDateForContext(Patient patient, Object context){
+		//get the date for the supplied context
 		Calendar endDate = getEndEvent().getDateForContext(patient, context);
+		//if its not null, add the appropriate offset
 		if(endDate != null){
 			endDate.add(Calendar.MONTH, endMonths);
 			endDate.add(Calendar.DAY_OF_MONTH, endDays);

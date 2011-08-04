@@ -2,13 +2,12 @@ package net.frontlinesms.plugins.patientview.data.domain.reminder.event;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.EventTimingOption;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.ReminderEvent;
+import net.frontlinesms.plugins.patientview.data.domain.reminder.impl.ReminderDate;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose;
 import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
 
@@ -46,13 +45,13 @@ public class VaccineAppointmentMissedEvent extends ReminderEvent<ScheduledDose>{
 		return null;
 	}
 
-	public Map<Calendar, ScheduledDose> getEventDatesWithContext(Patient patient) {
+	public List<ReminderDate<ScheduledDose>> getEventDatesWithContext(Patient patient) {
 		List<ScheduledDose> doses = scheduledDoseDao.getScheduledDoses(patient, null);
-		Map<Calendar,ScheduledDose> dates = new HashMap<Calendar, ScheduledDose>();
+		List<ReminderDate<ScheduledDose>>  dates = new ArrayList<ReminderDate<ScheduledDose>>();
 		for(ScheduledDose dose:doses){
 			//TODO: figure out if this should be < or <=
 			if(dose.getWindowStartDate().compareTo(Calendar.getInstance()) < 0 && !dose.isAdministered()){
-				dates.put(dose.getWindowStartDate(),dose);
+				dates.add(new ReminderDate<ScheduledDose>(dose.getWindowStartDate(),dose));
 			}
 		}
 		return dates;

@@ -2,13 +2,12 @@ package net.frontlinesms.plugins.patientview.data.domain.reminder.event;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.EventTimingOption;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.ReminderEvent;
+import net.frontlinesms.plugins.patientview.data.domain.reminder.impl.ReminderDate;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose;
 import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
 
@@ -38,11 +37,11 @@ public class VaccineWindowEndedEvent extends ReminderEvent<ScheduledDose>{
 		return "the end of a vaccine window";
 	}
 
-	public Map<Calendar, ScheduledDose> getEventDatesWithContext(Patient patient) {
-		Map<Calendar, ScheduledDose> results = new HashMap<Calendar,ScheduledDose>();
+	public List<ReminderDate<ScheduledDose>> getEventDatesWithContext(Patient patient) {
+		List<ReminderDate<ScheduledDose>> results = new ArrayList<ReminderDate<ScheduledDose>>();
 		List<ScheduledDose> doses = scheduledDoseDao.getScheduledDoses(patient, null);
 		for(ScheduledDose dose:doses){
-				results.put(dose.getWindowEndDate(), dose);
+				results.add(new ReminderDate<ScheduledDose>(dose.getWindowEndDate(), dose));
 		}
 		return results;
 	}

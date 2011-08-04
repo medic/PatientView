@@ -2,13 +2,12 @@ package net.frontlinesms.plugins.patientview.data.domain.reminder.event;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.EventTimingOption;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.ReminderEvent;
+import net.frontlinesms.plugins.patientview.data.domain.reminder.impl.ReminderDate;
 
 public class BirthEvent extends ReminderEvent<Patient>{
 
@@ -42,11 +41,11 @@ public class BirthEvent extends ReminderEvent<Patient>{
 		return result;
 	}
 
-	public Map<Calendar, Patient> getEventDatesWithContext(Patient patient) {
-		Map<Calendar, Patient> results = new HashMap<Calendar, Patient>();
+	public List<ReminderDate<Patient>> getEventDatesWithContext(Patient patient) {
+		List<ReminderDate<Patient>> results = new ArrayList<ReminderDate<Patient>>();
 		Calendar result = Calendar.getInstance();
 		result.setTime(patient.getBirthdate());
-		results.put(result, patient);
+		results.add(new ReminderDate<Patient>(result,patient));
 		return results;
 	}
 

@@ -2,7 +2,6 @@ package net.frontlinesms.plugins.patientview.data.domain.reminder.impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -12,6 +11,7 @@ import javax.persistence.Entity;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.Reminder;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.ReminderEvent;
+import net.frontlinesms.plugins.patientview.utils.Pair;
 import net.frontlinesms.plugins.patientview.utils.TimeUtils;
 
 @Entity
@@ -31,12 +31,12 @@ public class OneTimeReminder extends Reminder{
 	}
 	
 	public String getMessageForPatient(Patient p) {
-		Map<Calendar,Object> reminderDates = getStartDatesWithContext(p);
+		List<ReminderDate> reminderDates = getStartDatesWithContext(p);
 		List<Object> context = new ArrayList<Object>();
-		for(Calendar startDate: reminderDates.keySet()){
+		for(ReminderDate rDate: reminderDates){
 			//if the date is today, remind!
-			if(TimeUtils.compareCalendars(startDate, Calendar.getInstance()) == 0){
-				context.add(reminderDates.get(startDate));
+			if(TimeUtils.compareCalendars(rDate.date, Calendar.getInstance()) == 0){
+				context.add(rDate.context);
 			}
 		}
 		if(context.size() > 0){
@@ -47,7 +47,7 @@ public class OneTimeReminder extends Reminder{
 	}
 
 	protected String generateMessage(Patient patient, List<Object> context) {
-		return insertMessageVariables(messageFormat, patient, context.get(0));
+		return insertMessageVariables(messageFormat, patient, context);
 	}
 	
 	/**
@@ -57,14 +57,14 @@ public class OneTimeReminder extends Reminder{
 	 * @param patient
 	 * @return
 	 */
-	protected Map<Calendar,Object> getStartDatesWithContext(Patient patient){
-		Map<Calendar,Object> oldStartDates = getStartEvent().getEventDatesWithContext(patient);
-		Map<Calendar,Object> newStartDates = new HashMap<Calendar, Object>();
-		for(Calendar c: oldStartDates.keySet()){
-			Calendar newCalendar = TimeUtils.cloneCalendar(c);
+	protected List<ReminderDate> getStartDatesWithContext(Patient patient){
+		List<ReminderDate> oldStartDates = getStartEvent().getEventDatesWithContext(patient);
+		List<ReminderDate> newStartDates = new ArrayList<ReminderDate>();
+		for(ReminderDate rDate: oldStartDates){
+			Calendar newCalendar = TimeUtils.cloneCalendar(rDate.date);
 			newCalendar.add(Calendar.MONTH, startMonths);
 			newCalendar.add(Calendar.DAY_OF_MONTH, startDays);
-			newStartDates.put(newCalendar, oldStartDates.get(c));
+			newStartDates.add(new ReminderDate(newCalendar, rDate.context));
 		}
 		return newStartDates;
 	}
@@ -123,13 +123,26 @@ public class OneTimeReminder extends Reminder{
 		return "One-Time";
 	}
 	
-	protected String insertMessageVariables(String message, Patient patient, Object context){
+	protected String insertMessageVariables(String message, Patient patient, List<Object> context){
+		//get all possible variables
 		Map<String,String> variables = getStartEvent().getVariables();
+		//a list to hold all the variable replacements
+		List<String> existingValues = new ArrayList<String>();
 		for(Entry<String,String> entry: variables.entrySet()){
-			String value = getStartEvent().getVariableValue(patient, context,entry.getValue());
-			String regex = entry.getValue().replace("{","\\{");
-			regex = regex.replace("}", "\\}");
-			message = message.replaceAll(regex, value);
+			String finalValue = "";
+			for(int i = 0; i < context.size(); i++){
+				String tempValue = getStartEvent().getVariableValue(patient, context.get(i),entry.getValue()).trim();
+				if(!existingValues.contains(tempValue)){
+					if(!finalValue.equals("")){
+						finalValue +=", ";
+					}
+					finalValue += tempValue;
+					existingValues.add(tempValue);
+				}
+				
+			}
+			String regex = entry.getValue().replace("{","\\{").replace("}", "\\}");
+			message = message.replaceAll(regex, finalValue);
 		}
 		return message;
 	}

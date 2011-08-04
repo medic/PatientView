@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
+import net.frontlinesms.plugins.patientview.data.domain.reminder.impl.ReminderDate;
 
 public abstract class ReminderEvent<C> {
 	
@@ -27,7 +28,7 @@ public abstract class ReminderEvent<C> {
 	
 	public abstract boolean canBeEndEvent();
 	
-	public abstract Map<Calendar,C> getEventDatesWithContext(Patient patient);
+	public abstract List<ReminderDate<C>> getEventDatesWithContext(Patient patient);
 	
 	public abstract Calendar getDateForContext(Patient patient, C context);
 	
