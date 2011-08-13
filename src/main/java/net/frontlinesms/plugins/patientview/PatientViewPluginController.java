@@ -10,8 +10,6 @@ import net.frontlinesms.plugins.PluginInitialisationException;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.ReminderDispatcher;
 import net.frontlinesms.plugins.patientview.listener.PatientViewFormListener;
 import net.frontlinesms.plugins.patientview.listener.PatientViewMessageListener;
-import net.frontlinesms.plugins.patientview.listener.StudyGroupListener;
-import net.frontlinesms.plugins.patientview.listener.VaccineScheduleListener;
 import net.frontlinesms.plugins.patientview.responsemapping.IncomingFormMatcher;
 import net.frontlinesms.plugins.patientview.security.UserSessionManager;
 import net.frontlinesms.plugins.patientview.ui.PatientViewThinletTabController;
@@ -38,8 +36,6 @@ public class PatientViewPluginController extends BasePluginController{
 	private PatientViewFormListener formListener; 
 	private PatientViewThinletTabController tabController;
 	private ReminderDispatcher reminderDispatch;
-	private VaccineScheduleListener vaccineListener;
-	private StudyGroupListener studyGroupListener;
 	/** 
 	 * @see net.frontlinesms.plugins.BasePluginController#initThinletTab(net.frontlinesms.ui.UiGeneratorController)
 	 */
@@ -48,9 +44,6 @@ public class PatientViewPluginController extends BasePluginController{
 		this.ui = uiController;
 		//init the thinlet tab
 		tabController = new PatientViewThinletTabController(this,ui);
-		//start the vaccine listener
-		vaccineListener = new VaccineScheduleListener(ui);
-		studyGroupListener= new StudyGroupListener(ui);
 		//start the reminder dispatcher
 		reminderDispatch = new ReminderDispatcher(ui, applicationContext);
 		Timer t = new Timer();
@@ -67,8 +60,6 @@ public class PatientViewPluginController extends BasePluginController{
 	 */
 	public void deinit() {
 		reminderDispatch.cancel();
-		vaccineListener.deinit();
-		studyGroupListener.deinit();
 		incomingFormMatcher.deinit();
 		messageListener.deinit();
 		formListener.deinit();
