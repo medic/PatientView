@@ -60,17 +60,17 @@ public class VaccineScheduleListener implements IncomingMessageListener {
 		// Calculate BCG, OPV, and Hep B at birth; append to string
 		response = response.append(df.format(calendar.getTime()) + " BCG, OPV, HBV. \n");
 
-		// Calculate DTP, OPV, and Hep B at 6 weeks; append to string
+		// Calculate DPT, OPV, and Hep B at 6 weeks; append to string
 		calendar.add(Calendar.WEEK_OF_YEAR, 6);
-		response = response.append(df.format(calendar.getTime()) + " DTP, OPV, HBV. \n");
+		response = response.append(df.format(calendar.getTime()) + " DPT, OPV, HBV. \n");
 
-		// Calculate DTP, OPV, and Hep B at 10 weeks; append to string
+		// Calculate DPT, OPV, and Hep B at 10 weeks; append to string
 		calendar.add(Calendar.WEEK_OF_YEAR, 4);
-		response = response.append(df.format(calendar.getTime()) + " DTP, OPV, HBV. \n");
+		response = response.append(df.format(calendar.getTime()) + " DPT, OPV, HBV. \n");
 
-		// Calculate DTP, OPV, and Hep B at 14 weeks; append to string
+		// Calculate DPT, OPV, and Hep B at 14 weeks; append to string
 		calendar.add(Calendar.WEEK_OF_YEAR, 4);
-		response = response.append(df.format(calendar.getTime()) + " DTP, OPV, HBV. \n");
+		response = response.append(df.format(calendar.getTime()) + " DPT, OPV, HBV. \n");
 
 		// Calculate MCV at 9 months; append to string
 		calendar.add(Calendar.WEEK_OF_YEAR, 22);
