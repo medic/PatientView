@@ -13,11 +13,12 @@ import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfie
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.NewbornCheckbox;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.PatientIdField;
 import net.frontlinesms.plugins.patientview.vaccine.VaccineScheduler;
+import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
 
-public class PatientFieldGroup extends PersonFieldGroup<Patient> {
+public class PatientFieldGroup extends PersonFieldGroup<Patient> implements ThinletUiEventHandler {
 
 	private PatientDao patientDao;
 	private VaccineDao vaccineDao;
@@ -59,6 +60,14 @@ public class PatientFieldGroup extends PersonFieldGroup<Patient> {
 				doseDao.saveScheduledDoses(scheduledDoses);
 			}
 		}
+		if(!isNewPersonGroup && bday.hasChanged() && vaccineDao.getScheduledVaccinesForPatient(getPerson()).size() >0){
+			ui.showConfirmationDialog("rescheduleVaccines()", this, "medic.vaccine.reschedule.confirm");
+		}
+	}
+	
+	public void rescheduleVaccines(){
+		VaccineScheduler.instance().rescheduleUnadministeredDosesFromBirth(getPerson());
+		ui.remove(ui.find("confirmDialog"));
 	}
 
 	@Override

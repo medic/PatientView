@@ -19,7 +19,7 @@ public abstract class PersonFieldGroup<P extends Person> extends FieldGroup {
 	private P person;
 	
 	protected boolean isNewPersonGroup;
-	
+	protected BirthdateField bday;
 	public PersonFieldGroup(UiGeneratorController ui, ApplicationContext appCon, FormFieldDelegate delegate, P person) {
 		super(ui, appCon, delegate);
 		this.setPerson(person);
@@ -30,7 +30,7 @@ public abstract class PersonFieldGroup<P extends Person> extends FieldGroup {
 	private void initialize(){
 		NameField name = new NameField(ui, isNewPersonGroup ? "" : getPerson().getName(),null);
 		GenderComboBox gender = new GenderComboBox(ui,isNewPersonGroup? null : getPerson().getGender(),null);
-		BirthdateField bday = new BirthdateField(ui, isNewPersonGroup? new Date() : getPerson().getBirthdate(),null);
+		bday = new BirthdateField(ui, isNewPersonGroup? new Date() : getPerson().getBirthdate(),null);
 		PhoneNumberField phoneNumber = new PhoneNumberField(ui,isNewPersonGroup? "":getPerson().getPhoneNumber(),null, appCon);
 		super.addField(name);
 		super.addField(gender);

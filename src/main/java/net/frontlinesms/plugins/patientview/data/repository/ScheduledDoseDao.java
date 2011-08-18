@@ -22,10 +22,10 @@ public interface ScheduledDoseDao {
 	public List<ScheduledDose> getAllScheduledDoses();
 	
 	public ScheduledDose getScheduledDose(long scheduledDoseId);
-	
-	public List<ScheduledDose> getScheduledDoses(Patient patient, VaccineDose dose);
-	
+		
 	public List<ScheduledDose> getScheduledDoses(Vaccine vaccine, Patient patient);
+	
+	public List<ScheduledDose> getScheduledDoses(VaccineDose dose);
 	
 	public void administerDose(ScheduledDose dose, Person administeredBy, Date dateAdministered, String placeAdministered);
 	

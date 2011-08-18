@@ -47,12 +47,6 @@ public class HibernateScheduledDoseDao extends BaseHibernateDao<ScheduledDose> i
 		return super.getUnique(c);
 	}
 
-	public List<ScheduledDose> getScheduledDoses(Patient patient, VaccineDose dose) {
-		DetachedCriteria c = super.getCriterion();
-		if(patient != null) c.add(Restrictions.eq("patient",patient));
-		if(dose != null) c.add(Restrictions.eq("dose",dose));
-		return super.getList(c);
-	}
 	
 	public List<ScheduledDose> getScheduledDoses(Vaccine vaccine, Patient patient) {
 		DetachedCriteria c = super.getCriterion();
@@ -65,6 +59,11 @@ public class HibernateScheduledDoseDao extends BaseHibernateDao<ScheduledDose> i
 		return doses;
 	}
 	
+	public List<ScheduledDose> getScheduledDoses(VaccineDose dose) {
+		DetachedCriteria c = super.getCriterion();
+		if(dose != null) c.add(Restrictions.eq("dose",dose));
+		return super.getList(c);
+	}
 
 	public void saveOrUpdateScheduledDose(ScheduledDose dose) {
 		super.getHibernateTemplate().saveOrUpdate(dose);

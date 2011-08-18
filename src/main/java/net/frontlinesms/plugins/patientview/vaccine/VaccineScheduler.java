@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.Vaccine;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.VaccineDose;
 import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
+import net.frontlinesms.plugins.patientview.data.repository.VaccineDao;
 import net.frontlinesms.plugins.patientview.utils.TimeUtils;
 
 import org.springframework.context.ApplicationContext;
@@ -20,6 +22,8 @@ import org.springframework.context.ApplicationContext;
 public class VaccineScheduler {
 
 	private ScheduledDoseDao scheduledDoseDao;
+	private VaccineDao vaccineDao;
+	
 	private static VaccineScheduler instance;
 	
 	public static VaccineScheduler instance(){
@@ -31,6 +35,7 @@ public class VaccineScheduler {
 	
 	public void init(ApplicationContext appCon){
 		this.scheduledDoseDao = (ScheduledDoseDao) appCon.getBean("ScheduledDoseDao");
+		this.vaccineDao = (VaccineDao) appCon.getBean("VaccineDao");
 	}
 	
 	public List<ScheduledDose> scheduleVaccinesFromBirth(Patient patient, Vaccine vaccine){
@@ -159,6 +164,32 @@ public class VaccineScheduler {
 			previousDose = dose;
 		}
 		return doses;
+	}
+	
+	public void rescheduleUnadministeredDosesFromBirth(Patient patient){
+		Set<Vaccine> vaccines = vaccineDao.getScheduledVaccinesForPatient(patient);
+		for(Vaccine v: vaccines){
+			List<ScheduledDose> doses= scheduledDoseDao.getScheduledDoses(v, patient);
+			for(ScheduledDose dose:doses){
+				if(!dose.isAdministered()){
+					scheduleDoseFromBirth(dose,patient);
+					scheduledDoseDao.saveOrUpdateScheduledDose(dose);
+				}
+			}
+		}
+	}
+	
+	private void scheduleDoseFromBirth(ScheduledDose dose, Patient patient){
+		Calendar aptDate = Calendar.getInstance();
+		aptDate.setTime(patient.getBirthdate());
+		aptDate.add(Calendar.MONTH, dose.getDose().getStartDateMonths());
+		aptDate.add(Calendar.DAY_OF_MONTH, dose.getDose().getStartDateDays());
+		dose.setWindowStartDate(aptDate);
+		Calendar endDate = Calendar.getInstance();
+		endDate.setTime(patient.getBirthdate());
+		endDate.add(Calendar.MONTH, dose.getDose().getEndDateMonths());
+		endDate.add(Calendar.DAY_OF_MONTH, dose.getDose().getEndDateDays());
+		dose.setWindowEndDate(endDate);
 	}
 	
 	private List<ScheduledDose> getDosesAfterDose(ScheduledDose dose){

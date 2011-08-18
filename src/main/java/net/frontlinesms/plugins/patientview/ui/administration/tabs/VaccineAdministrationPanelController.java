@@ -331,7 +331,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	 * the dose.
 	 */
 	public void removeDose(){
-		if(scheduledDoseDao.getScheduledDoses(null, (VaccineDose) doseTableController.getCurrentlySelectedObject()).size() != 0){
+		if(scheduledDoseDao.getScheduledDoses((VaccineDose) doseTableController.getCurrentlySelectedObject()).size() != 0){
 			ui.alert("You cannot delete a dose that has appointments scheduled.");
 		}else{
 			ui.showConfirmationDialog("removeDoseConfirmed()", this,"medic.vaccine.dose.confirm.delete");

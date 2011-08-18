@@ -39,7 +39,7 @@ public class VaccineWindowEndedEvent extends ReminderEvent<ScheduledDose>{
 
 	public List<ReminderDate<ScheduledDose>> getEventDatesWithContext(Patient patient) {
 		List<ReminderDate<ScheduledDose>> results = new ArrayList<ReminderDate<ScheduledDose>>();
-		List<ScheduledDose> doses = scheduledDoseDao.getScheduledDoses(patient, null);
+		List<ScheduledDose> doses = scheduledDoseDao.getScheduledDoses(null, patient);
 		for(ScheduledDose dose:doses){
 				results.add(new ReminderDate<ScheduledDose>(dose.getWindowEndDate(), dose));
 		}

@@ -46,7 +46,7 @@ public class VaccineAppointmentMissedEvent extends ReminderEvent<ScheduledDose>{
 	}
 
 	public List<ReminderDate<ScheduledDose>> getEventDatesWithContext(Patient patient) {
-		List<ScheduledDose> doses = scheduledDoseDao.getScheduledDoses(patient, null);
+		List<ScheduledDose> doses = scheduledDoseDao.getScheduledDoses(null, patient);
 		List<ReminderDate<ScheduledDose>>  dates = new ArrayList<ReminderDate<ScheduledDose>>();
 		for(ScheduledDose dose:doses){
 			//TODO: figure out if this should be < or <=
