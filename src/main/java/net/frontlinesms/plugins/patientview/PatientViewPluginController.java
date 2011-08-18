@@ -54,11 +54,11 @@ public class PatientViewPluginController extends BasePluginController{
 		//start the reminder dispatcher
 		reminderDispatch = new ReminderDispatcher(ui, applicationContext);
 		Timer t = new Timer();
-//		int minutes = Calendar.getInstance().get(Calendar.MINUTE);
-//		int firstRunWait = (61 - minutes) % 60;
-//		System.out.println("Dispatching reminders in " + firstRunWait + " minutes");
-//		t.scheduleAtFixedRate(reminderDispatch, firstRunWait * 60 * 1000 , ReminderDispatcher.INTERVAL_MINUTES * 60 * 1000);
-		t.scheduleAtFixedRate(reminderDispatch, 1000, 15 * 1000);
+		int minutes = Calendar.getInstance().get(Calendar.MINUTE);
+		int firstRunWait = (61 - minutes) % 60;
+		System.out.println("Dispatching reminders in " + firstRunWait + " minutes");
+		t.scheduleAtFixedRate(reminderDispatch, firstRunWait * 60 * 1000 , ReminderDispatcher.INTERVAL_MINUTES * 60 * 1000);
+//		t.scheduleAtFixedRate(reminderDispatch, 1000, 15 * 1000);
 		return tabController.getTab();
 	}
 

@@ -346,17 +346,22 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		ui.add(ui.find(mainPanel,DOSE_BUTTON_PANEL),administerPanel);
 	}
 	
-	public void administerDoseConfirmed(String forceString){
-		boolean force = Boolean.parseBoolean(forceString);
-		if(force){
+	public void administerDoseConfirmed(String forceWindowString, String forceFutureString){
+		boolean forceWindow = Boolean.parseBoolean(forceWindowString);
+		boolean forceFuture = Boolean.parseBoolean(forceFutureString);
+		if(forceWindow || forceFuture){
 			ui.remove(ui.find(CONFIRMATION_DIALOG));
 		}
 		Calendar windowStart = toBeAdministered.getWindowStartDate();
 		Calendar windowEnd = toBeAdministered.getWindowEndDate();
 		Calendar adminDate = Calendar.getInstance();
 		adminDate.setTime(administeredDateField.getRawResponse());
-		if(!force && (TimeUtils.compareCalendars(adminDate, windowStart) < 0 || TimeUtils.compareCalendars(adminDate, windowEnd) > 0)){
-			ui.showConfirmationDialog("administerDoseConfirmed('true')", this, "medic.vaccine.administer.confirm");
+		if(!forceWindow && (TimeUtils.compareCalendars(adminDate, windowStart) < 0 || TimeUtils.compareCalendars(adminDate, windowEnd) > 0)){
+			ui.showConfirmationDialog("administerDoseConfirmed('true','" + forceFutureString + "')", this, "medic.vaccine.administer.confirm");
+			return;
+		}
+		if(!forceFuture && TimeUtils.compareCalendars(adminDate, Calendar.getInstance()) > 0){
+			ui.showConfirmationDialog("administerDoseConfirmed('"+ forceWindowString +"','true')", this, "medic.vaccine.administer.future.confirm");
 			return;
 		}
 		scheduledDoseDao.administerDose(toBeAdministered, null,administeredDateField.getRawResponse(),placeAdministeredField.getRawResponse());
