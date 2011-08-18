@@ -1,6 +1,7 @@
 package net.frontlinesms.plugins.patientview.ui.dashboard.tabs;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -18,6 +19,7 @@ import net.frontlinesms.plugins.patientview.ui.thinletformfields.DateField;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.FormFieldDelegate;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.TextField;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.ThinletFormField;
+import net.frontlinesms.plugins.patientview.utils.TimeUtils;
 import net.frontlinesms.plugins.patientview.vaccine.VaccineScheduler;
 import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
@@ -344,7 +346,19 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		ui.add(ui.find(mainPanel,DOSE_BUTTON_PANEL),administerPanel);
 	}
 	
-	public void administerDoseConfirmed(){
+	public void administerDoseConfirmed(String forceString){
+		boolean force = Boolean.parseBoolean(forceString);
+		if(force){
+			ui.remove(ui.find(CONFIRMATION_DIALOG));
+		}
+		Calendar windowStart = toBeAdministered.getWindowStartDate();
+		Calendar windowEnd = toBeAdministered.getWindowEndDate();
+		Calendar adminDate = Calendar.getInstance();
+		adminDate.setTime(administeredDateField.getRawResponse());
+		if(!force && (TimeUtils.compareCalendars(adminDate, windowStart) < 0 || TimeUtils.compareCalendars(adminDate, windowEnd) > 0)){
+			ui.showConfirmationDialog("administerDoseConfirmed('true')", this, "medic.vaccine.administer.confirm");
+			return;
+		}
 		scheduledDoseDao.administerDose(toBeAdministered, null,administeredDateField.getRawResponse(),placeAdministeredField.getRawResponse());
 		List<ScheduledDose> doses = VaccineScheduler.instance().rescheduleRemainingDoses(toBeAdministered);
 		scheduledDoseDao.saveScheduledDoses(doses);
