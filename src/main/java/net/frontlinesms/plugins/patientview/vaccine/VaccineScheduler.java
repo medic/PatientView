@@ -216,6 +216,9 @@ public class VaccineScheduler {
 			}
 		}
 		if(previousDose == null) return false;
+		Calendar propCal = Calendar.getInstance();
+		propCal.setTime(proposedDate);
+		if(TimeUtils.compareCalendars(previousDose.getWindowEndDate(), propCal)>0) return true;
 		if(!previousDose.isAdministered()) return false;
 		//get the absolute earliest date that the dose could be scheduled
 		Calendar administrationDate = previousDose.getDateAdministered();

@@ -293,16 +293,42 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		ui.add(ui.find(mainPanel,DOSE_BUTTON_PANEL),reschedulePanel);
 	}
 	
-	public void rescheduleDoseConfirmed(){
-		if(VaccineScheduler.instance().doseWillViolatePreviousWindow(toBeRescheduled, rescheduledStartDateField.getRawResponse())){
-			Object dialog = ui.showConfirmationDialog("windowViolationAcknowledged()", this, "medic.vaccine.reschedule.will.violate.window");
-		}else{
-			rescheduleDose();
+	public void rescheduleDoseConfirmed(String forceWindowString, String forceStartString, String forceEndString){
+		//parse the booleans
+		boolean forceWindow = Boolean.parseBoolean(forceWindowString);
+		boolean forceStart= Boolean.parseBoolean(forceStartString);
+		boolean forceEnd = Boolean.parseBoolean(forceEndString);
+		if(forceWindow || forceStart || forceEnd){
+			ui.remove(ui.find(CONFIRMATION_DIALOG));
 		}
-	}
-	
-	public void windowViolationAcknowledged(){
-		ui.remove(ui.find(CONFIRMATION_DIALOG));
+		//check the birthdate
+		Calendar propDate = Calendar.getInstance();
+		propDate.setTime(rescheduledStartDateField.getRawResponse());
+		Calendar bDate = Calendar.getInstance();
+		bDate.setTime(patient.getBirthdate());
+		if(TimeUtils.compareCalendars(propDate,bDate)<0){
+			ui.alert("You cannot schedule a vaccine dose before the patient was born.");
+			return;
+		}
+		//check the previous window
+		if(!forceWindow && VaccineScheduler.instance().doseWillViolatePreviousWindow(toBeRescheduled, rescheduledStartDateField.getRawResponse())){
+			ui.showConfirmationDialog("rescheduleDoseConfirmed('true','"+forceStart+"','"+forceEnd+"')", this, "medic.vaccine.reschedule.will.violate.window");
+			return;
+		}
+		Calendar startDate = TimeUtils.cloneCalendar(bDate);
+		startDate.add(Calendar.DAY_OF_MONTH, toBeRescheduled.getDose().getStartDateDays());
+		startDate.add(Calendar.MONTH, toBeRescheduled.getDose().getStartDateMonths());
+		Calendar endDate = TimeUtils.cloneCalendar(bDate);
+		endDate.add(Calendar.DAY_OF_MONTH, toBeRescheduled.getDose().getEndDateDays());
+		endDate.add(Calendar.MONTH, toBeRescheduled.getDose().getEndDateMonths());
+		if(!forceStart && TimeUtils.compareCalendars(startDate, propDate)>0){
+			ui.showConfirmationDialog("rescheduleDoseConfirmed('"+forceWindow+"','true','"+forceEnd+"')", this, "medic.dose.reschedule.before.start");
+			return;
+		}
+		if(!forceEnd && TimeUtils.compareCalendars(endDate, propDate)<0){
+			ui.showConfirmationDialog("rescheduleDoseConfirmed('"+forceWindow+"','"+forceStart+"','true')", this, "medic.dose.reschedule.after.end");
+			return;
+		}
 		rescheduleDose();
 	}
 	
