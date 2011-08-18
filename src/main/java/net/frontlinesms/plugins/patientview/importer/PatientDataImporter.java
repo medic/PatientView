@@ -62,7 +62,7 @@ public class PatientDataImporter extends PersonDataImporter {
 		ui.add(panel, ui.createLabel(getI18nString("medic.importer.labels.column")+ " 3: " + patient + " " + getI18nString("simplesearch.fields.gender") + " ("+ getI18nString("medic.common.male") + ", "+ getI18nString("medic.common.female") + ", or "+ getI18nString("medic.common.transgender") + ")"));
 		ui.add(panel, ui.createLabel(getI18nString("medic.importer.labels.column")+ " 4: " + patient + " " + getI18nString("medic.importer.formatting.info.phone.number")));
 		ui.add(panel, ui.createLabel(getI18nString("medic.importer.labels.column")+ " 5: " + getI18nString("medic.importer.patient.chw.info")));
-		ui.add(panel, ui.createLabel(getI18nString("medic.importer.labels.column")+ " 6: " + "Enroll the patient in vaccines for newborns? (yes/no, optional, default no)"));
+		ui.add(panel, ui.createLabel(getI18nString("medic.importer.labels.column")+ " 6: " + "Enroll the patient in vaccines for newborns? (true/false, optional, default false)"));
 		ui.add(panel, ui.createLabel(getI18nString("medic.importer.labels.column")+ " 7: " + "Patient ID number (optional, defaults to database ID)"));
 		return panel;
 	}
