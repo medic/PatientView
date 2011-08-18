@@ -52,7 +52,7 @@ public class VaccineScheduleListener implements IncomingMessageListener {
 			return null;
 		}
 		//don't respond to pre-2005 dates
-		if(year < 2005) return "The year of birth must be 2005 or later";
+		if(year < 2005) return "Kshaminchandi, ee system 2005 kanna mundu tedheelanu angeekarinchadu.";
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(year, month, day);
