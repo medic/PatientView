@@ -51,6 +51,8 @@ public class VaccineScheduleListener implements IncomingMessageListener {
 		} catch (Exception e) {
 			return null;
 		}
+		//don't respond to pre-2005 dates
+		if(year < 2005) return "The year of birth must be 2005 or later";
 
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(year, month, day);
