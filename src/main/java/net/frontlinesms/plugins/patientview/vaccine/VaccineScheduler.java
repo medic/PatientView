@@ -216,20 +216,11 @@ public class VaccineScheduler {
 			}
 		}
 		if(previousDose == null) return false;
-		Calendar propCal = Calendar.getInstance();
-		propCal.setTime(proposedDate);
-		if(TimeUtils.compareCalendars(previousDose.getWindowEndDate(), propCal)>0) return true;
-		if(!previousDose.isAdministered()) return false;
-		//get the absolute earliest date that the dose could be scheduled
-		Calendar administrationDate = previousDose.getDateAdministered();
-		administrationDate.add(Calendar.MONTH, previousDose.getDose().getMinIntervalMonths());
-		administrationDate.add(Calendar.DAY_OF_MONTH, previousDose.getDose().getMinIntervalDays());
+		Calendar apptDate = previousDose.getWindowStartDate();
+		apptDate.add(Calendar.MONTH, previousDose.getDose().getMinIntervalMonths());
+		apptDate.add(Calendar.DAY_OF_MONTH, previousDose.getDose().getMinIntervalDays());
 		Calendar proposedCal = Calendar.getInstance();
 		proposedCal.setTime(proposedDate);
-		if(TimeUtils.compareCalendars(administrationDate, proposedCal)>-1){
-			return true;
-		}else{
-			return false;
-		}
+		return TimeUtils.compareCalendars(apptDate, proposedCal) > -1;
 	}
 }
