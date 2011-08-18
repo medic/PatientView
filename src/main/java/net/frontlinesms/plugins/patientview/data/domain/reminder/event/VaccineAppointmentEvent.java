@@ -3,19 +3,23 @@ package net.frontlinesms.plugins.patientview.data.domain.reminder.event;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
 
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.EventTimingOption;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.ReminderEvent;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.impl.ReminderDate;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose;
+import net.frontlinesms.plugins.patientview.data.domain.vaccine.Vaccine;
 import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
+import net.frontlinesms.plugins.patientview.data.repository.VaccineDao;
 
 import org.springframework.context.ApplicationContext;
 
 public class VaccineAppointmentEvent extends ReminderEvent<ScheduledDose>{
 
 	private ScheduledDoseDao scheduledDoseDao;
+	private VaccineDao vaccineDao;
 	
 	public static final List<EventTimingOption> supportedTimingOptions;
 	
@@ -24,12 +28,12 @@ public class VaccineAppointmentEvent extends ReminderEvent<ScheduledDose>{
 		supportedTimingOptions.add(EventTimingOption.BEFORE);
 		supportedTimingOptions.add(EventTimingOption.AFTER);
 		supportedTimingOptions.add(EventTimingOption.DAY_OF);
-		
 	}
 
 	public VaccineAppointmentEvent(ApplicationContext appCon){
 		super();
 		this.scheduledDoseDao = (ScheduledDoseDao) appCon.getBean("ScheduledDoseDao");
+		this.vaccineDao = (VaccineDao) appCon.getBean("VaccineDao");
 		variables.put("Vaccine Name", "{vaccine name}");
 		variables.put("Appointment Date", "{appointment date}");
 	}
@@ -43,10 +47,19 @@ public class VaccineAppointmentEvent extends ReminderEvent<ScheduledDose>{
 	}
 
 	public List<ReminderDate<ScheduledDose>> getEventDatesWithContext(Patient patient) {
-		List<ScheduledDose> doses = scheduledDoseDao.getScheduledDoses(null, patient);
+		Set<Vaccine> vaccines = vaccineDao.getScheduledVaccinesForPatient(patient);
 		List<ReminderDate<ScheduledDose>> dates = new ArrayList<ReminderDate<ScheduledDose>>();
-		for(ScheduledDose dose:doses){
-			dates.add(new ReminderDate<ScheduledDose>(dose.getWindowStartDate(),dose));
+		//for each of the patient's vaccines
+		for(Vaccine vaccine: vaccines){
+			List<ScheduledDose> doses = scheduledDoseDao.getScheduledDoses(vaccine, patient);
+			for(ScheduledDose dose:doses){
+				if(dose.isAdministered()){
+					dates.add(new ReminderDate<ScheduledDose>(dose.getWindowStartDate(), dose));
+				}else{
+					dates.add(new ReminderDate<ScheduledDose>(dose.getWindowStartDate(), dose));
+					break;
+				}
+			}
 		}
 		return dates;
 	}
