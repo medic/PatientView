@@ -284,7 +284,7 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		toBeRescheduled = (ScheduledDose) scheduledDoseController.getCurrentlySelectedObject();
 		//setup the date fields
 		rescheduledStartDateField = new DateField(ui, "Date Scheduled", this,false);
-		rescheduledStartDateField.setRawResponse(toBeRescheduled.getWindowStartDate().getTime());
+		rescheduledStartDateField.setRawResponse(toBeRescheduled.getWindowStartDate());
 		//add the date fields to the UI
 		ui.add(ui.find(reschedulePanel,RESCHEDULE_DOSE_DATE_SCHEDULED_PANEL),rescheduledStartDateField.getThinletPanel());
 		//add the panel to the UI
@@ -337,7 +337,7 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		//get the currently selected dose
 		toBeAdministered = (ScheduledDose) scheduledDoseController.getCurrentlySelectedObject();
 		administeredDateField = new DateField(ui,"Date Administered",this,false);
-		administeredDateField.setRawResponse(new Date());
+		administeredDateField.setRawResponse(new Date().getTime());
 		ui.add(ui.find(administerPanel,"administerDatePanel"),administeredDateField.getThinletPanel());
 		placeAdministeredField = new TextField(ui,"Place Administered",this);
 		ui.add(ui.find(administerPanel,"administerDatePanel"),placeAdministeredField.getThinletPanel());

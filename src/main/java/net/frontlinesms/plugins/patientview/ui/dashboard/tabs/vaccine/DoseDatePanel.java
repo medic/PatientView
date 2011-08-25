@@ -30,9 +30,9 @@ public class DoseDatePanel extends ViewHandler implements FormFieldDelegate{
 	private void init(){
 		ui.setText(find("doseNameLabel"),dose.getDoseName());
 		startDate = new DateField(ui, "", this,false);
-		startDate.setRawResponse(dose.getWindowStartDate().getTime());
+		startDate.setRawResponse(dose.getWindowStartDate());
 		endDate = new DateField(ui, "", this,false);
-		endDate.setRawResponse(dose.getWindowEndDate().getTime());
+		endDate.setRawResponse(dose.getWindowEndDate());
 		if(dose.isAdministered()){
 			ui.setEnabledRecursively(startDate.getThinletPanel(), false);
 			ui.setEnabledRecursively(endDate.getThinletPanel(), false);
@@ -43,14 +43,14 @@ public class DoseDatePanel extends ViewHandler implements FormFieldDelegate{
 	
 	public void save() throws Exception{
 		Calendar start = Calendar.getInstance();
-		start.setTime(startDate.getRawResponse());
+		start.setTimeInMillis(startDate.getRawResponse());
 		Calendar end = Calendar.getInstance();
-		end.setTime(endDate.getRawResponse());
+		end.setTimeInMillis(endDate.getRawResponse());
 		if(TimeUtils.compareCalendars(start, end) > -1){
 			throw new Exception("The start date of " + dose.getDoseName()+ " is later than the end date.");
 		}
-		dose.setWindowStartDate(start);
-		dose.setWindowEndDate(end);
+		dose.setWindowStartDate(start.getTimeInMillis());
+		dose.setWindowEndDate(end.getTimeInMillis());
 		((ScheduledDoseDao) appCon.getBean("ScheduledDoseDao")).saveOrUpdateScheduledDose(dose);
 	}
 

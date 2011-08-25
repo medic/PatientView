@@ -73,6 +73,10 @@ implements ThinletUiEventHandler {
 				addMessageToList("Error parsing file");
 				addMessageToList(e.toString());
 				return;
+			} catch (Exception e){
+				addMessageToList("Error parsing file");
+				addMessageToList(e.toString());
+				return;
 			}
 			for(CommunityHealthWorker chw: chws){
 				chwDao.saveCommunityHealthWorker(chw);
@@ -101,9 +105,9 @@ implements ThinletUiEventHandler {
 				phoneNumber = parsePhoneNumber(currLine[CsvColumns.PHONE_NUMBER_INDEX]);
 			}
 			Gender gender = parseGender(currLine[CsvColumns.GENDER_INDEX]);
-			Date birthdate = InternationalisationUtils.getDateFormat().parse(currLine[CsvColumns.BDAY_INDEX]);
+			long birthdate = InternationalisationUtils.getDateFormat().parseMillis(currLine[CsvColumns.BDAY_INDEX]);
 			//create the new CHW
-			CommunityHealthWorker chw = new CommunityHealthWorker(name,phoneNumber, gender,birthdate.getTime());
+			CommunityHealthWorker chw = new CommunityHealthWorker(name,phoneNumber, gender,birthdate);
 			//save the CHW
 			chws.add(chw);
 		}

@@ -172,7 +172,7 @@ public class VaccineScheduler {
 		return doses.subList(i+1, doses.size());
 	}
 	
-	public boolean doseWillViolatePreviousWindow(ScheduledDose dose, Date proposedDate){
+	public boolean doseWillViolatePreviousWindow(ScheduledDose dose, long proposedDate){
 		//if it's the first dose in the series, return false
 		if(dose.getDose().getPosition() == 0) return false;
 		//get the previous dose
@@ -191,7 +191,7 @@ public class VaccineScheduler {
 		administrationDate.add(Calendar.MONTH, previousDose.getDose().getMinIntervalMonths());
 		administrationDate.add(Calendar.DAY_OF_MONTH, previousDose.getDose().getMinIntervalDays());
 		Calendar proposedCal = Calendar.getInstance();
-		proposedCal.setTime(proposedDate);
+		proposedCal.setTimeInMillis(proposedDate);
 		if(TimeUtils.compareCalendars(administrationDate, proposedCal)>-1){
 			return true;
 		}else{

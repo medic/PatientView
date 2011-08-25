@@ -117,7 +117,7 @@ public class FormResponseTab<P extends Person> extends TabController implements 
 	public void resultsChanged() {}
 
 	public void formFieldChanged(ThinletFormField changedField, String newValue) {
-		resultSet.setAroundDate(((DateField) changedField).getRawResponse());
+		resultSet.setAroundDate(new Date(((DateField) changedField).getRawResponse()));
 		formResponseTable.updateTable();
 	}
 	

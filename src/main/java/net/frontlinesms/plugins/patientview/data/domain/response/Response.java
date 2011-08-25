@@ -76,8 +76,7 @@ public abstract class Response extends Deletable{
 	}
 	
 	public String getStringDateSubmitted(){
-		DateFormat df = InternationalisationUtils.getDateFormat();
-		return df.format(getDateSubmitted());
+		return InternationalisationUtils.getDateFormat().print(getDateSubmitted());
 	}
 
 	public long getDateSubmitted() {

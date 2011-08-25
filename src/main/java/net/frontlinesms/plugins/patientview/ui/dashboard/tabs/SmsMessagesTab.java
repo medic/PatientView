@@ -1,12 +1,15 @@
 package net.frontlinesms.plugins.patientview.ui.dashboard.tabs;
 
 import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
+
+import java.util.Date;
+
 import net.frontlinesms.plugins.patientview.data.domain.people.CommunityHealthWorker;
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicMessageResponse;
 import net.frontlinesms.plugins.patientview.search.impl.SmsMessageResultSet;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedAdvancedTableController;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.CheckBox;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.DateField;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.FormFieldDelegate;
@@ -85,7 +88,7 @@ public class SmsMessagesTab extends TabController implements TableActionDelegate
 
 	public void formFieldChanged(ThinletFormField changedField, String newValue) {
 		if(changedField instanceof DateField){
-			resultSet.setAroundDate(((DateField) changedField).getRawResponse());
+			resultSet.setAroundDate(new Date(((DateField) changedField).getRawResponse()));
 		}else if(changedField instanceof TextField){
 			resultSet.setContentSearchString(newValue);
 		}else if(changedField.getLabel().equalsIgnoreCase(getI18nString("medic.common.sent.to"))){

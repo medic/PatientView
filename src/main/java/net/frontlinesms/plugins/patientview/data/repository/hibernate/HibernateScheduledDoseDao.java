@@ -21,7 +21,7 @@ public class HibernateScheduledDoseDao extends BaseHibernateDao<ScheduledDose> i
 		super(ScheduledDose.class);
 	}
 	
-	public void administerDose(ScheduledDose dose, Person administeredBy, Date dateAdministered,String placeAdministered) {
+	public void administerDose(ScheduledDose dose, Person administeredBy, Long dateAdministered,String placeAdministered) {
 		dose.administer(administeredBy,dateAdministered, placeAdministered);
 		saveOrUpdateScheduledDose(dose);
 	}

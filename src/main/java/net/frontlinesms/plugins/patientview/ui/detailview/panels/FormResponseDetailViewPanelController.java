@@ -1,6 +1,5 @@
 package net.frontlinesms.plugins.patientview.ui.detailview.panels;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -15,6 +14,7 @@ import net.frontlinesms.plugins.patientview.ui.detailview.DetailViewPanelControl
 import net.frontlinesms.ui.UiGeneratorController;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.context.ApplicationContext;
 
 import thinlet.Thinlet;
@@ -50,8 +50,8 @@ public class FormResponseDetailViewPanelController extends DetailViewPanelContro
 		}catch(Exception e){
 			submitter = "Submitted by "+ getI18nString("medic.common.labels.unknown");
 		}
-		DateFormat df = InternationalisationUtils.getDateFormat();
-		String date = df.format(response.getDateSubmitted());
+		DateTimeFormatter df = InternationalisationUtils.getDateFormat();
+		String date = df.print(response.getDateSubmitted());
 		ui.setText(find("nameLabel"),  form);
 		ui.setText(find("submitterLabel"),  submitter);
 		ui.setText(find("dateSubmittedLabel"),  date);

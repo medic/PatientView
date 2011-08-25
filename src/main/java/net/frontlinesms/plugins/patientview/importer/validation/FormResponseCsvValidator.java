@@ -1,7 +1,8 @@
 package net.frontlinesms.plugins.patientview.importer.validation;
 
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
+
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,6 @@ import net.frontlinesms.ui.i18n.InternationalisationUtils;
 import org.springframework.context.ApplicationContext;
 
 import au.com.bytecode.opencsv.CSVReader;
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.*;
 public class FormResponseCsvValidator extends CsvValidator{
 	
 	protected List<MedicFormField> fields;
@@ -116,8 +116,8 @@ public class FormResponseCsvValidator extends CsvValidator{
 	
 	public void validateDate(String date, int lineNumber, List<CsvValidationException> exceptions){
 		try {
-			InternationalisationUtils.getDateFormat().parse(date);
-		} catch (ParseException e) {
+			InternationalisationUtils.getDateFormat().parseMillis(date);
+		} catch (Exception e) {
 			exceptions.add(new CsvValidationException(lineNumber,getI18nString("medic.importer.date.format.error")+": "+ date));
 		}
 	}

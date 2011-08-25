@@ -1,6 +1,5 @@
 package net.frontlinesms.plugins.patientview;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -12,7 +11,6 @@ import net.frontlinesms.data.DuplicateKeyException;
 import net.frontlinesms.data.domain.FrontlineMessage;
 import net.frontlinesms.data.domain.Group;
 import net.frontlinesms.data.repository.GroupDao;
-import net.frontlinesms.data.repository.GroupMembershipDao;
 import net.frontlinesms.data.repository.MessageDao;
 import net.frontlinesms.plugins.forms.data.domain.Form;
 import net.frontlinesms.plugins.forms.data.domain.FormField;
@@ -35,6 +33,7 @@ import net.frontlinesms.plugins.patientview.data.repository.MedicMessageResponse
 import net.frontlinesms.plugins.patientview.data.repository.PatientDao;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.context.ApplicationContext;
 
 public class DataGeneratorThread extends Thread{
@@ -45,7 +44,7 @@ public class DataGeneratorThread extends Thread{
 		private int formResponseNum; 
 		private int smsMessagesNum;
 		private ApplicationContext appCon;
-		private DateFormat df = InternationalisationUtils.getDateFormat();
+		private DateTimeFormatter df = InternationalisationUtils.getDateFormat();
 		private Group chwgroup;
 		private DummyDataGenerator parentController;
 		
@@ -328,11 +327,11 @@ public class DataGeneratorThread extends Thread{
 									"I'm entering additional notes for a text area", ff,p,chw));
 						} else if (ff.getDatatype() == DataType.DATE_FIELD) {
 							if (ff.getLabel().equals("Patient Birthdate") && !fudge) {
-								rvs.add(new MedicFormFieldResponse(df.format(p.getBirthdate()), ff,p,chw));
+								rvs.add(new MedicFormFieldResponse(df.print(p.getBirthdate()), ff,p,chw));
 							} else if (ff.getLabel().equals("Patient Birthdate") && !fudge) {
 								rvs.add(new MedicFormFieldResponse(fudgeDate(p), ff,p,chw));
 							}else{
-								rvs.add(new MedicFormFieldResponse(df.format(getRandomDate()), ff,p,chw));
+								rvs.add(new MedicFormFieldResponse(df.print(getRandomDate().getTime()), ff,p,chw));
 							}
 						}else if(ff.getDatatype() == DataType.NUMERIC_TEXT_FIELD){
 							rvs.add(new MedicFormFieldResponse(rand.nextInt(500)+"" , ff,p,chw));	
@@ -508,7 +507,7 @@ public class DataGeneratorThread extends Thread{
 		private String fudgeDate(Patient p){
 			Date d = new Date(p.getBirthdate());
 			Date newDate = new Date(d.getTime() + 86400000L);
-			return df.format(newDate);
+			return df.print(newDate.getTime());
 		}
 			
 			

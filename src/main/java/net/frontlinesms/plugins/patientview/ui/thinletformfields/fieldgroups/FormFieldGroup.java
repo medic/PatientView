@@ -52,7 +52,7 @@ public class FormFieldGroup extends FieldGroup {
 			if(mff.getMapping() == PatientFieldMapping.NAMEFIELD){
 				formFields.get(i-nonRespondable).setStringResponse(p.getName());
 			}else if(mff.getMapping() == PatientFieldMapping.BIRTHDATEFIELD){
-				((DateField) formFields.get(i-nonRespondable)).setRawResponse(new Date(p.getBirthdate()));
+				((DateField) formFields.get(i-nonRespondable)).setRawResponse(p.getBirthdate());
 			}else if(mff.getMapping() == PatientFieldMapping.IDFIELD){
 				formFields.get(i-nonRespondable).setStringResponse(String.valueOf(p.getPid()));
 			}

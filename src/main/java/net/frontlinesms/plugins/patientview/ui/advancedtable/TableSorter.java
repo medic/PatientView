@@ -1,12 +1,12 @@
 package net.frontlinesms.plugins.patientview.ui.advancedtable;
 
 import java.lang.reflect.Method;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Comparator;
 import java.util.Date;
 
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
+
+import org.joda.time.format.DateTimeFormatter;
 
 public class TableSorter implements Comparator<Object>{
 	
@@ -88,19 +88,16 @@ public class TableSorter implements Comparator<Object>{
 	}
 	
 	private int compareDates(String s1, String s2){
-		DateFormat df = InternationalisationUtils.getDateFormat();
-		if(df == null){
-			df = DateFormat.getDateInstance();
-		}
-		Date d1, d2;
+		DateTimeFormatter df = InternationalisationUtils.getDateFormat();
+		Long d1, d2;
 		try {
-			d1 = df.parse(s1);
-		} catch (ParseException e) {
+			d1 = df.parseMillis(s1);
+		} catch (Exception e) {
 			d1 = null;
 		}
 		try {
-			d2 = df.parse(s2);
-		} catch (ParseException e) {
+			d2 = df.parseMillis(s2);
+		} catch (Exception e) {
 			d2 = null;
 		}
 		if(d1 == null || d2 == null){

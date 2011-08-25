@@ -133,7 +133,7 @@ public abstract class Person extends Deletable{
 	}
 	
 	public String getStringBirthdate(){
-		return InternationalisationUtils.getDateFormat().format(new Date(birthdate));
+		return InternationalisationUtils.getDateFormat().print(birthdate);
 	}
 
 	public Gender getGender() {

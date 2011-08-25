@@ -2,21 +2,19 @@ package net.frontlinesms.plugins.patientview.ui.thinletformfields;
 
 import static net.frontlinesms.ui.i18n.InternationalisationUtils.getDateFormat;
 import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
-
-import java.text.DateFormat;
-import java.util.Date;
-
-import org.hibernate.classic.ValidationFailure;
-
 import net.frontlinesms.FrontlineSMSConstants;
 import net.frontlinesms.plugins.patientview.ui.components.DateSelectorDialog;
 import net.frontlinesms.ui.ExtendedThinlet;
 
-public class DateField extends TextBox<Date> {
+import org.hibernate.classic.ValidationFailure;
+import org.joda.time.format.DateTimeFormatter;
+
+public class DateField extends TextBox<Long> {
 
 	protected DateSelectorDialog ds;
 	protected boolean shouldShowDateFormat;
-	protected DateFormat df = getDateFormat();
+	protected DateTimeFormatter df = getDateFormat();
+	protected long date;
 	Object btn;
 
 	public DateField(ExtendedThinlet thinlet, String label, FormFieldDelegate delegate, boolean showDateFormat) {
@@ -47,13 +45,15 @@ public class DateField extends TextBox<Date> {
 		}
 	}
 	
-	public void setRawResponse(Date d){
-		setStringResponse(df.format(d));
+	public void setRawResponse(Long date){
+		this.date = date;
+		setStringResponse(df.print(date));
 	}
 	
-	public Date getRawResponse(){
+	public Long getRawResponse(){
 		try{
-			return df.parse(getStringResponse());
+			this.date = df.parseMillis(getStringResponse());
+			return date;
 		}catch(Exception e){
 			return null;
 		}
@@ -69,10 +69,9 @@ public class DateField extends TextBox<Date> {
 			return;
 		}
 		try {
-			Date date = df.parse(this.getStringResponse());
+			long date = df.parseMillis(this.getStringResponse());
 		} catch (Exception e) {
 			throw new ValidationFailure("\""+ getLabel().replace(":", "")+ "\" is formatted incorrectly");
 		}
 	}
-
 }

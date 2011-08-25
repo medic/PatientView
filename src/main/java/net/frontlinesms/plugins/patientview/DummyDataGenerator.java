@@ -1,7 +1,6 @@
 package net.frontlinesms.plugins.patientview;
 
 import java.security.GeneralSecurityException;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -18,13 +17,14 @@ import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.context.ApplicationContext;
 
 import thinlet.Thinlet;
 
 public class DummyDataGenerator implements ThinletUiEventHandler {
 	
-	private static DateFormat df = InternationalisationUtils.getDateFormat();
+	private static DateTimeFormatter df = InternationalisationUtils.getDateFormat();
 	
 	private boolean isGenerating=false;
 	
@@ -101,7 +101,7 @@ public class DummyDataGenerator implements ThinletUiEventHandler {
 		if(createOneUser){
 			User user0 = null;
 			try {
-				user0 = new User("Root User",Gender.FEMALE, new Date(),"root",Role.ADMIN, "toor");
+				user0 = new User("Root User",Gender.FEMALE, new Date().getTime(),"root",Role.ADMIN, "toor");
 			} catch (GeneralSecurityException e) {
 				e.printStackTrace();
 			}
@@ -112,10 +112,10 @@ public class DummyDataGenerator implements ThinletUiEventHandler {
 			User user3 = null;
 			User user4 = null;
 			try {
-				user = new User("Alex Harsha",Gender.FEMALE, new Date(),"aHarsha",Role.ADMIN,"medic");
-				user2 = new User("Aisha Moniba",Gender.FEMALE, new Date(),"aMoniba",Role.READWRITE,"medic");
-				user3 = new User("Daniel Kayiwa",Gender.MALE, new Date(),"dKayiwa",Role.READ,"medic");
-				user4 = new User("Dieterich Lawson", Gender.MALE, new Date(),"dLawson",Role.REGISTRAR,"medic");
+				user = new User("Alex Harsha",Gender.FEMALE, new Date().getTime(),"aHarsha",Role.ADMIN,"medic");
+				user2 = new User("Aisha Moniba",Gender.FEMALE, new Date().getTime(),"aMoniba",Role.READWRITE,"medic");
+				user3 = new User("Daniel Kayiwa",Gender.MALE, new Date().getTime(),"dKayiwa",Role.READ,"medic");
+				user4 = new User("Dieterich Lawson", Gender.MALE, new Date().getTime(),"dLawson",Role.REGISTRAR,"medic");
 			} catch (GeneralSecurityException e) {
 				e.printStackTrace();
 			}

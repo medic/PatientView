@@ -91,6 +91,10 @@ public class PatientDataImporter extends PersonDataImporter {
 				addMessageToList("Error parsing file");
 				addMessageToList(e.toString());
 				return;
+			} catch (Exception e) {
+				addMessageToList("Error parsing file");
+				addMessageToList(e.toString());
+				return;
 			}
 			//now save the patients
 			for(Entry<Patient, Boolean> patientEntry: patients.entrySet()){
@@ -119,8 +123,10 @@ public class PatientDataImporter extends PersonDataImporter {
 			// get the name, birthdate, and gender
 			String name = currLine[CsvColumns.NAME_INDEX].trim();
 			Gender gender = parseGender(currLine[CsvColumns.GENDER_INDEX]);
-			Date birthdate;
-			birthdate = InternationalisationUtils.getDateFormat().parse(currLine[CsvColumns.BDAY_INDEX]);
+			long birthdate = 0L;
+			try{
+				birthdate = InternationalisationUtils.getDateFormat().parseMillis(currLine[CsvColumns.BDAY_INDEX]);
+			}catch(Exception e){}
 			// get the secondary ID number
 			String secondaryId = null;
 			if (hasColumn(currLine, CsvColumns.SECONDARY_ID_INDEX)) {
@@ -143,7 +149,7 @@ public class PatientDataImporter extends PersonDataImporter {
 			// newborn vaccines
 			boolean enrollNewborn = hasColumn(currLine, CsvColumns.NEWBORN_INDEX) && Boolean.parseBoolean(currLine[CsvColumns.NEWBORN_INDEX]);
 			// create the patient
-			Patient p = new Patient(chw, name, gender, birthdate.getTime());
+			Patient p = new Patient(chw, name, gender, birthdate);
 			p.setExternalId(secondaryId);
 			p.setPhoneNumber(phoneNumber);
 			results.put(p, enrollNewborn);

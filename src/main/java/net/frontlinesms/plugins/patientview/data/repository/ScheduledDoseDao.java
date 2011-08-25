@@ -1,6 +1,5 @@
 package net.frontlinesms.plugins.patientview.data.repository;
 
-import java.util.Date;
 import java.util.List;
 
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
@@ -27,7 +26,7 @@ public interface ScheduledDoseDao {
 	
 	public List<ScheduledDose> getScheduledDoses(Vaccine vaccine, Patient patient);
 	
-	public void administerDose(ScheduledDose dose, Person administeredBy, Date dateAdministered, String placeAdministered);
+	public void administerDose(ScheduledDose dose, Person administeredBy, Long dateAdministered, String placeAdministered);
 	
 	public boolean patientHasAdministeredDosesForVaccine(Patient patient, Vaccine vaccine);
 }

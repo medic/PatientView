@@ -1,6 +1,5 @@
 package net.frontlinesms.plugins.patientview.data.domain.vaccine;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -71,7 +70,7 @@ public class ScheduledDose implements Comparable{
 	}
 	
 	public String getWindowStartDateString(){
-		return InternationalisationUtils.getDateFormat().format(getWindowStartDate());
+		return InternationalisationUtils.getDateFormat().print(getWindowStartDate());
 	}
 
 	public void setWindowStartDate(long windowStartDate) {
@@ -83,7 +82,7 @@ public class ScheduledDose implements Comparable{
 	}
 	
 	public String getWindowEndDateString(){
-		return InternationalisationUtils.getDateFormat().format(getWindowEndDate());
+		return InternationalisationUtils.getDateFormat().print(getWindowEndDate());
 	}
 	
 	public void setWindowEndDate(long windowEndDate) {
@@ -94,10 +93,8 @@ public class ScheduledDose implements Comparable{
 		return administered;
 	}
 
-	public Calendar getDateAdministered() {
-		Calendar c = Calendar.getInstance();
-		c.setTimeInMillis(dateAdministered);
-		return c;
+	public long getDateAdministered() {
+		return dateAdministered;
 	}
 
 	public Person getAdministeredBy() {
@@ -107,7 +104,7 @@ public class ScheduledDose implements Comparable{
 	public String getAdministeredString(){
 		long currentTime = System.currentTimeMillis();
 		if(administered){
-			return "Administered by "+ administeredBy.getName() + " on " + InternationalisationUtils.getDateFormat().format(getDateAdministered().getTime())+ " at "+ placeAdministered;
+			return "Administered by "+ administeredBy.getName() + " on " + InternationalisationUtils.getDateFormat().print(getDateAdministered())+ " at "+ placeAdministered;
 		}else if(currentTime > windowStartDate && currentTime < windowEndDate){
 			return "-----";
 		}else if(currentTime < windowStartDate){
@@ -118,12 +115,12 @@ public class ScheduledDose implements Comparable{
 		return "";
 	}
 	
-	public void administer(Person adminsteredBy, Date dateAdministered, String placeAdministered){
+	public void administer(Person adminsteredBy, Long dateAdministered, String placeAdministered){
 		this.administered = true;
 		if(dateAdministered == null){
 			this.dateAdministered = new Date().getTime();
 		}else{
-			this.dateAdministered = dateAdministered.getTime();
+			this.dateAdministered = dateAdministered;
 		}
 		if(adminsteredBy == null){
 			this.administeredBy = UserSessionManager.getUserSessionManager().getCurrentUser();

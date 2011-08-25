@@ -1,8 +1,6 @@
 package net.frontlinesms.plugins.patientview.data.repository.hibernate;
 
 
-import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 import net.frontlinesms.data.repository.hibernate.BaseHibernateDao;
@@ -79,14 +77,14 @@ public class HibernatePatientDao extends BaseHibernateDao<Patient> implements Pa
 		}
 		//add the birthdate restriction
 		if(birthdate !=null && !birthdate.equals("")){
-			Date bday = null;
+			long bday = 0L;
 			try {
-				bday = InternationalisationUtils.getDateFormat().parse(birthdate);
-			} catch (ParseException e) {
+				bday = InternationalisationUtils.getDateFormat().parseMillis(birthdate);
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			long lower = bday.getTime() - 86400000;
-			long upper = bday.getTime() + 86400000;
+			long lower = bday - 86400000;
+			long upper = bday + 86400000;
 			c.add(Restrictions.and(Restrictions.gt("birthdate", lower), Restrictions.lt("birthdate", upper)));
 		}
 		//add the id restriction

@@ -76,7 +76,7 @@ public class FormResponseMappingPanelController extends AdministrationTabPanel i
 		ui.setIcon(label, "/icons/form.png");
 		add(find("controlPanel"),label);
 		add(find("controlPanel"),comboBox);
-		dateField.setRawResponse(new Date());
+		dateField.setRawResponse(new Date().getTime());
 		ui.setText(comboBox, getI18nString("medic.common.all.forms"));
 		tableController.updateTable();
 	}
@@ -156,7 +156,7 @@ public class FormResponseMappingPanelController extends AdministrationTabPanel i
 	 * @see net.frontlinesms.plugins.patientview.ui.thinletformfields.FormFieldDelegate#formFieldChanged(net.frontlinesms.plugins.patientview.ui.thinletformfields.ThinletFormField, java.lang.String)
 	 */
 	public void formFieldChanged(ThinletFormField changedField, String newValue) {
-		resultSet.setAroundDate(((DateField) changedField).getRawResponse());
+		resultSet.setAroundDate(new Date(((DateField) changedField).getRawResponse()));
 		tableController.updateTable();
 	}
 	
