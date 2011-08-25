@@ -85,14 +85,14 @@ public class DataGeneratorThread extends Thread{
 			for (int i = 0; i < chwNum; i++) {
 				String name = firsts[rand.nextInt(firsts.length)] + " " + lasts[rand.nextInt(lasts.length)];
 				Gender gender = (rand.nextBoolean()) ? Gender.MALE:Gender.FEMALE;
-				CommunityHealthWorker chw = new CommunityHealthWorker(name, getRandomNumber(),gender,getRandomDate());
+				CommunityHealthWorker chw = new CommunityHealthWorker(name, getRandomNumber(),gender,getRandomDate().getTime());
 				chws.add(chw);
 				ArrayList<Patient> patients = new ArrayList<Patient>();
 				//create 100 patients for each chw
 				for (int j = 0; j < perCHWPatientNum; j++) {
 					Gender gender2 = (rand.nextBoolean()) ? Gender.MALE:Gender.FEMALE;
 					String name2 = firsts[rand.nextInt(firsts.length)] + " " + lasts[rand.nextInt(lasts.length)];
-					Patient p = new Patient(chw, name2, gender2, getRandomDate());
+					Patient p = new Patient(chw, name2, gender2, getRandomDate().getTime());
 					p.setPhoneNumber(getRandomNumber());
 					patients.add(p);
 					ps.add(p);
@@ -506,7 +506,7 @@ public class DataGeneratorThread extends Thread{
 		}
 		
 		private String fudgeDate(Patient p){
-			Date d = p.getBirthdate();
+			Date d = new Date(p.getBirthdate());
 			Date newDate = new Date(d.getTime() + 86400000L);
 			return df.format(newDate);
 		}

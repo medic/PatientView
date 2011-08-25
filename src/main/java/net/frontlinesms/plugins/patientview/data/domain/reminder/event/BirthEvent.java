@@ -37,14 +37,14 @@ public class BirthEvent extends ReminderEvent<Patient>{
 
 	public Calendar getDateForContext(Patient patient, Patient context) {
 		Calendar result = Calendar.getInstance();
-		result.setTime(patient.getBirthdate());
+		result.setTimeInMillis(patient.getBirthdate());
 		return result;
 	}
 
 	public List<ReminderDate<Patient>> getEventDatesWithContext(Patient patient) {
 		List<ReminderDate<Patient>> results = new ArrayList<ReminderDate<Patient>>();
 		Calendar result = Calendar.getInstance();
-		result.setTime(patient.getBirthdate());
+		result.setTimeInMillis(patient.getBirthdate());
 		results.add(new ReminderDate<Patient>(result,patient));
 		return results;
 	}

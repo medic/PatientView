@@ -103,7 +103,7 @@ implements ThinletUiEventHandler {
 			Gender gender = parseGender(currLine[CsvColumns.GENDER_INDEX]);
 			Date birthdate = InternationalisationUtils.getDateFormat().parse(currLine[CsvColumns.BDAY_INDEX]);
 			//create the new CHW
-			CommunityHealthWorker chw = new CommunityHealthWorker(name,phoneNumber, gender,birthdate);
+			CommunityHealthWorker chw = new CommunityHealthWorker(name,phoneNumber, gender,birthdate.getTime());
 			//save the CHW
 			chws.add(chw);
 		}

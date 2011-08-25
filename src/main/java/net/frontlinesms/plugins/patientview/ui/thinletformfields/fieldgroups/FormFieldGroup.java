@@ -1,5 +1,7 @@
 package net.frontlinesms.plugins.patientview.ui.thinletformfields.fieldgroups;
 
+import java.util.Date;
+
 import net.frontlinesms.plugins.patientview.data.domain.framework.DataType;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField;
@@ -50,7 +52,7 @@ public class FormFieldGroup extends FieldGroup {
 			if(mff.getMapping() == PatientFieldMapping.NAMEFIELD){
 				formFields.get(i-nonRespondable).setStringResponse(p.getName());
 			}else if(mff.getMapping() == PatientFieldMapping.BIRTHDATEFIELD){
-				((DateField) formFields.get(i-nonRespondable)).setRawResponse(p.getBirthdate());
+				((DateField) formFields.get(i-nonRespondable)).setRawResponse(new Date(p.getBirthdate()));
 			}else if(mff.getMapping() == PatientFieldMapping.IDFIELD){
 				formFields.get(i-nonRespondable).setStringResponse(String.valueOf(p.getPid()));
 			}

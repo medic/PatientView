@@ -105,7 +105,7 @@ public class User extends Person {
 	/** Default constructor for Hibernate. */
 	public User() {}
 
-	public User(String name, Gender gender, Date birthdate, String username, Role role, String password) throws GeneralSecurityException {
+	public User(String name, Gender gender, long birthdate, String username, Role role, String password) throws GeneralSecurityException {
 		super(name, gender, birthdate);
 		// TODO: Make sure no two users have the same login name
 		assert username != null;
@@ -121,7 +121,7 @@ public class User extends Person {
 	}
 
 	public User(String username, Role role) throws GeneralSecurityException {
-		this(null, null, null, username, role, null);
+		this(null, null, 0L, username, role, null);
 	}
 
 	/**

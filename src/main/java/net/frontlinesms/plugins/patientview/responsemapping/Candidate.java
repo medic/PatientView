@@ -1,6 +1,7 @@
 package net.frontlinesms.plugins.patientview.responsemapping;
 
 import java.text.DecimalFormat;
+import java.util.Date;
 
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
@@ -63,7 +64,7 @@ public class Candidate implements Comparable<Candidate>{
 	}
 	
 	public String getStringBirthdate(){
-		return InternationalisationUtils.getDateFormat().format(patient.getBirthdate());
+		return InternationalisationUtils.getDateFormat().format(new Date(patient.getBirthdate()));
 	}
 
 	public int compareTo(Candidate o) {

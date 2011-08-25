@@ -82,10 +82,10 @@ public abstract class Person extends Deletable{
 	 * @param gender Gender of the Person (options are m,f,t)
 	 * @param birthdate birthdate of the person
 	 */
-	protected Person(String name, Gender gender, Date birthdate){
+	protected Person(String name, Gender gender, long birthdate){
 		this.name = name;
 		this.gender = gender;
-		this.birthdate = birthdate.getTime();
+		this.birthdate = birthdate;
 	}
 	
 	/**
@@ -95,10 +95,10 @@ public abstract class Person extends Deletable{
 	 * @param birthdate birthdate of the person
 	 * @param phoneNumber the phone number of the person
 	 */
-	protected Person(String name, Gender gender, Date birthdate, String phoneNumber){
+	protected Person(String name, Gender gender, long birthdate, String phoneNumber){
 		this.name = name;
 		this.gender = gender;
-		this.birthdate = birthdate.getTime();
+		this.birthdate = birthdate;
 		this.phoneNumber = phoneNumber;
 	}
 	
@@ -124,16 +124,16 @@ public abstract class Person extends Deletable{
 		this.name = name;
 	}
 
-	public Date getBirthdate() {
-		return new Date(birthdate);
+	public long getBirthdate() {
+		return birthdate;
 	}
 
-	public void setBirthdate(Date birthdate) {
-		this.birthdate = birthdate.getTime();
+	public void setBirthdate(long birthdate) {
+		this.birthdate = birthdate;
 	}
 	
 	public String getStringBirthdate(){
-		return InternationalisationUtils.getDateFormat().format(birthdate);
+		return InternationalisationUtils.getDateFormat().format(new Date(birthdate));
 	}
 
 	public Gender getGender() {

@@ -143,7 +143,7 @@ public class PatientDataImporter extends PersonDataImporter {
 			// newborn vaccines
 			boolean enrollNewborn = hasColumn(currLine, CsvColumns.NEWBORN_INDEX) && Boolean.parseBoolean(currLine[CsvColumns.NEWBORN_INDEX]);
 			// create the patient
-			Patient p = new Patient(chw, name, gender, birthdate);
+			Patient p = new Patient(chw, name, gender, birthdate.getTime());
 			p.setExternalId(secondaryId);
 			p.setPhoneNumber(phoneNumber);
 			results.put(p, enrollNewborn);

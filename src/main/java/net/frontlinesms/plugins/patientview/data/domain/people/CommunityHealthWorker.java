@@ -25,7 +25,7 @@ public class CommunityHealthWorker extends Person {
 	
 	public CommunityHealthWorker() {}
 
-	public CommunityHealthWorker(String name,String phoneNumber, Gender gender, Date birthdate) {
+	public CommunityHealthWorker(String name,String phoneNumber, Gender gender, long birthdate) {
 		super(name, gender, birthdate,phoneNumber);
 	}
 	

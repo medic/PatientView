@@ -36,7 +36,7 @@ public class VaccineScheduler {
 	public List<ScheduledDose> scheduleVaccinesFromBirth(Patient patient, Vaccine vaccine){
 		List<VaccineDose> doses = vaccine.getDoses();
 		List<ScheduledDose> scheduledDoses  = new ArrayList<ScheduledDose>();
-		Date birthdate = patient.getBirthdate();
+		Date birthdate = new Date(patient.getBirthdate());
 		for(VaccineDose dose: doses){
 			Calendar startDate = Calendar.getInstance();
 			startDate.setTimeInMillis(birthdate.getTime());
