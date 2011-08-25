@@ -159,7 +159,7 @@ public class SimpleSearchController implements ThinletUiEventHandler, SearchCont
 	}
 	
 	public Date getBeforeDate(){
-		if (currentField.getDataType().equals(SimpleSearchDataType.DATE)){
+		if (currentField.getDataType().equals(SimpleSearchDataType.DATE) && dateFieldBefore.getRawResponse() != null){
 			return new Date(dateFieldBefore.getRawResponse());
 		}else{
 			return null;
@@ -167,7 +167,7 @@ public class SimpleSearchController implements ThinletUiEventHandler, SearchCont
 	}
 	
 	public Date getAfterDate(){
-		if (currentField.getDataType().equals(SimpleSearchDataType.DATE)){
+		if (currentField.getDataType().equals(SimpleSearchDataType.DATE) && dateFieldAfter.getRawResponse() != null){
 			return new Date(dateFieldAfter.getRawResponse());
 		}else{
 			return null;
