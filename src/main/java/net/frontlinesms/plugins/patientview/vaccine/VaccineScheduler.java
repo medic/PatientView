@@ -36,15 +36,14 @@ public class VaccineScheduler {
 	public List<ScheduledDose> scheduleVaccinesFromBirth(Patient patient, Vaccine vaccine){
 		List<VaccineDose> doses = vaccine.getDoses();
 		List<ScheduledDose> scheduledDoses  = new ArrayList<ScheduledDose>();
-		Date birthdate = new Date(patient.getBirthdate());
 		for(VaccineDose dose: doses){
 			Calendar startDate = Calendar.getInstance();
-			startDate.setTimeInMillis(birthdate.getTime());
+			startDate.setTimeInMillis(patient.getBirthdate());
 			startDate.add(Calendar.MONTH, dose.getStartDateMonths());
 			startDate.add(Calendar.DAY_OF_MONTH, dose.getStartDateDays());
 			long windowStartDate = startDate.getTimeInMillis();
 			Calendar endDate = Calendar.getInstance();
-			endDate.setTimeInMillis(birthdate.getTime());
+			endDate.setTimeInMillis(patient.getBirthdate());
 			endDate.add(Calendar.MONTH, dose.getEndDateMonths());
 			endDate.add(Calendar.DAY_OF_MONTH, dose.getEndDateDays());
 			long windowEndDate = endDate.getTimeInMillis();
