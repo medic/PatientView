@@ -306,7 +306,7 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 	
 	private void rescheduleDose(){
 		//reschedule the doses
-		List<ScheduledDose> toSave = VaccineScheduler.instance().rescheduleDose(toBeRescheduled, rescheduledStartDateField.getRawResponse());
+		List<ScheduledDose> toSave = VaccineScheduler.instance().rescheduleDose(toBeRescheduled, new Date(rescheduledStartDateField.getRawResponse()));
 		//save the doses
 		scheduledDoseDao.saveOrUpdateScheduledDose(toBeRescheduled);
 		scheduledDoseDao.saveScheduledDoses(toSave);

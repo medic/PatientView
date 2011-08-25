@@ -2,7 +2,6 @@ package net.frontlinesms.plugins.patientview.vaccine;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import net.frontlinesms.junit.BaseTestCase;
@@ -11,6 +10,7 @@ import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.Vaccine;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.VaccineDose;
+import net.frontlinesms.plugins.patientview.utils.TimeUtils;
 
 public class VaccineSchedulerTest extends BaseTestCase{
 
@@ -21,7 +21,7 @@ public class VaccineSchedulerTest extends BaseTestCase{
 	private void setup(int year, int month, int day, int hour){
 		c = Calendar.getInstance();
 		c.set(year,month, day,hour,0);
-		p = new Patient(null, "", Gender.MALE, new Date(c.getTimeInMillis()));
+		p = new Patient(null, "", Gender.MALE, c.getTimeInMillis());
 		v = new Vaccine("OPV", true);
 		//OPV at 1 months w/1 month window
 		VaccineDose vd1 = new VaccineDose("OPV 1", v, 1, 0, 2, 0, 0, 1);
@@ -42,18 +42,18 @@ public class VaccineSchedulerTest extends BaseTestCase{
 		//check the size
 		assertEquals(3, schedDoses.size());
 		//check the first one
-		Calendar first = schedDoses.get(0).getWindowStartDate();
+		Calendar first = TimeUtils.getCalendar(schedDoses.get(0).getWindowStartDate());
 		assertEquals(Calendar.JUNE,first.get(Calendar.MONTH));
 		assertEquals(15,first.get(Calendar.DAY_OF_MONTH));
 		assertEquals(1980,first.get(Calendar.YEAR));
 		//check the second one
-		Calendar second = schedDoses.get(1).getWindowStartDate();
+		Calendar second = TimeUtils.getCalendar(schedDoses.get(1).getWindowStartDate());
 		//assert
 		assertEquals(Calendar.AUGUST,second.get(Calendar.MONTH));
 		assertEquals(15,second.get(Calendar.DAY_OF_MONTH));
 		assertEquals(1980,second.get(Calendar.YEAR));
 		//check the third one
-		Calendar third = schedDoses.get(2).getWindowStartDate();
+		Calendar third = TimeUtils.getCalendar(schedDoses.get(2).getWindowStartDate());
 		//assert
 		assertEquals(Calendar.OCTOBER,third.get(Calendar.MONTH));
 		assertEquals(15,third.get(Calendar.DAY_OF_MONTH));
@@ -63,7 +63,7 @@ public class VaccineSchedulerTest extends BaseTestCase{
 	public void test_scheduleVaccinesFromBirth_wrapsMonths_scheduledProperly(){
 		c = Calendar.getInstance();
 		c.set(1980,Calendar.MAY, 28,3,0);
-		p = new Patient(null, "", Gender.MALE, new Date(c.getTimeInMillis()));
+		p = new Patient(null, "", Gender.MALE, c.getTimeInMillis());
 		v = new Vaccine("OPV", true);
 		//OPV at 1 months w/1 month window
 		VaccineDose vd1 = new VaccineDose("OPV 1", v, 1, 20, 2, 0, 0, 1);
@@ -80,18 +80,18 @@ public class VaccineSchedulerTest extends BaseTestCase{
 		//check the size
 		assertEquals(3, schedDoses.size());
 		//check the first one
-		Calendar first = schedDoses.get(0).getWindowStartDate();
+		Calendar first = TimeUtils.getCalendar(schedDoses.get(0).getWindowStartDate());
 		assertEquals(Calendar.JULY,first.get(Calendar.MONTH));
 		assertEquals(18,first.get(Calendar.DAY_OF_MONTH));
 		assertEquals(1980,first.get(Calendar.YEAR));
 		//check the second one
-		Calendar second = schedDoses.get(1).getWindowStartDate();
+		Calendar second = TimeUtils.getCalendar(schedDoses.get(1).getWindowStartDate());
 		//second date should be Aug 21st 1980
 		assertEquals(Calendar.SEPTEMBER,second.get(Calendar.MONTH));
 		assertEquals(15,second.get(Calendar.DAY_OF_MONTH));
 		assertEquals(1980,second.get(Calendar.YEAR));
 		//check the third one
-		Calendar third = schedDoses.get(2).getWindowStartDate();
+		Calendar third = TimeUtils.getCalendar(schedDoses.get(2).getWindowStartDate());
 		//third date should be October 16th 1980
 		assertEquals(Calendar.NOVEMBER,third.get(Calendar.MONTH));
 		assertEquals(6,third.get(Calendar.DAY_OF_MONTH));

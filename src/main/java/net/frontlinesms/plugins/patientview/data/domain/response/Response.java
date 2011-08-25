@@ -1,6 +1,5 @@
 package net.frontlinesms.plugins.patientview.data.domain.response;
 
-import java.text.DateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;

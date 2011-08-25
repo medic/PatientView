@@ -111,15 +111,13 @@ public class VaccineScheduler {
 	}
 	
 	public List<ScheduledDose> rescheduleDose(ScheduledDose toReschedule, Date apptDate){
-		Calendar c = Calendar.getInstance();
-		c.setTime(apptDate);
-		toReschedule.setWindowStartDate(c);
+		toReschedule.setWindowStartDate(apptDate.getTime());
 		Calendar earliestWindowEnd = Calendar.getInstance();
 		earliestWindowEnd.setTime(apptDate);
 		earliestWindowEnd.add(Calendar.MONTH, toReschedule.getDose().getMinIntervalMonths());
 		earliestWindowEnd.add(Calendar.DAY_OF_MONTH, toReschedule.getDose().getMinIntervalDays());
-		if(TimeUtils.compareCalendars(earliestWindowEnd, toReschedule.getWindowEndDate())>-1){
-			toReschedule.setWindowEndDate(earliestWindowEnd);
+		if(TimeUtils.compareCalendars(earliestWindowEnd, TimeUtils.getCalendar(toReschedule.getWindowEndDate()))>-1){
+			toReschedule.setWindowEndDate(earliestWindowEnd.getTimeInMillis());
 		}
 		return rescheduleRemainingDoses(toReschedule);
 	}
@@ -130,30 +128,30 @@ public class VaccineScheduler {
 		for(ScheduledDose dose:doses){
 			Calendar earliestApptDate = null;
 			if(previousDose.isAdministered()){
-				earliestApptDate = previousDose.getDateAdministered();
+				earliestApptDate = TimeUtils.getCalendar(previousDose.getDateAdministered());
 			}else{
-				earliestApptDate = previousDose.getWindowStartDate();
+				earliestApptDate = TimeUtils.getCalendar(previousDose.getWindowStartDate());
 			}
 			earliestApptDate.add(Calendar.MONTH, previousDose.getDose().getMinIntervalMonths());
 			earliestApptDate.add(Calendar.DAY_OF_MONTH, previousDose.getDose().getMinIntervalDays());
 			//get the current appointment date
-			Calendar apptDate = dose.getWindowStartDate();
+			Calendar apptDate = TimeUtils.getCalendar(dose.getWindowStartDate());
 			//if the earliest possible appointment date is later than the
 			//scheduled appointment date
 			if(TimeUtils.compareCalendars(earliestApptDate, apptDate)>-1){
 				//add 1 day to the earliest appointment date
 				earliestApptDate.add(Calendar.DAY_OF_MONTH,1);
 				//set the date
-				dose.setWindowStartDate(earliestApptDate);
+				dose.setWindowStartDate(earliestApptDate.getTimeInMillis());
 				//check the end date
 				Calendar earliestWindowEndDate = TimeUtils.cloneCalendar(earliestApptDate);
 				earliestWindowEndDate.add(Calendar.MONTH, dose.getDose().getMinIntervalMonths());
 				earliestWindowEndDate.add(Calendar.DAY_OF_MONTH, dose.getDose().getMinIntervalDays());
 				//get the window end time
-				Calendar windowEnd = dose.getWindowEndDate();
+				Calendar windowEnd = TimeUtils.getCalendar(dose.getWindowEndDate());
 				if(TimeUtils.compareCalendars(earliestWindowEndDate, windowEnd)>-1){
 					//set the date
-					dose.setWindowEndDate(earliestWindowEndDate);
+					dose.setWindowEndDate(earliestWindowEndDate.getTimeInMillis());
 				}
 			}
 			previousDose = dose;
@@ -187,7 +185,7 @@ public class VaccineScheduler {
 		if(previousDose == null) return false;
 		if(!previousDose.isAdministered()) return false;
 		//get the absolute earliest date that the dose could be scheduled
-		Calendar administrationDate = previousDose.getDateAdministered();
+		Calendar administrationDate = TimeUtils.getCalendar(previousDose.getDateAdministered());
 		administrationDate.add(Calendar.MONTH, previousDose.getDose().getMinIntervalMonths());
 		administrationDate.add(Calendar.DAY_OF_MONTH, previousDose.getDose().getMinIntervalDays());
 		Calendar proposedCal = Calendar.getInstance();
