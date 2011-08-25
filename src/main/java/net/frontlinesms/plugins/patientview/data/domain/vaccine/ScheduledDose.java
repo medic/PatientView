@@ -66,32 +66,28 @@ public class ScheduledDose implements Comparable{
 		return patient;
 	}
 
-	public Calendar getWindowStartDate() {
-		Calendar c = Calendar.getInstance();
-		c.setTimeInMillis(windowStartDate);
-		return c;
+	public long getWindowStartDate() {
+		return windowStartDate;
 	}
 	
 	public String getWindowStartDateString(){
-		return InternationalisationUtils.getDateFormat().format(getWindowStartDate().getTime());
+		return InternationalisationUtils.getDateFormat().format(getWindowStartDate());
 	}
 
-	public void setWindowStartDate(Calendar windowStartDate) {
-		this.windowStartDate = windowStartDate.getTimeInMillis();
+	public void setWindowStartDate(long windowStartDate) {
+		this.windowStartDate = windowStartDate;
 	}
 
-	public Calendar getWindowEndDate() {
-		Calendar c = Calendar.getInstance();
-		c.setTimeInMillis(windowEndDate);
-		return c;
+	public long getWindowEndDate() {
+		return windowEndDate;
 	}
 	
 	public String getWindowEndDateString(){
-		return InternationalisationUtils.getDateFormat().format(getWindowEndDate().getTime());
+		return InternationalisationUtils.getDateFormat().format(getWindowEndDate());
 	}
 	
-	public void setWindowEndDate(Calendar windowEndDate) {
-		this.windowEndDate = windowEndDate.getTimeInMillis();
+	public void setWindowEndDate(long windowEndDate) {
+		this.windowEndDate = windowEndDate;
 	}
 
 	public boolean isAdministered() {

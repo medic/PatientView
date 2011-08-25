@@ -33,8 +33,8 @@ public abstract class Deletable {
 		return deleter;
 	}
 	
-	public Date getDateDeleted(){
-		return new Date(dateDeleted);
+	public long getDateDeleted(){
+		return dateDeleted;
 	}
 	
 	public void delete(String reason){

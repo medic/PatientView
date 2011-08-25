@@ -10,6 +10,7 @@ import net.frontlinesms.plugins.patientview.data.domain.reminder.ReminderEvent;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.impl.ReminderDate;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose;
 import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
+import net.frontlinesms.plugins.patientview.utils.TimeUtils;
 
 import org.springframework.context.ApplicationContext;
 
@@ -39,14 +40,15 @@ public class VaccineAppointmentEvent extends ReminderEvent<ScheduledDose>{
 	}
 
 	public Calendar getDateForContext(Patient patient, ScheduledDose context) {
-		return context.getWindowEndDate();
+		
+		return TimeUtils.getCalendar(context.getWindowEndDate());
 	}
 
 	public List<ReminderDate<ScheduledDose>> getEventDatesWithContext(Patient patient) {
 		List<ScheduledDose> doses = scheduledDoseDao.getScheduledDoses(patient, null);
 		List<ReminderDate<ScheduledDose>> dates = new ArrayList<ReminderDate<ScheduledDose>>();
 		for(ScheduledDose dose:doses){
-			dates.add(new ReminderDate<ScheduledDose>(dose.getWindowStartDate(),dose));
+			dates.add(new ReminderDate<ScheduledDose>(TimeUtils.getCalendar(dose.getWindowStartDate()),dose));
 		}
 		return dates;
 	}

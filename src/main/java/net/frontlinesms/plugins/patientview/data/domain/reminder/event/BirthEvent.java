@@ -8,6 +8,7 @@ import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.EventTimingOption;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.ReminderEvent;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.impl.ReminderDate;
+import net.frontlinesms.plugins.patientview.utils.TimeUtils;
 
 public class BirthEvent extends ReminderEvent<Patient>{
 
@@ -43,8 +44,7 @@ public class BirthEvent extends ReminderEvent<Patient>{
 
 	public List<ReminderDate<Patient>> getEventDatesWithContext(Patient patient) {
 		List<ReminderDate<Patient>> results = new ArrayList<ReminderDate<Patient>>();
-		Calendar result = Calendar.getInstance();
-		result.setTimeInMillis(patient.getBirthdate());
+		Calendar result = TimeUtils.getCalendar(patient.getBirthdate());
 		results.add(new ReminderDate<Patient>(result,patient));
 		return results;
 	}

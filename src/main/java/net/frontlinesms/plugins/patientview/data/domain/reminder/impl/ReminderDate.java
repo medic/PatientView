@@ -2,6 +2,7 @@ package net.frontlinesms.plugins.patientview.data.domain.reminder.impl;
 
 import java.util.Calendar;
 
+
 public class ReminderDate<C> {
 	
 	public final Calendar date;

@@ -114,4 +114,10 @@ public class TimeUtils {
 	public static int getMinutes(int time){
 		return time % 100;
 	}
+	
+	public static Calendar getCalendar(long time){
+		Calendar c= Calendar.getInstance();
+		c.setTimeInMillis(time);
+		return c;
+	}
 }

@@ -80,8 +80,8 @@ public abstract class Response extends Deletable{
 		return df.format(getDateSubmitted());
 	}
 
-	public Date getDateSubmitted() {
-		return new Date(dateSubmitted);
+	public long getDateSubmitted() {
+		return dateSubmitted;
 	}
 
 	public void setDateSubmitted(long dateSubmitted) {

@@ -10,6 +10,7 @@ import net.frontlinesms.plugins.patientview.data.domain.reminder.ReminderEvent;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.impl.ReminderDate;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose;
 import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
+import net.frontlinesms.plugins.patientview.utils.TimeUtils;
 
 import org.springframework.context.ApplicationContext;
 
@@ -39,8 +40,8 @@ public class VaccineAppointmentMissedEvent extends ReminderEvent<ScheduledDose>{
 	}
 
 	public Calendar getDateForContext(Patient patient, ScheduledDose context) {
-		if(context.getWindowStartDate().compareTo(Calendar.getInstance()) < 0 && !context.isAdministered()){
-			return context.getWindowStartDate();
+		if(TimeUtils.getCalendar(context.getWindowStartDate()).compareTo(Calendar.getInstance()) < 0 && !context.isAdministered()){
+			return TimeUtils.getCalendar(context.getWindowStartDate());
 		}
 		return null;
 	}
@@ -50,8 +51,8 @@ public class VaccineAppointmentMissedEvent extends ReminderEvent<ScheduledDose>{
 		List<ReminderDate<ScheduledDose>>  dates = new ArrayList<ReminderDate<ScheduledDose>>();
 		for(ScheduledDose dose:doses){
 			//TODO: figure out if this should be < or <=
-			if(dose.getWindowStartDate().compareTo(Calendar.getInstance()) < 0 && !dose.isAdministered()){
-				dates.add(new ReminderDate<ScheduledDose>(dose.getWindowStartDate(),dose));
+			if(TimeUtils.getCalendar(dose.getWindowStartDate()).compareTo(Calendar.getInstance()) < 0 && !dose.isAdministered()){
+				dates.add(new ReminderDate<ScheduledDose>(TimeUtils.getCalendar(dose.getWindowStartDate()),dose));
 			}
 		}
 		return dates;
