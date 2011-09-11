@@ -48,6 +48,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	private static final String DOSE_TABLE_PANEL = "doseTable";
 	private static final String EDIT_DOSE_PANEL = "editDosePanel";
 	private static final String ENROLL_NEWBORNS_CHECKBOX = "enrollNewbornsCheckbox";
+	private static final String ENROLL_MOTHERS_CHECKBOX = "enrollMothersCheckbox";
 	private static final String START_DATE_MONTHS_BOX = "startDateMonths";
 	private static final String START_DATE_DAYS_BOX = "startDateDays";
 	private static final String END_DATE_MONTHS_BOX = "endDateMonths";
@@ -139,6 +140,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 			ui.setEnabled(find(REMOVE_VACCINE_BUTTON), true);
 			ui.setEnabled(find(ADD_DOSE_BUTTON), true);
 			ui.setEnabled(find(ENROLL_NEWBORNS_CHECKBOX), true);
+			ui.setEnabled(find(ENROLL_MOTHERS_CHECKBOX), true);
 		}
 	}
 	
@@ -167,6 +169,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		//set up the dose panel
 		ui.setText(find(VACCINE_NAME_LABEL), v.getName());
 		ui.setSelected(find(ENROLL_NEWBORNS_CHECKBOX), v.isAutomaticallyEnrollNewborns());
+		ui.setSelected(find(ENROLL_MOTHERS_CHECKBOX), v.isAutomaticallyEnrollMothers());
 		//add the doses to the table
 		int selectedIndex = doseTableController.getSelectedIndex();
 		List<VaccineDose> doses = vaccineDoseDao.getDosesForVaccine(v);
@@ -401,6 +404,17 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		boolean autoEnrollNewborns = ui.isSelected(find(ENROLL_NEWBORNS_CHECKBOX));
 		Vaccine v = getCurrentlySelectedVaccine();
 		v.setAutomaticallyEnrollNewborns(autoEnrollNewborns);
+		vaccineDao.saveOrUpdateVaccine(v);
+	}
+	
+	/**
+	 * Called when the value of the 'enroll mothers' checkbox
+	 * changes. This method saves the value to the database.
+	 */
+	public void enrollMothersChanged(){
+		boolean autoEnrollMothers = ui.isSelected(find(ENROLL_MOTHERS_CHECKBOX));
+		Vaccine v = getCurrentlySelectedVaccine();
+		v.setAutomaticallyEnrollMothers(autoEnrollMothers);
 		vaccineDao.saveOrUpdateVaccine(v);
 	}
 	

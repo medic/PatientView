@@ -30,13 +30,22 @@ public class Vaccine {
 	private List<VaccineDose> doses;
 	
 	private boolean automaticallyEnrollNewborns;
-
+	
+	private boolean automaticallyEnrollMothers;
+	
 	public Vaccine(){}
 	
 	public Vaccine(String name, boolean automaticallyEnrollNewborns) {
 		super();
 		this.name = name;
 		this.automaticallyEnrollNewborns = automaticallyEnrollNewborns;
+	}
+	
+	public Vaccine(String name, boolean automaticallyEnrollNewborns, boolean automaticallyEnrollMothers) {
+		super();
+		this.name = name;
+		this.automaticallyEnrollNewborns = automaticallyEnrollNewborns;
+		this.setAutomaticallyEnrollMothers(automaticallyEnrollMothers);
 	}
 
 	public void setName(String name) {
@@ -92,5 +101,13 @@ public class Vaccine {
 
 	public long getVaccineId() {
 		return vaccineId;
+	}
+
+	public void setAutomaticallyEnrollMothers(boolean automaticallyEnrollMothers) {
+		this.automaticallyEnrollMothers = automaticallyEnrollMothers;
+	}
+
+	public boolean isAutomaticallyEnrollMothers() {
+		return automaticallyEnrollMothers;
 	}
 }
