@@ -8,7 +8,6 @@ import net.frontlinesms.ui.UiGeneratorController;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.util.StringUtils;
 
 public class PatientPanel extends PersonPanel<Patient> {
 

@@ -10,6 +10,7 @@ import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
 import net.frontlinesms.plugins.patientview.data.repository.VaccineDao;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.FormFieldDelegate;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.CHWComboBox;
+import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.MotherCheckbox;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.NewbornCheckbox;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.PatientIdField;
 import net.frontlinesms.plugins.patientview.vaccine.VaccineScheduler;
@@ -23,7 +24,8 @@ public class PatientFieldGroup extends PersonFieldGroup<Patient> {
 	private VaccineDao vaccineDao;
 	private ScheduledDoseDao doseDao;
 	
-	private NewbornCheckbox checkBox;
+	private NewbornCheckbox newbornCheckBox;
+	private MotherCheckbox motherCheckBox;
 	
 	
 	public PatientFieldGroup(UiGeneratorController ui, ApplicationContext appCon, FormFieldDelegate delegate, Patient person) {
@@ -40,8 +42,10 @@ public class PatientFieldGroup extends PersonFieldGroup<Patient> {
 		PatientIdField idField = new PatientIdField(getPerson()!=null?getPerson().getExternalId():"", ui, this);
 		super.insertField(idField, 1);
 		if(isNewPersonGroup){
-			checkBox = new NewbornCheckbox(ui, "Enroll in vaccines for newborns?", null , appCon);
-			super.addField(checkBox);
+			newbornCheckBox = new NewbornCheckbox(ui, "Enroll in vaccines for newborns?", null , appCon);
+			motherCheckBox = new MotherCheckbox(ui, "Enroll in antenatal care?", null , appCon);
+			super.addField(newbornCheckBox);
+			super.addField(motherCheckBox);
 		}
 	}
 	
@@ -52,12 +56,15 @@ public class PatientFieldGroup extends PersonFieldGroup<Patient> {
 		}else{
 			patientDao.updatePatient(getPerson());
 		}
-		if(checkBox != null && checkBox.getRawResponse()){
+		if(newbornCheckBox != null && newbornCheckBox.getRawResponse()){
 			List<Vaccine> vaccines = vaccineDao.getNewbornVaccines();
 			for(Vaccine v: vaccines){
 				List<ScheduledDose> scheduledDoses = VaccineScheduler.instance().scheduleVaccinesFromBirth(getPerson(), v);
 				doseDao.saveScheduledDoses(scheduledDoses);
 			}
+		}
+		if(motherCheckBox != null && motherCheckBox.getRawResponse()){
+			//do stuff
 		}
 	}
 
