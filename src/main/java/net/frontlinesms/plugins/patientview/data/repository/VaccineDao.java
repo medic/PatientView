@@ -18,6 +18,8 @@ public interface VaccineDao {
 	
 	public List<Vaccine> getNewbornVaccines();
 	
+	public List<Vaccine> getAntenatalVaccines();
+	
 	public Vaccine getVaccineByName(String name);
 	
 	public List<Vaccine> findVaccineByName(String nameFragment);

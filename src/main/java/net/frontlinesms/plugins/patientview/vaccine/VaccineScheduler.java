@@ -33,17 +33,17 @@ public class VaccineScheduler {
 		this.scheduledDoseDao = (ScheduledDoseDao) appCon.getBean("ScheduledDoseDao");
 	}
 	
-	public List<ScheduledDose> scheduleVaccinesFromBirth(Patient patient, Vaccine vaccine){
+	public List<ScheduledDose> scheduleVaccinesFromDate(Patient patient, Vaccine vaccine, long date){
 		List<VaccineDose> doses = vaccine.getDoses();
 		List<ScheduledDose> scheduledDoses  = new ArrayList<ScheduledDose>();
 		for(VaccineDose dose: doses){
 			Calendar startDate = Calendar.getInstance();
-			startDate.setTimeInMillis(patient.getBirthdate());
+			startDate.setTimeInMillis(date);
 			startDate.add(Calendar.MONTH, dose.getStartDateMonths());
 			startDate.add(Calendar.DAY_OF_MONTH, dose.getStartDateDays());
 			long windowStartDate = startDate.getTimeInMillis();
 			Calendar endDate = Calendar.getInstance();
-			endDate.setTimeInMillis(patient.getBirthdate());
+			endDate.setTimeInMillis(date);
 			endDate.add(Calendar.MONTH, dose.getEndDateMonths());
 			endDate.add(Calendar.DAY_OF_MONTH, dose.getEndDateDays());
 			long windowEndDate = endDate.getTimeInMillis();
@@ -53,22 +53,20 @@ public class VaccineScheduler {
 		return scheduledDoses;
 	}
 	
+	public List<ScheduledDose> scheduleVaccinesFromBirth(Patient patient, Vaccine vaccine){
+		return scheduleVaccinesFromDate(patient,vaccine,patient.getBirthdate());
+	}
+	
 	public List<ScheduledDose> scheduleVaccinesFromToday(Patient patient, Vaccine vaccine){
-		List<VaccineDose> doses = vaccine.getDoses();
-		List<ScheduledDose> scheduledDoses  = new ArrayList<ScheduledDose>();
-		for(VaccineDose dose: doses){
-			Calendar startDate = Calendar.getInstance();
-			startDate.add(Calendar.MONTH, dose.getStartDateMonths());
-			startDate.add(Calendar.DAY_OF_MONTH, dose.getStartDateDays());
-			long windowStartDate = startDate.getTimeInMillis();
-			Calendar endDate = Calendar.getInstance();
-			endDate.add(Calendar.MONTH, dose.getEndDateMonths());
-			endDate.add(Calendar.DAY_OF_MONTH, dose.getEndDateDays());
-			long windowEndDate = endDate.getTimeInMillis();
-			ScheduledDose sched = new ScheduledDose(dose, patient, windowStartDate, windowEndDate);
-			scheduledDoses.add(sched);
+		return scheduleVaccinesFromDate(patient,vaccine,new Date().getTime());
+	}
+	
+	public List<ScheduledDose> scheduleVaccinesFromDateOfConception(Patient patient, Vaccine vaccine){
+		if(patient.getDateOfConception() != null && patient.getDateOfConception() >0){
+			return scheduleVaccinesFromDate(patient,vaccine,patient.getDateOfConception());
+		}else{
+			return new ArrayList<ScheduledDose>();
 		}
-		return scheduledDoses;
 	}
 	
 	public List<ScheduledDose> scheduleVaccinesFirstDoseToday(Patient patient, Vaccine vaccine){

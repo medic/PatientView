@@ -86,9 +86,16 @@ public class HibernateVaccineDao extends BaseHibernateDao<Vaccine> implements Va
 		allVaccines.removeAll(toRemove);
 		return allVaccines;
 	}
+	
 	public List<Vaccine> getNewbornVaccines() {
 		DetachedCriteria c = super.getCriterion();
 		c.add(Restrictions.eq("automaticallyEnrollNewborns", true));
+		return super.getList(c);
+	}
+	
+	public List<Vaccine> getAntenatalVaccines() {
+		DetachedCriteria c = super.getCriterion();
+		c.add(Restrictions.eq("automaticallyEnrollMothers", true));
 		return super.getList(c);
 	}
 }

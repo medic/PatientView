@@ -16,8 +16,10 @@ import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfie
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.PatientIdField;
 import net.frontlinesms.plugins.patientview.vaccine.VaccineScheduler;
 import net.frontlinesms.ui.UiGeneratorController;
+import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.util.StringUtils;
 
 public class PatientFieldGroup extends PersonFieldGroup<Patient> {
 
@@ -27,7 +29,7 @@ public class PatientFieldGroup extends PersonFieldGroup<Patient> {
 	
 	private NewbornCheckbox newbornCheckBox;
 	private MotherCheckbox motherCheckBox;
-	
+	private ConceptionDateField cDateField;
 	
 	public PatientFieldGroup(UiGeneratorController ui, ApplicationContext appCon, FormFieldDelegate delegate, Patient person) {
 		super(ui, appCon, delegate, person);
@@ -42,7 +44,7 @@ public class PatientFieldGroup extends PersonFieldGroup<Patient> {
 		super.addField(chwCombo);
 		PatientIdField idField = new PatientIdField(getPerson()!=null?getPerson().getExternalId():"", ui, this);
 		super.insertField(idField, 1);
-		ConceptionDateField cDateField = new ConceptionDateField(ui, this,getPerson()!=null?getPerson().getDateOfConception():null);
+		cDateField = new ConceptionDateField(ui, this,getPerson()!=null?getPerson().getDateOfConception():null);
 		super.insertField(cDateField, 5);
 		if(isNewPersonGroup){
 			newbornCheckBox = new NewbornCheckbox(ui, "Enroll in vaccines for newborns?", null , appCon);
@@ -65,9 +67,20 @@ public class PatientFieldGroup extends PersonFieldGroup<Patient> {
 				List<ScheduledDose> scheduledDoses = VaccineScheduler.instance().scheduleVaccinesFromBirth(getPerson(), v);
 				doseDao.saveScheduledDoses(scheduledDoses);
 			}
-		}
-		if(motherCheckBox != null && motherCheckBox.getRawResponse()){
-			//do stuff
+			if(getPerson().getChw()!=null && StringUtils.hasText(getPerson().getChw().getPhoneNumber())){
+				String message = "Newborn registered: "+ getPerson().getName() + ", DOB: "+ InternationalisationUtils.getDateFormat().print(getPerson().getBirthdate()) + ", ID: "+ getPerson().getStringID();
+				ui.getFrontlineController().sendTextMessage(getPerson().getChw().getPhoneNumber(), message);
+			}
+		}else if(motherCheckBox != null && motherCheckBox.getRawResponse()){
+			List<Vaccine> antenatalVaccines = vaccineDao.getAntenatalVaccines();
+			for(Vaccine v: antenatalVaccines){
+				List<ScheduledDose> scheduledDoses = VaccineScheduler.instance().scheduleVaccinesFromDateOfConception(getPerson(), v);
+				doseDao.saveScheduledDoses(scheduledDoses);
+			}
+			if(getPerson().getChw()!=null && StringUtils.hasText(getPerson().getChw().getPhoneNumber())){
+				String message = "Mother registered: "+ getPerson().getName() + ", ID: "+ getPerson().getStringID();
+				ui.getFrontlineController().sendTextMessage(getPerson().getChw().getPhoneNumber(), message);
+			}
 		}
 	}
 
