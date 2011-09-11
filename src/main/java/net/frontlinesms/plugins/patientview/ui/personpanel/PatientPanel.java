@@ -55,6 +55,10 @@ public class PatientPanel extends PersonPanel<Patient> {
 	 */
 	@Override
 	protected void addAdditionalFields() {
+		if(getPerson().getDateOfConception() !=null){
+			String dOC = InternationalisationUtils.getDateFormat().print(getPerson().getDateOfConception());
+			super.addLabelToLabelPanel("Date of conception: " + dOC);
+		}
 		if(getPerson().getChw()!= null){
 			Object panel = uiController.createPanel("");
 			uiController.setGap(panel, 5);

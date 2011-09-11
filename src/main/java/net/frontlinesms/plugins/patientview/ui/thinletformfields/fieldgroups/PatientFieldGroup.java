@@ -10,6 +10,7 @@ import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
 import net.frontlinesms.plugins.patientview.data.repository.VaccineDao;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.FormFieldDelegate;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.CHWComboBox;
+import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.ConceptionDateField;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.MotherCheckbox;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.NewbornCheckbox;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.PatientIdField;
@@ -41,6 +42,8 @@ public class PatientFieldGroup extends PersonFieldGroup<Patient> {
 		super.addField(chwCombo);
 		PatientIdField idField = new PatientIdField(getPerson()!=null?getPerson().getExternalId():"", ui, this);
 		super.insertField(idField, 1);
+		ConceptionDateField cDateField = new ConceptionDateField(ui, this,getPerson()!=null?getPerson().getDateOfConception():null);
+		super.insertField(cDateField, 5);
 		if(isNewPersonGroup){
 			newbornCheckBox = new NewbornCheckbox(ui, "Enroll in vaccines for newborns?", null , appCon);
 			motherCheckBox = new MotherCheckbox(ui, "Enroll in antenatal care?", null , appCon);

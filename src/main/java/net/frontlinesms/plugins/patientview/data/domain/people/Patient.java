@@ -30,6 +30,8 @@ public class Patient extends Person {
 	
 	private String externalId;
 	
+	private Long dateOfConception;
+	
 	/** Default constructor for Hibernate. */
 	public Patient() {}
 
@@ -81,5 +83,13 @@ public class Patient extends Person {
 		}else{
 			return pid+"";
 		}
+	}
+
+	public void setDateOfConception(Long dateOfConception) {
+		this.dateOfConception = dateOfConception;
+	}
+
+	public Long getDateOfConception() {
+		return dateOfConception;
 	}
 }
