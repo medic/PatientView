@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <panel name="vaccineAdministrationPanel" weightx="1" weighty="1">
-    <panel border="true" bottom="5" columns="1" gap="5" left="5" name="vaccineListPanel" right="5" text="Vaccines" top="5" weightx="1" weighty="1" icon="/icons/syringe_small.png">
+    <panel border="true" bottom="5" columns="1" gap="5" left="5" name="vaccineListPanel" right="5" text="Appointment Schedules" top="5" weightx="2" weighty="1" icon="/icons/syringe_small.png">
         <list name="vaccineList" weightx="1" weighty="1" action="vaccineListSelectionChanged()"/>
         <panel columns="1" gap="5" name="vaccineButtonPanel" weightx="1">
-            <button name="addVaccineButton" text="Add Vaccine" weightx="1" action="addVaccine()" icon="/icons/add_vaccine_large.png"/>
-            <button name="removeVaccineButton" text="Remove Vaccine" weightx="1" action="removeVaccine()" icon="/icons/delete_vaccine_large.png"/>
+            <button name="addVaccineButton" text="Add Schedule" weightx="1" action="addVaccine()" icon="/icons/add_vaccine_large.png"/>
+            <button name="removeVaccineButton" text="Remove Schedule" weightx="1" action="removeVaccine()" icon="/icons/delete_vaccine_large.png"/>
         </panel>
     </panel>
-    <panel bottom="5" columns="1" left="5" name="vaccineActionPanel" right="5" top="5" weightx="3" weighty="1"/>
+    <panel bottom="5" columns="1" left="5" name="vaccineActionPanel" right="5" top="5" weightx="5" weighty="1"/>
 </panel>

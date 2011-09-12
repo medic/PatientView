@@ -61,6 +61,7 @@ public class PatientFieldGroup extends PersonFieldGroup<Patient> {
 		}else{
 			patientDao.updatePatient(getPerson());
 		}
+		//if they are a newborn, enroll them in the proper vaccines and notify the chw
 		if(newbornCheckBox != null && newbornCheckBox.getRawResponse()){
 			List<Vaccine> vaccines = vaccineDao.getNewbornVaccines();
 			for(Vaccine v: vaccines){
@@ -71,7 +72,8 @@ public class PatientFieldGroup extends PersonFieldGroup<Patient> {
 				String message = "Newborn registered: "+ getPerson().getName() + ", DOB: "+ InternationalisationUtils.getDateFormat().print(getPerson().getBirthdate()) + ", ID: "+ getPerson().getStringID();
 				ui.getFrontlineController().sendTextMessage(getPerson().getChw().getPhoneNumber(), message);
 			}
-		}else if(motherCheckBox != null && motherCheckBox.getRawResponse()){
+		// if they're a new mother, enroll them in the proper vaccines and notify the CHW
+		}else if(motherCheckBox != null && motherCheckBox.getRawResponse() && getPerson().getDateOfConception() != null && getPerson().getDateOfConception() > 0){
 			List<Vaccine> antenatalVaccines = vaccineDao.getAntenatalVaccines();
 			for(Vaccine v: antenatalVaccines){
 				List<ScheduledDose> scheduledDoses = VaccineScheduler.instance().scheduleVaccinesFromDateOfConception(getPerson(), v);

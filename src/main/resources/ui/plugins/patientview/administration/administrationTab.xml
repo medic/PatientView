@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tab name="admin" text="i18n.admin.tab.title" icon="/icons/big_medic.png">
-    <splitpane divider="240" weightx="1" weighty="1" name="splitpanel">
-        <panel columns="1" bottom="9" gap="9" left="9" right="5" top="9" weightx="1" weighty="1">
-            <panel name="taskpanel" border="true" text="i18n.admin.tasks" icon="/icons/tick.png" columns="1" gap="6" bottom="4" left="4" right="4" top="4" weightx="1" weighty="1">
+    <splitpane divider="255" weightx="1" weighty="1" name="splitpanel">
+        <panel columns="1" bottom="9" gap="9" left="9" right="5" top="9" weightx="2" weighty="1">
+            <panel name="taskpanel" border="true" text="i18n.admin.tasks" icon="/icons/tick.png" columns="1" gap="6" bottom="4" left="4" right="4" top="4" weightx="2" weighty="1">
                 <list name="tasklist" weightx="1" weighty="1" action="listSelectionChanged()"/>
             </panel>
         </panel>
-        <panel columns="1" bottom="9" gap="9" left="5" right="9" top="9" weightx="1" weighty="1">
+        <panel columns="1" bottom="9" gap="9" left="5" right="9" top="9" weightx="5" weighty="1">
             <panel name="actionPanel" columns="1" gap="6" weightx="1" weighty="1"/>
         </panel>
     </splitpane>

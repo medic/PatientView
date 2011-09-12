@@ -7,8 +7,8 @@
 	</panel>
 	<panel gap="7" halign="right" name="actionButtonPanel" right="6"
 		weightx="1">
-		<button name="addDoseButton" text="Add Dose" action="addDose()" icon="/icons/add.png" />
-		<button name="editDoseButton" text="Edit Dose" action="editDose()" icon="/icons/pencil.png"/>
-		<button name="deleteDoseButton" text="Remove Dose" action="removeDose()" icon="/icons/delete.png"/>
+		<button name="addDoseButton" text="Add Appointment" action="addDose()" icon="/icons/add.png" />
+		<button name="editDoseButton" text="Edit Appointment" action="editDose()" icon="/icons/pencil.png"/>
+		<button name="deleteDoseButton" text="Remove Appointment" action="removeDose()" icon="/icons/delete.png"/>
 	</panel>
 </panel>

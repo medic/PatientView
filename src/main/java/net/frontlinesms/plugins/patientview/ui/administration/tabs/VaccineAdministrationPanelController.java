@@ -75,12 +75,12 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		this.scheduledDoseDao = (ScheduledDoseDao) appCon.getBean("ScheduledDoseDao");
 		//create the dose table
 		doseTableController = new AdvancedTableController(this, uiController);
-		doseTableController.setNoResultsMessage("No doses");
+		doseTableController.setNoResultsMessage("No Appointments");
 		List<HeaderColumn> columnList = new ArrayList<HeaderColumn>();
-		columnList.add(new HeaderColumn("getName", "/icons/syringe_small.png", "Dose Name"));
+		columnList.add(new HeaderColumn("getName", "/icons/syringe_small.png", "Appointment Name"));
 		columnList.add(new HeaderColumn("getStringStartDate", "/icons/date_add.png", "Start Date"));
 		columnList.add(new HeaderColumn("getStringEndDate", "/icons/date_delete.png", "End Date"));
-		columnList.add(new HeaderColumn("getStringMinimumInterval", "/icons/time.png", "Minimum Interval To Next Dose"));
+		columnList.add(new HeaderColumn("getStringMinimumInterval", "/icons/time.png", "Minimum Interval To Next Appointment"));
 		doseTableController.putHeader(VaccineDose.class, columnList);
 	}
 	
@@ -91,7 +91,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	
 	@Override
 	public String getListItemTitle() {
-		return "Manage Vaccines";
+		return "Manage Appointment Schedules";
 	}
 	
 	@Override
@@ -113,7 +113,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		//put the vaccines in the list
 		//if there aren't any vaccines
 		if(vaccines.size() == 0){
-			add(find(VACCINE_LIST),ui.createListItem("No Vaccines",null));
+			add(find(VACCINE_LIST),ui.createListItem("No Schedules",null));
 		}else{ //otherwise, add them all
 			int count = 0;
 			for(Vaccine v: vaccines){
@@ -223,7 +223,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		String name = ui.getText(find(VACCINE_NAME_FIELD));
 		if(name == null || name.trim().equals("")){
 			ui.setText(find(VACCINE_NAME_FIELD), "");
-			ui.alert("You cannot create a vaccine without a name");
+			ui.alert("You cannot create an appointment schedule without a name");
 			return;
 		}
 		Vaccine v = new Vaccine(ui.getText(find(VACCINE_NAME_FIELD)),true);
@@ -261,7 +261,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	 */
 	public void removeVaccine(){
 		if(scheduledDoseDao.getScheduledDoses(getCurrentlySelectedVaccine(),null).size() != 0){
-			ui.alert("You cannot delete a vaccine with scheduled doses.");
+			ui.alert("You cannot delete an appointment schedule that is already in use.");
 		}else{
 			ui.showConfirmationDialog("removeVaccineConfirmed()", this,"medic.vaccine.confirm.delete");
 		}
@@ -287,7 +287,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		removeAll(find(DOSE_ACTION_PANEL));
 		add(find(DOSE_ACTION_PANEL),ui.loadComponentFromFile(EDIT_DOSE_XML, this));
 		ui.requestFocus(find(DOSE_NAME_FIELD));
-		ui.setText(find(EDIT_DOSE_PANEL), "Add a Dose");
+		ui.setText(find(EDIT_DOSE_PANEL), "Add an Appointment");
 		//disable the vaccine action buttons
 		ui.setEnabled(find(ADD_VACCINE_BUTTON), false);
 		ui.setEnabled(find(REMOVE_VACCINE_BUTTON), false);
@@ -335,7 +335,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	 */
 	public void removeDose(){
 		if(scheduledDoseDao.getScheduledDoses(null, (VaccineDose) doseTableController.getCurrentlySelectedObject()).size() != 0){
-			ui.alert("You cannot delete a dose that has appointments scheduled.");
+			ui.alert("You cannot delete an appointment that is already in use.");
 		}else{
 			ui.showConfirmationDialog("removeDoseConfirmed()", this,"medic.vaccine.dose.confirm.delete");
 		}
@@ -362,7 +362,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		//prepare all the data
 		String name = ui.getText(find(DOSE_NAME_FIELD));
 		if(name == null || name.trim().equals("")){
-			ui.alert("You can't create a dose without a name.");
+			ui.alert("You can't create an appointment without a name.");
 			return;
 		}
 		int startDateMonths = Integer.parseInt(ui.getText(find(START_DATE_MONTHS_BOX)));
@@ -373,7 +373,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		int minIntervalDays = Integer.parseInt(ui.getText(find(MIN_INTERVAL_DAYS_BOX)));
 		
 		if(startDateMonths > endDateMonths || (startDateMonths == endDateMonths && startDateDays >= endDateDays)){
-			ui.alert("The dose window's end date cannot be before its start date.");
+			ui.alert("The appointment window's end date cannot be before its start date.");
 			return;
 		}
 		//if we're not currently editing a dose, create a new one
