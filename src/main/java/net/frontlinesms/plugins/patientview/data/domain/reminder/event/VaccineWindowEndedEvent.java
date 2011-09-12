@@ -30,12 +30,12 @@ public class VaccineWindowEndedEvent extends ReminderEvent<ScheduledDose>{
 	public VaccineWindowEndedEvent(ApplicationContext appCon){
 		super();
 		this.scheduledDoseDao=(ScheduledDoseDao) appCon.getBean("ScheduledDoseDao");
-		variables.put("Vaccine Name", "{vaccine name}");
+		variables.put("Appointment Name", "{appointment name}");
 		variables.put("Window End Date", "{window end date}");
 	}
 
 	public String getSnippet() {
-		return "the end of a vaccine window";
+		return "the end of an appointment window";
 	}
 
 	public List<ReminderDate<ScheduledDose>> getEventDatesWithContext(Patient patient) {
@@ -68,7 +68,7 @@ public class VaccineWindowEndedEvent extends ReminderEvent<ScheduledDose>{
 	}
 	
 	public String getVariableValue(Patient patient, ScheduledDose context, String key) {
-		if(key.equals("{vaccine name}")){
+		if(key.equals("{appointment name}")){
 			return context.getDose().getVaccine().getName();
 		}else if(key.equals("{window end date}")){
 			return context.getWindowEndDateString();
