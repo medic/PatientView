@@ -2,6 +2,7 @@ package net.frontlinesms.plugins.patientview.ui.thinletformfields.fieldgroups;
 
 import java.util.List;
 
+import net.frontlinesms.plugins.patientview.data.domain.people.Gender;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.Vaccine;
@@ -44,8 +45,10 @@ public class PatientFieldGroup extends PersonFieldGroup<Patient> {
 		super.addField(chwCombo);
 		PatientIdField idField = new PatientIdField(getPerson()!=null?getPerson().getExternalId():"", ui, this);
 		super.insertField(idField, 1);
-		cDateField = new ConceptionDateField(ui, this,getPerson()!=null?getPerson().getDateOfConception():null);
-		super.insertField(cDateField, 5);
+		if(isNewPersonGroup || getPerson().getGender() == Gender.FEMALE){
+			cDateField = new ConceptionDateField(ui, this,getPerson()!=null?getPerson().getDateOfConception():null);
+			super.insertField(cDateField, 5);
+		}
 		if(isNewPersonGroup){
 			newbornCheckBox = new NewbornCheckbox(ui, "Enroll in vaccines for newborns?", null , appCon);
 			motherCheckBox = new MotherCheckbox(ui, "Enroll in antenatal care?", null , appCon);
