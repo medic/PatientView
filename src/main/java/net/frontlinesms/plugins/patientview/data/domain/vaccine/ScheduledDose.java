@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.util.StringUtils;
+
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
 import net.frontlinesms.plugins.patientview.security.UserSessionManager;
@@ -104,7 +106,7 @@ public class ScheduledDose implements Comparable{
 	public String getAdministeredString(){
 		long currentTime = System.currentTimeMillis();
 		if(administered){
-			return "Administered by "+ administeredBy.getName() + " on " + InternationalisationUtils.getDateFormat().print(getDateAdministered())+ " at "+ placeAdministered;
+			return "Completed by "+ administeredBy.getName() + " on " + InternationalisationUtils.getDateFormat().print(getDateAdministered())+ (StringUtils.hasText(placeAdministered)?" at "+ placeAdministered:"");
 		}else if(currentTime > windowStartDate && currentTime < windowEndDate){
 			return "-----";
 		}else if(currentTime < windowStartDate){

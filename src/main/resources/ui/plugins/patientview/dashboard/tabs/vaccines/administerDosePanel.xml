@@ -2,7 +2,7 @@
 <panel columns="1" gap="5" halign="center" name="administerPanel" weightx="1">
     <panel gap="14" name="administerDatePanel" weightx="1"/>
     <panel gap="5" halign="center" name="administerButtonPanel" weightx="1">
-        <button action="administerDoseConfirmed()" text="Administer" icon="/icons/tick.png"/>
+        <button name="confirmAdministerDoseButton" action="administerDoseConfirmed()" text="Complete" icon="/icons/tick.png"/>
         <button action="administerDoseCancelled()" text="Cancel" icon="/icons/cross.png"/>
     </panel>
 </panel>

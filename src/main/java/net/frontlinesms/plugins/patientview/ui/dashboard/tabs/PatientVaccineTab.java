@@ -22,6 +22,7 @@ import net.frontlinesms.plugins.patientview.vaccine.VaccineScheduler;
 import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
 
+import org.mockito.internal.matchers.Find;
 import org.springframework.context.ApplicationContext;
 
 public class PatientVaccineTab extends TabController implements ThinletUiEventHandler, TableActionDelegate, FormFieldDelegate {
@@ -79,7 +80,7 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		this.scheduledDoseDao = (ScheduledDoseDao) appCon.getBean("ScheduledDoseDao");
 		this.patient = patient;
 		//setup UI
-		setTitle("Vaccines");
+		setTitle("Appointments");
 		setIconPath("/icons/syringe.png");
 		this.mainPanel = ui.loadComponentFromFile(MAIN_THINLET_XML, this);
 		ui.removeAll(getTab());
@@ -87,12 +88,12 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		//setup table
 		scheduledDoseController = new AdvancedTableController(this, uiController);
 		List<HeaderColumn> doseColumns = new ArrayList<HeaderColumn>();
-		doseColumns.add(new HeaderColumn("getDoseName", "/icons/syringe_small.png", "Dose Name"));
+		doseColumns.add(new HeaderColumn("getDoseName", "/icons/syringe_small.png", "Appointment Name"));
 		doseColumns.add(new HeaderColumn("getWindowStartDateString", "/icons/date_add.png", "Date Scheduled"));
 		doseColumns.add(new HeaderColumn("getAdministeredString", "/icons/tick.png", "Status"));
 		doseColumns.add(new HeaderColumn("getWindowEndDateString", "/icons/date_delete.png", "Window End Date"));
 		scheduledDoseController.putHeader(ScheduledDose.class, doseColumns);
-		scheduledDoseController.setNoResultsMessage("No Scheduled Vaccines");
+		scheduledDoseController.setNoResultsMessage("No Appointments");
 		scheduledDoseController.setResults(new ArrayList<ScheduledDose>());
 		ui.add(ui.find(mainPanel,SCHEDULED_DOSE_TABLE_PANEL),scheduledDoseController.getMainPanel());
 		populateVaccineList(null);
@@ -105,7 +106,7 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		
 		//if there are 2 or more vaccines, add an 'all vaccines' option
 		if(scheduledVaccines.size()>=2){
-			ui.add(ui.find(mainPanel,VACCINE_LIST),ui.createListItem("All Vaccines", null));
+			ui.add(ui.find(mainPanel,VACCINE_LIST),ui.createListItem("All Appointment Schedules", null));
 		}
 		int selectIndex = 0;
 		boolean foundVaccine = false;
@@ -121,7 +122,7 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		}
 		// if there are no vaccines, add a "No Vaccines" option
 		if(scheduledVaccines.size() == 0){
-			ui.add(ui.find(mainPanel,VACCINE_LIST),ui.createListItem("No Vaccines", null));
+			ui.add(ui.find(mainPanel,VACCINE_LIST),ui.createListItem("No Appointment Schedules", null));
 		}else{// if there are vaccines, select index 1
 			if(toSelect == null){
 				ui.setSelectedIndex(ui.find(mainPanel,VACCINE_LIST),0);
@@ -226,13 +227,19 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 	}
 	
 	public void scheduleVaccineConfirmed(){
+		if(ui.find(mainPanel,"confirmScheduleButton") == null) return;
 		Vaccine v = (Vaccine) ui.getAttachedObject(ui.getSelectedItem(ui.find(mainPanel,VACCINE_SELECT)));
 		if(ui.isSelected(ui.find(FROM_BIRTH_RADIO))){
 			scheduledDoseDao.saveScheduledDoses(VaccineScheduler.instance().scheduleVaccinesFromBirth(patient, v));
 		}else if(ui.isSelected(ui.find(FROM_TODAY_RADIO))){
 			scheduledDoseDao.saveScheduledDoses(VaccineScheduler.instance().scheduleVaccinesFromToday(patient, v));
 		}else if(ui.isSelected(ui.find(FIRST_SHOT_TODAY_RADIO))){
-			scheduledDoseDao.saveScheduledDoses(VaccineScheduler.instance().scheduleVaccinesFirstDoseToday(patient,v));
+			if(patient.getDateOfConception() != null && patient.getDateOfConception() > 0){
+				scheduledDoseDao.saveScheduledDoses(VaccineScheduler.instance().scheduleVaccinesFromDateOfConception(patient,v));
+			}else{
+				ui.alert("This patient's date of conception has not been entered into the system yet.");
+				return;
+			}
 		}
 		scheduleVaccineCanceled();
 		populateVaccineList(v);
@@ -242,8 +249,8 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 	public void scheduleVaccineCanceled(){
 		ui.removeAll(ui.find(mainPanel,VACCINE_LIST_BUTTON_PANEL));
 		Object panel = ui.createPanel("");
-		Object scheduleButton = ui.createButton("Schedule Vaccine", "scheduleVaccineClicked()", null, this);
-		Object removeButton = ui.createButton("Remove Vaccine", "removeVaccineClicked()", null, this);
+		Object scheduleButton = ui.createButton("Add Appointment Schedule", "scheduleVaccineClicked()", null, this);
+		Object removeButton = ui.createButton("Remove Appointment Schedule", "removeVaccineClicked()", null, this);
 		ui.setName(scheduleButton, SCHEDULE_VACCINE_BUTTON);
 		ui.setName(removeButton, REMOVE_VACCINE_BUTTON);
 		ui.setWeight(scheduleButton, 1, 0);
@@ -260,7 +267,7 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 	public void removeVaccineClicked(){
 		Vaccine v = (Vaccine) ui.getAttachedObject(ui.getSelectedItem(ui.find(mainPanel,VACCINE_LIST)));
 		if(scheduledDoseDao.patientHasAdministeredDosesForVaccine(patient, v)){
-			ui.alert("You cannot remove a patient from a scheduled vaccine series once a dose has been administered");
+			ui.alert("You cannot remove a patient from an appointment schedule once one appointment has been completed.");
 		}else{
 			ui.showConfirmationDialog("removeVaccineConfirmed()", this,"medic.vaccine.confirm.remove");
 		}
@@ -283,7 +290,7 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		//get the currently selected dose
 		toBeRescheduled = (ScheduledDose) scheduledDoseController.getCurrentlySelectedObject();
 		//setup the date fields
-		rescheduledStartDateField = new DateField(ui, "Date Scheduled", this,false);
+		rescheduledStartDateField = new DateField(ui, "New Appointment Date", this,false);
 		rescheduledStartDateField.setRawResponse(toBeRescheduled.getWindowStartDate());
 		//add the date fields to the UI
 		ui.add(ui.find(reschedulePanel,RESCHEDULE_DOSE_DATE_SCHEDULED_PANEL),rescheduledStartDateField.getThinletPanel());
@@ -336,15 +343,16 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		Object administerPanel = ui.loadComponentFromFile(ADMINISTER_DOSE_PANEL_XML,this);
 		//get the currently selected dose
 		toBeAdministered = (ScheduledDose) scheduledDoseController.getCurrentlySelectedObject();
-		administeredDateField = new DateField(ui,"Date Administered",this,false);
+		administeredDateField = new DateField(ui,"Date",this,false);
 		administeredDateField.setRawResponse(new Date().getTime());
 		ui.add(ui.find(administerPanel,"administerDatePanel"),administeredDateField.getThinletPanel());
-		placeAdministeredField = new TextField(ui,"Place Administered",this);
+		placeAdministeredField = new TextField(ui,"Place",this);
 		ui.add(ui.find(administerPanel,"administerDatePanel"),placeAdministeredField.getThinletPanel());
 		ui.add(ui.find(mainPanel,DOSE_BUTTON_PANEL),administerPanel);
 	}
 	
 	public void administerDoseConfirmed(){
+		if(ui.find(mainPanel,"confirmAdministerDoseButton") == null) return;
 		scheduledDoseDao.administerDose(toBeAdministered, null,administeredDateField.getRawResponse(),placeAdministeredField.getRawResponse());
 		List<ScheduledDose> doses = VaccineScheduler.instance().rescheduleRemainingDoses(toBeAdministered);
 		scheduledDoseDao.saveScheduledDoses(doses);
