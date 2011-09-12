@@ -22,7 +22,6 @@ import net.frontlinesms.plugins.patientview.vaccine.VaccineScheduler;
 import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
 
-import org.mockito.internal.matchers.Find;
 import org.springframework.context.ApplicationContext;
 
 public class PatientVaccineTab extends TabController implements ThinletUiEventHandler, TableActionDelegate, FormFieldDelegate {
