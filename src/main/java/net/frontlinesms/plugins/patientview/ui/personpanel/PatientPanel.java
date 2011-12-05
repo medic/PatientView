@@ -65,7 +65,7 @@ public class PatientPanel extends PersonPanel<Patient> {
 	@Override
 	protected void addAdditionalFields() {
 		if(getPerson().getDateOfConception() !=null){
-			String dOC = InternationalisationUtils.getDateFormat().print(getPerson().getDateOfConception());
+			String dOC = InternationalisationUtils.getDateFormat().format(getPerson().getDateOfConception());
 			super.addLabelToLabelPanel("Expected Date of Delivery: " + dOC);
 		}
 		if(getPerson().getChw()!= null){

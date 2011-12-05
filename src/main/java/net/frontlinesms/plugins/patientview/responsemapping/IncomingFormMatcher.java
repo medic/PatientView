@@ -1,5 +1,7 @@
 package net.frontlinesms.plugins.patientview.responsemapping;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,8 +32,6 @@ import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
 import org.apache.log4j.Logger;
 import org.jfree.util.Log;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.context.ApplicationContext;
 
 import uk.ac.shef.wit.simmetrics.similaritymetrics.JaroWinkler;
@@ -51,8 +51,8 @@ public class IncomingFormMatcher implements EventObserver{
 	private PatientDao patientDao;
 	private CommunityHealthWorkerDao chwDao;
 	
-	private DateTimeFormatter shortFormatter;
-	private DateTimeFormatter longFormatter;
+	private SimpleDateFormat shortFormatter;
+	private DateFormat longFormatter;
 	
 	private ApplicationContext appCon;
 	
@@ -78,9 +78,8 @@ public class IncomingFormMatcher implements EventObserver{
 		dateString = dateString.toLowerCase();
 		dateString = dateString.replace("mm", "MM");
 		dateString = dateString.replace("yyyy", "yy");
-		shortFormatter = DateTimeFormat.forPattern(dateString).withChronology(InternationalisationUtils.ethiopicChronology).withZone(InternationalisationUtils.addisZone);
-		dateString = dateString.replace("yy", "yyyy");
-		longFormatter = DateTimeFormat.forPattern(dateString).withChronology(InternationalisationUtils.ethiopicChronology).withZone(InternationalisationUtils.addisZone);
+		shortFormatter = new SimpleDateFormat(dateString);
+		longFormatter = InternationalisationUtils.getDateFormat();
 	//	FrameLauncher f = new FrameLauncher("Test form handling",thinlet,200,100,null)
 		//{ public void windowClosing(WindowEvent e){  dispose(); }};
 	}
@@ -184,9 +183,9 @@ public class IncomingFormMatcher implements EventObserver{
 			}else if(fieldResponse.getField().getMapping() == PatientFieldMapping.BIRTHDATEFIELD){
 				for(Candidate c: candidates){
 					if(fieldResponse.getValue().length() <=8){
-						c.setBirthdateScore(getEditDistance(shortFormatter.print(c.getPatient().getBirthdate()),fieldResponse.getValue()));
+						c.setBirthdateScore(getEditDistance(shortFormatter.format(c.getPatient().getBirthdate()),fieldResponse.getValue()));
 					}else{
-						c.setBirthdateScore(getEditDistance(longFormatter.print(c.getPatient().getBirthdate()),fieldResponse.getValue()));
+						c.setBirthdateScore(getEditDistance(longFormatter.format(c.getPatient().getBirthdate()),fieldResponse.getValue()));
 					}
 				}
 			}
@@ -217,9 +216,9 @@ public class IncomingFormMatcher implements EventObserver{
 			//if it is mapped as a bday field, score it as a bday
 			}else if(fieldResponse.getField().getMapping() == PatientFieldMapping.BIRTHDATEFIELD){
 				if(fieldResponse.getValue().length() <=8){
-					result += getEditDistance(shortFormatter.print(subject.getBirthdate()),fieldResponse.getValue());
+					result += getEditDistance(shortFormatter.format(subject.getBirthdate()),fieldResponse.getValue());
 				}else{
-					result += getEditDistance(longFormatter.print(subject.getBirthdate()),fieldResponse.getValue());
+					result += getEditDistance(longFormatter.format(subject.getBirthdate()),fieldResponse.getValue());
 				}
 					total += 1.0F;
 			}

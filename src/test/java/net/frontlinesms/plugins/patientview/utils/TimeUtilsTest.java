@@ -117,9 +117,10 @@ public class TimeUtilsTest extends BaseTestCase {
 	public void test_compareCalendars_sameYearDifferentMonth_correctNumberReturned(){
 		Calendar first = Calendar.getInstance();
 		Calendar second = Calendar.getInstance();
-		first.set(Calendar.MONTH, second.get(Calendar.MONTH)+1);
+		second.set(Calendar.MONTH, Calendar.FEBRUARY);
+		first.set(Calendar.MONTH, Calendar.MARCH);
 		assertTrue(TimeUtils.compareCalendars(first, second) > 0);
-		second.set(Calendar.MONTH, first.get(Calendar.MONTH)+1);
+		second.set(Calendar.MONTH, Calendar.APRIL);
 		assertTrue(TimeUtils.compareCalendars(first, second) < 0);
 	}
 	

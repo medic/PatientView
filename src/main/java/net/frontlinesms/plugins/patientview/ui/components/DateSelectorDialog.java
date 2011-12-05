@@ -1,5 +1,3 @@
-package net.frontlinesms.plugins.patientview.ui.components;
-
 /*
  * FrontlineSMS <http://www.frontlinesms.com>
  * Copyright 2007, 2008 kiwanja
@@ -19,17 +17,20 @@ package net.frontlinesms.plugins.patientview.ui.components;
  * You should have received a copy of the GNU Lesser General Public License
  * along with FrontlineSMS. If not, see <http://www.gnu.org/licenses/>.
  */
+package net.frontlinesms.plugins.patientview.ui.components;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Date;
 
+import net.frontlinesms.FrontlineSMSConstants;
 import net.frontlinesms.FrontlineUtils;
 import net.frontlinesms.ui.ExtendedThinlet;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
 import org.apache.log4j.Logger;
-import org.joda.time.DateTime;
 
 import thinlet.Thinlet;
 
@@ -38,18 +39,23 @@ import thinlet.Thinlet;
  *
  */
 public class DateSelectorDialog {
-	
+
 //> STATIC CONSTANTS
+	/** Index of the first month, January */
+	private static final int FIRST_MONTH = 0;
+	/** Index of the last month, December */
+	private static final int LAST_MONTH = 11;
 	private static final String COMPONENT_LB_MONTH = "lbMonth";
 	private static final String COMPONENT_BT_NEXT = "btNext";
 	private static final String COMPONENT_BT_PREVIOUS = "btPrevious";
 	private static final String UI_FILE_DATE_SELECTER_FORM = "/ui/core/util/dgDate.xml";
 
-//> INSTANCE PROPERTIES
 	/** Logger for this class */
-	private final Logger log = FrontlineUtils.getLogger(getClass());
+	private static Logger LOG = FrontlineUtils.getLogger(DateSelectorDialog.class);
+
+//> INSTANCE PROPERTIES
 	/** A calendar object with a poorly-defined role */
-	private DateTime current;
+	private Calendar current;
 	/** A month value with a poorly-defined role */
 	private int curMonth;
 	/** A year value with a poorly-defined role */
@@ -61,14 +67,7 @@ public class DateSelectorDialog {
 	private int dayToHighlight;
 	private int monthToHighlight;
 	private int yearToHighlight;
-	
-	private final static String[] ETHIOPIC_MONTHS = new String[]{
-		"M\u00E4sk\u00E4r\u00E4m","\u1E6C\u0259q\u0259mt", "\u1E2A\u0259dar",
-		"Ta\u1E2B\u015Ba\u015B", "\u1E6C\u0259rr","Y\u00E4katit",
-		"M\u00E4gabit","Miyazya","G\u0259nbot","S\u00E4ne",
-		"\u1E24amle","N\u00E4hase","\u1E56ag\u02B7\u0259men"
-	};
-	
+
 //> CONSTRUCTORS
 	/**
 	 * Constructs a new date selecter which will update a particular textfield.
@@ -79,7 +78,7 @@ public class DateSelectorDialog {
 		this.ui = ui;
 		this.textField = textField;
 	}
-	
+
 	/**
 	 * Shows the date selecter dialog, showing the previous date or today.
 	 * @throws IOException
@@ -90,33 +89,34 @@ public class DateSelectorDialog {
 		showMonth(dialog);
 		ui.add(dialog);
 	}
-	
+
 	/**
 	 * Initialises the dialog buttons, set their action method and gets the dte to be shown.
 	 * 
 	 * @param dialog
 	 */
 	private void init(Object dialog) {
-		log.trace("ENTER");
+		LOG.trace("ENTER");
 		Object prev = ui.find(dialog, COMPONENT_BT_PREVIOUS);
 		ui.setCloseAction(dialog, "closeDialog(this)", dialog, this);
 		ui.setAction(prev, "previousMonth(dateSelecter)", dialog, this);
 		Object next = ui.find(dialog, COMPONENT_BT_NEXT);
 		ui.setAction(next, "nextMonth(dateSelecter)", dialog, this);
-		current = DateTime.now(InternationalisationUtils.ethiopicChronology);
+		current = Calendar.getInstance();
 		setDayToHighlight();
-		current = new DateTime(current.getYear(),current.getMonthOfYear(),1,0,0,InternationalisationUtils.ethiopicChronology);
+		current.set(Calendar.DATE, 1);
 		if (!ui.getText(textField).equals("")) {
-			log.debug("Previous date is [" + ui.getText(textField) + "]");
+			LOG.debug("Previous date is [" + ui.getText(textField) + "]");
 			try {
-				current = InternationalisationUtils.getDateFormat().parseDateTime(ui.getText(textField));
+				Date d = InternationalisationUtils.getDateFormat().parse(ui.getText(textField));
+				current.setTime(d);
 				setDayToHighlight();
-			} catch (Exception e) {}
+			} catch (ParseException e) {}
 		}
-		log.debug("Current date is [" + current.toString() + "]");
-		curMonth = current.getMonthOfYear();
-		curYear = current.getYear();
-		log.trace("EXIT");
+		LOG.debug("Current date is [" + current.getTime() + "]");
+		curMonth = current.get(Calendar.MONTH);
+		curYear = current.get(Calendar.YEAR);
+		LOG.trace("EXIT");
 	}
 
 //> UI EVENT METHODS
@@ -133,57 +133,65 @@ public class DateSelectorDialog {
 	 * @param dialog
 	 */
 	public void nextMonth(Object dialog) {
-		current = current.plusMonths(1);
-		curMonth = current.getMonthOfYear();
-		curYear = current.getYear();
+		current.set(Calendar.MONTH, this.curMonth + 1);
+		curMonth = current.get(Calendar.MONTH);
+		if (curMonth == FIRST_MONTH) {
+			current.set(Calendar.YEAR, this.curYear + 1);
+		}
+		curYear = current.get(Calendar.YEAR);
 		showMonth(dialog);
 	}
-	
+
 	/**
 	 * Method called when the user clicks the previous month button on the dialog.
 	 * 
 	 * @param dialog
 	 */
 	public void previousMonth(Object dialog) {
-		current = current.minusMonths(1);
-		curMonth = current.getMonthOfYear();
-		curYear = current.getYear();
+		current.set(Calendar.MONTH, this.curMonth - 1);
+		curMonth = current.get(Calendar.MONTH);
+		if (curMonth == LAST_MONTH) {
+			current.set(Calendar.YEAR, this.curYear - 1);
+		}
+		curYear = current.get(Calendar.YEAR);
 		showMonth(dialog);
 	}
-	
+
 	/**
 	 * Fill all the dates in the dialog for the current month.
 	 * 
 	 * @param dialog
 	 */
 	private void showMonth(Object dialog) {
-		log.trace("ENTER");
-		current = new DateTime(current.getYear(),current.getMonthOfYear(),1,2,2,InternationalisationUtils.ethiopicChronology);
-		String curMonth = ETHIOPIC_MONTHS[current.getMonthOfYear() -1] + " " + curYear;
+		LOG.trace("ENTER");
+		current.set(Calendar.DATE, 1);
+		String curMonth = getMonthAsString(this.curMonth) + " " + curYear;
 		Object lbMonth = ui.find(dialog, COMPONENT_LB_MONTH);
-		log.debug("Current month [" + curMonth + "]");
+		LOG.debug("Current month [" + curMonth + "]");
 		ui.setText(lbMonth, curMonth);
 		for (int i = 1; i <= 6; i++) {
 			fillRow(dialog, "pn" + i);
 		}
-		if(current.getMonthOfYear() != this.curMonth) current = current.minusMonths(1);
-		log.trace("EXIT");
+		LOG.trace("EXIT");
 	}
 
 	public void selectionMade(Object dialog, String day) {
-		DateTime dt = new DateTime(this.curYear,this.curMonth,Integer.parseInt(day),0,0,InternationalisationUtils.ethiopicChronology);
-		String date = InternationalisationUtils.getDateFormat().print(dt);
+		Calendar c = Calendar.getInstance();
+		c.set(Calendar.DATE, Integer.parseInt(day));
+		c.set(Calendar.MONTH, this.curMonth);
+		c.set(Calendar.YEAR, this.curYear);
+		String date = InternationalisationUtils.getDateFormat().format(c.getTime());
 		ui.setText(textField, date);
 		ui.remove(dialog);
 		ui.invokeAction(this.textField);
 	}
-	
+
 //> UI HELPER METHODS
 	/** Sets the day to be highlighted */
 	private void setDayToHighlight() {
-		dayToHighlight = current.getDayOfMonth();
-		monthToHighlight = current.getMonthOfYear();
-		yearToHighlight = current.getYear();
+		dayToHighlight = current.get(Calendar.DATE);
+		monthToHighlight = current.get(Calendar.MONTH);
+		yearToHighlight = current.get(Calendar.YEAR);
 	}
 	/**
 	 * Sets the button texts for the supplied week.
@@ -195,25 +203,27 @@ public class DateSelectorDialog {
 		Object panel = ui.find(dialog, pnName);
 		Object buttons[] = ui.getItems(panel);
 		cleanButtons(buttons);
-		
+
 		int dayOfWeek;
-		while (current.getMonthOfYear() == this.curMonth) {
-			dayOfWeek = current.getDayOfWeek();
-			Object button = buttons[dayOfWeek-1];
+		while (current.get(Calendar.MONTH) == this.curMonth) {
+			dayOfWeek = current.get(Calendar.DAY_OF_WEEK);
+			Object button = buttons[dayOfWeek - 1];
 			ui.setEnabled(button, true);
-			ui.setText(button, String.valueOf(current.getDayOfMonth()));
+			ui.setText(button, String.valueOf(current.get(Calendar.DATE)));
 			ui.setAction(button, "selectionMade(dateSelecter, this.text)", dialog, this);
 			if (isDayToHighlight()) {
 				ui.setColor(button, Thinlet.FOREGROUND, Color.RED);
 			}
-			current = current.plusDays(1);
+			current.set(Calendar.DATE, current.get(Calendar.DATE) + 1);
 			if (dayOfWeek == Calendar.SATURDAY) {
 				//we've reached the end of the week, so we break;
 				break;
 			}
 		}
+		if (current.get(Calendar.YEAR) != curYear) {
+			current.set(Calendar.YEAR, curYear);
+		}
 	}
-	
 	private void cleanButtons(Object[] buttons) {
 		for (Object but : buttons) {
 			ui.setText(but, "");
@@ -222,8 +232,16 @@ public class DateSelectorDialog {
 		}
 	}
 	private boolean isDayToHighlight() {
-		return (current.getDayOfMonth() == dayToHighlight 
-				&& current.getMonthOfYear() == monthToHighlight
-				&& current.getYear() == yearToHighlight);
+		return (current.get(Calendar.DATE) == dayToHighlight 
+				&& current.get(Calendar.MONTH) == monthToHighlight
+				&& current.get(Calendar.YEAR) == yearToHighlight);
+	}
+	/**
+	 * Gets the name of the month with the specified index
+	 * @param i 0-based index of the month: 0=jan, 11=dec
+	 * @return Month name
+	 */
+	private String getMonthAsString(int i) {
+		return InternationalisationUtils.getI18nString(FrontlineSMSConstants.MONTH_KEYS[i]);
 	}
 }

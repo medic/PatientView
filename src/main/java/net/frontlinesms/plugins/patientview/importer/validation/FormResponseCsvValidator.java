@@ -116,7 +116,7 @@ public class FormResponseCsvValidator extends CsvValidator{
 	
 	public void validateDate(String date, int lineNumber, List<CsvValidationException> exceptions){
 		try {
-			InternationalisationUtils.getDateFormat().parseMillis(date);
+			InternationalisationUtils.getDateFormat().parse(date).getTime();
 		} catch (Exception e) {
 			exceptions.add(new CsvValidationException(lineNumber,getI18nString("medic.importer.date.format.error")+": "+ date));
 		}

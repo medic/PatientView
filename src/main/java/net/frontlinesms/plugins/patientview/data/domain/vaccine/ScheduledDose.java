@@ -72,7 +72,7 @@ public class ScheduledDose implements Comparable{
 	}
 	
 	public String getWindowStartDateString(){
-		return InternationalisationUtils.getDateFormat().print(getWindowStartDate());
+		return InternationalisationUtils.getDateFormat().format(getWindowStartDate());
 	}
 
 	public void setWindowStartDate(long windowStartDate) {
@@ -84,7 +84,7 @@ public class ScheduledDose implements Comparable{
 	}
 	
 	public String getWindowEndDateString(){
-		return InternationalisationUtils.getDateFormat().print(getWindowEndDate());
+		return InternationalisationUtils.getDateFormat().format(getWindowEndDate());
 	}
 	
 	public void setWindowEndDate(long windowEndDate) {
@@ -106,7 +106,7 @@ public class ScheduledDose implements Comparable{
 	public String getAdministeredString(){
 		long currentTime = System.currentTimeMillis();
 		if(administered){
-			return "Completed by "+ administeredBy.getName() + " on " + InternationalisationUtils.getDateFormat().print(getDateAdministered())+ (StringUtils.hasText(placeAdministered)?" at "+ placeAdministered:"");
+			return "Completed by "+ administeredBy.getName() + " on " + InternationalisationUtils.getDateFormat().format(getDateAdministered())+ (StringUtils.hasText(placeAdministered)?" at "+ placeAdministered:"");
 		}else if(currentTime > windowStartDate && currentTime < windowEndDate){
 			return "-----";
 		}else if(currentTime < windowStartDate){

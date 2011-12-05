@@ -93,7 +93,7 @@ public class PatientFieldGroup extends PersonFieldGroup<Patient> {
 					doseDao.saveScheduledDoses(scheduledDoses);
 				}
 				if(getPerson().getChw()!=null && StringUtils.hasText(getPerson().getChw().getPhoneNumber())){
-					String message = "Newborn registered: "+ getPerson().getName() + ", DOB: "+ InternationalisationUtils.getDateFormat().print(getPerson().getBirthdate()) + ", ID: "+ getPerson().getStringID();
+					String message = "Newborn registered: "+ getPerson().getName() + ", DOB: "+ InternationalisationUtils.getDateFormat().format(getPerson().getBirthdate()) + ", ID: "+ getPerson().getStringID();
 					ui.getFrontlineController().sendTextMessage(getPerson().getChw().getPhoneNumber(), message);
 				}
 			// if they're a new mother, enroll them in the proper vaccines and notify the CHW

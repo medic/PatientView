@@ -1,12 +1,11 @@
 package net.frontlinesms.plugins.patientview.ui.detailview.panels;
 
+import java.text.DateFormat;
+
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicMessageResponse;
 import net.frontlinesms.plugins.patientview.ui.detailview.DetailViewPanelController;
 import net.frontlinesms.ui.UiGeneratorController;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
-
-import org.joda.time.format.DateTimeFormatter;
-
 import thinlet.Thinlet;
 
 public class MessageResponseDetailViewPanelController extends DetailViewPanelController<MedicMessageResponse> {
@@ -27,9 +26,9 @@ public class MessageResponseDetailViewPanelController extends DetailViewPanelCon
 	@Override
 	public void willAppear(MedicMessageResponse message) {
 		removeAll();
-		DateTimeFormatter df = InternationalisationUtils.getDateFormat();
+		DateFormat df = InternationalisationUtils.getDateFormat();
 		Object submitterLabel = ui.createLabel(getI18nString(SUBMITTED_BY)+" "+ message.getSubmitter().getName());
-		Object dateLabel = ui.createLabel(getI18nString(ON)+" " +  df.print(message.getDateSubmitted()));
+		Object dateLabel = ui.createLabel(getI18nString(ON)+" " +  df.format(message.getDateSubmitted()));
 		Object textarea = Thinlet.create("textarea");
 		ui.setText(textarea, message.getMessageContent());
 		ui.setEditable (textarea,false);

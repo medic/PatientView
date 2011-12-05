@@ -114,7 +114,7 @@ public class PatientRegistrationPanelController extends AdministrationTabPanel i
 					gender = Gender.stringToGender(mfr.getValue());
 				}else if(mfr.getField().getRegMapping() == RegistrationFieldMapping.BIRTHDATE){
 					try{
-						birthdate = InternationalisationUtils.getDateFormat().parseMillis(mfr.getValue());
+						birthdate = InternationalisationUtils.getDateFormat().parse(mfr.getValue()).getTime();
 					}catch(Throwable t){
 						birthdate = 0L;
 					}
@@ -137,7 +137,7 @@ public class PatientRegistrationPanelController extends AdministrationTabPanel i
 					gender = Gender.stringToGender(mfr.getValue());
 				}else if(mfr.getField().getRegMapping() == RegistrationFieldMapping.BIRTHDATE){
 					try{
-						birthdate = InternationalisationUtils.getDateFormat().parseMillis(mfr.getValue());
+						birthdate = InternationalisationUtils.getDateFormat().parse(mfr.getValue()).getTime();
 					}catch(Throwable t){
 						birthdate = 0L;
 					}
@@ -151,14 +151,14 @@ public class PatientRegistrationPanelController extends AdministrationTabPanel i
 						months = Integer.parseInt(mfr.getValue());
 					}catch(Throwable t){ continue;}
 					double weeksRemaining = 40.0 - ((30.0 * months)/7.0);
-					DateTime current = DateTime.now(InternationalisationUtils.ethiopicChronology);
+					DateTime current = DateTime.now();
 					amenDateOfConception = current.plusWeeks(TimeUtils.safeLongToInt(Math.round(weeksRemaining))).getMillis();
 				}else if(mfr.getField().getRegMapping() == RegistrationFieldMapping.LASTMENSTRALCYCLE){
 					long lastMens;
 					try{
-						lastMens = InternationalisationUtils.getDateFormat().parseMillis(mfr.getValue());
+						lastMens = InternationalisationUtils.getDateFormat().parse(mfr.getValue()).getTime();
 					}catch(Throwable t){ continue;}
-					DateTime done = new DateTime(lastMens,InternationalisationUtils.ethiopicChronology);
+					DateTime done = new DateTime(lastMens);
 					lmpDateOfConception = done.plusWeeks(40).getMillis();
 				}
 			}
@@ -168,7 +168,7 @@ public class PatientRegistrationPanelController extends AdministrationTabPanel i
 			lmpDateOfConception = amenDateOfConception;
 		}
 		if(birthdate == 0L && age > 0){
-			DateTime cur = DateTime.now(InternationalisationUtils.ethiopicChronology);
+			DateTime cur = DateTime.now();
 			birthdate = cur.minusYears(age).getMillis();
 		}
 		result = new PatientFieldGroup(ui, appCon, null, firstname + " " + lastname, gender, birthdate, lmpDateOfConception, isNewborn);

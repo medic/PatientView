@@ -64,7 +64,7 @@ public class Candidate implements Comparable<Candidate>{
 	}
 	
 	public String getStringBirthdate(){
-		return InternationalisationUtils.getDateFormat().print(patient.getBirthdate());
+		return InternationalisationUtils.getDateFormat().format(patient.getBirthdate());
 	}
 
 	public int compareTo(Candidate o) {

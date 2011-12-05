@@ -196,7 +196,7 @@ public class FormResponseDataImporter implements CsvDataImporter{
 	
 	private void addMessageToList(String message){
 		String text = uiController.getText(messageList);
-		String newLine = "["+getI18nString("medic.common.form.response")+ " "+getI18nString("medic.data.importer") +"] "+InternationalisationUtils.getDatetimeFormat().print(new Date().getTime()) + " - " + message;
+		String newLine = "["+getI18nString("medic.common.form.response")+ " "+getI18nString("medic.data.importer") +"] "+InternationalisationUtils.getDatetimeFormat().format(new Date().getTime()) + " - " + message;
 		text += "\n"+newLine;
 		uiController.setText(messageList, text);
 	}

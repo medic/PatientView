@@ -125,7 +125,7 @@ public class PatientDataImporter extends PersonDataImporter {
 			Gender gender = parseGender(currLine[CsvColumns.GENDER_INDEX]);
 			long birthdate = 0L;
 			try{
-				birthdate = InternationalisationUtils.getDateFormat().parseMillis(currLine[CsvColumns.BDAY_INDEX]);
+				birthdate = InternationalisationUtils.getDateFormat().parse(currLine[CsvColumns.BDAY_INDEX]).getTime();
 			}catch(Exception e){}
 			// get the secondary ID number
 			String secondaryId = null;

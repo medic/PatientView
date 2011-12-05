@@ -41,7 +41,7 @@ public abstract class PersonCsvValidator extends CsvValidator{
 				}
 				//check the birthdate
 				try{
-					InternationalisationUtils.getDateFormat().parseMillis(currLine[CsvColumns.BDAY_INDEX].trim());
+					InternationalisationUtils.getDateFormat().parse(currLine[CsvColumns.BDAY_INDEX].trim()).getTime();
 				}catch(Exception e){
 					exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.date.format.error")+ ": \""+currLine[CsvColumns.BDAY_INDEX]+"\""));
 				}
