@@ -1,6 +1,5 @@
 package net.frontlinesms.plugins.patientview.responsemapping;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,7 +12,6 @@ import net.frontlinesms.events.EventObserver;
 import net.frontlinesms.events.FrontlineEventNotification;
 import net.frontlinesms.plugins.forms.data.domain.Form;
 import net.frontlinesms.plugins.forms.data.domain.FormResponse;
-import net.frontlinesms.plugins.forms.data.domain.ResponseValue;
 import net.frontlinesms.plugins.forms.data.repository.FormDao;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField.PatientFieldMapping;
@@ -86,39 +84,13 @@ public class IncomingFormMatcher implements EventObserver{
 	//	FrameLauncher f = new FrameLauncher("Test form handling",thinlet,200,100,null)
 		//{ public void windowClosing(WindowEvent e){  dispose(); }};
 	}
-	
-	public void testHandler(){
-		List<ResponseValue> responses = new ArrayList<ResponseValue>();
-		responses.add(new ResponseValue("Frankie Tenday"));
-		responses.add(new ResponseValue("16/06/1964"));
-		responses.add(new ResponseValue("First answer"));
-		responses.add(new ResponseValue("true"));
-		responses.add(new ResponseValue("false"));
-		responses.add(new ResponseValue("true"));
-		responses.add(new ResponseValue("false"));
-		responses.add(new ResponseValue("true"));
-		responses.add(new ResponseValue("false"));
-		responses.add(new ResponseValue("true"));
-		responses.add(new ResponseValue("false"));
-		responses.add(new ResponseValue("true"));
-		responses.add(new ResponseValue("false"));
-		responses.add(new ResponseValue("true"));
-		responses.add(new ResponseValue("false"));
-		responses.add(new ResponseValue("true"));
-		responses.add(new ResponseValue("false"));
-		responses.add(new ResponseValue("true"));
-		responses.add(new ResponseValue("false"));
-		responses.add(new ResponseValue("true"));
-		responses.add(new ResponseValue("false"));
-		responses.add(new ResponseValue("true"));
-		responses.add(new ResponseValue("false"));
-		responses.add(new ResponseValue("true"));
-		FormResponse fr = new FormResponse("2099707079",vanillaFormDao.getFromId(10L),responses);
-		handleFormResponse(fr);
-	}
-	
+		
 	public boolean isMedicForm(Form f){
 		return formDao.getMedicFormForForm(f) != null;
+	}
+	
+	public void testHandler(){
+		
 	}
 	
 	/**
@@ -139,7 +111,9 @@ public class IncomingFormMatcher implements EventObserver{
 		MedicForm mForm = formDao.getMedicFormForForm(formResponse.getParentForm());
 		CommunityHealthWorker submitter = chwDao.getCommunityHealthWorkerByPhoneNumber(formResponse.getSubmitter());
 		MedicFormResponse mfr = new MedicFormResponse(formResponse,mForm,submitter,null);
-		mfr.setSubject(getFinalCandidate(mfr));
+		if(!mForm.isChildRegistrationForm() && !mForm.isMotherRegistrationForm()){
+			mfr.setSubject(getFinalCandidate(mfr));
+		}
 		formResponseDao.saveMedicFormResponse(mfr);
 	}
 	

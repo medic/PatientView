@@ -1,8 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.thinletformfields;
 
 import static net.frontlinesms.ui.i18n.InternationalisationUtils.getDateFormat;
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
-import net.frontlinesms.FrontlineSMSConstants;
 import net.frontlinesms.plugins.patientview.ui.components.DateSelectorDialog;
 import net.frontlinesms.ui.ExtendedThinlet;
 
@@ -18,7 +16,7 @@ public class DateField extends TextBox<Long> {
 	Object btn;
 
 	public DateField(ExtendedThinlet thinlet, String label, FormFieldDelegate delegate, boolean showDateFormat) {
-		super(thinlet, label + (showDateFormat?" ("+getI18nString(FrontlineSMSConstants.DATEFORMAT_YMD)+")":""), delegate);
+		super(thinlet, label + (showDateFormat ? " (dd/mm/yyyy)":""), delegate);
 		btn = thinlet.createButton("");
 		thinlet.setIcon(btn, "/icons/date.png");
 		thinlet.setAction(btn, "showDateSelector()", null, this);
@@ -28,7 +26,7 @@ public class DateField extends TextBox<Long> {
 	}
 	
 	public DateField(ExtendedThinlet thinlet, String label, FormFieldDelegate delegate) {
-		super(thinlet, label + " ("+getI18nString(FrontlineSMSConstants.DATEFORMAT_YMD)+")", delegate);
+		super(thinlet, label + " (dd/mm/yyyy)", delegate);
 		btn = thinlet.createButton("");
 		thinlet.setIcon(btn, "/icons/date.png");
 		thinlet.setAction(btn, "showDateSelector()", null, this);

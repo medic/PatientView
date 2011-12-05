@@ -6,6 +6,7 @@ import net.frontlinesms.plugins.forms.data.domain.Form;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField.PatientFieldMapping;
+import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField.RegistrationFieldMapping;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormFieldDao;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormResponseDao;
@@ -27,8 +28,6 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 	private static final String FORM_PANEL_XML = "/ui/plugins/patientview/administration/formAdministrationPanel.xml";
 	
 	/* Thinlet objects */
-	/**The main Thinlet container for this panel */
-	private Object mainPanel;
 	/**The list second from the left, with all patient view forms in it */
 	private Object patientViewFormList;
 	/** The list farthest to the right, with the fields of the currently selected medic form in it*/
@@ -101,8 +100,20 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 	 */
 	public void patientViewFormListSelectionChanged(){
 		MedicForm selectedForm = (MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList));
-		if(selectedForm != null)
+		if(selectedForm != null){
 			populateFieldList(selectedForm);
+			ui.setSelected(ui.find(mainPanel, "regNoneBox"),false);
+			ui.setSelected(ui.find(mainPanel, "regMothersBox"),false);
+			ui.setSelected(ui.find(mainPanel, "regChildrenBox"),false);
+			if(selectedForm.isChildRegistrationForm()){
+				ui.setSelected(ui.find(mainPanel, "regChildrenBox"),true);
+			}else if(selectedForm.isMotherRegistrationForm()){
+				ui.setSelected(ui.find(mainPanel, "regMothersBox"),true);
+			}else{
+				ui.setSelected(ui.find(mainPanel, "regNoneBox"),true);
+			}
+			
+		}
 	}
 	
 	/**
@@ -119,12 +130,14 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 	 * @param form
 	 */
 	private void populateFieldList(MedicForm form){
-		ui.setText(find("fieldListTitle"), getI18nString(FIELDS_ON_FORM_PREFIX)+ " \"" + form.getName()+"\"");
+//		ui.setText(find("fieldListTitle"), getI18nString(FIELDS_ON_FORM_PREFIX)+ " \"" + form.getName()+"\"");
 		removeAll(fieldList);
 		for(MedicFormField mff: patientViewFieldDao.getFieldsOnForm(form)){
 			Object item = ui.createListItem(mff.getLabel(), mff);
-			if(mff.getMapping() != null){
+			if(!form.isChildRegistrationForm() && !form.isMotherRegistrationForm() && mff.getMapping() != null){
 				ui.setIcon(item, mff.getMapping().getIconPath());
+			}else if(mff.getRegMapping() != null){
+				ui.setIcon(item, mff.getRegMapping().getIconPath());
 			}
 			add(fieldList,item);
 		}
@@ -138,26 +151,53 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 	 * @param field
 	 */
 	private void populateFieldMappingPanel(MedicFormField field){
+		MedicForm selectedForm = (MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList));
 		removeAll(mappingComboBox);
 		ui.setAction(mappingComboBox, "mappingComboBoxSelectionChanged()", null, this);
 		add(mappingComboBox,ui.createComboboxChoice(getI18nString("common.blank"),null));
 		ui.setSelectedIndex(mappingComboBox,0);
 		ui.setText(mappingComboBox, getI18nString("common.blank"));
-		for(int i = 0; i < PatientFieldMapping.values().length; i++){
-			PatientFieldMapping m = PatientFieldMapping.values()[i];
-			Object choice = ui.createComboboxChoice(m.toString(), m);
-			ui.setIcon(choice, m.getIconPath());
-			add(mappingComboBox,choice);
-			if(field.getMapping() == m){
-				ui.setSelectedIndex(mappingComboBox, i+1);
-				ui.setText(mappingComboBox, m.toString());
+		if(!selectedForm.isChildRegistrationForm() && !selectedForm.isMotherRegistrationForm()){
+			for(int i = 0; i < PatientFieldMapping.values().length; i++){
+				PatientFieldMapping m = PatientFieldMapping.values()[i];
+				Object choice = ui.createComboboxChoice(m.toString(), m);
+				ui.setIcon(choice, m.getIconPath());
+				add(mappingComboBox,choice);
+				if(field.getMapping() == m){
+					ui.setSelectedIndex(mappingComboBox, i+1);
+					ui.setText(mappingComboBox, m.toString());
+				}
+				
 			}
-			
-		}
-		if(field.getMapping() != null){
-			ui.setIcon(mappingComboBox, field.getMapping().getIconPath());
+			if(field.getMapping() != null){
+				ui.setIcon(mappingComboBox, field.getMapping().getIconPath());
+			}else{
+				ui.setIcon(mappingComboBox, "");
+			}
 		}else{
-			ui.setIcon(mappingComboBox, "");
+			for(int i = 0; i < RegistrationFieldMapping.values().length; i++){
+				RegistrationFieldMapping m = RegistrationFieldMapping.values()[i];
+				if((m == RegistrationFieldMapping.MONTHOFAMENORIA || m == RegistrationFieldMapping.LASTMENSTRALCYCLE)
+						&& selectedForm.isChildRegistrationForm()){
+					continue;
+				}
+				if(m == RegistrationFieldMapping.GENDER && selectedForm.isMotherRegistrationForm()){
+					continue;
+				}
+				Object choice = ui.createComboboxChoice(m.toString(), m);
+				ui.setIcon(choice, m.getIconPath());
+				add(mappingComboBox,choice);
+				if(field.getRegMapping() == m){
+					ui.setSelectedIndex(mappingComboBox, i+1);
+					ui.setText(mappingComboBox, m.toString());
+				}
+				
+			}
+			if(field.getRegMapping() != null){
+				ui.setIcon(mappingComboBox, field.getRegMapping().getIconPath());
+			}else{
+				ui.setIcon(mappingComboBox, "");
+			}
 		}
 	}
 	
@@ -165,15 +205,29 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 	 * Called when the mapping combo box selection is changed. It saves the new mapping selection
 	 */
 	public void mappingComboBoxSelectionChanged(){
-		PatientFieldMapping mapping = (PatientFieldMapping) ui.getAttachedObject(ui.getSelectedItem(mappingComboBox));
-		MedicFormField field = (MedicFormField) ui.getAttachedObject(ui.getSelectedItem(fieldList));
-		field.setMapping(mapping);
-		patientViewFieldDao.updateField(field);
-		Object item = ui.getSelectedItem(fieldList);
-		if(field.getMapping() != null){
-			ui.setIcon(item, field.getMapping().getIconPath());
+		MedicForm selectedForm = (MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList));
+		if(!selectedForm.isChildRegistrationForm() && !selectedForm.isMotherRegistrationForm()){
+			PatientFieldMapping mapping = (PatientFieldMapping) ui.getAttachedObject(ui.getSelectedItem(mappingComboBox));
+			MedicFormField field = (MedicFormField) ui.getAttachedObject(ui.getSelectedItem(fieldList));
+			field.setMapping(mapping);
+			patientViewFieldDao.updateField(field);
+			Object item = ui.getSelectedItem(fieldList);
+			if(field.getMapping() != null){
+				ui.setIcon(item, field.getMapping().getIconPath());
+			}else{
+				ui.setIcon(item, "");
+			}
 		}else{
-			ui.setIcon(item, "");
+			RegistrationFieldMapping mapping = (RegistrationFieldMapping) ui.getAttachedObject(ui.getSelectedItem(mappingComboBox));
+			MedicFormField field = (MedicFormField) ui.getAttachedObject(ui.getSelectedItem(fieldList));
+			field.setRegMapping(mapping);
+			patientViewFieldDao.updateField(field);
+			Object item = ui.getSelectedItem(fieldList);
+			if(field.getRegMapping() != null){
+				ui.setIcon(item, field.getRegMapping().getIconPath());
+			}else{
+				ui.setIcon(item, "");
+			}
 		}
 	}
 	
@@ -199,4 +253,33 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 		populatePatientViewFormList();
 	}
 
+	public void noneBoxSelected(){
+		MedicForm selectedForm = (MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList));
+		if(selectedForm != null){
+			selectedForm.setChildRegistrationForm(false);
+			selectedForm.setMotherRegistrationForm(false);
+			patientViewFormDao.updateMedicForm(selectedForm);
+		}
+		patientViewFormListSelectionChanged();
+	}
+	
+	public void motherBoxSelected(){
+		MedicForm selectedForm = (MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList));
+		if(selectedForm != null){
+			selectedForm.setChildRegistrationForm(false);
+			selectedForm.setMotherRegistrationForm(true);
+			patientViewFormDao.updateMedicForm(selectedForm);
+		}
+		patientViewFormListSelectionChanged();
+	}
+	
+	public void childBoxSelected(){
+		MedicForm selectedForm = (MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList));
+		if(selectedForm != null){
+			selectedForm.setChildRegistrationForm(true);
+			selectedForm.setMotherRegistrationForm(false);
+			patientViewFormDao.updateMedicForm(selectedForm);
+		}
+		patientViewFormListSelectionChanged();
+	}
 }

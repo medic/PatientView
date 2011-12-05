@@ -156,8 +156,12 @@ public class FormResponseMappingPanelController extends AdministrationTabPanel i
 	 * @see net.frontlinesms.plugins.patientview.ui.thinletformfields.FormFieldDelegate#formFieldChanged(net.frontlinesms.plugins.patientview.ui.thinletformfields.ThinletFormField, java.lang.String)
 	 */
 	public void formFieldChanged(ThinletFormField changedField, String newValue) {
-		resultSet.setAroundDate(new Date(((DateField) changedField).getRawResponse()));
-		tableController.updateTable();
+		if(changedField == null) return;
+		Long response = ((DateField) changedField).getRawResponse();
+		if(response != null){
+			resultSet.setAroundDate(new Date(response));
+			tableController.updateTable();
+		}
 	}
 	
 	/**

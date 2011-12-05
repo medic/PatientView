@@ -18,6 +18,8 @@ public class FormMappingResultSet extends PagedResultSet {
 	
 	private boolean searchingMapped;
 	
+	private boolean searchingRegForms = false;
+	
 	private Date aroundDate;
 	
 	private MedicForm form;
@@ -30,8 +32,8 @@ public class FormMappingResultSet extends PagedResultSet {
 	
 	@Override
 	public List<MedicFormResponse> getFreshResultsPage() {
-		super.setTotalResults(formResponseDao.countFindFormResponses(isSearchingMapped(), form));
-		this.results = formResponseDao.findFormResponses(isSearchingMapped(), form, aroundDate, getFirstResultOnPage() -1, pageSize);
+		super.setTotalResults(formResponseDao.countFindFormResponses(isSearchingMapped(),searchingRegForms, form));
+		this.results = formResponseDao.findFormResponses(isSearchingMapped(),searchingRegForms, form, aroundDate, getFirstResultOnPage() -1, pageSize);
 		return results;
 	}
 
@@ -57,5 +59,9 @@ public class FormMappingResultSet extends PagedResultSet {
 
 	public void setForm(MedicForm form) {
 		this.form = form;
+	}
+
+	public void setSearchingRegForms(boolean searchingRegForms) {
+		this.searchingRegForms = searchingRegForms;
 	}
 }

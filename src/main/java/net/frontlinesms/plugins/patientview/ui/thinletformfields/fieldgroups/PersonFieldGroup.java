@@ -2,6 +2,7 @@ package net.frontlinesms.plugins.patientview.ui.thinletformfields.fieldgroups;
 
 import java.util.Date;
 
+import net.frontlinesms.plugins.patientview.data.domain.people.Gender;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.FormFieldDelegate;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.ThinletFormField;
@@ -24,19 +25,30 @@ public abstract class PersonFieldGroup<P extends Person> extends FieldGroup {
 		super(ui, appCon, delegate);
 		this.setPerson(person);
 		this.isNewPersonGroup = (person == null);
-		initialize();
+		initialize("",null,new Date().getTime());
 	}
 	
-	private void initialize(){
-		NameField name = new NameField(ui, isNewPersonGroup ? "" : getPerson().getName(),null);
-		GenderComboBox gender = new GenderComboBox(ui,isNewPersonGroup? null : getPerson().getGender(),null);
-		BirthdateField bday = new BirthdateField(ui, isNewPersonGroup? new Date().getTime() : getPerson().getBirthdate(),null);
+	public PersonFieldGroup(UiGeneratorController ui, ApplicationContext appCon, FormFieldDelegate delegate, String name, Gender gender, long birthdate) {
+		super(ui, appCon, delegate);
+		this.setPerson(person);
+		this.isNewPersonGroup = true;
+		initialize(name, gender, birthdate,false);
+	}
+	
+	private void initialize(String namePar, Gender genderPar, long birthdate){
+		initialize(namePar,genderPar,birthdate, true);
+	}
+	
+	private void initialize(String namePar, Gender genderPar, long birthdate, boolean addAdditionalFields){
+		NameField name = new NameField(ui, isNewPersonGroup ? namePar : getPerson().getName(),null);
+		GenderComboBox gender = new GenderComboBox(ui,isNewPersonGroup? genderPar : getPerson().getGender(),null);
+		BirthdateField bday = new BirthdateField(ui, isNewPersonGroup? birthdate : getPerson().getBirthdate(),null);
 		PhoneNumberField phoneNumber = new PhoneNumberField(ui,isNewPersonGroup? "":getPerson().getPhoneNumber(),null, appCon);
 		super.addField(name);
 		super.addField(gender);
 		super.addField(bday);
 		super.addField(phoneNumber);
-		addAdditionalFields();
+		if(addAdditionalFields) addAdditionalFields();
 	}
 	
 	public boolean saveIfValid(boolean alert){

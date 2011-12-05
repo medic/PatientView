@@ -1,0 +1,6 @@
+<panel weightx="1" weighty="1" gap="6" columns="2">
+	<label font="17 bold" halign="left" name="titleLabel" text="Register Patients" weightx="5" colspan="2"/>
+    <separator  weightx="5" colspan="2"/>
+    <panel left="6" name="tablePanel" weightx="3"/>
+    <panel border="true" columns="1" bottom="6" gap="6" left="6" name="regPanel" right="6" top="6" weightx="2" weighty="1"/>
+</panel>

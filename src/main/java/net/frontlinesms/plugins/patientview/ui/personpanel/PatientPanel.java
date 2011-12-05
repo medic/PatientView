@@ -41,6 +41,15 @@ public class PatientPanel extends PersonPanel<Patient> {
 	}
 	
 	/**
+	 * Creates a PatientPanel used for creating new Patients
+	 * @param uiController
+	 * @param appCon
+	 */
+	public PatientPanel(UiGeneratorController uiController, ApplicationContext appCon, PersonFieldGroup<Patient> fields, PersonPanelDelegate delegate) {
+		super(uiController,appCon,fields,delegate);
+	}
+	
+	/**
 	 * Creates a PatientPanel for Patient p
 	 * @param uiController
 	 * @param appCon
@@ -57,7 +66,7 @@ public class PatientPanel extends PersonPanel<Patient> {
 	protected void addAdditionalFields() {
 		if(getPerson().getDateOfConception() !=null){
 			String dOC = InternationalisationUtils.getDateFormat().print(getPerson().getDateOfConception());
-			super.addLabelToLabelPanel("Date of conception: " + dOC);
+			super.addLabelToLabelPanel("Expected Date of Delivery: " + dOC);
 		}
 		if(getPerson().getChw()!= null){
 			Object panel = uiController.createPanel("");

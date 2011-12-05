@@ -64,14 +64,20 @@ public class HibernateMedicFormResponseDao extends BaseHibernateDao<MedicFormRes
 		return super.getList(c);
 	}
 
-	public int countFindFormResponses(boolean searchingMappedForms, MedicForm form) {
+	public int countFindFormResponses(boolean searchingMappedForms, boolean searchingRegForms, MedicForm form) {
 		DetachedCriteria c = DetachedCriteria.forClass(MedicFormResponse.class);
 		c.setFetchMode("form.fields", FetchMode.LAZY);
-		if(searchingMappedForms){
-			c.add(Restrictions.isNotNull("subject"));
-			c.createCriteria("submitter").add(Restrictions.sqlRestriction("{alias}.person_type='chw'"));
-		}else{
-			c.add(Restrictions.isNull("subject"));
+		if(!searchingRegForms){
+			if(searchingMappedForms){
+				c.add(Restrictions.isNotNull("subject"));
+				c.createCriteria("submitter").add(Restrictions.sqlRestriction("{alias}.person_type='chw'"));
+			}else{
+				c.add(Restrictions.isNull("subject"));
+			}
+		}
+		if(searchingRegForms){
+			c.createCriteria("form").add(Restrictions.or(Restrictions.eq("isMotherRegistrationForm", true), Restrictions.eq("isChildRegistrationForm", true)));
+			c.add(Restrictions.eq("isRegistered",false));
 		}
 		if(form != null){
 			c.add(Restrictions.eq("form", form));
@@ -79,15 +85,21 @@ public class HibernateMedicFormResponseDao extends BaseHibernateDao<MedicFormRes
 		return super.getCount(c);
 	}
 
-	public List<MedicFormResponse> findFormResponses(boolean searchingMappedForms, MedicForm form, Date aroundDate, int startIndex, int maxResults) {
+	public List<MedicFormResponse> findFormResponses(boolean searchingMappedForms, boolean searchingRegForms, MedicForm form, Date aroundDate, int startIndex, int maxResults) {
 		DetachedCriteria c = DetachedCriteria.forClass(MedicFormResponse.class);
 		c.setFetchMode("form.fields", FetchMode.LAZY);
 		//are we searching mapped forms?
-		if(searchingMappedForms){
-			c.add(Restrictions.isNotNull("subject"));
-			c.createCriteria("submitter").add(Restrictions.sqlRestriction("{alias}.person_type='chw'"));
-		}else{
-			c.add(Restrictions.isNull("subject"));
+		if(!searchingRegForms){
+			if(searchingMappedForms){
+				c.add(Restrictions.isNotNull("subject"));
+				c.createCriteria("submitter").add(Restrictions.sqlRestriction("{alias}.person_type='chw'"));
+			}else{
+				c.add(Restrictions.isNull("subject"));
+			}
+		}
+		if(searchingRegForms){
+			c.createCriteria("form").add(Restrictions.or(Restrictions.eq("isMotherRegistrationForm", true), Restrictions.eq("isChildRegistrationForm", true)));
+			c.add(Restrictions.eq("isRegistered",false));
 		}
 		//set the form
 		if(form != null){

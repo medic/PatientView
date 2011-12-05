@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.frontlinesms.plugins.patientview.data.domain.framework.DataType;
+import net.frontlinesms.plugins.patientview.data.domain.framework.Field;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.FormFieldDelegate;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.ThinletFormField;
 import net.frontlinesms.ui.UiGeneratorController;
@@ -33,8 +34,10 @@ public class FieldGroup implements FormFieldDelegate {
 		return mainPanel;
 	}
 	
-	public void addField(String label, DataType datatype){
-		addField(ThinletFormField.getThinletFormFieldForDataType(datatype, ui, appCon, label, this));
+	public void addField(String label, DataType datatype, Field field){
+		ThinletFormField tff = ThinletFormField.getThinletFormFieldForDataType(datatype, ui, appCon, label, this);
+		tff.setField(field);
+		addField(tff);
 	}
 	
 	public void addField(ThinletFormField<?> field){

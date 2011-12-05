@@ -56,9 +56,9 @@ public interface MedicFormResponseDao {
 	 */
 	public List<MedicFormResponse> getMappedResponses();
 	
-	public int countFindFormResponses(boolean searchingMappedForms, MedicForm form);
+	public int countFindFormResponses(boolean searchingMappedForms, boolean searchingRegForms, MedicForm form) ;
 	
-	public List<MedicFormResponse> findFormResponses(boolean searchingMappedForms, MedicForm form, Date aroundDate, int startIndex, int maxResults);
+	public List<MedicFormResponse> findFormResponses(boolean searchingMappedForms, boolean searchingRegForms, MedicForm form, Date aroundDate, int startIndex, int maxResults);
 	
 	public int countFindFormResponsesWithPeople(Person submitter, Person subject, MedicForm form);
 	

@@ -41,14 +41,14 @@ public abstract class PersonCsvValidator extends CsvValidator{
 				}
 				//check the birthdate
 				try{
-					InternationalisationUtils.getDateFormat().parseMillis(currLine[CsvColumns.BDAY_INDEX]);
+					InternationalisationUtils.getDateFormat().parseMillis(currLine[CsvColumns.BDAY_INDEX].trim());
 				}catch(Exception e){
 					exceptions.add(new CsvValidationException(lineNumber, getI18nString("medic.importer.date.format.error")+ ": \""+currLine[CsvColumns.BDAY_INDEX]+"\""));
 				}
 				//check gender
 				boolean validGender = false;
 				for(String gender: genderPossibilities){
-					if(currLine[CsvColumns.GENDER_INDEX].equalsIgnoreCase(gender)){
+					if(currLine[CsvColumns.GENDER_INDEX].trim().equalsIgnoreCase(gender)){
 						validGender = true;
 					}
 				}

@@ -23,6 +23,7 @@ public class FormResponseDetailViewPanelController extends DetailViewPanelContro
 
 	private MedicFormFieldResponseDao fieldResponseDao;
 	private MedicFormFieldDao formFieldDao;
+	private boolean showHeader = true;
 	
 	private static final String FORM_RESPONSE_PANEL = "/ui/plugins/patientview/components/formPanel.xml";
 	//i18n
@@ -37,24 +38,34 @@ public class FormResponseDetailViewPanelController extends DetailViewPanelContro
 	public Class<MedicFormResponse> getEntityClass() {
 		return MedicFormResponse.class;
 	}
+	
 
 	public void willAppear(MedicFormResponse response) {
 		//set the header information
 		if(response == null){
 			return;
 		}
-		String form = getI18nString(FORM) + ": " + response.getForm().getName();
-		String submitter;
-		try{
-			submitter = "Submitted by " + response.getSubmitter().getName();
-		}catch(Exception e){
-			submitter = "Submitted by "+ getI18nString("medic.common.labels.unknown");
+		if(showHeader){
+			ui.setVisible(find("nameLabel"), true);
+			ui.setVisible(find("submitterLabel"), true);
+			ui.setVisible(find("dateSubmittedLabel"), true);
+			String form = getI18nString(FORM) + ": " + response.getForm().getName();
+			String submitter;
+			try{
+				submitter = "Submitted by " + response.getSubmitter().getName();
+			}catch(Exception e){
+				submitter = "Submitted by "+ getI18nString("medic.common.labels.unknown");
+			}
+			DateTimeFormatter df = InternationalisationUtils.getDateFormat();
+			String date = df.print(response.getDateSubmitted());
+			ui.setText(find("nameLabel"),  form);
+			ui.setText(find("submitterLabel"),  submitter);
+			ui.setText(find("dateSubmittedLabel"),  date);
+		}else{
+			ui.setVisible(find("nameLabel"), false);
+			ui.setVisible(find("submitterLabel"), false);
+			ui.setVisible(find("dateSubmittedLabel"), false);
 		}
-		DateTimeFormatter df = InternationalisationUtils.getDateFormat();
-		String date = df.print(response.getDateSubmitted());
-		ui.setText(find("nameLabel"),  form);
-		ui.setText(find("submitterLabel"),  submitter);
-		ui.setText(find("dateSubmittedLabel"),  date);
 		Object fieldContainer = find("fieldPanel");
 		removeAll(fieldContainer);
 		//get all the responses
@@ -106,6 +117,14 @@ public class FormResponseDetailViewPanelController extends DetailViewPanelContro
 			}
 		}
 		subviewsWillAppear();
+	}
+
+	public void setShowHeader(boolean showHeader) {
+		this.showHeader = showHeader;
+	}
+
+	public boolean isShowHeader() {
+		return showHeader;
 	}
 
 }

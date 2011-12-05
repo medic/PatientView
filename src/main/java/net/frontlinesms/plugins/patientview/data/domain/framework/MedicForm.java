@@ -51,6 +51,10 @@ public class MedicForm{
 	@JoinColumn(name = "vanilla_form_id", nullable = true)
 	private Form vanillaForm;
 
+	private boolean isMotherRegistrationForm;
+	
+	private boolean isChildRegistrationForm;
+	
 	/**
 	 * Blank Hibernate Constructor 
 	 */
@@ -172,5 +176,21 @@ public class MedicForm{
 	 */
 	public long getFid() {
 		return fid;
+	}
+
+	public void setMotherRegistrationForm(boolean isMotherRegistrationForm) {
+		this.isMotherRegistrationForm = isMotherRegistrationForm;
+	}
+
+	public boolean isMotherRegistrationForm() {
+		return isMotherRegistrationForm;
+	}
+
+	public void setChildRegistrationForm(boolean isChildRegistrationForm) {
+		this.isChildRegistrationForm = isChildRegistrationForm;
+	}
+
+	public boolean isChildRegistrationForm() {
+		return isChildRegistrationForm;
 	}
 }

@@ -9,7 +9,7 @@ import net.frontlinesms.ui.ExtendedThinlet;
 public class ConceptionDateField extends DateField implements PersonalFormField {
 
 	public ConceptionDateField(ExtendedThinlet thinlet, FormFieldDelegate delegate, Long dateOfConception) {
-		super(thinlet, "Date of conception", delegate);
+		super(thinlet, "Expected Date of Delivery", delegate);
 		if(dateOfConception != null){
 			this.setRawResponse(dateOfConception);
 		}

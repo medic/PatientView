@@ -34,9 +34,12 @@ public class MedicFormResponse extends Response{
 	@OrderBy(clause = "responsePosition asc")
 	private List<MedicFormFieldResponse> responses;
 	
+	private boolean isRegistered;
+	
 	public MedicFormResponse(){}
 	
 	public MedicFormResponse(FormResponse fr, MedicForm mForm, Person submitter, Person subject){
+		isRegistered = false;
 		this.form = mForm;
 		this.subject = subject;
 		this.submitter = submitter;
@@ -56,6 +59,7 @@ public class MedicFormResponse extends Response{
 	
 	public MedicFormResponse(MedicForm form, List<MedicFormFieldResponse> responses,Person submitter, Person subject) {
 		super(submitter,subject);
+		isRegistered = false;
 		this.form = form;
 		this.responses = responses;
 		setFieldSubjects();
@@ -64,6 +68,7 @@ public class MedicFormResponse extends Response{
 
 	public MedicFormResponse(MedicForm form, Person submitter, Person subject) {
 		super(submitter, subject);
+		isRegistered = false;
 		this.form = form;
 		this.dateSubmitted = new Date().getTime();
 		responses = new ArrayList<MedicFormFieldResponse>();
@@ -120,5 +125,13 @@ public class MedicFormResponse extends Response{
 		for(MedicFormFieldResponse mfr : responses){
 			mfr.setFormResponse(this);
 		}
+	}
+
+	public void setRegistered(boolean isRegistered) {
+		this.isRegistered = isRegistered;
+	}
+
+	public boolean isRegistered() {
+		return isRegistered;
 	}
 }

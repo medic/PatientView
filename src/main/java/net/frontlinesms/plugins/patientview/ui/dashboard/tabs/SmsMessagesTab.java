@@ -88,7 +88,10 @@ public class SmsMessagesTab extends TabController implements TableActionDelegate
 
 	public void formFieldChanged(ThinletFormField changedField, String newValue) {
 		if(changedField instanceof DateField){
-			resultSet.setAroundDate(new Date(((DateField) changedField).getRawResponse()));
+			Long response = ((DateField) changedField).getRawResponse();
+			if(response != null){
+				resultSet.setAroundDate(new Date(response));
+			}
 		}else if(changedField instanceof TextField){
 			resultSet.setContentSearchString(newValue);
 		}else if(changedField.getLabel().equalsIgnoreCase(getI18nString("medic.common.sent.to"))){

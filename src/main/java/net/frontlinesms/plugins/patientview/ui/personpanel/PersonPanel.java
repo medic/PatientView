@@ -112,6 +112,24 @@ public abstract class PersonPanel<E extends Person> implements ThinletUiEventHan
 		uiController.setInteger(mainPanelContainer, "weightx", 1);
 		addEditableFields();
 	}
+	
+	/**
+	 * A constructor for creating person panels that are meant to add new people
+	 * to the system
+	 * 
+	 * @param uiController
+	 *            the UI controller
+	 */
+	public PersonPanel(UiGeneratorController uiController, ApplicationContext appCon, PersonFieldGroup<E> fieldGroup, PersonPanelDelegate delegate) {
+		this.uiController = uiController;
+		this.appCon = appCon;
+		this.mainPanelContainer = Thinlet.create("panel");
+		isNewPersonPanel = true;
+		inEditingMode = true;
+		uiController.setInteger(mainPanelContainer, "weightx", 1);
+		addEditableFields(fieldGroup);
+		this.delegate = delegate;
+	}
 
 	protected abstract void addAdditionalDemoFields();
 
@@ -226,11 +244,15 @@ public abstract class PersonPanel<E extends Person> implements ThinletUiEventHan
 		uiController.setText(mainPanel, getDefaultTitle());
 	}
 
+	private void addEditableFields(){
+		addEditableFields(null);
+	}
+	
 	/**
 	 * Replaces all labels in the person panel with editable controls for
 	 * modifying the person's data
 	 */
-	private void addEditableFields() {
+	private void addEditableFields(PersonFieldGroup<E> fields) {
 		uiController.removeAll(mainPanelContainer);
 		mainPanel = uiController.loadComponentFromFile(PERSON_PANEL_XML, this);
 		uiController.setAction(uiController.find(mainPanel, "imagePanel"),"imageClicked()", null, this);
@@ -245,7 +267,11 @@ public abstract class PersonPanel<E extends Person> implements ThinletUiEventHan
 		Object labelPanel = getLabelPanel();
 		uiController.removeAll(labelPanel);
 		//add all the editable fields
-		this.fieldGroup = getEditableFields();
+		if(fields == null){
+			this.fieldGroup = getEditableFields();
+		}else{
+			this.fieldGroup = fields;
+		}
 		uiController.add(labelPanel,fieldGroup.getMainPanel());
 		inEditingMode = true;
 		if (isNewPersonPanel) {
@@ -266,7 +292,10 @@ public abstract class PersonPanel<E extends Person> implements ThinletUiEventHan
 		if(isNewPersonPanel && isValid){
 			this.person = fieldGroup.getPerson();
 			if(delegate !=null){
+				System.out.println("delegate notified");
 				delegate.didCreatePerson();
+			}else{
+				System.out.println("NULL DELEGATE");
 			}
 		}
 		return isValid;       

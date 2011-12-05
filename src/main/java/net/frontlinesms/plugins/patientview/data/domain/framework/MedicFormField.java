@@ -82,6 +82,35 @@ public class MedicFormField extends Field{
 		}
 	}
 	
+	@Enumerated(EnumType.STRING)
+	private RegistrationFieldMapping regMapping;
+	
+	public enum RegistrationFieldMapping{
+		FIRSTNAME("medic.common.first.name",""), 
+		LASTNAME("medic.common.last.name",""),
+		AGE("medic.common.labels.age",""),
+		BIRTHDATE("thinletformfields.birthdate",""),
+		GENDER("medic.common.labels.gender",""),
+		MONTHOFAMENORIA("medic.common.labels.amenoria",""),
+		LASTMENSTRALCYCLE("medic.common.labels.lmc","");
+		
+		private String displayName;
+		
+		private String iconPath;
+		
+		private RegistrationFieldMapping(String displayName, String iconPath){
+			this.displayName = displayName;
+			this.iconPath = (iconPath);
+		}
+		
+		public String toString(){
+			return InternationalisationUtils.getI18nString(displayName);
+		}
+
+		public String getIconPath() {
+			return iconPath;
+		}
+	}
 	/**
 	 * Empty Hibernate Constructor
 	 */
@@ -191,5 +220,15 @@ public class MedicFormField extends Field{
 	 */
 	public boolean isRespondable(){
 		return this.datatype.isRespondable();
+	}
+
+
+	public void setRegMapping(RegistrationFieldMapping regMapping) {
+		this.regMapping = regMapping;
+	}
+
+
+	public RegistrationFieldMapping getRegMapping() {
+		return regMapping;
 	}
 }

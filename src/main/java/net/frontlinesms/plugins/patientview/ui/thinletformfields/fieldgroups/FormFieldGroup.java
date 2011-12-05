@@ -33,7 +33,7 @@ public class FormFieldGroup extends FieldGroup {
 				ui.setChoice(field, "halign", "center");
 				ui.setInteger(field, "weightx", 1);
 			}else{ //otherwise, put in a normal field
-				addField(mff.getLabel(), mff.getDatatype());
+				addField(mff.getLabel(), mff.getDatatype(),mff);
 			}
 		}
 	}
