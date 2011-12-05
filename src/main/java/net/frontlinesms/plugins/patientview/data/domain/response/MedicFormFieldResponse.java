@@ -75,6 +75,4 @@ public class MedicFormFieldResponse extends Response {
 	public int getResponsePosition() {
 		return responsePosition;
 	}
-	
-
 }

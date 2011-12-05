@@ -129,7 +129,7 @@
 		</dependency>
 		
 		<!--  Test Dependencies -->
-			<dependency>
+		<dependency>
 			<groupId>net.frontlinesms.core</groupId>
 			<artifactId>frontlinesms-test</artifactId>
 			<version>0.01.01</version>
