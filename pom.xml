@@ -4,7 +4,7 @@
 	<groupId>net.frontlinesms.plugins</groupId>
 	<artifactId>frontlinesms-plugin-patient-view</artifactId>
 	<name>FrontlineSMS:Medic Patient view</name>
-	<version>1.1.0-wbethiopia</version>
+	<version>1.1.0-hope</version>
 	<description>PatientView plugin for FrontlineSMS</description>
 	<licenses>
 		<license>
@@ -98,12 +98,12 @@
 		<dependency>
 			<groupId>net.frontlinesms.core</groupId>
 			<artifactId>frontlinesms</artifactId>
-			<version>1.7.00-beta-6-wbethiopia</version>
+			<version>1.7.00-beta-6-hope</version>
 		</dependency>
 		<dependency>
 			<groupId>net.frontlinesms.plugins</groupId>
 			<artifactId>frontlinesms-plugin-forms</artifactId>
-			<version>0.02.33-wbethiopia</version>
+			<version>0.02.33-hope</version>
 		</dependency>
 		
 		<!--  Library Dependencies -->
