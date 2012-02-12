@@ -17,9 +17,9 @@ public enum FlagConditionOperation {
 	LESS_THAN_EQUAL_TO("<=",new DataType[]{DataType.NUMERIC_TEXT_FIELD},false),
 	TRUE("is true",new DataType[]{DataType.TEXT_FIELD,DataType.TEXT_AREA,DataType.NUMERIC_TEXT_FIELD},true);
 	
-	private String label;
+	public final String label;
 	private DataType[] validTypes;
-	private boolean isUnary;
+	public final boolean isUnary;
 	private static Set<DataType> operableTypes;
 	
 	static{
@@ -35,10 +35,6 @@ public enum FlagConditionOperation {
 		this.label = label;
 		this.validTypes = validTypes;
 		this.isUnary = isUnary;
-	}
-	
-	public String getLabel(){
-		return label;
 	}
 	
 	public List<FlagConditionOperation> getOperationsForDataType(DataType dt){
