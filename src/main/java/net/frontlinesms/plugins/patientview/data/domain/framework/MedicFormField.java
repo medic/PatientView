@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import net.frontlinesms.plugins.patientview.data.domain.flag.FlagCondition;
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormFieldResponse;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
@@ -20,8 +21,6 @@ import net.frontlinesms.ui.i18n.InternationalisationUtils;
  * MedicFields are fields on medic forms. Like most fields they have a datatype
  * and a label, as well as other functionality for displaying them in the attribute
  * panel, etc...
- * @author Dieterich
- *
  */
 @Entity
 @DiscriminatorValue(value="formfield")
@@ -46,6 +45,8 @@ public class MedicFormField extends Field{
 	@OneToMany(cascade=CascadeType.REMOVE, fetch=FetchType.LAZY, mappedBy="field",targetEntity=MedicFormFieldResponse.class)
 	private Set<MedicFormFieldResponse> responses;
 	 
+	@OneToMany(cascade={}, fetch=FetchType.LAZY, mappedBy="field")
+	private Set<FlagCondition> conditions;
 	
 	/**
 	 * The field's position on the form
@@ -191,5 +192,15 @@ public class MedicFormField extends Field{
 	 */
 	public boolean isRespondable(){
 		return this.datatype.isRespondable();
+	}
+
+
+	public void setConditions(Set<FlagCondition> conditions) {
+		this.conditions = conditions;
+	}
+
+
+	public Set<FlagCondition> getConditions() {
+		return conditions;
 	}
 }

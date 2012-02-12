@@ -2,6 +2,7 @@ package net.frontlinesms.plugins.patientview.data.domain.framework;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -17,6 +18,7 @@ import javax.persistence.Table;
 
 import net.frontlinesms.plugins.forms.data.domain.Form;
 import net.frontlinesms.plugins.forms.data.domain.FormField;
+import net.frontlinesms.plugins.patientview.data.domain.flag.Flag;
 
 import org.hibernate.annotations.IndexColumn;
 import org.hibernate.annotations.OrderBy;
@@ -50,6 +52,9 @@ public class MedicForm{
 	@OneToOne(fetch = FetchType.LAZY, cascade = {},targetEntity=Form.class)
 	@JoinColumn(name = "vanilla_form_id", nullable = true)
 	private Form vanillaForm;
+	
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "form")
+	private Set<Flag> flags;
 
 	/**
 	 * Blank Hibernate Constructor 
@@ -172,5 +177,13 @@ public class MedicForm{
 	 */
 	public long getFid() {
 		return fid;
+	}
+
+	public void setFlags(Set<Flag> flags) {
+		this.flags = flags;
+	}
+
+	public Set<Flag> getFlags() {
+		return flags;
 	}
 }
