@@ -37,5 +37,7 @@
 	<bean id="VaccineDoseDao" class="net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernateVaccineDoseDao" parent="baseHibernateDao"/>
 	
 	<bean id="ReminderDao" class="net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernateReminderDao" parent="baseHibernateDao"/>
-	
+	<bean id="FlagDao" class="net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernateFlagDao" parent="baseHibernateDao"/>
+	<bean id="FlagConditionDao" class="net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernateFlagConditionDao" parent="baseHibernateDao"/>
+		
 </beans>
