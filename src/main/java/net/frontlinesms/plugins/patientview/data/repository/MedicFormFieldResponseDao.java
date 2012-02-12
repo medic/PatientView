@@ -67,6 +67,9 @@ public interface MedicFormFieldResponseDao {
 	 */
 	public List<MedicFormFieldResponse> getResponsesForFormResponse(
 			MedicFormResponse mfr);
+	
+	public MedicFormFieldResponse getResponseForFormResponseAndField(
+			MedicFormResponse mfr, MedicFormField field);
 
 	/**
 	 * Updates the subjects of the fields on the supplied form response

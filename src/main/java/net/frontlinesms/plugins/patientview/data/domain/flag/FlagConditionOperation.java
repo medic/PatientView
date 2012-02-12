@@ -15,7 +15,8 @@ public enum FlagConditionOperation {
 	GREATER_THAN_EQUAL_TO(">=",new DataType[]{DataType.NUMERIC_TEXT_FIELD},false),
 	LESS_THAN("<",new DataType[]{DataType.NUMERIC_TEXT_FIELD},false),
 	LESS_THAN_EQUAL_TO("<=",new DataType[]{DataType.NUMERIC_TEXT_FIELD},false),
-	TRUE("is true",new DataType[]{DataType.TEXT_FIELD,DataType.TEXT_AREA,DataType.NUMERIC_TEXT_FIELD},true);
+	TRUE("is true",new DataType[]{DataType.TEXT_FIELD,DataType.TEXT_AREA},true),
+	CONTAINS("contains",new DataType[]{DataType.TEXT_FIELD,DataType.TEXT_AREA},false);
 	
 	public final String label;
 	private DataType[] validTypes;

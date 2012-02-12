@@ -15,7 +15,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
+import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormFieldResponse;
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormResponse;
+import net.frontlinesms.plugins.patientview.data.repository.MedicFormFieldResponseDao;
+
+import org.springframework.context.ApplicationContext;
 
 
 @Entity
@@ -40,7 +44,7 @@ public class Flag {
 	protected boolean any;
 	
 	@OneToMany(cascade=CascadeType.ALL,mappedBy="flag",fetch=FetchType.LAZY,targetEntity=FlagCondition.class)
-	protected Set<FlagCondition> conditions;
+	protected Set<FlagCondition<?>> conditions;
 	
 	@ManyToOne(cascade={},fetch=FetchType.EAGER,optional=false)
 	protected MedicForm form;
@@ -48,12 +52,14 @@ public class Flag {
 	public Flag(String name, MedicForm form){
 		this.name = name;
 		this.form = form;
-		conditions = new HashSet<FlagCondition>();
+		conditions = new HashSet<FlagCondition<?>>();
 	}
 	
-	public boolean evaluate(MedicFormResponse mfr){
-		for(FlagCondition c: conditions){
-			boolean condResult = c.evaluate(mfr);
+	public boolean evaluate(MedicFormResponse mfr, ApplicationContext context){
+		MedicFormFieldResponseDao responseDao = (MedicFormFieldResponseDao) context.getBean("MedicFormFieldResponseDao");
+		for(FlagCondition<?> c: conditions){
+			MedicFormFieldResponse response = responseDao.getResponseForFormResponseAndField(mfr, c.getField());
+			boolean condResult = c.evaluate(response);
 			if(any && condResult){
 				return true;
 			}else if(!any && !condResult){
@@ -91,12 +97,12 @@ public class Flag {
 		this.form = form;
 	}
 	
-	public void addCondition(FlagCondition c){
+	public void addCondition(FlagCondition<?> c){
 		c.setFlag(this);
 		conditions.add(c);
 	}
 	
-	public void removeCondition(FlagCondition c){
+	public void removeCondition(FlagCondition<?> c){
 		conditions.remove(c);
 	}
 }

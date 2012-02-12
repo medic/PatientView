@@ -76,4 +76,10 @@ public class HibernateMedicFormFieldResponseDao extends BaseHibernateDao<MedicFo
 		}
 	}
 
+	public MedicFormFieldResponse getResponseForFormResponseAndField(MedicFormResponse mfr, MedicFormField field) {
+		DetachedCriteria c = DetachedCriteria.forClass(MedicFormFieldResponse.class);
+		c.add(Restrictions.eq("formResponse",mfr));
+		c.add(Restrictions.eq("field", field));
+		return super.getUnique(c);
+	}
 }
