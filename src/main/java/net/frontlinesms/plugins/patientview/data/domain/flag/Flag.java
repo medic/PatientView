@@ -29,7 +29,7 @@ public class Flag {
 	/** Unique id for this entity.  This is for hibernate usage. */
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(unique=true,nullable=false,updatable=false)
-	protected long fid;
+	private long fid;
 	
 	//The name of this flag
 	private String name;
@@ -114,5 +114,9 @@ public class Flag {
 
 	public boolean isAny() {
 		return any;
+	}
+
+	public long getFid() {
+		return fid;
 	}
 }
