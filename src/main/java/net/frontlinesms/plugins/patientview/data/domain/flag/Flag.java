@@ -49,6 +49,8 @@ public class Flag {
 	@ManyToOne(cascade={},fetch=FetchType.EAGER,optional=false)
 	protected MedicForm form;
 
+	public Flag(){}
+	
 	public Flag(String name, MedicForm form){
 		this.name = name;
 		this.form = form;
