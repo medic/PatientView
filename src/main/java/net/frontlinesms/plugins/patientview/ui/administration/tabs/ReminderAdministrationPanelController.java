@@ -81,10 +81,10 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 			ui.setEnabled(find(REMOVE_REMINDER_BUTTON), true);
 			ui.setEnabled(find(EDIT_REMINDER_BUTTON), true);
 		}
-		if(reminders.size() >= beforeIndex){
+		if(reminders.size() > beforeIndex){
 			ui.setSelectedIndex(find(REMINDER_LIST), beforeIndex);
 		}else{
-			ui.setSelectedIndex(find(REMINDER_LIST), reminders.size());
+			ui.setSelectedIndex(find(REMINDER_LIST), reminders.size()-1);
 		}
 		showReminderDisplayView();
 	}

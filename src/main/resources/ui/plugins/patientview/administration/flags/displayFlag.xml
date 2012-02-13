@@ -3,6 +3,7 @@
 <panel bottom="5" columns="1" gap="5" left="5" name="actionPanel" right="5" top="5" weightx="4" weighty="1">
     <label name="flagNameLabel"/>
     <separator weightx="1"/>
+    <label name="formLabel"/>
     <panel border="true" bottom="4" gap="5" icon="/icons/time.png" left="5" name="conditionsPanel" right="5" text="Conditions" top="5" weightx="1">
         <textarea border="false" editable="false" name="conditionsTextArea" weightx="1"/>
     </panel>
