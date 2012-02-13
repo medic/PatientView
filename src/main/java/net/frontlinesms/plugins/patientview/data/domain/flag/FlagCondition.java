@@ -42,9 +42,7 @@ public abstract class FlagCondition<E> {
 	
 	@Enumerated(EnumType.ORDINAL)
 	protected FlagConditionOperation operation;
-	
-	protected E operand;
-	
+		
 	public abstract boolean evaluate(MedicFormFieldResponse fieldResponse);
 
 	public FlagCondition(){}
@@ -75,11 +73,7 @@ public abstract class FlagCondition<E> {
 		return field;
 	}
 
-	public void setOperand(E value) {
-		this.operand = value;
-	}
+	public abstract void setOperand(E value); 
 
-	public E getOperand() {
-		return operand;
-	}
+	public abstract E getOperand();
 }

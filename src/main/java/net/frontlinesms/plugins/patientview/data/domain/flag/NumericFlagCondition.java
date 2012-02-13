@@ -1,9 +1,16 @@
 package net.frontlinesms.plugins.patientview.data.domain.flag;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormFieldResponse;
 
+@Entity
+@DiscriminatorValue(value = "num")
 public class NumericFlagCondition extends FlagCondition<Integer> {
 
+	private int operand;
+	
 	@Override
 	public boolean evaluate(MedicFormFieldResponse fieldResponse) {
 		Integer i = Integer.valueOf(fieldResponse.getValue());
@@ -20,5 +27,15 @@ public class NumericFlagCondition extends FlagCondition<Integer> {
 		}else{
 			return i >= operand;
 		}
+	}
+
+	@Override
+	public Integer getOperand() {
+		return operand;
+	}
+
+	@Override
+	public void setOperand(Integer value) {
+		this.operand = value;
 	}
 }
