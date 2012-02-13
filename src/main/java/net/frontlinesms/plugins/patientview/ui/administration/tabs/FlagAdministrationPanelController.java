@@ -48,7 +48,7 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 		conditionDao = (FlagConditionDao) appCon.getBean("FlagConditionDao");
 		formDao = (MedicFormDao) appCon.getBean("MedicFormDao");
 		isEditing = false;
-		refreshFlagList();
+		refreshFlagList(null);
 	}
 
 	@Override
@@ -71,24 +71,33 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 	 * in the flag list. Maintains selection
 	 * if possible.
 	 */
-	public void refreshFlagList(){
+	public void refreshFlagList(Flag toSelect){
 		int beforeIndex = ui.getSelectedIndex(find(FLAG_LIST));
 		if(beforeIndex < 0) beforeIndex = 0;
 		removeAll(find(FLAG_LIST));
 		List<Flag> flags = flagDao.getAllFlags();
+		int index = 0;
 		for(Flag flag: flags){
 			add(find(FLAG_LIST),ui.createListItem(flag.getName(),flag));
+			if(toSelect != null && toSelect.getFid() == flag.getFid()){
+				ui.setSelectedIndex(find(FLAG_LIST), index);
+			}
+			index++;
 		}
+		
 		if(flags.size() == 0){
 			add(find(FLAG_LIST),ui.createListItem("No Flags",null));
 			ui.setEnabled(find(REMOVE_FLAG_BUTTON), false);
 		}else{
 			ui.setEnabled(find(REMOVE_FLAG_BUTTON), true);
 		}
-		if(flags.size() > beforeIndex){
-			ui.setSelectedIndex(find(FLAG_LIST), beforeIndex);
-		}else{
-			ui.setSelectedIndex(find(FLAG_LIST), flags.size()-1);
+		
+		if(toSelect == null){
+			if(flags.size() > beforeIndex){
+				ui.setSelectedIndex(find(FLAG_LIST), beforeIndex);
+			}else{
+				ui.setSelectedIndex(find(FLAG_LIST), flags.size()-1);
+			}
 		}
 		flagListSelectionChanged();
 	}
@@ -154,7 +163,7 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 			// delete the reminder
 			flagDao.deleteFlag(getSelectedFlag());
 			// refresh the list
-			refreshFlagList();
+			refreshFlagList(null);
 			// remove the confirmation dialog
 			ui.remove(ui.find(CONFIRMATION_DIALOG));
 		}
@@ -204,23 +213,24 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 		String name = ui.getText(find(FLAG_NAME_FIELD));
 		String message = ui.getText(find(MESSAGE_TEXT_AREA));
 		boolean any = ui.getSelectedIndex(find(ANY_OR_ALL_SELECT)) == 0;
+		Flag newFlag;
 		if(isEditing){
-			Flag f = getSelectedFlag();
-			f.setName(name);
-			f.setMessage(message);
-			f.setAny(any);
+			newFlag = getSelectedFlag();
+			newFlag.setName(name);
+			newFlag.setMessage(message);
+			newFlag.setAny(any);
 			//update conditions?
-			flagDao.updateFlag(f);
+			flagDao.updateFlag(newFlag);
 		}else{
 			MedicForm mf = (MedicForm) ui.getAttachedObject(ui.getSelectedItem(find(FORM_SELECT)));
-			Flag f = new Flag(name, mf);
-			f.setMessage(message);
-			f.setAny(any);
+			newFlag = new Flag(name, mf);
+			newFlag.setMessage(message);
+			newFlag.setAny(any);
 			//update conditions?
-			flagDao.saveFlag(f);
+			flagDao.saveFlag(newFlag);
 		}
 		isEditing = false;
-		refreshFlagList();
+		refreshFlagList(newFlag);
 	}
 	
 	private boolean checkField(String thinletFieldName, String fieldName){
