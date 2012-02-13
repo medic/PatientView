@@ -21,5 +21,8 @@
 		<mapping class="net.frontlinesms.plugins.patientview.data.domain.reminder.impl.RecurringReminder" />
 		<mapping class="net.frontlinesms.plugins.patientview.data.domain.flag.Flag" />
 		<mapping class="net.frontlinesms.plugins.patientview.data.domain.flag.FlagCondition" />
+		<mapping class="net.frontlinesms.plugins.patientview.data.domain.flag.BooleanFlagCondition" />
+		<mapping class="net.frontlinesms.plugins.patientview.data.domain.flag.StringFlagCondition" />
+		<mapping class="net.frontlinesms.plugins.patientview.data.domain.flag.NumericFlagCondition" />
 	</session-factory>
 </hibernate-configuration>
