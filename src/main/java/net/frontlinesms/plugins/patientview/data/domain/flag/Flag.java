@@ -41,7 +41,7 @@ public class Flag {
 	 * true if 'any' conditions can be matched
 	 * false if 'all' conditions must be matched
 	 */
-	protected boolean any;
+	private boolean any;
 	
 	@OneToMany(cascade=CascadeType.ALL,mappedBy="flag",fetch=FetchType.LAZY,targetEntity=FlagCondition.class)
 	protected Set<FlagCondition<?>> conditions;
@@ -60,13 +60,13 @@ public class Flag {
 		for(FlagCondition<?> c: conditions){
 			MedicFormFieldResponse response = responseDao.getResponseForFormResponseAndField(mfr, c.getField());
 			boolean condResult = c.evaluate(response);
-			if(any && condResult){
+			if(isAny() && condResult){
 				return true;
-			}else if(!any && !condResult){
+			}else if(!isAny() && !condResult){
 				return false;
 			}
 		}
-		if(any){
+		if(isAny()){
 			return false;
 		}else{
 			return true;
@@ -104,5 +104,13 @@ public class Flag {
 	
 	public void removeCondition(FlagCondition<?> c){
 		conditions.remove(c);
+	}
+
+	public void setAny(boolean any) {
+		this.any = any;
+	}
+
+	public boolean isAny() {
+		return any;
 	}
 }
