@@ -76,4 +76,6 @@ public abstract class FlagCondition<E> {
 	public abstract void setOperand(E value); 
 
 	public abstract E getOperand();
+	
+	public abstract String toString();
 }

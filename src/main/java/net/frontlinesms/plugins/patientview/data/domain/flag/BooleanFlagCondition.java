@@ -26,4 +26,11 @@ public class BooleanFlagCondition extends FlagCondition<Boolean> {
 	public void setOperand(Boolean value) {
 		this.operand = value;
 	}
+
+	@Override
+	public String toString() {
+		String result = "\"" + field.getLabel()+"\" is " + String.valueOf(operand);
+		return result;
+	}
+	
 }

@@ -31,5 +31,8 @@ public class StringFlagCondition extends FlagCondition<String> {
 	public void setOperand(String value) {
 		this.operand = value;
 	}
-
+	public String toString(){
+		return "\"" + field.getLabel() + "\" " + operation.label + " " + operand;
+	}
+	
 }

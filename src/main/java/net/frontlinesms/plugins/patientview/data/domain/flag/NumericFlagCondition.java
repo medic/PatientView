@@ -38,4 +38,9 @@ public class NumericFlagCondition extends FlagCondition<Integer> {
 	public void setOperand(Integer value) {
 		this.operand = value;
 	}
+
+	@Override
+	public String toString() {
+		return "\"" + field.getLabel() + "\" " + operation.label + " " + operand;
+	}
 }
