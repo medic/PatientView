@@ -62,16 +62,21 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 	public ReminderAdministrationPanelController(UiGeneratorController uiController, ApplicationContext appCon) {
 		super(uiController, appCon,THINLET_XML);
 		reminderDao = (ReminderDao) appCon.getBean("ReminderDao");
-		refreshReminderList();
+		refreshReminderList(null);
 	}
 	
-	public void refreshReminderList(){
+	public void refreshReminderList(Long toSelect){
 		int beforeIndex = ui.getSelectedIndex(find(REMINDER_LIST));
 		if(beforeIndex < 0) beforeIndex = 0;
 		removeAll(find(REMINDER_LIST));
 		List<Reminder> reminders = reminderDao.getAllReminders();
+		int index = 0;
 		for(Reminder reminder: reminders){
 			add(find(REMINDER_LIST),ui.createListItem(reminder.getName(),reminder));
+			if(toSelect != null && toSelect == reminder.getReminderId()){
+				ui.setSelectedIndex(find(REMINDER_LIST), index);
+			}
+			index++;
 		}
 		if(reminders.size() == 0){
 			add(find(REMINDER_LIST),ui.createListItem("No Reminders",null));
@@ -81,10 +86,12 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 			ui.setEnabled(find(REMOVE_REMINDER_BUTTON), true);
 			ui.setEnabled(find(EDIT_REMINDER_BUTTON), true);
 		}
-		if(reminders.size() > beforeIndex){
-			ui.setSelectedIndex(find(REMINDER_LIST), beforeIndex);
-		}else{
-			ui.setSelectedIndex(find(REMINDER_LIST), reminders.size()-1);
+		if(toSelect == null){
+			if(reminders.size() > beforeIndex){
+				ui.setSelectedIndex(find(REMINDER_LIST), beforeIndex);
+			}else{
+				ui.setSelectedIndex(find(REMINDER_LIST), reminders.size()-1);
+			}
 		}
 		showReminderDisplayView();
 	}
@@ -333,6 +340,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 		fromDays = Integer.parseInt(fromDaysString)* multiplier;
 		fromMonths = Integer.parseInt(fromMonthsString)* multiplier;
 		//if its a onetimer, just save it
+		Long reminderId = null;
 		if(!(r instanceof RecurringReminder)){
 			OneTimeReminder oneTime;
 			if(!isEditing){
@@ -346,6 +354,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 			oneTime.setStartCriteria(fromEvent, fromDays, fromMonths);
 			oneTime.setSendToPatient(sendToPatient);
 			reminderDao.saveOrUpdateReminder(oneTime);
+			reminderId = oneTime.getReminderId();
 		}else if(r instanceof RecurringReminder){
 			String toMonthsString=null,toDaysString=null;
 			if(checkField(TO_MONTHS_FIELD, "The \"To Months\" field")){
@@ -377,9 +386,10 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 			recur.setFrequency(frequency);
 			recur.setSendToPatient(sendToPatient);
 			reminderDao.saveOrUpdateReminder(recur);
+			reminderId = recur.getReminderId();
 		}
 		isEditing = false;
-		refreshReminderList();
+		refreshReminderList(reminderId);
 	}
 	
 	private boolean checkField(String thinletFieldName, String fieldName){
@@ -472,7 +482,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 		// delete the reminder
 		reminderDao.deleteReminder(getSelectedReminder());
 		// refresh the list
-		refreshReminderList();
+		refreshReminderList(null);
 		// remove the confirmation dialog
 		ui.remove(ui.find(CONFIRMATION_DIALOG));
 	}
