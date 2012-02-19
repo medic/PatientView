@@ -1,7 +1,5 @@
 package net.frontlinesms.plugins.patientview.ui.thinletformfields.fieldgroups;
 
-import java.util.Date;
-
 import net.frontlinesms.plugins.patientview.data.domain.framework.DataType;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField;
@@ -33,7 +31,7 @@ public class FormFieldGroup extends FieldGroup {
 				ui.setChoice(field, "halign", "center");
 				ui.setInteger(field, "weightx", 1);
 			}else{ //otherwise, put in a normal field
-				addField(mff.getLabel(), mff.getDatatype());
+				addField(mff);
 			}
 		}
 	}

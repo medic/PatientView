@@ -8,6 +8,7 @@ import net.frontlinesms.plugins.BasePluginController;
 import net.frontlinesms.plugins.PluginControllerProperties;
 import net.frontlinesms.plugins.PluginInitialisationException;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.ReminderDispatcher;
+import net.frontlinesms.plugins.patientview.listener.FlagListener;
 import net.frontlinesms.plugins.patientview.listener.PatientViewFormListener;
 import net.frontlinesms.plugins.patientview.listener.PatientViewMessageListener;
 import net.frontlinesms.plugins.patientview.responsemapping.IncomingFormMatcher;
@@ -36,6 +37,8 @@ public class PatientViewPluginController extends BasePluginController{
 	private PatientViewFormListener formListener; 
 	private PatientViewThinletTabController tabController;
 	private ReminderDispatcher reminderDispatch;
+	private FlagListener flagListener;
+	
 	/** 
 	 * @see net.frontlinesms.plugins.BasePluginController#initThinletTab(net.frontlinesms.ui.UiGeneratorController)
 	 */
@@ -46,6 +49,8 @@ public class PatientViewPluginController extends BasePluginController{
 		tabController = new PatientViewThinletTabController(this,ui);
 		//start the reminder dispatcher
 		reminderDispatch = new ReminderDispatcher(ui, applicationContext);
+		//start the flag listener
+		flagListener = new FlagListener(applicationContext, ui);
 		Timer t = new Timer();
 		int minutes = Calendar.getInstance().get(Calendar.MINUTE);
 		int firstRunWait = (61 - minutes) % 60;
