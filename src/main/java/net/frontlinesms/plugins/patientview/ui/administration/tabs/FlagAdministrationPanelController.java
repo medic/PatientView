@@ -210,8 +210,7 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 	}
 	
 	private void populateConditions(Flag f){
-		List<FlagCondition> conditions = conditionDao.getConditionsForFlag(f);
-		for(FlagCondition c: conditions){
+		for(FlagCondition c: f.getConditions()){
 			add(find(CONDITION_LIST),ui.createListItem(c.toString(), c));
 		}
 	}
