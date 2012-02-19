@@ -9,7 +9,7 @@
         <label name="formLabel" text="Form:"/>
         <combobox action="formSelectionChanged()" columns="30" editable="false" name="formSelect"/>
     </panel>
-    <panel border="true" bottom="4" columns="1" gap="6" icon="/icons/conditions.png" left="5" name="conditionsPanel" right="5" text="Conditions" top="5" weightx="1">
+    <panel border="true" bottom="4" columns="1" gap="6" icon="/icons/conditions.png" left="5" name="conditionsPanel" right="5" text="Conditions" top="5" weightx="2" rowspan="2">
         <panel gap="6" left="1" name="anyAllPanel">
             <label name="anyAllPreLabel" text="If"/>
             <combobox editable="false" name="anyAllSelect" selected="0" text=" any">
@@ -18,11 +18,13 @@
             </combobox>
             <label name="anyAllPostLabel" text="of these conditions are met:"/>
         </panel>
-        <list name="conditionList" weightx="1"/>
+        <list name="conditionList" weightx="2" selection="single"/>
+        <panel name="conditionActions">
         <panel gap="5" name="conditionButtonPanel">
-            <button action="addCondition()" name="addConditionButton" text="Add Condition"/>
-            <button action="editCondition()" name="editConditionButton" text="Edit Condition"/>
-            <button action="removeCondition()" name="removeConditionButton" text="Remove Condition"/>
+            <button action="addCondition()" name="addConditionButton" text="Add Condition" icon="/icons/add.png"/>
+            <button action="editCondition()" name="editConditionButton" text="Edit Condition" icon="/icons/pencil.png"/>
+            <button action="removeCondition()" name="removeConditionButton" text="Remove Condition" icon="/icons/delete.png"/>
+        </panel>
         </panel>
     </panel>
     <panel border="true" bottom="5" columns="1" gap="5" icon="/icons/sms.png" left="5" name="messagePanel" right="5" text="Message" top="5" weightx="1">

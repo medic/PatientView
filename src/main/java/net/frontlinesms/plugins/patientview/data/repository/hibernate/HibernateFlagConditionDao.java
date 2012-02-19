@@ -21,4 +21,8 @@ public class HibernateFlagConditionDao extends BaseHibernateDao<FlagCondition> i
 		c.add(Restrictions.eq("flag", f));
 		return super.getList(c);
 	}
+
+	public void deleteCondition(FlagCondition fc) {
+		super.delete(fc);
+	}
 }

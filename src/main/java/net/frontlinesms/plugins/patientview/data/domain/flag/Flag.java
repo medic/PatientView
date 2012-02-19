@@ -43,8 +43,8 @@ public class Flag {
 	 */
 	private boolean any;
 	
-	@OneToMany(cascade=CascadeType.ALL,mappedBy="flag",fetch=FetchType.LAZY,targetEntity=FlagCondition.class)
-	protected Set<FlagCondition<?>> conditions;
+	@OneToMany(cascade=CascadeType.ALL,mappedBy="flag",fetch=FetchType.EAGER,targetEntity=FlagCondition.class)
+	private Set<FlagCondition<?>> conditions;
 	
 	@ManyToOne(cascade={},fetch=FetchType.EAGER,optional=false)
 	protected MedicForm form;
@@ -54,12 +54,12 @@ public class Flag {
 	public Flag(String name, MedicForm form){
 		this.name = name;
 		this.form = form;
-		conditions = new HashSet<FlagCondition<?>>();
+		setConditions(new HashSet<FlagCondition<?>>());
 	}
 	
 	public boolean evaluate(MedicFormResponse mfr, ApplicationContext context){
 		MedicFormFieldResponseDao responseDao = (MedicFormFieldResponseDao) context.getBean("MedicFormFieldResponseDao");
-		for(FlagCondition<?> c: conditions){
+		for(FlagCondition<?> c: getConditions()){
 			MedicFormFieldResponse response = responseDao.getResponseForFormResponseAndField(mfr, c.getField());
 			boolean condResult = c.evaluate(response);
 			if(isAny() && condResult){
@@ -101,11 +101,11 @@ public class Flag {
 	
 	public void addCondition(FlagCondition<?> c){
 		c.setFlag(this);
-		conditions.add(c);
+		getConditions().add(c);
 	}
 	
 	public void removeCondition(FlagCondition<?> c){
-		conditions.remove(c);
+		getConditions().remove(c);
 	}
 
 	public void setAny(boolean any) {
@@ -118,5 +118,13 @@ public class Flag {
 
 	public long getFid() {
 		return fid;
+	}
+
+	public void setConditions(Set<FlagCondition<?>> conditions) {
+		this.conditions = conditions;
+	}
+
+	public Set<FlagCondition<?>> getConditions() {
+		return conditions;
 	}
 }

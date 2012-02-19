@@ -9,38 +9,57 @@ import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormFieldR
 @DiscriminatorValue(value = "num")
 public class NumericFlagCondition extends FlagCondition<Integer> {
 
-	private int operand;
+	private int numOperand;
 	
 	@Override
 	public boolean evaluate(MedicFormFieldResponse fieldResponse) {
 		Integer i = Integer.valueOf(fieldResponse.getValue());
-		if(operation == FlagConditionOperation.EQUAL){
-			return i == operand;
-		}else if(operation == FlagConditionOperation.NOT_EQUAL){
-			return i != operand;
-		}else if(operation == FlagConditionOperation.LESS_THAN){
-			return i < operand;
-		}else if(operation == FlagConditionOperation.LESS_THAN_EQUAL_TO){
-			return i <= operand;
-		}else if(operation == FlagConditionOperation.GREATER_THAN){
-			return i > operand;
+		if(getOperation() == FlagConditionOperation.EQUAL){
+			return i == numOperand;
+		}else if(getOperation() == FlagConditionOperation.NOT_EQUAL){
+			return i != numOperand;
+		}else if(getOperation() == FlagConditionOperation.LESS_THAN){
+			return i < numOperand;
+		}else if(getOperation() == FlagConditionOperation.LESS_THAN_EQUAL_TO){
+			return i <= numOperand;
+		}else if(getOperation() == FlagConditionOperation.GREATER_THAN){
+			return i > numOperand;
 		}else{
-			return i >= operand;
+			return i >= numOperand;
 		}
 	}
 
 	@Override
 	public Integer getOperand() {
-		return operand;
+		return numOperand;
 	}
 
 	@Override
 	public void setOperand(Integer value) {
-		this.operand = value;
+		this.numOperand = value;
 	}
 
 	@Override
 	public String toString() {
-		return "\"" + field.getLabel() + "\" " + operation.label + " " + operand;
+		return "\"" + field.getLabel() + "\" " + getOperation().label + " " + numOperand;
+	}
+
+	@Override
+	public boolean isValidOperand(String operand) {
+		try{
+			int i = Integer.valueOf(operand);
+		}catch(Exception e){
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public void setOperand(String value) {
+		try{
+			numOperand = Integer.valueOf(value);
+		}catch(Exception e){
+			numOperand = -1;
+		}
 	}
 }

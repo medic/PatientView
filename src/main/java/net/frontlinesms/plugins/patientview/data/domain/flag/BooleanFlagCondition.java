@@ -9,28 +9,38 @@ import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormFieldR
 @DiscriminatorValue(value = "bool")
 public class BooleanFlagCondition extends FlagCondition<Boolean> {
 	
-	private boolean operand;
+	private boolean boolOperand;
 	
 	@Override
 	public boolean evaluate(MedicFormFieldResponse response) {
 		boolean v = response.getValue().equalsIgnoreCase("true");
-		return v == operand;
+		return v == boolOperand;
 	}
 
 	@Override
 	public Boolean getOperand() {
-		return operand;
+		return boolOperand;
 	}
 
 	@Override
 	public void setOperand(Boolean value) {
-		this.operand = value;
+		this.boolOperand = value;
 	}
 
 	@Override
 	public String toString() {
-		String result = "\"" + field.getLabel()+"\" is " + String.valueOf(operand);
+		String result = "\"" + field.getLabel()+"\" is " + String.valueOf(boolOperand);
 		return result;
+	}
+
+	@Override
+	public boolean isValidOperand(String operand) {
+		return operand.equalsIgnoreCase("true") || operand.equalsIgnoreCase("false");
+	}
+
+	@Override
+	public void setOperand(String value) {
+		boolOperand = value.equalsIgnoreCase("true");
 	}
 	
 }

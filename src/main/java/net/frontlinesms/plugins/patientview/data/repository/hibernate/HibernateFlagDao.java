@@ -6,7 +6,9 @@ import net.frontlinesms.data.repository.hibernate.BaseHibernateDao;
 import net.frontlinesms.plugins.patientview.data.domain.flag.Flag;
 import net.frontlinesms.plugins.patientview.data.repository.FlagDao;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 public class HibernateFlagDao extends BaseHibernateDao<Flag> implements FlagDao {
@@ -20,7 +22,10 @@ public class HibernateFlagDao extends BaseHibernateDao<Flag> implements FlagDao 
 	}
 
 	public List<Flag> getAllFlags() {
-		return super.getAll();
+		DetachedCriteria c = DetachedCriteria.forClass(Flag.class);
+		c.addOrder(Order.asc("fid"));
+		c.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+		return super.getList(c);
 	}
 
 	public List<Flag> getAllFlags(boolean includeDeleted) {

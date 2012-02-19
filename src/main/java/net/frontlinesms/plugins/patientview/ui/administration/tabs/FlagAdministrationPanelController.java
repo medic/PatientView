@@ -1,5 +1,6 @@
 package net.frontlinesms.plugins.patientview.ui.administration.tabs;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.frontlinesms.plugins.patientview.data.domain.flag.Flag;
@@ -9,6 +10,7 @@ import net.frontlinesms.plugins.patientview.data.repository.FlagConditionDao;
 import net.frontlinesms.plugins.patientview.data.repository.FlagDao;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;
 import net.frontlinesms.plugins.patientview.ui.administration.AdministrationTabPanel;
+import net.frontlinesms.plugins.patientview.ui.administration.EditConditionPanel;
 import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
@@ -18,6 +20,7 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 	private static final String MAIN_XML = "/ui/plugins/patientview/administration/flags/flagAdministrationPanel.xml";
 	private static final String DISPLAY_FLAG_XML = "/ui/plugins/patientview/administration/flags/displayFlag.xml";
 	private static final String EDIT_FLAG_XML = "/ui/plugins/patientview/administration/flags/editFlag.xml";
+	private static final String CONDITION_BUTTONS_XML = "/ui/plugins/patientview/administration/flags/conditionButtons.xml";
 	
 	private boolean isEditing;
 	
@@ -30,17 +33,23 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 	private static final String FLAG_NAME_LABEL = "flagNameLabel";
 	private static final String FLAG_NAME_FIELD = "flagNameField";
 	private static final String CONDITION_LIST = "conditionList";
-
+	private static final String EDIT_CONDITION_BUTTON = "editConditionButton";
+	private static final String REMOVE_CONDITION_BUTTON = "removeConditionButton";
+	
 	private static final String CONDITIONS_TEXT_AREA = "conditionsTextArea";
 	private static final String MESSAGE_TEXT_AREA = "messageTextArea";
 	private static final String FORM_SELECT = "formSelect";
 	private static final String ANY_OR_ALL_SELECT = "anyAllSelect";
 	private static final String FORM_LABEL = "formLabel";
 	private static final String CONFIRMATION_DIALOG = "confirmDialog";
-
+	private static final String CONDITIONS_PANEL = "conditionsPanel";
+	private static final String CONDITION_BUTTONS_PANEL = 	"conditionButtonPanel";
+	
+	
 	private FlagDao flagDao;
 	private FlagConditionDao conditionDao;
 	private MedicFormDao formDao;
+	private ArrayList<FlagCondition> toRemove;
 	
 	public FlagAdministrationPanelController(UiGeneratorController ui, ApplicationContext appCon) {
 		super(ui, appCon, MAIN_XML);
@@ -48,12 +57,13 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 		conditionDao = (FlagConditionDao) appCon.getBean("FlagConditionDao");
 		formDao = (MedicFormDao) appCon.getBean("MedicFormDao");
 		isEditing = false;
+		toRemove = new ArrayList<FlagCondition>();
 		refreshFlagList(null);
 	}
 
 	@Override
 	public String getIconPath() {
-		return "/icons/flag_red.png";
+		return "/icons/flag_purple.png";
 	}
 
 	@Override
@@ -65,10 +75,17 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 		return (Flag) ui.getAttachedObject(ui.getSelectedItem(find(FLAG_LIST)));
 	}
 	
+	public MedicForm getSelectedForm(){
+		return (MedicForm) ui.getAttachedObject(ui.getSelectedItem(find(FORM_SELECT)));
+	}
+	
+	public FlagCondition getSelectedCondition(){
+		return ui.getAttachedObject(ui.getSelectedItem(find(CONDITION_LIST)),FlagCondition.class);
+	}
+	
 	/**
-	 * loads all the flags
-	 * from the database and displays them
-	 * in the flag list. Maintains selection
+	 * loads all the flags from the database 
+	 * and displays them in the flag list. Maintains selection
 	 * if possible.
 	 */
 	public void refreshFlagList(Flag toSelect){
@@ -117,11 +134,11 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 			ui.setText(find(FLAG_NAME_LABEL), f.getName());
 			ui.setText(find(FORM_LABEL), "Form: "+f.getForm().getName());
 			//create the condition text
-			String conditionText = "If " + (f.isAny()?"any":"all") + " of these conditions are met:\n";
+			String conditionText = "If " + (f.isAny()?"any":"all") + " of these conditions are met:\n\t";
 			List<FlagCondition> conditions = conditionDao.getConditionsForFlag(f);
 			for(FlagCondition c: conditions){
 				conditionText += c.toString();
-				conditionText +="\n";
+				conditionText +="\n\t";
 			}
 			//set the condition text
 			ui.setText(find(CONDITIONS_TEXT_AREA), conditionText);
@@ -140,6 +157,8 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 		add(find(ACTION_PANEL),ui.loadComponentFromFile(EDIT_FLAG_XML, this));
 		populateFormSelect(null);
 		ui.requestFocus(find(FLAG_NAME_FIELD));
+		ui.setEnabled(find(EDIT_CONDITION_BUTTON), false);
+		ui.setEnabled(find(REMOVE_CONDITION_BUTTON), false);
 	}
 	
 	private void populateFormSelect(MedicForm toSelect){
@@ -181,6 +200,12 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 			populateFormSelect(f.getForm());
 			populateConditions(f);
 			ui.setText(find(MESSAGE_TEXT_AREA), f.getMessage());
+			if(f.getConditions().size() == 0){
+				ui.setEnabled(find(EDIT_CONDITION_BUTTON), false);
+				ui.setEnabled(find(REMOVE_CONDITION_BUTTON), false);
+			}else{
+				ui.setSelectedIndex(find(CONDITION_LIST),0);
+			}
 		}
 	}
 	
@@ -196,15 +221,61 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 	}
 	
 	public void addCondition(){
-		
+		EditConditionPanel p = new EditConditionPanel(ui, appCon, getSelectedForm(), null,this);
+		ui.setText(find(p.getMainPanel(),"saveEditingCondition"), "Add");
+		ui.removeAll(find(CONDITION_BUTTONS_PANEL));
+		add(find(CONDITION_BUTTONS_PANEL),p.getMainPanel());
 	}
 	
 	public void editCondition(){
-		
+		EditConditionPanel p = new EditConditionPanel(ui, appCon, getSelectedForm(), getSelectedCondition(),this);
+		ui.removeAll(find(CONDITION_BUTTONS_PANEL));
+		add(find(CONDITION_BUTTONS_PANEL),p.getMainPanel());
 	}
 	
 	public void removeCondition(){
+		Object selected = ui.getSelectedItem(find(CONDITION_LIST));
+		if(isEditing)
+			toRemove.add(ui.getAttachedObject(selected,FlagCondition.class));
+		int index = ui.getSelectedIndex(find(CONDITION_LIST));
+		index = Math.min(index, ui.getItems(find(CONDITION_LIST)).length-2);
+		ui.remove(selected);
+		if(ui.getItems(find(CONDITION_LIST)).length == 0){
+			ui.setEnabled(find(EDIT_CONDITION_BUTTON), false);
+			ui.setEnabled(find(REMOVE_CONDITION_BUTTON), false);
+		}else{
+			ui.setSelectedIndex(find(CONDITION_LIST), index);
+		}
+	}
+	
+	public void conditionCreated(FlagCondition c){
+		//add the condition to the panel
+		boolean alreadyExisted=false;
+		Object[] kids = ui.getItems(find(CONDITION_LIST));
+		int index = 0;
 		
+		for(Object item: kids){
+			if(ui.getAttachedObject(item,FlagCondition.class) == c){
+				ui.setText(item, c.toString());
+				ui.setSelectedIndex(find(CONDITION_LIST),index);
+				alreadyExisted=true;
+				break;
+			}
+			index++;
+		}
+		if(!alreadyExisted){
+			Object listItem = ui.createListItem(c.toString(),c);
+			add(find(CONDITION_LIST),listItem);
+			ui.setSelectedItem(find(CONDITION_LIST), listItem);
+		}
+		conditionEditingCancelled();
+		ui.setEnabled(find(EDIT_CONDITION_BUTTON), true);
+		ui.setEnabled(find(REMOVE_CONDITION_BUTTON), true);
+	}
+	
+	public void conditionEditingCancelled(){
+		ui.removeAll(find(CONDITION_BUTTONS_PANEL));
+		ui.add(find(CONDITION_BUTTONS_PANEL),ui.loadComponentFromFile(CONDITION_BUTTONS_XML, this));
 	}
 	
 	public void saveFlag(){
@@ -219,14 +290,32 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 			newFlag.setName(name);
 			newFlag.setMessage(message);
 			newFlag.setAny(any);
-			//update conditions?
+			Object[] conditions = ui.getItems(find(CONDITION_LIST));
+			for(Object item: conditions){
+				FlagCondition fc = (FlagCondition) ui.getAttachedObject(item);
+				if(fc.getCid() == -1L){
+					newFlag.addCondition(fc);
+				}
+			}
+			for(FlagCondition remove: toRemove){
+				if(remove.getCid() > 0)
+					newFlag.removeCondition(remove);
+			}
 			flagDao.updateFlag(newFlag);
+			for(FlagCondition remove: toRemove){
+				if(remove.getCid() > 0)
+					conditionDao.deleteCondition(remove);
+			}
+			toRemove = new ArrayList<FlagCondition>();
 		}else{
 			MedicForm mf = (MedicForm) ui.getAttachedObject(ui.getSelectedItem(find(FORM_SELECT)));
 			newFlag = new Flag(name, mf);
 			newFlag.setMessage(message);
 			newFlag.setAny(any);
-			//update conditions?
+			Object[] conditions = ui.getItems(find(CONDITION_LIST));
+			for(Object item: conditions){
+				newFlag.addCondition((FlagCondition<?>) ui.getAttachedObject(item));
+			}
 			flagDao.saveFlag(newFlag);
 		}
 		isEditing = false;
@@ -245,6 +334,7 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 	
 	public void editFlagCancelled(){
 		isEditing = false;
+		toRemove = new ArrayList<FlagCondition>();
 		flagListSelectionChanged();
 	}
 	

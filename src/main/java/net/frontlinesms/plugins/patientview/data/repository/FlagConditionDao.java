@@ -14,4 +14,6 @@ public interface FlagConditionDao {
 	 * @return
 	 */
 	public List<FlagCondition> getConditionsForFlag(Flag f);
+	
+	public void deleteCondition(FlagCondition fc);
 }

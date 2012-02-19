@@ -15,7 +15,8 @@ public enum FlagConditionOperation {
 	GREATER_THAN_EQUAL_TO(">=",new DataType[]{DataType.NUMERIC_TEXT_FIELD},false),
 	LESS_THAN("<",new DataType[]{DataType.NUMERIC_TEXT_FIELD},false),
 	LESS_THAN_EQUAL_TO("<=",new DataType[]{DataType.NUMERIC_TEXT_FIELD},false),
-	TRUE("is true",new DataType[]{DataType.TEXT_FIELD,DataType.TEXT_AREA},true),
+	TRUE("is true",new DataType[]{DataType.CHECK_BOX,DataType.POSITIVENEGATIVE,DataType.TRUEFALSE, DataType.YESNO},true),
+	NOT_TRUE("is false",new DataType[]{DataType.CHECK_BOX,DataType.POSITIVENEGATIVE,DataType.TRUEFALSE, DataType.YESNO},true),
 	CONTAINS("contains",new DataType[]{DataType.TEXT_FIELD,DataType.TEXT_AREA},false);
 	
 	public final String label;
@@ -38,7 +39,7 @@ public enum FlagConditionOperation {
 		this.isUnary = isUnary;
 	}
 	
-	public List<FlagConditionOperation> getOperationsForDataType(DataType dt){
+	public static List<FlagConditionOperation> getOperationsForDataType(DataType dt){
 		List<FlagConditionOperation> results = new ArrayList<FlagConditionOperation>();
 		for(FlagConditionOperation fco: FlagConditionOperation.values()){
 			for(DataType type: fco.validTypes){
