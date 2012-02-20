@@ -31,7 +31,12 @@
         <textarea name="messageTextArea" weightx="1"/>
         <panel gap="5" name="variablePanel" weightx="1">
             <label name="variableLabel" text="Insert:"/>
-            <panel gap="5" name="variableButtonPanel" weightx="1"/>
+            <panel gap="5" name="variableButtonPanel" weightx="1">
+            	<button action="insertMessageText('{patient name}')" name="insertPatientButton" text="Patient Name"/>
+            	<button action="insertMessageText('{vhw name}')" name="insertVhwButton" text="VHW Name"/>
+            	<label text="Field Value:"/>
+            	<combobox action="messageFieldSelectionChanged()" columns="30" editable="false" name="messageFieldSelect"/>
+            </panel>
         </panel>
     </panel>
     <panel gap="10" halign="left" name="bottomButtonPanel" valign="top" weightx="1" weighty="1">

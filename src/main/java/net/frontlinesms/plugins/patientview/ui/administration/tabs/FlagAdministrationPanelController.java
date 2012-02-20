@@ -6,6 +6,7 @@ import java.util.List;
 import net.frontlinesms.plugins.patientview.data.domain.flag.Flag;
 import net.frontlinesms.plugins.patientview.data.domain.flag.FlagCondition;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
+import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField;
 import net.frontlinesms.plugins.patientview.data.repository.FlagConditionDao;
 import net.frontlinesms.plugins.patientview.data.repository.FlagDao;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;
@@ -44,6 +45,7 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 	private static final String CONFIRMATION_DIALOG = "confirmDialog";
 	private static final String CONDITIONS_PANEL = "conditionsPanel";
 	private static final String CONDITION_BUTTONS_PANEL = 	"conditionButtonPanel";
+	private static final String MESSAGE_FIELD_SELECT = "messageFieldSelect";
 	
 	
 	private FlagDao flagDao;
@@ -156,6 +158,7 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 		removeAll(find(ACTION_PANEL));
 		add(find(ACTION_PANEL),ui.loadComponentFromFile(EDIT_FLAG_XML, this));
 		populateFormSelect(null);
+		populateMessageFieldSelect();
 		ui.requestFocus(find(FLAG_NAME_FIELD));
 		ui.setEnabled(find(EDIT_CONDITION_BUTTON), false);
 		ui.setEnabled(find(REMOVE_CONDITION_BUTTON), false);
@@ -206,6 +209,7 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 			}else{
 				ui.setSelectedIndex(find(CONDITION_LIST),0);
 			}
+			populateMessageFieldSelect();
 		}
 	}
 	
@@ -229,6 +233,7 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 		conditionEditingCancelled();
 		ui.setEnabled(find(EDIT_CONDITION_BUTTON), false);
 		ui.setEnabled(find(REMOVE_CONDITION_BUTTON), false);
+		populateMessageFieldSelect();
 	}
 	
 	public void addCondition(){
@@ -349,5 +354,31 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 		flagListSelectionChanged();
 	}
 	
+	public void insertMessageText(String textToInsert){
+		String messageText= ui.getText(find(MESSAGE_TEXT_AREA));
+		Integer cursorIndex = ui.getCaretPosition(find(MESSAGE_TEXT_AREA));
+		if(messageText == null || messageText.trim().equals("") || cursorIndex == null){
+			ui.setText(find(MESSAGE_TEXT_AREA), textToInsert);
+		}else{
+			String insertText = messageText.substring(0, cursorIndex) + textToInsert + messageText.substring(cursorIndex);
+			ui.setText(find(MESSAGE_TEXT_AREA), insertText);
+		}
+		ui.setFocus(find(MESSAGE_TEXT_AREA));
+		ui.setCaretPosition(find(MESSAGE_TEXT_AREA), cursorIndex+textToInsert.length());
+	}
 	
+	private void populateMessageFieldSelect(){
+		ui.removeAll(find(MESSAGE_FIELD_SELECT));
+		MedicForm mf = ui.getAttachedObject(ui.getSelectedItem(find(FORM_SELECT)),MedicForm.class);
+		for(MedicFormField field: mf.getFields()){
+			Object item = ui.createComboboxChoice(field.getLabel(), field);
+			ui.add(find(MESSAGE_FIELD_SELECT),item);
+		}
+		ui.setSelectedIndex(find(MESSAGE_FIELD_SELECT), 0);
+	}
+	
+	public void messageFieldSelectionChanged(){
+		String label = ui.getAttachedObject(ui.getSelectedItem(find(MESSAGE_FIELD_SELECT)),MedicFormField.class).getLabel();
+		insertMessageText("{"+label +"}");
+	}
 }
