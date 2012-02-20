@@ -216,7 +216,19 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 	}
 	
 	public void formSelectionChanged(){
-		
+		if(ui.getItems(find(CONDITION_LIST)).length > 0){
+			ui.showConfirmationDialog("formChangeConfirmed()", this, "medic.flag.confirm.form.switch");
+		}else{
+			formChangeConfirmed();
+		}
+	}
+	
+	public void formChangeConfirmed(){
+		ui.remove(ui.find(CONFIRMATION_DIALOG));
+		ui.removeAll(find(CONDITION_LIST));
+		conditionEditingCancelled();
+		ui.setEnabled(find(EDIT_CONDITION_BUTTON), false);
+		ui.setEnabled(find(REMOVE_CONDITION_BUTTON), false);
 	}
 	
 	public void addCondition(){
