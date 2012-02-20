@@ -39,7 +39,7 @@ public class FlagListener implements EventObserver{
 		List<Flag> flags = flagDao.getAllFlags();
 		for(Flag flag: flags){
 			if(mfr.getForm().getFid() == flag.getForm().getFid() && flag.evaluate(mfr, appCon)){
-				ui.alert(flag.getMessage());
+				ui.alert(flag.generateMessage(mfr, appCon));
 			}
 		}
 	}

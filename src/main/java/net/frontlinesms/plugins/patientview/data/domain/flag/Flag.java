@@ -1,6 +1,7 @@
 package net.frontlinesms.plugins.patientview.data.domain.flag;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -15,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
+import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormFieldResponse;
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormResponse;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormFieldResponseDao;
@@ -89,6 +91,24 @@ public class Flag {
 
 	public String getMessage() {
 		return message;
+	}
+	
+	public String generateMessage(MedicFormResponse response, ApplicationContext appCon){
+		String result = new String(message);
+		String name = response.getSubject() != null? response.getSubjectName():"Unknown Patient";
+		result = result.replaceAll("\\{patient name\\}", name);
+		String vhwName = "Unknown VHW";
+		if(response.getSubject() != null && ((Patient)response.getSubject()).getChw() != null){
+			vhwName = ((Patient) response.getSubject()).getCHWName();
+		}
+		result = result.replaceAll("\\{vhw name\\}", vhwName);
+		
+		MedicFormFieldResponseDao fieldResponseDao = (MedicFormFieldResponseDao) appCon.getBean("MedicFormFieldResponseDao");
+		List<MedicFormFieldResponse> responses = fieldResponseDao.getResponsesForFormResponse(response);
+		for(MedicFormFieldResponse fieldResponse: responses){
+			result = result.replaceAll("\\{" + fieldResponse.getFieldLabel() + "\\}", fieldResponse.getValue());
+		}
+		return result;
 	}
 	
 	public MedicForm getForm(){
