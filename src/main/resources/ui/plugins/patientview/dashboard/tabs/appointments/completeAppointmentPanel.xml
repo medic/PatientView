@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<panel columns="1" gap="10" halign="center" valign="center" weightx="1" weighty="1">
+    <panel gap="5">
+        <label text="Did the patient attend? "/>
+        <checkbox group="attendGroup" selected="true" text="Yes" name="patientAttendedCheckbox"/>
+        <checkbox group="attendGroup" text="No"/>
+    </panel>
+    <panel gap="5" halign="center" weighty="1">
+        <button action="finishedAppointment()" icon="/icons/tick.png" name="finishButton" text="Finish"/>
+        <button action="resetBottomPanel()" icon="/icons/cross.png" name="cancelButton" text="Cancel"/>
+    </panel>
+</panel>

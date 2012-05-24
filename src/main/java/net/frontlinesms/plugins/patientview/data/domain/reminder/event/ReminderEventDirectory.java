@@ -19,7 +19,7 @@ public class ReminderEventDirectory {
 		eventList = new CopyOnWriteArrayList<ReminderEvent>();
 		eventList.add(new VaccineAppointmentEvent(appCon));
 		eventList.add(new VaccineAppointmentMissedEvent(appCon));
-		eventList.add(new VaccineWindowEndedEvent(appCon));
+	//	eventList.add(new VaccineWindowEndedEvent(appCon));
 		eventList.add(new BirthEvent());
 	}
 	

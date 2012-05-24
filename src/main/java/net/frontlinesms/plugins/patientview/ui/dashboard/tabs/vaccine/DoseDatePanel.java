@@ -19,7 +19,7 @@ public class DoseDatePanel extends ViewHandler implements FormFieldDelegate{
 	
 	ScheduledDose dose;
 	DateField startDate;
-	DateField endDate;
+	//DateField endDate;
 	
 	public DoseDatePanel(UiGeneratorController ui,ApplicationContext appCon, ScheduledDose dose) {
 		super(ui,appCon,THINLET_XML);
@@ -31,26 +31,26 @@ public class DoseDatePanel extends ViewHandler implements FormFieldDelegate{
 		ui.setText(find("doseNameLabel"),dose.getDoseName());
 		startDate = new DateField(ui, "", this,false);
 		startDate.setRawResponse(dose.getWindowStartDate());
-		endDate = new DateField(ui, "", this,false);
-		endDate.setRawResponse(dose.getWindowEndDate());
+	//	endDate = new DateField(ui, "", this,false);
+	//	endDate.setRawResponse(dose.getWindowEndDate());
 		if(dose.isAdministered()){
 			ui.setEnabledRecursively(startDate.getThinletPanel(), false);
-			ui.setEnabledRecursively(endDate.getThinletPanel(), false);
+		//	ui.setEnabledRecursively(endDate.getThinletPanel(), false);
 		}
 		ui.add(find("startDatePanel"),startDate.getThinletPanel());
-		ui.add(find("endDatePanel"),endDate.getThinletPanel());
+	//	ui.add(find("endDatePanel"),endDate.getThinletPanel());
 	}
 	
 	public void save() throws Exception{
 		Calendar start = Calendar.getInstance();
 		start.setTimeInMillis(startDate.getRawResponse());
-		Calendar end = Calendar.getInstance();
-		end.setTimeInMillis(endDate.getRawResponse());
-		if(TimeUtils.compareCalendars(start, end) > -1){
-			throw new Exception("The start date of " + dose.getDoseName()+ " is later than the end date.");
-		}
+//		Calendar end = Calendar.getInstance();
+	//	end.setTimeInMillis(endDate.getRawResponse());
+		//if(TimeUtils.compareCalendars(start, end) > -1){
+		//	throw new Exception("The start date of " + dose.getDoseName()+ " is later than the end date.");
+	//	}
 		dose.setWindowStartDate(start.getTimeInMillis());
-		dose.setWindowEndDate(end.getTimeInMillis());
+	//	dose.setWindowEndDate(end.getTimeInMillis());
 		((ScheduledDoseDao) appCon.getBean("ScheduledDoseDao")).saveOrUpdateScheduledDose(dose);
 	}
 

@@ -82,7 +82,7 @@ public abstract class PersonDataImporter implements CsvDataImporter{
 	 */
 	protected void addMessageToList(String message) {
 		String text = ui.getText(messageList);
-		String newLine = "[ "+ InternationalisationUtils.getDatetimeFormat().print(new Date().getTime()) + " ]  " + message;
+		String newLine = "[ "+ InternationalisationUtils.getDatetimeFormat().format(new Date().getTime()) + " ]  " + message;
 		text += "\n" + newLine;
 		ui.setText(messageList, text);
 	}

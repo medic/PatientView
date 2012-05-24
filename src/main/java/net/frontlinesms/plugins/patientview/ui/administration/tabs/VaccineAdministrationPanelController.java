@@ -50,10 +50,10 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	private static final String ENROLL_NEWBORNS_CHECKBOX = "enrollNewbornsCheckbox";
 	private static final String START_DATE_MONTHS_BOX = "startDateMonths";
 	private static final String START_DATE_DAYS_BOX = "startDateDays";
-	private static final String END_DATE_MONTHS_BOX = "endDateMonths";
-	private static final String END_DATE_DAYS_BOX = "endDateDays";
-	private static final String MIN_INTERVAL_MONTHS_BOX = "minIntervalMonths";
-	private static final String MIN_INTERVAL_DAYS_BOX = "minIntervalDays";
+	//private static final String END_DATE_MONTHS_BOX = "endDateMonths";
+	//private static final String END_DATE_DAYS_BOX = "endDateDays";
+	//private static final String MIN_INTERVAL_MONTHS_BOX = "minIntervalMonths";
+	//private static final String MIN_INTERVAL_DAYS_BOX = "minIntervalDays";
 	private static final String DOSE_NAME_FIELD = "doseNameField";
 	private static final String CONFIRMATION_DIALOG = "confirmDialog";
 	//Thinlet button names
@@ -74,23 +74,23 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		this.scheduledDoseDao = (ScheduledDoseDao) appCon.getBean("ScheduledDoseDao");
 		//create the dose table
 		doseTableController = new AdvancedTableController(this, uiController);
-		doseTableController.setNoResultsMessage("No doses");
+		doseTableController.setNoResultsMessage("No appointments");
 		List<HeaderColumn> columnList = new ArrayList<HeaderColumn>();
-		columnList.add(new HeaderColumn("getName", "/icons/syringe_small.png", "Dose Name"));
-		columnList.add(new HeaderColumn("getStringStartDate", "/icons/date_add.png", "Start Date"));
-		columnList.add(new HeaderColumn("getStringEndDate", "/icons/date_delete.png", "End Date"));
-		columnList.add(new HeaderColumn("getStringMinimumInterval", "/icons/time.png", "Minimum Interval To Next Dose"));
+		columnList.add(new HeaderColumn("getName", "/icons/date.png", "Appointment Name"));
+		columnList.add(new HeaderColumn("getStringStartDate", "/icons/date_add.png", "Appointment Date"));
+		//columnList.add(new HeaderColumn("getStringEndDate", "/icons/date_delete.png", "End Date"));
+		//columnList.add(new HeaderColumn("getStringMinimumInterval", "/icons/time.png", "Minimum Interval To Next Dose"));
 		doseTableController.putHeader(VaccineDose.class, columnList);
 	}
 	
 	@Override
 	public String getIconPath() {
-		return "/icons/syringe.png";
+		return "/icons/calendar.png";
 	}
 	
 	@Override
 	public String getListItemTitle() {
-		return "Manage Vaccines";
+		return "Manage Appointments";
 	}
 	
 	@Override
@@ -112,7 +112,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		//put the vaccines in the list
 		//if there aren't any vaccines
 		if(vaccines.size() == 0){
-			add(find(VACCINE_LIST),ui.createListItem("No Vaccines",null));
+			add(find(VACCINE_LIST),ui.createListItem("No Appointment Series",null));
 		}else{ //otherwise, add them all
 			int count = 0;
 			for(Vaccine v: vaccines){
@@ -220,7 +220,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		String name = ui.getText(find(VACCINE_NAME_FIELD));
 		if(name == null || name.trim().equals("")){
 			ui.setText(find(VACCINE_NAME_FIELD), "");
-			ui.alert("You cannot create a vaccine without a name");
+			ui.alert("You cannot create a appointment series without a name");
 			return;
 		}
 		Vaccine v = new Vaccine(ui.getText(find(VACCINE_NAME_FIELD)),true);
@@ -258,7 +258,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	 */
 	public void removeVaccine(){
 		if(scheduledDoseDao.getScheduledDoses(getCurrentlySelectedVaccine(),null).size() != 0){
-			ui.alert("You cannot delete a vaccine with scheduled doses.");
+			ui.alert("You cannot delete a appointment series with scheduled appointments.");
 		}else{
 			ui.showConfirmationDialog("removeVaccineConfirmed()", this,"medic.vaccine.confirm.delete");
 		}
@@ -284,7 +284,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		removeAll(find(DOSE_ACTION_PANEL));
 		add(find(DOSE_ACTION_PANEL),ui.loadComponentFromFile(EDIT_DOSE_XML, this));
 		ui.requestFocus(find(DOSE_NAME_FIELD));
-		ui.setText(find(EDIT_DOSE_PANEL), "Add a Dose");
+		ui.setText(find(EDIT_DOSE_PANEL), "Add an Appointment");
 		//disable the vaccine action buttons
 		ui.setEnabled(find(ADD_VACCINE_BUTTON), false);
 		ui.setEnabled(find(REMOVE_VACCINE_BUTTON), false);
@@ -302,10 +302,10 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		//populate the panel
 		ui.setText(find(START_DATE_MONTHS_BOX),String.valueOf(dose.getStartDateMonths()));
 		ui.setText(find(START_DATE_DAYS_BOX),String.valueOf(dose.getStartDateDays()));
-		ui.setText(find(END_DATE_MONTHS_BOX),String.valueOf(dose.getEndDateMonths()));
-		ui.setText(find(END_DATE_DAYS_BOX),String.valueOf(dose.getEndDateDays()));
-		ui.setText(find(MIN_INTERVAL_MONTHS_BOX),String.valueOf(dose.getMinIntervalMonths()));
-		ui.setText(find(MIN_INTERVAL_DAYS_BOX),String.valueOf(dose.getMinIntervalDays()));
+	//	ui.setText(find(END_DATE_MONTHS_BOX),String.valueOf(dose.getEndDateMonths()));
+	//	ui.setText(find(END_DATE_DAYS_BOX),String.valueOf(dose.getEndDateDays()));
+	//	ui.setText(find(MIN_INTERVAL_MONTHS_BOX),String.valueOf(dose.getMinIntervalMonths()));
+	//	ui.setText(find(MIN_INTERVAL_DAYS_BOX),String.valueOf(dose.getMinIntervalDays()));
 		ui.setText(find(DOSE_NAME_FIELD),dose.getName());
 		ui.setText(find(EDIT_DOSE_PANEL), "Editing "+ dose.getName());
 		//focus on the first field
@@ -332,7 +332,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	 */
 	public void removeDose(){
 		if(scheduledDoseDao.getScheduledDoses(null, (VaccineDose) doseTableController.getCurrentlySelectedObject()).size() != 0){
-			ui.alert("You cannot delete a dose that has appointments scheduled.");
+			ui.alert("You cannot delete an appointment that users have already scheduled.");
 		}else{
 			ui.showConfirmationDialog("removeDoseConfirmed()", this,"medic.vaccine.dose.confirm.delete");
 		}
@@ -359,32 +359,32 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		//prepare all the data
 		String name = ui.getText(find(DOSE_NAME_FIELD));
 		if(name == null || name.trim().equals("")){
-			ui.alert("You can't create a dose without a name.");
+			ui.alert("You can't create an appointment without a name.");
 			return;
 		}
 		int startDateMonths = Integer.parseInt(ui.getText(find(START_DATE_MONTHS_BOX)));
 		int startDateDays = Integer.parseInt(ui.getText(find(START_DATE_DAYS_BOX)));
-		int endDateMonths = Integer.parseInt(ui.getText(find(END_DATE_MONTHS_BOX)));
-		int endDateDays = Integer.parseInt(ui.getText(find(END_DATE_DAYS_BOX)));
-		int minIntervalMonths = Integer.parseInt(ui.getText(find(MIN_INTERVAL_MONTHS_BOX)));
-		int minIntervalDays = Integer.parseInt(ui.getText(find(MIN_INTERVAL_DAYS_BOX)));
+	//	int endDateMonths = Integer.parseInt(ui.getText(find(END_DATE_MONTHS_BOX)));
+	//	int endDateDays = Integer.parseInt(ui.getText(find(END_DATE_DAYS_BOX)));
+	//	int minIntervalMonths = Integer.parseInt(ui.getText(find(MIN_INTERVAL_MONTHS_BOX)));
+	//	int minIntervalDays = Integer.parseInt(ui.getText(find(MIN_INTERVAL_DAYS_BOX)));
 		
-		if(startDateMonths > endDateMonths || (startDateMonths == endDateMonths && startDateDays >= endDateDays)){
-			ui.alert("The dose window's end date cannot be before its start date.");
-			return;
-		}
+	//	if(startDateMonths > endDateMonths || (startDateMonths == endDateMonths && startDateDays >= endDateDays)){
+	//		ui.alert("The dose window's end date cannot be before its start date.");
+	//		return;
+	//	}
 		//if we're not currently editing a dose, create a new one
 		if(currentlyEditingDose == null){
-			getCurrentlySelectedVaccine().addDose(new VaccineDose(name,getCurrentlySelectedVaccine(),startDateMonths,startDateDays,endDateMonths,endDateDays,minIntervalMonths,minIntervalDays));
+			getCurrentlySelectedVaccine().addDose(new VaccineDose(name,getCurrentlySelectedVaccine(),startDateMonths,startDateDays));
 			vaccineDao.saveOrUpdateVaccine(getCurrentlySelectedVaccine());
 			newDose=true;
 		}else{ // otherwise, modify the existing dose
 			currentlyEditingDose.setStartDateDays(startDateDays);
 			currentlyEditingDose.setStartDateMonths(startDateMonths);
-			currentlyEditingDose.setEndDateDays(endDateDays);
-			currentlyEditingDose.setEndDateMonths(endDateMonths);
-			currentlyEditingDose.setMinIntervalDays(minIntervalDays);
-			currentlyEditingDose.setMinIntervalMonths(minIntervalMonths);
+	//		currentlyEditingDose.setEndDateDays(endDateDays);
+	//		currentlyEditingDose.setEndDateMonths(endDateMonths);
+	//		currentlyEditingDose.setMinIntervalDays(minIntervalDays);
+	//		currentlyEditingDose.setMinIntervalMonths(minIntervalMonths);
 			currentlyEditingDose.setName(name);
 	//		vaccineDao.saveOrUpdateVaccine(currentlyEditingDose.getVaccine());
 			vaccineDoseDao.saveOrUpdateVaccineDose(currentlyEditingDose);

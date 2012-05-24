@@ -121,7 +121,7 @@ public class AdvancedTableController extends ViewHandler{
 		if(results.size() == 0){
 			removeAll(table);
 			Object header = Thinlet.create("header");
-			add(header,ui.createColumn(getI18nString("advancedtable.no.results.to.display"), null));
+			add(header,ui.createColumn(" ", null));
 			add(table,header);
 			Object row = ui.createTableRow(null);
 			add(row, ui.createTableCell(noResultsMessage==null?getI18nString("advancedtable.no.search.results"):noResultsMessage));

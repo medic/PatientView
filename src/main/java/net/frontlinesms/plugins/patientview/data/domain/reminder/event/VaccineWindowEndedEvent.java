@@ -42,13 +42,14 @@ public class VaccineWindowEndedEvent extends ReminderEvent<ScheduledDose>{
 		List<ReminderDate<ScheduledDose>> results = new ArrayList<ReminderDate<ScheduledDose>>();
 		List<ScheduledDose> doses = scheduledDoseDao.getScheduledDoses(patient, null);
 		for(ScheduledDose dose:doses){
-				results.add(new ReminderDate<ScheduledDose>(TimeUtils.getCalendar(dose.getWindowEndDate()), dose));
+		//		results.add(new ReminderDate<ScheduledDose>(TimeUtils.getCalendar(dose.getWindowEndDate()), dose));
 		}
 		return results;
 	}
 
 	public Calendar getDateForContext(Patient patient, ScheduledDose context) {
-			return TimeUtils.getCalendar(context.getWindowEndDate());
+			//return TimeUtils.getCalendar(context.getWindowEndDate());
+		return Calendar.getInstance();
 	}
 	
 	public List<EventTimingOption> getSupportedTimingOptions() {
@@ -71,7 +72,7 @@ public class VaccineWindowEndedEvent extends ReminderEvent<ScheduledDose>{
 		if(key.equals("{vaccine name}")){
 			return context.getDose().getVaccine().getName();
 		}else if(key.equals("{window end date}")){
-			return context.getWindowEndDateString();
+			return "";//context.getWindowEndDateString();
 		}else{
 			return super.getVariableValue(patient, key);
 		}

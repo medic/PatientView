@@ -3,6 +3,7 @@ package net.frontlinesms.plugins.patientview.ui.dashboard;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.people.User.Role;
 import net.frontlinesms.plugins.patientview.security.UserSessionManager;
+import net.frontlinesms.plugins.patientview.ui.dashboard.tabs.AppointmentTab;
 import net.frontlinesms.plugins.patientview.ui.dashboard.tabs.FormResponseTab;
 import net.frontlinesms.plugins.patientview.ui.dashboard.tabs.PatientVaccineTab;
 import net.frontlinesms.plugins.patientview.ui.dashboard.tabs.SubmitFormTab;

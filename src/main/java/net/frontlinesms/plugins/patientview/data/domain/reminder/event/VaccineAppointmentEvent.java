@@ -31,17 +31,17 @@ public class VaccineAppointmentEvent extends ReminderEvent<ScheduledDose>{
 	public VaccineAppointmentEvent(ApplicationContext appCon){
 		super();
 		this.scheduledDoseDao = (ScheduledDoseDao) appCon.getBean("ScheduledDoseDao");
-		variables.put("Vaccine Name", "{vaccine name}");
+		variables.put("Appointment Name", "{vaccine name}");
 		variables.put("Appointment Date", "{appointment date}");
 	}
 	
 	public String getSnippet() {
-		return "a vaccine appointment";
+		return "an appointment";
 	}
 
 	public Calendar getDateForContext(Patient patient, ScheduledDose context) {
 		
-		return TimeUtils.getCalendar(context.getWindowEndDate());
+		return TimeUtils.getCalendar(context.getWindowStartDate());
 	}
 
 	public List<ReminderDate<ScheduledDose>> getEventDatesWithContext(Patient patient) {
@@ -70,7 +70,7 @@ public class VaccineAppointmentEvent extends ReminderEvent<ScheduledDose>{
 	}
 
 	public String getVariableValue(Patient patient, ScheduledDose context, String key) {
-		if(key.equals("{vaccine name}")){
+		if(key.equals("{appointment name}")){
 			return context.getDose().getVaccine().getName();
 		}else if(key.equals("{appointment date}")){
 			return context.getWindowStartDateString();

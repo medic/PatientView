@@ -2,7 +2,6 @@
 <panel columns="1" gap="5" halign="center" name="reschedulePanel" weightx="1">
     <panel gap="14" name="datePanel" weightx="1">
         <panel gap="5" name="dateScheduledPanel"/>
-        <panel gap="5" name="endDatePanel"/>
     </panel>
     <panel gap="5" halign="center" name="rescheduleButtonPanel" weightx="1">
         <button action="rescheduleDoseConfirmed()" text="Save" icon="/icons/tick.png"/>

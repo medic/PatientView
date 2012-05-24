@@ -1,32 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <panel border="true" bottom="5" columns="1" gap="5" left="5" name="editDosePanel" right="5" text="Editing OPV" top="5" weightx="1" icon="/icons/pencil.png">
     <panel gap="5" weightx="1">
-        <label text="Dose Name:"/>
+        <label text="Appointment Name:"/>
         <textfield columns="42" name="doseNameField"/>
     </panel>
     <panel gap="5">
-        <label text="Window Start Date:" />
+        <label text="Appointment Date:" />
         <spinbox minimum="0" columns="4" halign="center" name="startDateMonths" text="0" width="1"/>
         <label text="months"/>
         <spinbox minimum="0" columns="4" name="startDateDays" text="0"/>
-        <label text="days"/>
-    </panel>
-    <panel gap="5">
-        <label text="Window End Date:" />
-        <spinbox minimum="0" columns="4" halign="center" name="endDateMonths" text="0" width="1"/>
-        <label text="months"/>
-        <spinbox minimum="0" columns="4" name="endDateDays" text="0"/>
-        <label text="days"/>
-    </panel>
-    <panel gap="5">
-        <label text="Minimum Interval to Next Dose:"/>
-        <spinbox minimum="0" columns="4" halign="center" name="minIntervalMonths" text="0" width="1"/>
-        <label text="months"/>
-        <spinbox minimum="0" columns="4" name="minIntervalDays" text="0"/>
-        <label text="days"/>
+        <label text=" days from the start of the series."/>
     </panel>
     <panel gap="10" halign="left" valign="center" weightx="1">
-        <button action="saveDose()" name="saveDoseButton" text="Save Dose" icon="/icons/tick.png"/>
+        <button action="saveDose()" name="saveDoseButton" text="Save Appointment" icon="/icons/tick.png"/>
         <button action="cancelEditingDose()" name="cancelDoseButton" text="Cancel" icon="/icons/cross.png"/>
     </panel>
 </panel>

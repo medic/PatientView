@@ -9,6 +9,7 @@ import net.frontlinesms.plugins.patientview.data.repository.PatientDao;
 import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
 import net.frontlinesms.plugins.patientview.data.repository.VaccineDao;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.FormFieldDelegate;
+import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.AmenorrheaDateField;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.CHWComboBox;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.NewbornCheckbox;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.PatientIdField;
@@ -40,7 +41,9 @@ public class PatientFieldGroup extends PersonFieldGroup<Patient> {
 		PatientIdField idField = new PatientIdField(getPerson()!=null?getPerson().getExternalId():"", ui, this);
 		super.insertField(idField, 1);
 		if(isNewPersonGroup){
-			checkBox = new NewbornCheckbox(ui, "Enroll in vaccines for newborns?", null , appCon);
+			AmenorrheaDateField df = new AmenorrheaDateField(ui, this, getPerson() == null?null:getPerson().getDateOfAmenorrhea());
+			super.addField(df);
+			checkBox = new NewbornCheckbox(ui, "Enroll in ANC appointments?", null , appCon);
 			super.addField(checkBox);
 		}
 	}
@@ -55,7 +58,7 @@ public class PatientFieldGroup extends PersonFieldGroup<Patient> {
 		if(checkBox != null && checkBox.getRawResponse()){
 			List<Vaccine> vaccines = vaccineDao.getNewbornVaccines();
 			for(Vaccine v: vaccines){
-				List<ScheduledDose> scheduledDoses = VaccineScheduler.instance().scheduleVaccinesFromBirth(getPerson(), v);
+				List<ScheduledDose> scheduledDoses = VaccineScheduler.instance().scheduleVaccinesFromDateOfAmenorrhea(getPerson(), v);
 				doseDao.saveScheduledDoses(scheduledDoses);
 			}
 		}

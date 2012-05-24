@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose;
+import net.frontlinesms.plugins.patientview.data.domain.appointment.Appointment;
 
 import org.springframework.util.StringUtils;
 
@@ -26,9 +26,11 @@ public class Patient extends Person {
 	private CommunityHealthWorker chw;
 
 	@OneToMany(cascade=CascadeType.ALL,fetch=FetchType.LAZY,mappedBy="patient")
-	private Set<ScheduledDose> scheduledDoses;
+	private Set<Appointment> appointments;
 	
 	private String externalId;
+	
+	private Long dateOfAmenorrhea;
 	
 	/** Default constructor for Hibernate. */
 	public Patient() {}
@@ -81,5 +83,13 @@ public class Patient extends Person {
 		}else{
 			return pid+"";
 		}
+	}
+
+	public void setDateOfAmenorrhea(Long dateOfAmenorrhea) {
+		this.dateOfAmenorrhea = dateOfAmenorrhea;
+	}
+
+	public Long getDateOfAmenorrhea() {
+		return dateOfAmenorrhea;
 	}
 }

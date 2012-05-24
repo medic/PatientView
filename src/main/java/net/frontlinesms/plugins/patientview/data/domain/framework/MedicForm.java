@@ -1,12 +1,15 @@
 package net.frontlinesms.plugins.patientview.data.domain.framework;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,6 +22,7 @@ import javax.persistence.Table;
 import net.frontlinesms.plugins.forms.data.domain.Form;
 import net.frontlinesms.plugins.forms.data.domain.FormField;
 import net.frontlinesms.plugins.patientview.data.domain.flag.Flag;
+import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField.PatientFieldMapping;
 
 import org.hibernate.annotations.IndexColumn;
 import org.hibernate.annotations.OrderBy;
@@ -32,7 +36,8 @@ import org.hibernate.annotations.OrderBy;
 @Entity
 @Table(name = "medic_forms")
 public class MedicForm{
-
+	
+	
 	/** Unique id for this entity. This is for hibernate usage. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,6 +61,32 @@ public class MedicForm{
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "form")
 	private Set<Flag> flags;
 
+	public enum MedicFormType{
+		PATIENT_DATA("Patient Data",new PatientFieldMapping[]{PatientFieldMapping.NAMEFIELD, 
+				PatientFieldMapping.BIRTHDATEFIELD,PatientFieldMapping.IDFIELD}), 
+		REGISTRATION("Patient Registration",new PatientFieldMapping[]{PatientFieldMapping.NAMEFIELD, 
+				PatientFieldMapping.BIRTHDATEFIELD,PatientFieldMapping.IDFIELD,PatientFieldMapping.GENDER,
+				PatientFieldMapping.DATE_OF_LAST_AMENORRHEA, PatientFieldMapping.PHONE_NUMBER }), 
+		APPOINTMENT("Appointment",new PatientFieldMapping[]{PatientFieldMapping.NAMEFIELD, 
+				PatientFieldMapping.BIRTHDATEFIELD,PatientFieldMapping.IDFIELD}),
+		NONE("None",new PatientFieldMapping[0]);
+		
+		public final String name;
+		public final PatientFieldMapping[] fields;
+		
+		private MedicFormType(String name, PatientFieldMapping[] fields){
+			this.name = name;
+			this.fields = fields;
+		}
+		
+		public String toString(){
+			return name;
+		}
+ 	}
+	
+	@Enumerated(EnumType.ORDINAL)
+	private MedicFormType type;
+	
 	/**
 	 * Blank Hibernate Constructor 
 	 */
@@ -68,6 +99,7 @@ public class MedicForm{
 	public MedicForm(String name) {
 		this.name = name;
 		fields = new ArrayList<MedicFormField>();
+		type = MedicFormType.PATIENT_DATA;
 	}
 	
 	/**
@@ -78,6 +110,7 @@ public class MedicForm{
 	public MedicForm(String name, List<MedicFormField> fields) {
 		this.name = name;
 		setFields(fields);
+		type = MedicFormType.PATIENT_DATA;
 	}
 	
 	/**
@@ -94,6 +127,7 @@ public class MedicForm{
 			fields.add(mff);
 		}
 		updateFieldPositions();
+		type = MedicFormType.PATIENT_DATA;
 	}
 
 	/**
@@ -185,5 +219,37 @@ public class MedicForm{
 
 	public Set<Flag> getFlags() {
 		return flags;
+	}
+
+	public void setType(MedicFormType type, boolean autoMap){
+		if(this.type != null && autoMap){
+			Set<PatientFieldMapping> newTypes = new HashSet<PatientFieldMapping>();
+			for(PatientFieldMapping mft: type.fields){
+				newTypes.add(mft);
+			}
+			for(MedicFormField field: this.fields){
+				if(newTypes.contains(field.getMapping())) continue;
+				field.setMapping(null);
+				for(PatientFieldMapping pfm : newTypes){
+					if(pfm.toString().equalsIgnoreCase(field.getLabel()) || field.getLabel().contains(pfm.toString())){
+						field.setMapping(pfm);
+						break;
+					}
+				}
+			}
+		}else{
+			for(MedicFormField field: this.fields){
+				field.setMapping(null);
+			}
+		}
+		this.type = type;
+	}
+	
+	public void setType(MedicFormType type) {
+		setType(type,false);
+	}
+
+	public MedicFormType getType() {
+		return type;
 	}
 }

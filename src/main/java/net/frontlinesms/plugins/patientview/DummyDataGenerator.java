@@ -1,6 +1,7 @@
 package net.frontlinesms.plugins.patientview;
 
 import java.security.GeneralSecurityException;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -17,14 +18,13 @@ import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.context.ApplicationContext;
 
 import thinlet.Thinlet;
 
 public class DummyDataGenerator implements ThinletUiEventHandler {
 	
-	private static DateTimeFormatter df = InternationalisationUtils.getDateFormat();
+	private static DateFormat df = InternationalisationUtils.getDateFormat();
 	
 	private boolean isGenerating=false;
 	

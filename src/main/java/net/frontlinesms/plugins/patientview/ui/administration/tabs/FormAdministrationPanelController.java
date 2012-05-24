@@ -5,6 +5,7 @@ import java.util.Collection;
 import net.frontlinesms.plugins.forms.data.domain.Form;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField;
+import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm.MedicFormType;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField.PatientFieldMapping;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormFieldDao;
@@ -36,7 +37,8 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 	
 	/** The combo box that holds the choices for the form field -> patient field mapping*/
 	private Object mappingComboBox;
-	
+	private Object formTypeComboBox;
+
 	/* Daos */
 	MedicFormDao patientViewFormDao;
 	MedicFormFieldDao patientViewFieldDao;
@@ -54,6 +56,7 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 		patientViewFormList = find("patientViewFormList");
 		fieldList = find("fieldList");
 		mappingComboBox = find("mappingComboBox");
+		formTypeComboBox= find("formTypeSelect");
 		//initialize the daos
 		patientViewFormDao = (MedicFormDao) appCon.getBean("MedicFormDao");
 		patientViewFieldDao = (MedicFormFieldDao) appCon.getBean("MedicFormFieldDao");
@@ -101,8 +104,10 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 	 */
 	public void patientViewFormListSelectionChanged(){
 		MedicForm selectedForm = (MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList));
-		if(selectedForm != null)
+		if(selectedForm != null){
 			populateFieldList(selectedForm);
+			populateFormTypeSelect(selectedForm);
+		}
 	}
 	
 	/**
@@ -119,7 +124,15 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 	 * @param form
 	 */
 	private void populateFieldList(MedicForm form){
-		ui.setText(find("fieldListTitle"), getI18nString(FIELDS_ON_FORM_PREFIX)+ " \"" + form.getName()+"\"");
+		MedicFormField currentField = (MedicFormField) ui.getAttachedObject(ui.getSelectedItem(fieldList));
+		int previousIndex = ui.getSelectedIndex(fieldList);
+		if(currentField != null){
+			MedicForm currentForm = currentField.getForm();
+			if(currentForm != null && currentForm.getFid() != form.getFid()){
+				previousIndex = -1;
+			}
+		}
+		ui.setText(find("fieldListPanel"), getI18nString(FIELDS_ON_FORM_PREFIX)+ " \"" + form.getName()+"\"");
 		removeAll(fieldList);
 		for(MedicFormField mff: patientViewFieldDao.getFieldsOnForm(form)){
 			Object item = ui.createListItem(mff.getLabel(), mff);
@@ -128,7 +141,11 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 			}
 			add(fieldList,item);
 		}
-		ui.setSelectedIndex(fieldList, 0);
+		if(previousIndex >0){
+			ui.setSelectedIndex(fieldList, previousIndex);
+		}else{
+			ui.setSelectedIndex(fieldList, 0);
+		}
 		fieldListSelectionChanged();
 	}
 	
@@ -143,8 +160,9 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 		add(mappingComboBox,ui.createComboboxChoice(getI18nString("common.blank"),null));
 		ui.setSelectedIndex(mappingComboBox,0);
 		ui.setText(mappingComboBox, getI18nString("common.blank"));
-		for(int i = 0; i < PatientFieldMapping.values().length; i++){
-			PatientFieldMapping m = PatientFieldMapping.values()[i];
+		MedicForm form = (MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList));
+		for(int i = 0; i < form.getType().fields.length; i++){
+			PatientFieldMapping m = form.getType().fields[i];
 			Object choice = ui.createComboboxChoice(m.toString(), m);
 			ui.setIcon(choice, m.getIconPath());
 			add(mappingComboBox,choice);
@@ -152,12 +170,34 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 				ui.setSelectedIndex(mappingComboBox, i+1);
 				ui.setText(mappingComboBox, m.toString());
 			}
-			
 		}
 		if(field.getMapping() != null){
 			ui.setIcon(mappingComboBox, field.getMapping().getIconPath());
 		}else{
 			ui.setIcon(mappingComboBox, "");
+		}
+	}
+	
+	public void formTypeComboBoxSelectionChanged(){
+		MedicFormType mapping = (MedicFormType) ui.getAttachedObject(ui.getSelectedItem(formTypeComboBox));
+		MedicForm form= (MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList));
+		form.setType(mapping,true);
+		ui.setAttachedObject(ui.getSelectedItem(patientViewFormList), form);
+		patientViewFormDao.updateMedicForm(form);
+		patientViewFormListSelectionChanged();
+	}
+	
+	private void populateFormTypeSelect(MedicForm form){
+		removeAll(formTypeComboBox);
+		ui.setAction(formTypeComboBox, "formTypeComboBoxSelectionChanged()", null, this);
+		for(int i = 0; i < MedicFormType.values().length; i++){
+			MedicFormType m = MedicFormType.values()[i];
+			Object choice = ui.createComboboxChoice(m.toString(), m);
+			add(formTypeComboBox,choice);
+			if(form.getType() == m){
+				ui.setSelectedIndex(formTypeComboBox, i);
+				ui.setText(formTypeComboBox, m.toString());
+			}
 		}
 	}
 	

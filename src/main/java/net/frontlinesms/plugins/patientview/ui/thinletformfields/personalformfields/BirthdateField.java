@@ -11,7 +11,7 @@ public class BirthdateField extends DateField implements PersonalFormField{
 	public BirthdateField(ExtendedThinlet thinlet, Long initialDate, FormFieldDelegate delegate) {
 		super(thinlet, InternationalisationUtils.getI18nString("thinletformfields.birthdate"), delegate);		
 		if(initialDate != null){
-			String initialText = df.print(initialDate);
+			String initialText = df.format(initialDate);
 			thinlet.setText(textBox, initialText);
 			super.date = initialDate;
 		}

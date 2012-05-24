@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<panel columns="1" gap="5" halign="center" name="scheduleAppointmentPanel" valign="center" weightx="1" weighty="1">
+    <panel gap="5">
+        <label name="subjectLabel" text="Reason for Appointment"/>
+        <textfield columns="23" name="reasonField"/>
+        <label text="   "/>
+        <panel  name="appointmentDateField"/>
+    </panel>
+    <panel gap="5" halign="center">
+        <button action="scheduleAppointmentConfirmed()" icon="/icons/tick.png" name="scheduleConfirmedButton" text="Schedule"/>
+        <button action="resetBottomPanel()" icon="/icons/cross.png" text="Cancel"/>
+    </panel>
+</panel>

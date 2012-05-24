@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<panel columns="1" gap="5" halign="center" name="scheduleAppointmentPanel" valign="center" weightx="1" weighty="1">
+	<panel  name="appointmentDateField"/>
+    <panel gap="5" halign="center">
+        <button action="rescheduleAppointmentConfirmed()" icon="/icons/tick.png" name="scheduleConfirmedButton" text="Schedule"/>
+        <button action="resetBottomPanel()" icon="/icons/cross.png" text="Cancel"/>
+    </panel>
+</panel>

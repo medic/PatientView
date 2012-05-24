@@ -1,0 +1,6 @@
+<panel gap="5">
+	<button name="scheduleButton" text="Schedule" action="scheduleClicked()"/>
+	<button name="rescheduleButton" text="Reschedule" action="rescheduleClicked()"/>
+	<button name="completeButton" text="Complete" action="completeClicked()"/>
+	<button name="cancelButton" text="Cancel" action="cancelClicked()"/>
+</panel>

@@ -79,7 +79,7 @@ public class HibernatePatientDao extends BaseHibernateDao<Patient> implements Pa
 		if(birthdate !=null && !birthdate.equals("")){
 			long bday = 0L;
 			try {
-				bday = InternationalisationUtils.getDateFormat().parseMillis(birthdate);
+				bday = InternationalisationUtils.getDateFormat().parse(birthdate).getTime();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

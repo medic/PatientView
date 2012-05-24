@@ -1,4 +1,4 @@
 <panel columns="1" gap="5" weightx="1">
-	<button action="addVaccine()" name="addVaccineButton" text="Add Vaccine" weightx="1"  icon="/icons/add_vaccine_large.png"/>
-	<button action="removeVaccine()" name="removeVaccineButton" text="Remove Vaccine" weightx="1"  icon="/icons/delete_vaccine_large.png"/>
+	<button action="addVaccine()" name="addVaccineButton" text="Add Appointment Series" weightx="1"  icon="/icons/calendar_add.png"/>
+	<button action="removeVaccine()" name="removeVaccineButton" text="Remove Appointment Series" weightx="1"  icon="/icons/calendar_delete.png"/>
 </panel>

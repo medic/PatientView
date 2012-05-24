@@ -1,5 +1,6 @@
 package net.frontlinesms.plugins.patientview;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -19,7 +20,7 @@ import net.frontlinesms.plugins.forms.data.repository.FormDao;
 import net.frontlinesms.plugins.patientview.data.domain.framework.DataType;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField;
-import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField.PatientFieldMapping;
+import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm.MedicFormType;
 import net.frontlinesms.plugins.patientview.data.domain.people.CommunityHealthWorker;
 import net.frontlinesms.plugins.patientview.data.domain.people.Gender;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
@@ -33,7 +34,6 @@ import net.frontlinesms.plugins.patientview.data.repository.MedicMessageResponse
 import net.frontlinesms.plugins.patientview.data.repository.PatientDao;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.context.ApplicationContext;
 
 public class DataGeneratorThread extends Thread{
@@ -44,7 +44,7 @@ public class DataGeneratorThread extends Thread{
 		private int formResponseNum; 
 		private int smsMessagesNum;
 		private ApplicationContext appCon;
-		private DateTimeFormatter df = InternationalisationUtils.getDateFormat();
+		private DateFormat df = InternationalisationUtils.getDateFormat();
 		private Group chwgroup;
 		private DummyDataGenerator parentController;
 		
@@ -131,80 +131,88 @@ public class DataGeneratorThread extends Thread{
 				log("Creating forms...");
 				// create new Patient Entry form
 				MedicForm f1 = new MedicForm("Patient Entry");
-				f1.addField(new MedicFormField(f1, DataType.TEXT_FIELD, "Patient Name", PatientFieldMapping.NAMEFIELD));
-				f1.addField(new MedicFormField(f1, DataType.DATE_FIELD, "Patient Birthdate", PatientFieldMapping.BIRTHDATEFIELD));
+				f1.addField(new MedicFormField(f1, DataType.TEXT_FIELD, "Patient Name"));
+				f1.addField(new MedicFormField(f1, DataType.DATE_FIELD, "Patient Birthdate"));
 				f1.addField(new MedicFormField(f1, DataType.TEXT_FIELD, "Patient Gender"));
 				f1.addField(new MedicFormField(f1, DataType.TEXT_FIELD, "Patient Height"));
 				f1.addField(new MedicFormField(f1, DataType.CHECK_BOX, "Patient HIV Status"));
+				f1.setType(MedicFormType.REGISTRATION, true);
 				log("Patient Entry Form created.");
 				
 				// create patient weight form
 				MedicForm f2 = new MedicForm("Patient Weight");
-				f2.addField(new MedicFormField(f2, DataType.TEXT_FIELD, "Patient Name", PatientFieldMapping.NAMEFIELD));
-				f2.addField(new MedicFormField(f2, DataType.DATE_FIELD, "Patient Birthdate", PatientFieldMapping.BIRTHDATEFIELD));
+				f2.addField(new MedicFormField(f2, DataType.TEXT_FIELD, "Patient Name"));
+				f2.addField(new MedicFormField(f2, DataType.DATE_FIELD, "Patient Birthdate"));
 				f2.addField(new MedicFormField(f2, DataType.NUMERIC_TEXT_FIELD, "Patient Weight"));
+				f1.setType(MedicFormType.PATIENT_DATA, true);
 				log("Patient Weight Form created.");
 				
 				// create patient death form
 				MedicForm f3 = new MedicForm("Patient Death");
-				f3.addField(new MedicFormField(f3, DataType.TEXT_FIELD, "Patient Name", PatientFieldMapping.NAMEFIELD));
-				f3.addField(new MedicFormField(f3, DataType.DATE_FIELD, "Patient Birthdate", PatientFieldMapping.BIRTHDATEFIELD));
+				f3.addField(new MedicFormField(f3, DataType.TEXT_FIELD, "Patient Name"));
+				f3.addField(new MedicFormField(f3, DataType.DATE_FIELD, "Patient Birthdate"));
 				f3.addField(new MedicFormField(f3, DataType.DATE_FIELD, "Date of Death"));
 				f3.addField(new MedicFormField(f3, DataType.TEXT_AREA, "Probable Cause"));
+				f3.setType(MedicFormType.PATIENT_DATA, true);
 				log("Patient Death Form created.");
 				
 				// create patient ARV adherence form
 				MedicForm f4 = new MedicForm("ARV adherence");
-				f4.addField(new MedicFormField(f4, DataType.TEXT_FIELD, "Patient Name", PatientFieldMapping.NAMEFIELD));
-				f4.addField(new MedicFormField(f4, DataType.DATE_FIELD, "Patient Birthdate", PatientFieldMapping.BIRTHDATEFIELD));
+				f4.addField(new MedicFormField(f4, DataType.TEXT_FIELD, "Patient Name"));
+				f4.addField(new MedicFormField(f4, DataType.DATE_FIELD, "Patient Birthdate"));
 				f4.addField(new MedicFormField(f4, DataType.CHECK_BOX, "ARVs taken?"));
 				f4.addField(new MedicFormField(f4, DataType.TEXT_AREA, "Additional notes"));
+				f4.setType(MedicFormType.PATIENT_DATA, true);
 				log("ARV Adherence Form created.");
 				
 				// create birth form
 				MedicForm f5 = new MedicForm("Patient Birth");
-				f5.addField(new MedicFormField(f5, DataType.TEXT_FIELD, "Patient Name", PatientFieldMapping.NAMEFIELD));
-				f5.addField(new MedicFormField(f5, DataType.DATE_FIELD, "Patient Birthdate", PatientFieldMapping.BIRTHDATEFIELD));
+				f5.addField(new MedicFormField(f5, DataType.TEXT_FIELD, "Patient Name"));
+				f5.addField(new MedicFormField(f5, DataType.DATE_FIELD, "Patient Birthdate"));
 				f5.addField(new MedicFormField(f5, DataType.CHECK_BOX, "Check if baby healthy"));
 				f5.addField(new MedicFormField(f5, DataType.CHECK_BOX, "Check if mother healthy"));
+				f5.setType(MedicFormType.PATIENT_DATA, true);
 				f5.addField(new MedicFormField(f5, DataType.TEXT_AREA, "Additional notes"));
 				log("Patient Birth Form created.");
 				
 				// create rash form
 				MedicForm f6 = new MedicForm("Unknown Rash");
-				f6.addField(new MedicFormField(f6, DataType.TEXT_FIELD, "Patient Name", PatientFieldMapping.NAMEFIELD));
-				f6.addField(new MedicFormField(f6, DataType.DATE_FIELD, "Patient Birthdate", PatientFieldMapping.BIRTHDATEFIELD));
+				f6.addField(new MedicFormField(f6, DataType.TEXT_FIELD, "Patient Name"));
+				f6.addField(new MedicFormField(f6, DataType.DATE_FIELD, "Patient Birthdate"));
 				f6.addField(new MedicFormField(f6, DataType.CHECK_BOX, "Head Rash?"));
 				f6.addField(new MedicFormField(f6, DataType.CHECK_BOX, "Body Rash?"));
 				f6.addField(new MedicFormField(f6, DataType.TEXT_FIELD,
 						"Location of Rash"));
 				f6.addField(new MedicFormField(f6, DataType.TEXT_AREA, "Other notes"));
+				f6.setType(MedicFormType.PATIENT_DATA, true);
 				log("Unknown Rash Form created.");
 				
 				// create other form
 				MedicForm f7 = new MedicForm("Diarrheal Disease");
-				f7.addField(new MedicFormField(f7, DataType.TEXT_FIELD, "Patient Name", PatientFieldMapping.NAMEFIELD));
-				f7.addField(new MedicFormField(f7, DataType.DATE_FIELD, "Patient Birthdate", PatientFieldMapping.BIRTHDATEFIELD));
+				f7.addField(new MedicFormField(f7, DataType.TEXT_FIELD, "Patient Name"));
+				f7.addField(new MedicFormField(f7, DataType.DATE_FIELD, "Patient Birthdate"));
 				f7.addField(new MedicFormField(f7,DataType.TEXT_FIELD,"Severity"));
 				f7.addField(new MedicFormField(f7,DataType.TEXT_FIELD,"Frequency"));
 				f7.addField(new MedicFormField(f7, DataType.CHECK_BOX, "Is patient dehydrated?"));
 				f7.addField(new MedicFormField(f7, DataType.CHECK_BOX, "Check if bloody"));
 				f7.addField(new MedicFormField(f7, DataType.TEXT_AREA, "Additional Notes"));
+				f7.setType(MedicFormType.PATIENT_DATA, true);
 				log("Diarrheal Disease Form created.");
 				
 				// create other form
 				MedicForm f8 = new MedicForm("Joint Pain");
-				f8.addField(new MedicFormField(f8, DataType.TEXT_FIELD, "Patient Name", PatientFieldMapping.NAMEFIELD));
-				f8.addField(new MedicFormField(f8, DataType.DATE_FIELD, "Patient Birthdate", PatientFieldMapping.BIRTHDATEFIELD));
+				f8.addField(new MedicFormField(f8, DataType.TEXT_FIELD, "Patient Name"));
+				f8.addField(new MedicFormField(f8, DataType.DATE_FIELD, "Patient Birthdate"));
 				f8.addField(new MedicFormField(f8, DataType.TEXT_FIELD, "Joints affected"));
 				f8.addField(new MedicFormField(f8, DataType.TEXT_FIELD, "Type of Pain"));
 				f8.addField(new MedicFormField(f8, DataType.TEXT_AREA, "Additional Notes"));
+				f8.setType(MedicFormType.PATIENT_DATA, true);
 				log("Joint Pain Form created.");
 				
 				// create other form
 				MedicForm f9 = new MedicForm("Long Test Form");
-				f9.addField(new MedicFormField(f9, DataType.TEXT_FIELD, "Patient Name", PatientFieldMapping.NAMEFIELD));
-				f9.addField(new MedicFormField(f9, DataType.DATE_FIELD, "Patient Birthdate", PatientFieldMapping.BIRTHDATEFIELD));
+				f9.addField(new MedicFormField(f9, DataType.TEXT_FIELD, "Patient Name"));
+				f9.addField(new MedicFormField(f9, DataType.DATE_FIELD, "Patient Birthdate"));
 				f9.addField(new MedicFormField(f9, DataType.TEXT_FIELD, "Field 1"));
 				f9.addField(new MedicFormField(f9, DataType.CHECK_BOX, "more fun!"));
 				f9.addField(new MedicFormField(f9, DataType.TEXT_FIELD, "Field 2"));
@@ -214,12 +222,13 @@ public class DataGeneratorThread extends Thread{
 				f9.addField(new MedicFormField(f9, DataType.TEXT_FIELD, "Field 6"));
 				f9.addField(new MedicFormField(f9, DataType.TEXT_FIELD, "Field 7"));
 				f9.addField(new MedicFormField(f9, DataType.TEXT_FIELD, "Field 8"));
+				f9.setType(MedicFormType.PATIENT_DATA, true);
 				log("Long Text Form created.");
 		
 				// create other form
 				MedicForm f0 = new MedicForm("Checkbox Long Test Form");
-				f0.addField(new MedicFormField(f0, DataType.TEXT_FIELD, "Patient Name", PatientFieldMapping.NAMEFIELD));
-				f0.addField(new MedicFormField(f0, DataType.DATE_FIELD, "Patient Birthdate", PatientFieldMapping.BIRTHDATEFIELD));
+				f0.addField(new MedicFormField(f0, DataType.TEXT_FIELD, "Patient Name"));
+				f0.addField(new MedicFormField(f0, DataType.DATE_FIELD, "Patient Birthdate"));
 				f0.addField(new MedicFormField(f0, DataType.TEXT_FIELD, "Field 1"));
 				f0.addField(new MedicFormField(f0, DataType.WRAPPED_TEXT, "Labelling"));
 				f0.addField(new MedicFormField(f0, DataType.CHECK_BOX, "Field 2"));
@@ -244,11 +253,12 @@ public class DataGeneratorThread extends Thread{
 				f0.addField(new MedicFormField(f0, DataType.CHECK_BOX, "Field 18"));
 				f0.addField(new MedicFormField(f0, DataType.CHECK_BOX, "Field 19"));
 				f0.addField(new MedicFormField(f0, DataType.CHECK_BOX, "Field 20"));
+				f0.setType(MedicFormType.PATIENT_DATA, true);
 				log("Long Checkbox Form created.");
 				
 				MedicForm f11 = new MedicForm("Side Effects");
-				f11.addField(new MedicFormField(f11, DataType.TEXT_FIELD, "Patient Name", PatientFieldMapping.NAMEFIELD));
-				f11.addField(new MedicFormField(f11, DataType.DATE_FIELD, "Patient Birthdate", PatientFieldMapping.BIRTHDATEFIELD));
+				f11.addField(new MedicFormField(f11, DataType.TEXT_FIELD, "Patient Name"));
+				f11.addField(new MedicFormField(f11, DataType.DATE_FIELD, "Patient Birthdate"));
 				f11.addField(new MedicFormField(f11, DataType.TEXT_FIELD, "Medication the patient is on"));
 				f11.addField(new MedicFormField(f11, DataType.CHECK_BOX, "Check for headache"));
 				f11.addField(new MedicFormField(f11, DataType.CHECK_BOX, "Check for nausea"));
@@ -256,19 +266,22 @@ public class DataGeneratorThread extends Thread{
 				f11.addField(new MedicFormField(f11, DataType.CHECK_BOX, "Check for internal bleeding"));
 				f11.addField(new MedicFormField(f11, DataType.CHECK_BOX, "Check for sores"));
 				f11.addField(new MedicFormField(f11, DataType.CHECK_BOX, "Check for dizziness"));
+				f11.setType(MedicFormType.PATIENT_DATA, true);
 				log("Side Effects Form created.");
 				
 				MedicForm f12 = new MedicForm("Morphine Adherence");
-				f12.addField(new MedicFormField(f12, DataType.TEXT_FIELD, "Patient Name", PatientFieldMapping.NAMEFIELD));
-				f12.addField(new MedicFormField(f12, DataType.DATE_FIELD, "Patient Birthdate", PatientFieldMapping.BIRTHDATEFIELD));
+				f12.addField(new MedicFormField(f12, DataType.TEXT_FIELD, "Patient Name"));
+				f12.addField(new MedicFormField(f12, DataType.DATE_FIELD, "Patient Birthdate"));
 				f12.addField(new MedicFormField(f12, DataType.CHECK_BOX, "Check if Morphine taken"));
 				f12.addField(new MedicFormField(f12, DataType.TEXT_AREA, "Additional notes"));
+				f12.setType(MedicFormType.PATIENT_DATA, true);
 				log("Morphine Adherence Form created.");
 				
 				MedicForm f13 = new MedicForm("Present Complaints of Patient");
-				f13.addField(new MedicFormField(f13, DataType.TEXT_FIELD, "Patient Name", PatientFieldMapping.NAMEFIELD));
-				f13.addField(new MedicFormField(f13, DataType.DATE_FIELD, "Patient Birthdate", PatientFieldMapping.BIRTHDATEFIELD));
+				f13.addField(new MedicFormField(f13, DataType.TEXT_FIELD, "Patient Name"));
+				f13.addField(new MedicFormField(f13, DataType.DATE_FIELD, "Patient Birthdate"));
 				f13.addField(new MedicFormField(f13, DataType.TEXT_AREA, "Complaints"));
+				f13.setType(MedicFormType.PATIENT_DATA, true);
 				log("Complaints Form created.");
 				
 				createFSMSFormFromMedicForm(f1);
@@ -327,11 +340,11 @@ public class DataGeneratorThread extends Thread{
 									"I'm entering additional notes for a text area", ff,p,chw));
 						} else if (ff.getDatatype() == DataType.DATE_FIELD) {
 							if (ff.getLabel().equals("Patient Birthdate") && !fudge) {
-								rvs.add(new MedicFormFieldResponse(df.print(p.getBirthdate()), ff,p,chw));
+								rvs.add(new MedicFormFieldResponse(df.format(p.getBirthdate()), ff,p,chw));
 							} else if (ff.getLabel().equals("Patient Birthdate") && !fudge) {
 								rvs.add(new MedicFormFieldResponse(fudgeDate(p), ff,p,chw));
 							}else{
-								rvs.add(new MedicFormFieldResponse(df.print(getRandomDate().getTime()), ff,p,chw));
+								rvs.add(new MedicFormFieldResponse(df.format(getRandomDate().getTime()), ff,p,chw));
 							}
 						}else if(ff.getDatatype() == DataType.NUMERIC_TEXT_FIELD){
 							rvs.add(new MedicFormFieldResponse(rand.nextInt(500)+"" , ff,p,chw));	
@@ -507,7 +520,7 @@ public class DataGeneratorThread extends Thread{
 		private String fudgeDate(Patient p){
 			Date d = new Date(p.getBirthdate());
 			Date newDate = new Date(d.getTime() + 86400000L);
-			return df.print(newDate.getTime());
+			return df.format(newDate.getTime());
 		}
 			
 			

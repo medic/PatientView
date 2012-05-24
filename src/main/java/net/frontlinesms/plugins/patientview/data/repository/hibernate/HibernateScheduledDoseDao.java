@@ -13,6 +13,7 @@ import net.frontlinesms.plugins.patientview.data.domain.vaccine.VaccineDose;
 import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
 
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 public class HibernateScheduledDoseDao extends BaseHibernateDao<ScheduledDose> implements ScheduledDoseDao {
@@ -84,5 +85,24 @@ public class HibernateScheduledDoseDao extends BaseHibernateDao<ScheduledDose> i
 			}
 		}
 		return false;
+	}
+
+	public List<ScheduledDose> getScheduledDosesForPatientBeforeDate(Patient patient, Long date) {
+		return getScheduledDosesForPatientBeforeDate(patient, date,false);
+	}
+	
+	public List<ScheduledDose> getScheduledDosesForPatientBeforeDate(Patient patient, Long date, boolean includeAdministered) {
+		DetachedCriteria c = super.getCriterion();
+		if(patient != null){
+			c.add(Restrictions.eq("patient",patient));
+		}
+		if(date != null){
+			c.add(Restrictions.lt("windowStartDate", date));
+			c.addOrder(Order.desc("windowStartDate"));
+		}
+		if(!includeAdministered){
+			c.add(Restrictions.eq("attended", false));
+		}
+		return super.getList(c);
 	}
 }

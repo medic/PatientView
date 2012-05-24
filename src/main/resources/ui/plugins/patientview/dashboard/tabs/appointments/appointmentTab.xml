@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<panel columns="1" weightx="1" weighty="1" top="5" left="5" right="5">
+    <panel name="appointmentTablePanel" weightx="1" weighty="1"/>
+    <panel bottom="5" gap="5" name="bottomPanel" right="5" top="5" weightx="1"/>
+</panel>

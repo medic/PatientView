@@ -1,7 +1,11 @@
 package net.frontlinesms.plugins.patientview.responsemapping;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import net.frontlinesms.FrontlineSMSConstants;
@@ -17,22 +21,26 @@ import net.frontlinesms.plugins.forms.data.repository.FormDao;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField.PatientFieldMapping;
 import net.frontlinesms.plugins.patientview.data.domain.people.CommunityHealthWorker;
+import net.frontlinesms.plugins.patientview.data.domain.people.Gender;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormFieldResponse;
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormResponse;
+import net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose;
+import net.frontlinesms.plugins.patientview.data.domain.vaccine.Vaccine;
 import net.frontlinesms.plugins.patientview.data.repository.CommunityHealthWorkerDao;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormFieldResponseDao;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormResponseDao;
 import net.frontlinesms.plugins.patientview.data.repository.PatientDao;
+import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
+import net.frontlinesms.plugins.patientview.data.repository.VaccineDao;
+import net.frontlinesms.plugins.patientview.vaccine.VaccineScheduler;
 import net.frontlinesms.ui.ExtendedThinlet;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
 import org.apache.log4j.Logger;
 import org.jfree.util.Log;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.springframework.context.ApplicationContext;
 
 import uk.ac.shef.wit.simmetrics.similaritymetrics.JaroWinkler;
@@ -49,11 +57,13 @@ public class IncomingFormMatcher implements EventObserver{
 	private MedicFormDao formDao;
 	private MedicFormResponseDao formResponseDao;
 	private MedicFormFieldResponseDao formFieldResponseDao;
+	private ScheduledDoseDao doseDao;
 	private PatientDao patientDao;
 	private CommunityHealthWorkerDao chwDao;
+	private VaccineDao vaccineDao;
 	
-	private DateTimeFormatter shortFormatter;
-	private DateTimeFormatter longFormatter;
+	private SimpleDateFormat shortFormatter;
+	private DateFormat longFormatter;
 	
 	private ApplicationContext appCon;
 	
@@ -65,6 +75,8 @@ public class IncomingFormMatcher implements EventObserver{
 		formFieldResponseDao = (MedicFormFieldResponseDao) appCon.getBean("MedicFormFieldResponseDao");
 		patientDao = (PatientDao) appCon.getBean("PatientDao");
 		chwDao = (CommunityHealthWorkerDao) appCon.getBean("CHWDao");
+		doseDao = (ScheduledDoseDao) appCon.getBean("ScheduledDoseDao");
+		vaccineDao = (VaccineDao) appCon.getBean("VaccineDao");
 		((EventBus) appCon.getBean("eventBus")).registerObserver(this);
 		//create the test harness
 		ExtendedThinlet thinlet = new ExtendedThinlet();
@@ -79,9 +91,8 @@ public class IncomingFormMatcher implements EventObserver{
 		dateString = dateString.toLowerCase();
 		dateString = dateString.replace("mm", "MM");
 		dateString = dateString.replace("yyyy", "yy");
-		shortFormatter = DateTimeFormat.forPattern(dateString).withChronology(InternationalisationUtils.ethiopicChronology).withZone(InternationalisationUtils.addisZone);
-		dateString = dateString.replace("yy", "yyyy");
-		longFormatter = DateTimeFormat.forPattern(dateString).withChronology(InternationalisationUtils.ethiopicChronology).withZone(InternationalisationUtils.addisZone);
+		shortFormatter = new SimpleDateFormat(dateString);
+		longFormatter = InternationalisationUtils.getDateFormat();
 	//	FrameLauncher f = new FrameLauncher("Test form handling",thinlet,200,100,null)
 		//{ public void windowClosing(WindowEvent e){  dispose(); }};
 	}
@@ -138,11 +149,91 @@ public class IncomingFormMatcher implements EventObserver{
 		MedicForm mForm = formDao.getMedicFormForForm(formResponse.getParentForm());
 		CommunityHealthWorker submitter = chwDao.getCommunityHealthWorkerByPhoneNumber(formResponse.getSubmitter());
 		MedicFormResponse mfr = new MedicFormResponse(formResponse,mForm,submitter,null);
-		mfr.setSubject(getFinalCandidate(mfr));
-		formResponseDao.saveMedicFormResponse(mfr);
+		switch(mForm.getType()){
+			case REGISTRATION:
+				handleRegistrationForm(mfr);
+			break;
+			case APPOINTMENT: 
+				handleAppointmentForm(mfr);
+			break;
+			case PATIENT_DATA:
+				mfr.setSubject(getFinalCandidate(mfr));
+			default:
+				formResponseDao.saveMedicFormResponse(mfr);
+			break;
+		}
 	}
 	
 	
+	private void handleAppointmentForm(MedicFormResponse mfr) {
+		mfr.setSubject(getFinalCandidate(mfr));
+		formResponseDao.saveMedicFormResponse(mfr);
+		if(mfr.getSubject() == null) return;
+		Calendar now = Calendar.getInstance();
+		now.set(Calendar.MINUTE, 59);
+		now.set(Calendar.SECOND, 59);
+		now.set(Calendar.MILLISECOND, 0);
+		now.set(Calendar.HOUR, 11);
+		now.set(Calendar.AM_PM, Calendar.PM);
+		List<ScheduledDose> doses = doseDao.getScheduledDosesForPatientBeforeDate((Patient)mfr.getSubject(), now.getTimeInMillis());
+		if(doses.size() == 0) return;
+		ScheduledDose d = doses.get(0);
+		if(now.getTimeInMillis() - d.getWindowStartDate() <= 604800000){
+			d.setAttended(true);
+			doseDao.administerDose(d, mfr.getSubmitter(), new Date().getTime(), "the field");
+		}
+	}
+
+	private void handleRegistrationForm(MedicFormResponse mfr) {
+		String name = "";
+		Date birthdate = null;
+		Gender gender = Gender.FEMALE;
+		Date lastAmenorrhea = null;
+		String phoneNum="";
+		String id = "";
+		for(MedicFormFieldResponse mffr: mfr.getResponses()){
+			switch(mffr.getField().getMapping()){
+				case NAMEFIELD:
+					name = mffr.getValue();
+				break;
+				case BIRTHDATEFIELD:
+					try{
+						birthdate = InternationalisationUtils.parseDate(mffr.getValue());
+					}catch (Exception e) { birthdate  =null; }
+				break;
+				case GENDER:
+					gender = Gender.getGenderForName(mffr.getValue());
+				break;
+				case IDFIELD:
+					id = mffr.getValue();
+				break;
+				case PHONE_NUMBER:
+					phoneNum = mffr.getValue();
+				break;
+				case DATE_OF_LAST_AMENORRHEA:
+					try{
+						lastAmenorrhea = InternationalisationUtils.parseDate(mffr.getValue());
+					}catch (Exception e) { lastAmenorrhea = null;}
+				break;
+			}
+		}
+		Patient p = new Patient(null, name, gender, birthdate.getTime());
+		p.setPhoneNumber(phoneNum);
+		p.setExternalId(id);
+		if(lastAmenorrhea != null){
+			p.setDateOfAmenorrhea(lastAmenorrhea.getTime());
+			patientDao.savePatient(p);
+			List<Vaccine> vaccines = vaccineDao.getNewbornVaccines();
+			for(Vaccine v: vaccines){
+				List<ScheduledDose> scheduledDoses = VaccineScheduler.instance().scheduleVaccinesFromDateOfAmenorrhea(p, v);
+				doseDao.saveScheduledDoses(scheduledDoses);
+			}
+		}
+		patientDao.savePatient(p);
+		mfr.setSubject(p);
+		formResponseDao.saveMedicFormResponse(mfr);
+	}
+
 	/**
 	 * Returns a float from 1.0 - 0.0 that measures the similarity between 2 strings (mainly names) using
 	 * the jaro-winkler method. The higher the number, the greater the similarity
@@ -209,9 +300,9 @@ public class IncomingFormMatcher implements EventObserver{
 			}else if(fieldResponse.getField().getMapping() == PatientFieldMapping.BIRTHDATEFIELD){
 				for(Candidate c: candidates){
 					if(fieldResponse.getValue().length() <=8){
-						c.setBirthdateScore(getEditDistance(shortFormatter.print(c.getPatient().getBirthdate()),fieldResponse.getValue()));
+						c.setBirthdateScore(getEditDistance(shortFormatter.format(c.getPatient().getBirthdate()),fieldResponse.getValue()));
 					}else{
-						c.setBirthdateScore(getEditDistance(longFormatter.print(c.getPatient().getBirthdate()),fieldResponse.getValue()));
+						c.setBirthdateScore(getEditDistance(longFormatter.format(c.getPatient().getBirthdate()),fieldResponse.getValue()));
 					}
 				}
 			}
@@ -242,9 +333,9 @@ public class IncomingFormMatcher implements EventObserver{
 			//if it is mapped as a bday field, score it as a bday
 			}else if(fieldResponse.getField().getMapping() == PatientFieldMapping.BIRTHDATEFIELD){
 				if(fieldResponse.getValue().length() <=8){
-					result += getEditDistance(shortFormatter.print(subject.getBirthdate()),fieldResponse.getValue());
+					result += getEditDistance(shortFormatter.format(subject.getBirthdate()),fieldResponse.getValue());
 				}else{
-					result += getEditDistance(longFormatter.print(subject.getBirthdate()),fieldResponse.getValue());
+					result += getEditDistance(longFormatter.format(subject.getBirthdate()),fieldResponse.getValue());
 				}
 					total += 1.0F;
 			}
@@ -255,7 +346,7 @@ public class IncomingFormMatcher implements EventObserver{
 	/**
 	 * Returns the 'final candidate', i.e. the most likely candidate for the subject
 	 * of the supplied form response. This is determined by fetching all candidates,
-	 * and selecting the ones that are over 97% confidence. If there is only one over 97%
+	 * and selecting the ones that are over 95% confidence. If there is only one over 97%
 	 * confidence, then that candidate is returned. Otherwise, this method returns null
 	 * @param response
 	 * @return
@@ -264,7 +355,7 @@ public class IncomingFormMatcher implements EventObserver{
 		List<Candidate> candidates = getCandidatesForResponse(response,false);
 		List<Candidate> finalCandidates = new ArrayList<Candidate>();
 		for(Candidate c: candidates){
-			if(c.getAverageScore()  >= 97F){
+			if(c.getAverageScore()  >= 95F){
 				finalCandidates.add(c);
 			}
 		}

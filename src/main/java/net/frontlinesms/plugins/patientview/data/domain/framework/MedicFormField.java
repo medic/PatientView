@@ -63,7 +63,10 @@ public class MedicFormField extends Field{
 	public enum PatientFieldMapping{
 		IDFIELD("medic.field.mapping.id","/icons/id_card.png"), 
 		NAMEFIELD("medic.field.mapping.name","/icons/user.png"),
-		BIRTHDATEFIELD("medic.field.mapping.birthdate","/icons/cake.png");
+		BIRTHDATEFIELD("medic.field.mapping.birthdate","/icons/cake.png"),
+		GENDER("medic.field.mapping.gender","/icons/gender.png"),
+		DATE_OF_LAST_AMENORRHEA("medic.field.mapping.lastamenorrhea","/icons/date.png"),
+		PHONE_NUMBER("medic.field.mapping.phone","/icons/phone.png");
 		
 		private String displayName;
 		
