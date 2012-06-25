@@ -38,6 +38,8 @@ public interface PatientDao {
 	
 	public List<Patient> getAllPatients(boolean includeDeleted);
 
+	public Patient getRandomPatient();
+	
 	/**
 	 * Returns the patients of a CHW
 	 * 

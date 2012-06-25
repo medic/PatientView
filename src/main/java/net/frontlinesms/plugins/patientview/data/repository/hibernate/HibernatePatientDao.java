@@ -110,4 +110,12 @@ public class HibernatePatientDao extends BaseHibernateDao<Patient> implements Pa
 		}
 		return super.getList(criteria);
 	}
+
+	public Patient getRandomPatient() {
+		DetachedCriteria criteria = getBaseCriterion();
+		criteria.add(Restrictions.ne("pid", -1));
+		criteria.add(Restrictions.sqlRestriction("1=1 order by rand()"));
+		
+		return super.getList(criteria, 0, 1).get(0);
+	}
 }
