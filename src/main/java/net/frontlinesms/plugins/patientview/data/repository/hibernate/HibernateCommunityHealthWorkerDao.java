@@ -68,7 +68,7 @@ public class HibernateCommunityHealthWorkerDao extends BaseHibernateDao<Communit
 	
 	public CommunityHealthWorker getCommunityHealthWorkerByPhoneNumber(String phoneNumber){
 		DetachedCriteria c= super.getCriterion();
-		c.createCriteria("contactInfo").add(Restrictions.eq("phoneNumber",phoneNumber));
+		c.add(Restrictions.eq("phoneNumber",phoneNumber));
 		return super.getUnique(c);
 	}
 

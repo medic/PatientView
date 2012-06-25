@@ -192,6 +192,7 @@ public class IncomingFormMatcher implements EventObserver{
 		String phoneNum="";
 		String id = "";
 		for(MedicFormFieldResponse mffr: mfr.getResponses()){
+			if(mffr.getField().getMapping() == null) continue;
 			switch(mffr.getField().getMapping()){
 				case NAMEFIELD:
 					name = mffr.getValue();
@@ -215,6 +216,7 @@ public class IncomingFormMatcher implements EventObserver{
 						lastAmenorrhea = InternationalisationUtils.parseDate(mffr.getValue());
 					}catch (Exception e) { lastAmenorrhea = null;}
 				break;
+				default: break;
 			}
 		}
 		Patient p = new Patient(null, name, gender, birthdate.getTime());
