@@ -4,7 +4,7 @@
         <panel gap="5" name="dateScheduledPanel"/>
     </panel>
     <panel gap="5" halign="center" name="rescheduleButtonPanel" weightx="1">
-        <button action="rescheduleDoseConfirmed()" text="Save" icon="/icons/tick.png"/>
-        <button action="rescheduleDoseCancelled()" text="Cancel" icon="/icons/cross.png"/>
+        <button action="rescheduleDoseConfirmed()" text="i18n.detailview.buttons.save.patient.data" icon="/icons/tick.png"/>
+        <button action="rescheduleDoseCancelled()" text="i18n.detailview.buttons.cancel" icon="/icons/cross.png"/>
     </panel>
 </panel>

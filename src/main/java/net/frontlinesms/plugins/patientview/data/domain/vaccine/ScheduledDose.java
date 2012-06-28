@@ -1,5 +1,7 @@
 package net.frontlinesms.plugins.patientview.data.domain.vaccine;
 
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
+
 import java.util.Date;
 
 import javax.persistence.DiscriminatorValue;
@@ -16,7 +18,11 @@ import net.frontlinesms.ui.i18n.InternationalisationUtils;
 @Entity
 @DiscriminatorValue(value = "vaccine")
 public class ScheduledDose extends Appointment implements Comparable<ScheduledDose>{
-	
+	private static final String APPOINTMENT_MISSED= "medic.appointments.missed";
+	private static final String COMPLETED_BY= "medic.appointments.completed.by";
+	private static final String ON = "medic.common.on";
+	private static final String AT = "medic.common.at";
+
 	@ManyToOne(cascade={},fetch=FetchType.EAGER,optional=true)
 	private VaccineDose dose;
 	
@@ -75,11 +81,13 @@ public class ScheduledDose extends Appointment implements Comparable<ScheduledDo
 	public String getAdministeredString(){
 		long currentTime = System.currentTimeMillis();
 		if(isAttended()){
-			return "Completed by "+ administeredBy.getName() + " on " + InternationalisationUtils.getDateFormat().format(getDateAdministered())+ " at "+ getLocation();
+			return getI18nString(COMPLETED_BY) + " "+ administeredBy.getName() + " " + getI18nString(ON) + "  " 
+			+ InternationalisationUtils.getDateFormat().format(getDateAdministered()) 
+			+ " " + getI18nString(AT) + " "+ getLocation();
 		}else if(currentTime <= windowStartDate){
 			return "-----";
 		}else if(currentTime > windowStartDate){
-			return "Appointment Missed";
+			return getI18nString(APPOINTMENT_MISSED);
 		}
 		return "";
 	}

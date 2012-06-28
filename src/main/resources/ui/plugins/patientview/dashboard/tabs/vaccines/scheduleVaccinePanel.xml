@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <panel columns="1" gap="5" name="scheduleVaccinePanel" weightx="1">
-    <panel border="true" bottom="5" left="5" name="vaccineSelectPanel" right="5" text="Apointment Series" top="5" icon="/icons/calendar_small.png">
+    <panel border="true" bottom="5" left="5" name="vaccineSelectPanel" right="5" text="i18n.medic.appointments.series" top="5" icon="/icons/calendar_small.png">
         <combobox name="vaccineSelect" weightx="1"/>
     </panel>
-    <panel border="true" bottom="5" columns="1" left="5" name="scheduleFromPanel" right="5" text="Schedule From" top="5" icon="/icons/date.png">
-        <checkbox group="scheduleFrom" name="fromBirthRadio" selected="true" text="Date of last amenorrhea"/>
-        <checkbox group="scheduleFrom" name="fromTodayRadio" text="Today"/>
-        <checkbox group="scheduleFrom" name="firstShotTodayRadio" text="First appointment today"/>
+    <panel border="true" bottom="5" columns="1" left="5" name="scheduleFromPanel" right="5" text="i18n.medic.appointments.schedule.from" top="5" icon="/icons/date.png">
+        <checkbox group="scheduleFrom" name="fromBirthRadio" selected="true" text="i18n.medic.appointments.date.of.last.amenorrhea"/>
+        <checkbox group="scheduleFrom" name="fromTodayRadio" text="i18n.medic.appointments.schedule.today"/>
+        <checkbox group="scheduleFrom" name="firstShotTodayRadio" text="i18n.medic.appointments.schedule.first.appointment.today"/>
     </panel>
     <panel name="bottomButtonPanel" weightx="1">
-        <button name="confirmScheduleButton" action="scheduleVaccineConfirmed()" text="Enroll" icon="/icons/tick.png"/>
+        <button name="confirmScheduleButton" action="scheduleVaccineConfirmed()" text="i18n.medic.appointments.enroll" icon="/icons/tick.png"/>
         <label weightx="1"/>
-        <button name="cancelScheduleButton" action="scheduleVaccineCanceled()" text="Cancel" icon="/icons/cross.png"/>
+        <button name="cancelScheduleButton" action="scheduleVaccineCanceled()" text="i18n.detailview.buttons.cancel" icon="/icons/cross.png"/>
     </panel>
 </panel>

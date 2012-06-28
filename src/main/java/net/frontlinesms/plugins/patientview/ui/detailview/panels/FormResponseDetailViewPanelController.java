@@ -46,9 +46,9 @@ public class FormResponseDetailViewPanelController extends DetailViewPanelContro
 		String form = getI18nString(FORM) + ": " + response.getForm().getName();
 		String submitter;
 		try{
-			submitter = "Submitted by " + response.getSubmitter().getName();
+			submitter = getI18nString("detailview.labels.submitted.by") + " " + response.getSubmitter().getName();
 		}catch(Exception e){
-			submitter = "Submitted by "+ getI18nString("medic.common.labels.unknown");
+			submitter = getI18nString("detailview.labels.submitted.by")+ " " + getI18nString("medic.common.labels.unknown");
 		}
 		DateFormat df = InternationalisationUtils.getDateFormat();
 		String date = df.format(response.getDateSubmitted());

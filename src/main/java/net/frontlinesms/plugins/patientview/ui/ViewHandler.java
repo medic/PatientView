@@ -117,7 +117,7 @@ public abstract class ViewHandler implements ThinletUiEventHandler{
 		}
 	}
 	
-	protected String getI18nString(String key){
+	protected static String getI18nString(String key){
 		return InternationalisationUtils.getI18nString(key);
 	}
 }

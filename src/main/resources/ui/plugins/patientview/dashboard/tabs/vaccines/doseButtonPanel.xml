@@ -1,6 +1,6 @@
 <panel gap="5" name="doseButtonPanel">
-	<button action="rescheduleDoseClicked()" name="rescheduleDoseButton" text="Reschedule" icon="/icons/calendar_refresh.png"/>
-	<button action="administerDoseClicked()" name="adminsterDoseButton" text="Complete" icon="/icons/calendar_complete.png"/>
+	<button action="rescheduleDoseClicked()" name="rescheduleDoseButton" text="i18n.medic.appointments.reschedule" icon="/icons/calendar_refresh.png"/>
+	<button action="administerDoseClicked()" name="adminsterDoseButton" text="i18n.medic.appointments.complete" icon="/icons/calendar_complete.png"/>
 	<label weightx="1"/>
-    <button action="rescheduleAllDosesClicked()" name="rescheduleAllButton" text="Reschedule All" icon="/icons/calendar_refresh_all.png"/>
+    <button action="rescheduleAllDosesClicked()" name="rescheduleAllButton" text="i18n.medic.appointments.reschedule.all" icon="/icons/calendar_refresh_all.png"/>
 </panel>

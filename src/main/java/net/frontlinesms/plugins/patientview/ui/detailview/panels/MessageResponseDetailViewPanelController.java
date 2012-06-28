@@ -13,7 +13,7 @@ public class MessageResponseDetailViewPanelController extends DetailViewPanelCon
 	private static final String MESSAGE_RESPONSE_PANEL = "/ui/plugins/patientview/components/formPanel.xml";
 	//i18n
 	private static final String SUBMITTED_BY = "detailview.labels.submitted.by";
-	private static final String ON = "detailview.labels.on";
+	private static final String ON = "medic.common.on";
 	
 	public MessageResponseDetailViewPanelController(UiGeneratorController uiController){
 		super(uiController, null, MESSAGE_RESPONSE_PANEL);

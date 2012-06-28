@@ -1,9 +1,9 @@
 <panel weightx="1" weighty="1">
-	<checkbox name="enrollNewbornsCheckbox" text="Automatically enroll mothers" action="enrollNewbornsChanged()" />
+	<checkbox name="enrollNewbornsCheckbox" text="i18n.medic.appointments.auto.enroll.mother" action="enrollNewbornsChanged()" />
 	<panel gap="7" halign="right" name="actionButtonPanel" right="6" weightx="1">
 		
-		<button name="addDoseButton" text="Add Appointment" action="addDose()" icon="/icons/add.png" />
-		<button name="editDoseButton" text="Edit Appointment" action="editDose()" icon="/icons/pencil.png"/>
-		<button name="deleteDoseButton" text="Remove Appointment" action="removeDose()" icon="/icons/delete.png"/>
+		<button name="addDoseButton" text="i18n.medic.appointment.add" action="addDose()" icon="/icons/add.png" />
+		<button name="editDoseButton" text="i18n.medic.appointment.edit" action="editDose()" icon="/icons/pencil.png"/>
+		<button name="deleteDoseButton" text="i18n.medic.appointment.remove" action="removeDose()" icon="/icons/delete.png"/>
 	</panel>
 </panel>

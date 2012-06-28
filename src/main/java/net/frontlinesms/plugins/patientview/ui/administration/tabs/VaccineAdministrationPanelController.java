@@ -63,6 +63,20 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	private static final String DELETE_DOSE_BUTTON = "deleteDoseButton";
 	private static final String EDIT_DOSE_BUTTON = "editDoseButton";
 	
+	private static final String APPT_NAME = getI18nString("medic.appointments.appointment.name");
+	
+	private static final String NO_APPTS = getI18nString("medic.appointments.no");
+	private static final String MANAGE_APPTS = getI18nString("medic.appointments.manage");
+	
+	private static final String NO_APPT_SERIES = getI18nString("medic.appointments.no.series");
+
+	
+	private static final String ADD_APPOINTMENT = getI18nString("medic.appointment.add.an");
+	private static final String APPT_DATE = getI18nString("medic.appointment.date");
+	private static final String EDITING = getI18nString("medic.common.labels.editing");
+	
+	
+	
 	/** indicates whether or not a new dose was just created*/
 	private boolean newDose = false;
 	
@@ -74,10 +88,10 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		this.scheduledDoseDao = (ScheduledDoseDao) appCon.getBean("ScheduledDoseDao");
 		//create the dose table
 		doseTableController = new AdvancedTableController(this, uiController);
-		doseTableController.setNoResultsMessage("No appointments");
+		doseTableController.setNoResultsMessage(NO_APPTS);
 		List<HeaderColumn> columnList = new ArrayList<HeaderColumn>();
-		columnList.add(new HeaderColumn("getName", "/icons/date.png", "Appointment Name"));
-		columnList.add(new HeaderColumn("getStringStartDate", "/icons/date_add.png", "Appointment Date"));
+		columnList.add(new HeaderColumn("getName", "/icons/date.png", APPT_NAME));
+		columnList.add(new HeaderColumn("getStringStartDate", "/icons/date_add.png", APPT_DATE));
 		//columnList.add(new HeaderColumn("getStringEndDate", "/icons/date_delete.png", "End Date"));
 		//columnList.add(new HeaderColumn("getStringMinimumInterval", "/icons/time.png", "Minimum Interval To Next Dose"));
 		doseTableController.putHeader(VaccineDose.class, columnList);
@@ -90,7 +104,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	
 	@Override
 	public String getListItemTitle() {
-		return "Manage Appointments";
+		return MANAGE_APPTS;
 	}
 	
 	@Override
@@ -112,7 +126,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		//put the vaccines in the list
 		//if there aren't any vaccines
 		if(vaccines.size() == 0){
-			add(find(VACCINE_LIST),ui.createListItem("No Appointment Series",null));
+			add(find(VACCINE_LIST),ui.createListItem(NO_APPT_SERIES,null));
 		}else{ //otherwise, add them all
 			int count = 0;
 			for(Vaccine v: vaccines){
@@ -220,7 +234,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		String name = ui.getText(find(VACCINE_NAME_FIELD));
 		if(name == null || name.trim().equals("")){
 			ui.setText(find(VACCINE_NAME_FIELD), "");
-			ui.alert("You cannot create a appointment series without a name");
+			ui.alert(getI18nString("medic.appointment.series.must.have.name"));
 			return;
 		}
 		Vaccine v = new Vaccine(ui.getText(find(VACCINE_NAME_FIELD)),true);
@@ -258,7 +272,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	 */
 	public void removeVaccine(){
 		if(scheduledDoseDao.getScheduledDoses(getCurrentlySelectedVaccine(),null).size() != 0){
-			ui.alert("You cannot delete a appointment series with scheduled appointments.");
+			ui.alert(getI18nString("medic.appointment.series.cannot.delete"));
 		}else{
 			ui.showConfirmationDialog("removeVaccineConfirmed()", this,"medic.vaccine.confirm.delete");
 		}
@@ -284,7 +298,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		removeAll(find(DOSE_ACTION_PANEL));
 		add(find(DOSE_ACTION_PANEL),ui.loadComponentFromFile(EDIT_DOSE_XML, this));
 		ui.requestFocus(find(DOSE_NAME_FIELD));
-		ui.setText(find(EDIT_DOSE_PANEL), "Add an Appointment");
+		ui.setText(find(EDIT_DOSE_PANEL), ADD_APPOINTMENT);
 		//disable the vaccine action buttons
 		ui.setEnabled(find(ADD_VACCINE_BUTTON), false);
 		ui.setEnabled(find(REMOVE_VACCINE_BUTTON), false);
@@ -307,7 +321,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	//	ui.setText(find(MIN_INTERVAL_MONTHS_BOX),String.valueOf(dose.getMinIntervalMonths()));
 	//	ui.setText(find(MIN_INTERVAL_DAYS_BOX),String.valueOf(dose.getMinIntervalDays()));
 		ui.setText(find(DOSE_NAME_FIELD),dose.getName());
-		ui.setText(find(EDIT_DOSE_PANEL), "Editing "+ dose.getName());
+		ui.setText(find(EDIT_DOSE_PANEL), EDITING + " "+ dose.getName());
 		//focus on the first field
 		ui.requestFocus(find(DOSE_NAME_FIELD));
 		//disable the vaccine action buttons
@@ -332,7 +346,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	 */
 	public void removeDose(){
 		if(scheduledDoseDao.getScheduledDoses(null, (VaccineDose) doseTableController.getCurrentlySelectedObject()).size() != 0){
-			ui.alert("You cannot delete an appointment that users have already scheduled.");
+			ui.alert(getI18nString("medic.appointment.cannot.delete.already.scheduled"));
 		}else{
 			ui.showConfirmationDialog("removeDoseConfirmed()", this,"medic.vaccine.dose.confirm.delete");
 		}
@@ -359,7 +373,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		//prepare all the data
 		String name = ui.getText(find(DOSE_NAME_FIELD));
 		if(name == null || name.trim().equals("")){
-			ui.alert("You can't create an appointment without a name.");
+			ui.alert(getI18nString("medic.appointment.must.have.name"));
 			return;
 		}
 		int startDateMonths = Integer.parseInt(ui.getText(find(START_DATE_MONTHS_BOX)));

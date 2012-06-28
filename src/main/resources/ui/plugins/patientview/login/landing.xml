@@ -10,6 +10,6 @@
     <panel colspan="2" weightx="1">
     	<button action="attemptForgotPassword()" halign = "left" text="i18n.login.forgot" type="link"/>
     	<label weightx="3"/>
-    	<button action="attemptLogin()" text="Login" weightx="1" icon="/icons/door_in.png"/>
+    	<button action="attemptLogin()" text="i18n.login.login" weightx="1" icon="/icons/door_in.png"/>
     </panel>
 </panel>
