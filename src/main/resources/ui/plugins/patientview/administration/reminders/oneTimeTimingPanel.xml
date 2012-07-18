@@ -2,9 +2,9 @@
 	<panel gap="5" name="fromTimingPanel" weightx="1">
 		<panel gap="5" name="extendedFromPanel">
 			<spinbox minimum="0" columns="4" name="fromMonthsField" text="0"/>
-			<label name="fromMonthsLabel" text="months" />
+			<label name="fromMonthsLabel" text="i18n.medic.reminder.months" />
 			<spinbox minimum="0" columns="4" name="fromDaysField" text="0"/>
-			<label name="fromDaysLabel" text="days" />
+			<label name="fromDaysLabel" text="i18n.medic.reminder.days" />
 		</panel>
 		<combobox action="fromDateOptionChanged()" columns="15"
 			name="fromDateOptionSelect" editable="false"/>
@@ -12,7 +12,7 @@
 			name="fromEventSelect" editable="false"/>
 	</panel>
 	<panel gap="5" name="extraTimingOptionPanel" weightx="1">
-		<label name="timeOfDayLabel" text="Time of day" />
+		<label name="timeOfDayLabel" text="i18n.medic.reminder.time.of.day" />
 		<combobox editable="false" name="timeOfDayField" selected="10">
 	        <choice text="1:00 AM"/>
 	        <choice text="2:00 AM"/>

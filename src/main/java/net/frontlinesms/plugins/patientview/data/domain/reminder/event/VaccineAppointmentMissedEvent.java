@@ -1,5 +1,7 @@
 package net.frontlinesms.plugins.patientview.data.domain.reminder.event;
 
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -26,17 +28,20 @@ public class VaccineAppointmentMissedEvent extends ReminderEvent<ScheduledDose>{
 		supportedTimingOptions.add(EventTimingOption.DAY_OF);
 	}
 	
+	private static final String APPT_NAME = "medic.reminder.variables.appointment.name";
+	private static final String APPT_DATE = "medic.reminder.variables.appointment.date";
+	
 	public VaccineAppointmentMissedEvent(){}
 	
 	public VaccineAppointmentMissedEvent(ApplicationContext appCon){
 		super();
 		this.setScheduledDoseDao((ScheduledDoseDao) appCon.getBean("ScheduledDoseDao"));
-		variables.put("Appointment Name", "{vaccine name}");
-		variables.put("Appointment Date", "{appointment date}");
+		variables.put(getI18nString(APPT_NAME), "{"+getI18nString(APPT_NAME).toLowerCase()+"}");
+		variables.put(getI18nString(APPT_DATE), "{"+getI18nString(APPT_DATE).toLowerCase()+"}");
 	}
 
 	public String getSnippet() {
-		return "a missed appointment";
+		return getI18nString("medic.reminder.event.missed.appointment");
 	}
 
 	public Calendar getDateForContext(Patient patient, ScheduledDose context) {
@@ -79,9 +84,9 @@ public class VaccineAppointmentMissedEvent extends ReminderEvent<ScheduledDose>{
 	}
 
 	public String getVariableValue(Patient patient, ScheduledDose context, String key) {
-		if(key.equals("{appointment name}")){
+		if(key.equals("{"+getI18nString(APPT_NAME).toLowerCase()+"}")){
 			return context.getDose().getVaccine().getName();
-		}else if(key.equals("{appointment date}")){
+		}else if(key.equals("{"+getI18nString(APPT_DATE).toLowerCase()+"}")){
 			return context.getWindowStartDateString();
 		}else{
 			return super.getVariableValue(patient, key);

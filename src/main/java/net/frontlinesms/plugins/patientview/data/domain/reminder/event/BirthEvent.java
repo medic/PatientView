@@ -9,6 +9,7 @@ import net.frontlinesms.plugins.patientview.data.domain.reminder.EventTimingOpti
 import net.frontlinesms.plugins.patientview.data.domain.reminder.ReminderEvent;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.impl.ReminderDate;
 import net.frontlinesms.plugins.patientview.utils.TimeUtils;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 public class BirthEvent extends ReminderEvent<Patient>{
 
@@ -50,7 +51,7 @@ public class BirthEvent extends ReminderEvent<Patient>{
 	}
 
 	public String getSnippet() {
-		return "a birth date";
+		return getI18nString("medic.reminder.event.birthdate");
 	}
 
 	public List<EventTimingOption> getSupportedTimingOptions() {

@@ -4,19 +4,20 @@ import java.util.Calendar;
 
 import net.frontlinesms.plugins.patientview.utils.Pair;
 import net.frontlinesms.plugins.patientview.utils.TimeUtils;
+import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
 public enum RecurringReminderFrequency {
-	DAILY("Daily",Calendar.DAY_OF_MONTH,1),
-	WEEKLY("Weekly",Calendar.DAY_OF_MONTH,7),
-	BI_WEEKLY("Bi-weekly",Calendar.DAY_OF_MONTH,14),
-	MONTHLY("Monthly",Calendar.MONTH,1);
+	DAILY("medic.reminder.recurrence.daily",Calendar.DAY_OF_MONTH,1),
+	WEEKLY("medic.reminder.recurrence.weekly",Calendar.DAY_OF_MONTH,7),
+	BI_WEEKLY("medic.reminder.recurrence.biweekly",Calendar.DAY_OF_MONTH,14),
+	MONTHLY("medic.reminder.recurrence.monthly",Calendar.MONTH,1);
 	
 	private String name;
 	private int calendarField;
 	private int stepAmount;
 	
 	public String getName(){
-		return name;
+		return InternationalisationUtils.getI18nString(name);
 	}
 	
 	private RecurringReminderFrequency(String name, int calendarField, int stepAmount){

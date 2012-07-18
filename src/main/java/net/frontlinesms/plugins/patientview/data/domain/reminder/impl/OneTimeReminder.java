@@ -13,6 +13,7 @@ import net.frontlinesms.plugins.patientview.data.domain.reminder.Reminder;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.ReminderEvent;
 import net.frontlinesms.plugins.patientview.utils.Pair;
 import net.frontlinesms.plugins.patientview.utils.TimeUtils;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 @Entity
 public class OneTimeReminder extends Reminder{
@@ -101,17 +102,23 @@ public class OneTimeReminder extends Reminder{
 	public String getTimingString() {
 		StringBuilder timing = new StringBuilder();
 		if(startDays !=0){
-			timing.append(Math.abs(startDays)+ (Math.abs(startDays)==1?" day ":" days "));
+			String days = Math.abs(startDays)==1?"medic.reminder.day":"medic.reminder.days";
+			days = getI18nString(days);
+			days = " " + days+" ";
+			timing.append(Math.abs(startDays)+ days);
 		}
 		if(startMonths !=0){
-			timing.append(Math.abs(startMonths)+ (Math.abs(startMonths)==1?" month ":" months "));
+			String months = Math.abs(startMonths)==1?"medic.reminder.month":"medic.reminder.months";
+			months = getI18nString(months);
+			months = " " + months+" ";
+			timing.append(Math.abs(startMonths)+ months);
 		}
 		if(startDays + startMonths > 0){
-			timing.append("after ");
+			timing.append(getI18nString("medic.reminder.timing.after")+" ");
 		}else if(startDays + startMonths < 0){
-			timing.append("before ");
+			timing.append(getI18nString("medic.reminder.timing.before")+" ");
 		}else if(startDays + startMonths == 0){
-			timing.append("the day of ");
+			timing.append(getI18nString("medic.reminder.timing.dayof")+" ");
 		}
 		timing.append(getStartEvent().getSnippet());
 		
@@ -120,7 +127,7 @@ public class OneTimeReminder extends Reminder{
 
 	@Override
 	public String getTypeName() {
-		return "One-Time";
+		return getI18nString("medic.reminders.type.one.time");
 	}
 	
 	protected String insertMessageVariables(String message, Patient patient, List<Object> context){

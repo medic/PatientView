@@ -7,15 +7,22 @@ import java.util.Map;
 
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.impl.ReminderDate;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 public abstract class ReminderEvent<C> {
 	
 	protected Map<String,String> variables;
 	
+	private static final String PATIENT_NAME_TITLE= "medic.reminder.variables.patient.name";
+	private static final String CHW_NAME_TITLE= "medic.reminder.variables.chw.name";
+	
 	public ReminderEvent(){
 		variables = new HashMap<String, String>();
-		variables.put("Patient Name", "{patient name}");
-		variables.put("CHW Name", "{chw name}");
+		String patientName = getI18nString(PATIENT_NAME_TITLE);
+		String chwName = getI18nString(CHW_NAME_TITLE);
+
+		variables.put(patientName, "{"+patientName.toLowerCase()+"}");
+		variables.put(chwName, "{"+chwName.toLowerCase()+"}");
 	}
 	
 	public abstract String getSnippet();
@@ -37,9 +44,9 @@ public abstract class ReminderEvent<C> {
 	}
 	
 	public String getVariableValue(Patient patient, String key){
-		if(key.equals("{patient name}")){
+		if(key.equals("{"+getI18nString(PATIENT_NAME_TITLE).toLowerCase()+"}")){
 			return patient.getName();
-		}else if(key.equals("{chw name}")){
+		}else if(key.equals("{"+getI18nString(CHW_NAME_TITLE).toLowerCase()+"}")){
 			return patient.getCHWName();
 		}else{
 			return "";

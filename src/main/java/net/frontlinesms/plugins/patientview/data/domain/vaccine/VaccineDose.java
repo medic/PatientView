@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 @Entity
 @Table(name = "medic_vaccine_doses")
@@ -50,7 +51,7 @@ public class VaccineDose {
 	}
 
 	public String getStringStartDate(){
-		return startDateMonths + " months " + startDateDays + " days";
+		return startDateMonths + " "+ getI18nString("medic.reminder.months") +" " + startDateDays + " " + getI18nString("medic.reminder.days");
 	}
 	
 	

@@ -1,11 +1,11 @@
 <panel columns="1" gap="10" name="timingSubPanel" weightx="1">
 	<panel gap="5" name="fromTimingPanel" weightx="1">
-		<label name="fromLabel" text="From" />
+		<label name="fromLabel" text="i18n.medic.reminder.from" />
 		<panel gap="5" name="extendedFromPanel">
 			<spinbox minimum="0" columns="4" name="fromMonthsField" text="0"/>
-			<label name="fromMonthsLabel" text="months" />
+			<label name="fromMonthsLabel" text="i18n.medic.reminder.months" />
 			<spinbox minimum="0" columns="4" name="fromDaysField" text="0"/>
-			<label name="fromDaysLabel" text="days" />
+			<label name="fromDaysLabel" text="i18n.medic.reminder.days" />
 		</panel>
 		<combobox action="fromDateOptionChanged()" columns="15"
 			name="fromDateOptionSelect" editable="false"/>
@@ -13,12 +13,12 @@
 			name="fromEventSelect" editable="false"/>
 	</panel>
 	<panel gap="5" name="toTimingPanel" weightx="1">
-		<label name="toLabel" text="To" />
+		<label name="toLabel" text="i18n.medic.reminder.to" />
 		<panel gap="5" name="extendedToPanel">
 			<spinbox minimum="0" columns="4" name="toMonthsField" text="0"/>
-			<label name="toMonthsLabel" text="months" />
+			<label name="toMonthsLabel" text="i18n.medic.reminder.months" />
 			<spinbox minimum="0" columns="4" name="toDaysField" text="0"/>
-			<label name="toDaysLabel" text="days" />
+			<label name="toDaysLabel" text="i18n.medic.reminder.days" />
 		</panel>
 		<combobox action="toDateOptionChanged()" columns="15"
 			name="toDateOptionSelect" editable="false"/>
@@ -26,10 +26,10 @@
 			name="toEventSelect" editable="false"/>
 	</panel>
 	<panel gap="5" name="extraTimingOptionPanel" weightx="1">
-		<label name="recurringLabel" text="Recurring" />
+		<label name="recurringLabel" text="i18n.medic.reminders.type.recurring" />
 		<combobox columns="15" name="recurringOptionSelect" editable="false"/>
 		<label name="spacer" text="     " />
-		<label name="timeOfDayLabel" text="Time of day" />
+		<label name="timeOfDayLabel" text="i18n.medic.reminder.time.of.day" />
 		<combobox editable="false" name="timeOfDayField" selected="10">
 	        <choice text="1:00 AM"/>
 	        <choice text="2:00 AM"/>

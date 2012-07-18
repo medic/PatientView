@@ -55,6 +55,19 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 	private static final String REMOVE_REMINDER_BUTTON = "removeReminderButton";
 	private static final String EDIT_REMINDER_BUTTON = "removeReminderButton";
 	
+	private static final String CANNOT_BE_EMPTY = getI18nString("medic.reminder.field.cannot.be.empty");
+	private static final String THE_TO_DAYS_FIELD = getI18nString("medic.reminder.field.to.days");
+	private static final String THE_TO_MONTHS_FIELD = getI18nString("medic.reminder.field.to.months");
+	private static final String MESSAGE_FIELD = getI18nString("medic.reminder.field.message");
+	private static final String THE_FROM_DAYS_FIELD = getI18nString("medic.reminder.field.from.days");
+	private static final String THE_FROM_MONTHS_FIELD = getI18nString("medic.reminder.field.from.months");
+	private static final String NAME_FIELD = getI18nString("medic.reminder.field.name");
+	private static final String MANAGE_REMINDERS = getI18nString("medic.reminders.manage");
+	private static final String TO_THE = getI18nString("medic.reminder.to.the");
+	private static final String PATIENT = getI18nString("medic.common.patient");
+	private static final String PATIENTS_CHW = getI18nString("medic.reminder.destination.patients.chw");
+	private static final String NO_REMINDERS = getI18nString("medic.reminders.none");
+	
 	private ReminderDao reminderDao;
 	
 	private boolean isEditing;
@@ -79,7 +92,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 			index++;
 		}
 		if(reminders.size() == 0){
-			add(find(REMINDER_LIST),ui.createListItem("No Reminders",null));
+			add(find(REMINDER_LIST),ui.createListItem(NO_REMINDERS,null));
 			ui.setEnabled(find(REMOVE_REMINDER_BUTTON), false);
 			ui.setEnabled(find(EDIT_REMINDER_BUTTON), false);
 		}else{
@@ -111,8 +124,8 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 			add(find(ACTION_PANEL),ui.loadComponentFromFile(DISPLAY_REMINDER_XML, this));
 			ui.setText(find(REMINDER_NAME_LABEL), getSelectedReminder().getName());
 			ui.setText(find(TIMING_TEXT_AREA), getSelectedReminder().getTimingString());
-			ui.setText(find(MESSAGE_TEXT_AREA), "To the "+ 
-				(getSelectedReminder().isSendToPatient()?"patient:\n\n":"patient's CHW:\n\n") +
+			ui.setText(find(MESSAGE_TEXT_AREA), TO_THE+" "+ 
+				(getSelectedReminder().isSendToPatient()?PATIENT+":\n\n":PATIENTS_CHW+":\n\n") +
 				getSelectedReminder().getMessageFormat());
 		}
 	}
@@ -124,7 +137,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 
 	@Override
 	public String getListItemTitle() {
-		return "Manage Reminders";
+		return MANAGE_REMINDERS;
 	}
 	
 	public void addReminder(){
@@ -318,16 +331,16 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 		boolean sendToPatient=false;
 		Reminder r = getSelectedReminderInstance();
 		//create and check all the field data
-		if(checkField(REMINDER_NAME_FIELD, "The name field")){
+		if(checkField(REMINDER_NAME_FIELD, NAME_FIELD)){
 			name = ui.getText(find(REMINDER_NAME_FIELD));
 		}else return;
-		if(checkField(FROM_MONTHS_FIELD, "The \"From Months\" field")){
+		if(checkField(FROM_MONTHS_FIELD, THE_FROM_MONTHS_FIELD)){
 			fromMonthsString = ui.getText(find(FROM_MONTHS_FIELD));
 		}else return;
-		if(checkField(FROM_DAYS_FIELD, "The \"From Days\" field")){
+		if(checkField(FROM_DAYS_FIELD, THE_FROM_DAYS_FIELD)){
 			fromDaysString = ui.getText(find(FROM_DAYS_FIELD));
 		}else return;
-		if(checkField(MESSAGE_TEXT_AREA, "The \"Message\" field")){
+		if(checkField(MESSAGE_TEXT_AREA, MESSAGE_FIELD)){
 			message = ui.getText(find(MESSAGE_TEXT_AREA));
 		}else return;
 		sendToPatient = (ui.getSelectedIndex(find(RECIPIENT_SELECT))==0);
@@ -357,10 +370,10 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 			reminderId = oneTime.getReminderId();
 		}else if(r instanceof RecurringReminder){
 			String toMonthsString=null,toDaysString=null;
-			if(checkField(TO_MONTHS_FIELD, "The \"To Months\" field")){
+			if(checkField(TO_MONTHS_FIELD, THE_TO_MONTHS_FIELD)){
 				toMonthsString = ui.getText(find(TO_MONTHS_FIELD));
 			}else return;
-			if(checkField(TO_DAYS_FIELD, "The \"To Days\" field")){
+			if(checkField(TO_DAYS_FIELD, THE_TO_DAYS_FIELD)){
 				toDaysString = ui.getText(find(TO_DAYS_FIELD));
 			}else return;
 			//properly calculate the to days and months
@@ -395,7 +408,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 	private boolean checkField(String thinletFieldName, String fieldName){
 		String contents = ui.getText(find(thinletFieldName));
 		if(contents == null || contents.equals("")){
-			ui.alert(fieldName+ " cannot be empty.");
+			ui.alert(fieldName+ " " +CANNOT_BE_EMPTY);
 			return false;
 		}else{
 			return true;

@@ -4,11 +4,11 @@
     <label name="flagNameLabel"/>
     <separator weightx="1"/>
     <label name="formLabel"/>
-    <panel border="true" bottom="4" gap="5" icon="/icons/time.png" left="5" name="conditionsPanel" right="5" text="Conditions" top="5" weightx="1">
+    <panel border="true" bottom="4" gap="5" icon="/icons/time.png" left="5" name="conditionsPanel" right="5" text="i18n.medic.flags.conditions" top="5" weightx="1">
         <textarea border="false" editable="false" name="conditionsTextArea" weightx="1"/>
     </panel>
-    <panel border="true" bottom="5" gap="5" icon="/icons/sms.png" left="5" name="messagePanel" right="5" text="Message" top="5" weightx="1">
+    <panel border="true" bottom="5" gap="5" icon="/icons/sms.png" left="5" name="messagePanel" right="5" text="i18n.medic.common.message" top="5" weightx="1">
         <textarea border="false" editable="false" name="messageTextArea" weightx="1"/>
     </panel>
-    <button action="editFlag()" halign="left" icon="/icons/edit_flag.png" name="editFlagButton" text="Edit Flag" valign="top" weightx="1" weighty="1"/>
+    <button action="editFlag()" halign="left" icon="/icons/edit_flag.png" name="editFlagButton" text="i18n.medic.flags.edit" valign="top" weightx="1" weighty="1"/>
 </panel>

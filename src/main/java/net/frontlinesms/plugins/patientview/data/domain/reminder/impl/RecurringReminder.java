@@ -1,5 +1,7 @@
 package net.frontlinesms.plugins.patientview.data.domain.reminder.impl;
 
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -124,35 +126,47 @@ public class RecurringReminder extends OneTimeReminder {
 	
 	@Override
 	public String getTimingString() {
-		StringBuilder timing = new StringBuilder(frequency.getName() + " from ");
+		StringBuilder timing = new StringBuilder(frequency.getName() + " "+getI18nString("medic.reminder.from").toLowerCase()+" ");
+		
 		if(startDays !=0){
-			timing.append(Math.abs(startDays) + (Math.abs(startDays)==1?" day ":" days "));
+			String days = Math.abs(startDays)==1?"medic.reminder.day":"medic.reminder.days";
+			days = getI18nString(days);
+			days = " " + days+" ";
+			timing.append(Math.abs(startDays)+ days);
 		}
 		if(startMonths !=0){
-			timing.append(Math.abs(startMonths)+ (Math.abs(startMonths)==1?" month ":" months "));
+			String months = Math.abs(startMonths)==1?"medic.reminder.month":"medic.reminder.months";
+			months = getI18nString(months);
+			months = " " + months+" ";
+			timing.append(Math.abs(startMonths)+ months);
 		}
 		if(startDays + startMonths > 0){
-			timing.append("after ");
+			timing.append(getI18nString("medic.reminder.timing.after")+" ");
 		}else if(startDays + startMonths < 0){
-			timing.append("before ");
+			timing.append(getI18nString("medic.reminder.timing.before")+" ");
 		}else if(startDays + startMonths == 0){
-			timing.append("the day of ");
+			timing.append(getI18nString("medic.reminder.timing.dayof")+" ");
 		}
 		timing.append(getStartEvent().getSnippet()+ " ");
 		
-		timing.append("to ");
+		timing.append(getI18nString("medic.reminder.to").toLowerCase()+" ");
 		if(endDays !=0){
-			timing.append(Math.abs(endDays) + (Math.abs(endDays)==1?" day ":" days "));
+			String days = Math.abs(endDays)==1?"medic.reminder.day":"medic.reminder.days";
+			days = getI18nString(days);
+			days = " " + days+" ";
+			timing.append(Math.abs(endDays)+ days);
 		}
 		if(endMonths !=0){
-			timing.append(Math.abs(endMonths)+ (Math.abs(endMonths)==1?" month ":" months "));
-		}
+			String months = Math.abs(endMonths)==1?"medic.reminder.month":"medic.reminder.months";
+			months = getI18nString(months);
+			months = " " + months+" ";
+			timing.append(Math.abs(endMonths)+ (Math.abs(startMonths)==1?" month ":" months "));		}
 		if(endDays + endMonths > 0){
-			timing.append("after ");
+			timing.append(getI18nString("medic.reminder.timing.after")+" ");
 		}else if(endDays + endMonths < 0){
-			timing.append("before ");
+			timing.append(getI18nString("medic.reminder.timing.before")+" ");
 		}else if(endDays + endMonths == 0){
-			timing.append("the day of ");
+			timing.append(getI18nString("medic.reminder.timing.dayof")+" ");
 		}
 		timing.append(getEndEvent().getSnippet());
 		return timing.toString();
@@ -160,7 +174,7 @@ public class RecurringReminder extends OneTimeReminder {
 	
 	@Override
 	public String getTypeName() {
-		return "Recurring";
+		return getI18nString("medic.reminders.type.recurring");
 	}
 	
 	public int getEndDays() {

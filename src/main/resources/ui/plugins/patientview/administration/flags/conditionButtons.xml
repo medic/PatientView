@@ -1,5 +1,5 @@
 <panel gap="5" name="conditionButtonSubPanel">
-	<button action="addCondition()" name="addConditionButton" text="Add Condition" icon="/icons/add.png"/>
-	<button action="editCondition()" name="editConditionButton" text="Edit Condition" icon="/icons/pencil.png"/>
-	<button action="removeCondition()" name="removeConditionButton" text="Remove Condition" icon="/icons/delete.png"/>
+	<button action="addCondition()" name="addConditionButton" text="i18n.medic.flags.condition.add" icon="/icons/add.png"/>
+	<button action="editCondition()" name="editConditionButton" text="i18n.medic.flags.condition.edit" icon="/icons/pencil.png"/>
+	<button action="removeCondition()" name="removeConditionButton" text="i18n.medic.flags.condition.remove" icon="/icons/delete.png"/>
 </panel>

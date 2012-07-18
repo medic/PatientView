@@ -1,35 +1,35 @@
 <panel  columns="1" gap="5" name="actionPanel" weightx="4" weighty="1">
 	<panel gap="5" name="namePanel">
-		<label name="reminderNameLabel" text="Name:" />
+		<label name="reminderNameLabel" text="i18n.medic.reminders.name.colon" />
 		<textfield columns="30" name="reminderNameField" />
 	</panel>
 	<separator weightx="1" />
 	<panel gap="5" name="typePanel">
-		<label name="typeLabel" text="Type:" />
+		<label name="typeLabel" text="i18n.medic.reminders.type.colon" />
 		<combobox action="reminderTypeSelectionChanged()" columns="30"
 			name="typeSelect" editable="false" />
 	</panel>
 	<panel border="true" bottom="4" gap="5" left="5" name="timingPanel"
-		right="5" text="Timing" top="5" weightx="1" icon="/icons/time.png"/>
+		right="5" text="i18n.medic.reminders.timing" top="5" weightx="1" icon="/icons/time.png"/>
 	<panel border="true" bottom="5" columns="1" gap="5" left="5"
-		name="messagePanel" right="5" text="Message" top="5" weightx="1" icon="/icons/sms.png">
+		name="messagePanel" right="5" text="i18n.medic.common.message" top="5" weightx="1" icon="/icons/sms.png">
 		<panel gap="5" weightx="1" name="recipientPanel">
-			<label text="Send to:"/>
+			<label text="i18n.medic.reminders.send.to"/>
 			<combobox editable="false" columns="30" name="recipientSelect" selected="0">
-				<choice text="Patient"/>
-				<choice text="Patient's CHW"/>
+				<choice text="i18n.medic.common.patient"/>
+				<choice text="i18n.medic.reminder.destination.patients.chw"/>
 			</combobox>
 		</panel>
 		<textarea name="messageTextArea" weightx="1" />
 		<panel gap="5" name="variablePanel" weightx="1">
-			<label name="variableLabel" text="Insert:" />
+			<label name="variableLabel" text="i18n.medic.reminders.insert.colon" />
 			<panel gap="5" name="variableButtonPanel" weightx="1" />
 		</panel>
 	</panel>
 	<panel gap="10" halign="left" name="bottomButtonPanel" valign="top"
 		weightx="1" weighty="1">
-		<button action="saveReminder()" name="saveReminderButton" text="Save Reminder" icon="/icons/tick.png"/>
+		<button action="saveReminder()" name="saveReminderButton" text="i18n.medic.reminder.save" icon="/icons/tick.png"/>
 		<button action="editReminderCancelled()" name="cancelEditingReminderButton"
-			text="Cancel" icon="/icons/cross.png"/>
+			text="i18n.detailview.buttons.cancel" icon="/icons/cross.png"/>
 	</panel>
 </panel>

@@ -47,6 +47,18 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 	private static final String CONDITION_BUTTONS_PANEL = 	"conditionButtonPanel";
 	private static final String MESSAGE_FIELD_SELECT = "messageFieldSelect";
 	
+	private static final String CANNOT_BE_EMPTY = getI18nString("medic.flags.fields.cannot.be.empty");
+	private static final String THE_MESSAGE_TEXT = getI18nString("medic.flags.fields.message.text");
+	private static final String THE_FLAG_NAME = getI18nString("medic.flags.fields.flag.name");
+	private static final String ADD = getI18nString("medic.common.labels.add");
+	private static final String CONDITIONS_MET = getI18nString("medic.flags.conditions.met");
+	private static final String ALL = getI18nString("medic.flags.all");
+	private static final String ANY = getI18nString("medic.flags.any");;
+	private static final String IF = getI18nString("medic.flags.if");
+	private static final String FORM_COLON = getI18nString("medic.common.form.colon");
+	private static final String NO_FLAGS = getI18nString("medic.flags.none");
+	private static final String FLAGS = getI18nString("medic.flags");
+	
 	
 	private FlagDao flagDao;
 	private FlagConditionDao conditionDao;
@@ -70,7 +82,7 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 
 	@Override
 	public String getListItemTitle() {
-		return "Flags";
+		return FLAGS;
 	}
 	
 	public Flag getSelectedFlag(){
@@ -105,7 +117,7 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 		}
 		
 		if(flags.size() == 0){
-			add(find(FLAG_LIST),ui.createListItem("No Flags",null));
+			add(find(FLAG_LIST),ui.createListItem(NO_FLAGS,null));
 			ui.setEnabled(find(REMOVE_FLAG_BUTTON), false);
 		}else{
 			ui.setEnabled(find(REMOVE_FLAG_BUTTON), true);
@@ -134,9 +146,9 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 			add(find(ACTION_PANEL),ui.loadComponentFromFile(DISPLAY_FLAG_XML, this));
 			//set the flag name
 			ui.setText(find(FLAG_NAME_LABEL), f.getName());
-			ui.setText(find(FORM_LABEL), "Form: "+f.getForm().getName());
+			ui.setText(find(FORM_LABEL), FORM_COLON+" "+f.getForm().getName());
 			//create the condition text
-			String conditionText = "If " + (f.isAny()?"any":"all") + " of these conditions are met:\n\t";
+			String conditionText = IF+" " + (f.isAny()?ANY:ALL) + " "+ CONDITIONS_MET+":\n\t";
 			List<FlagCondition> conditions = conditionDao.getConditionsForFlag(f);
 			for(FlagCondition c: conditions){
 				conditionText += c.toString();
@@ -238,7 +250,7 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 	
 	public void addCondition(){
 		EditConditionPanel p = new EditConditionPanel(ui, appCon, getSelectedForm(), null,this);
-		ui.setText(find(p.getMainPanel(),"saveEditingCondition"), "Add");
+		ui.setText(find(p.getMainPanel(),"saveEditingCondition"), ADD);
 		ui.removeAll(find(CONDITION_BUTTONS_PANEL));
 		add(find(CONDITION_BUTTONS_PANEL),p.getMainPanel());
 	}
@@ -295,8 +307,8 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 	}
 	
 	public void saveFlag(){
-		if(!checkField(FLAG_NAME_FIELD,"The flag name")) return;
-		if(!checkField(MESSAGE_TEXT_AREA,"The message text")) return;
+		if(!checkField(FLAG_NAME_FIELD,THE_FLAG_NAME)) return;
+		if(!checkField(MESSAGE_TEXT_AREA,THE_MESSAGE_TEXT)) return;
 		String name = ui.getText(find(FLAG_NAME_FIELD));
 		String message = ui.getText(find(MESSAGE_TEXT_AREA));
 		boolean any = ui.getSelectedIndex(find(ANY_OR_ALL_SELECT)) == 0;
@@ -341,7 +353,7 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 	private boolean checkField(String thinletFieldName, String fieldName){
 		String contents = ui.getText(find(thinletFieldName));
 		if(contents == null || contents.equals("")){
-			ui.alert(fieldName+ " cannot be empty.");
+			ui.alert(fieldName+ " "+ CANNOT_BE_EMPTY);
 			return false;
 		}else{
 			return true;

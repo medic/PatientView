@@ -4,6 +4,6 @@
     <combobox editable="false" name="fieldSelect" action="fieldSelectionChanged()"/>
     <combobox editable="false" name="operatorSelect" action="operationSelectionChanged()"/>
     <textfield columns="20" name="operandField"/>
-    <button icon="/icons/tick.png" name="saveEditingCondition" text="Save" action="saveCondition()"/>
-    <button icon="/icons/cross.png" name="cancelEditingCondition" text="Cancel" action="cancel()"/>
+    <button icon="/icons/tick.png" name="saveEditingCondition" text="i18n.detailview.buttons.save" action="saveCondition()"/>
+    <button icon="/icons/cross.png" name="cancelEditingCondition" text="i18n.detailview.buttons.cancel" action="cancel()"/>
 </panel>
