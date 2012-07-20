@@ -9,10 +9,13 @@ import net.frontlinesms.plugins.patientview.data.repository.PatientDao;
 import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
 import net.frontlinesms.plugins.patientview.data.repository.VaccineDao;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.FormFieldDelegate;
+import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.AddressField;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.AmenorrheaDateField;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.CHWComboBox;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.NewbornCheckbox;
+import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.ParentNameField;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.PatientIdField;
+import net.frontlinesms.plugins.patientview.ui.thinletformfields.personalformfields.VisitDateField;
 import net.frontlinesms.plugins.patientview.vaccine.VaccineScheduler;
 import net.frontlinesms.ui.UiGeneratorController;
 
@@ -40,12 +43,17 @@ public class PatientFieldGroup extends PersonFieldGroup<Patient> {
 		super.addField(chwCombo);
 		PatientIdField idField = new PatientIdField(getPerson()!=null?getPerson().getExternalId():"", ui, this);
 		super.insertField(idField, 1);
+		super.addField(new AddressField(ui, this,getPerson()!=null?getPerson().getAddress():""));
+		super.addField(new VisitDateField(ui, this, false, getPerson()!=null?getPerson().getVisitDate():null));
+		super.addField(new ParentNameField(ui, this, true, getPerson()!=null?getPerson().getMothersName():""));
+		super.addField(new ParentNameField(ui, this, false, getPerson()!=null?getPerson().getFathersName():""));
 		if(isNewPersonGroup){
 			AmenorrheaDateField df = new AmenorrheaDateField(ui, this, getPerson() == null?null:getPerson().getDateOfAmenorrhea());
 			super.addField(df);
 			checkBox = new NewbornCheckbox(ui, "Enroll in ANC appointments?", null , appCon);
 			super.addField(checkBox);
 		}
+		
 	}
 	
 	@Override

@@ -20,5 +20,4 @@ public class BirthdateField extends DateField implements PersonalFormField{
 	public void setFieldForPerson(Person p) {
 		p.setBirthdate(super.getRawResponse());
 	}
-
 }

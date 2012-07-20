@@ -66,7 +66,9 @@ public class MedicForm{
 				PatientFieldMapping.BIRTHDATEFIELD,PatientFieldMapping.IDFIELD}), 
 		REGISTRATION("Patient Registration",new PatientFieldMapping[]{PatientFieldMapping.NAMEFIELD, 
 				PatientFieldMapping.BIRTHDATEFIELD,PatientFieldMapping.IDFIELD,PatientFieldMapping.GENDER,
-				PatientFieldMapping.DATE_OF_LAST_AMENORRHEA, PatientFieldMapping.PHONE_NUMBER }), 
+				PatientFieldMapping.DATE_OF_LAST_AMENORRHEA, PatientFieldMapping.PHONE_NUMBER, 
+				PatientFieldMapping.ADDRESS, PatientFieldMapping.MOTHERS_NAME, PatientFieldMapping.FATHERS_NAME,
+				PatientFieldMapping.VISIT_DATE}), 
 		APPOINTMENT("Appointment",new PatientFieldMapping[]{PatientFieldMapping.NAMEFIELD, 
 				PatientFieldMapping.BIRTHDATEFIELD,PatientFieldMapping.IDFIELD}),
 		NONE("None",new PatientFieldMapping[0]);

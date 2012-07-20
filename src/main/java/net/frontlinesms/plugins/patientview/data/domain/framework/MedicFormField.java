@@ -66,7 +66,11 @@ public class MedicFormField extends Field{
 		BIRTHDATEFIELD("medic.field.mapping.birthdate","/icons/cake.png"),
 		GENDER("medic.field.mapping.gender","/icons/gender.png"),
 		DATE_OF_LAST_AMENORRHEA("medic.field.mapping.lastamenorrhea","/icons/date.png"),
-		PHONE_NUMBER("medic.field.mapping.phone","/icons/phone.png");
+		PHONE_NUMBER("medic.field.mapping.phone","/icons/phone.png"),
+		VISIT_DATE("medic.field.mapping.visitdate",""),
+		MOTHERS_NAME("medic.field.mapping.mothersname",""),
+		FATHERS_NAME("medic.field.mapping.fathersname",""),
+		ADDRESS("medic.field.mapping.address","");
 		
 		private String displayName;
 		

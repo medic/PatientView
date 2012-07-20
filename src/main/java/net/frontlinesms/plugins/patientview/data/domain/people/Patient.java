@@ -32,6 +32,14 @@ public class Patient extends Person {
 	
 	private Long dateOfAmenorrhea;
 	
+	private Long visitDate;
+	
+	private String mothersName;
+	
+	private String fathersName;
+	
+	private String address;
+
 	/** Default constructor for Hibernate. */
 	public Patient() {}
 
@@ -91,5 +99,37 @@ public class Patient extends Person {
 
 	public Long getDateOfAmenorrhea() {
 		return dateOfAmenorrhea;
+	}
+
+	public void setVisitDate(Long visitDate) {
+		this.visitDate = visitDate;
+	}
+
+	public Long getVisitDate() {
+		return visitDate;
+	}
+
+	public void setMothersName(String mothersName) {
+		this.mothersName = mothersName;
+	}
+
+	public String getMothersName() {
+		return mothersName;
+	}
+
+	public void setFathersName(String fathersName) {
+		this.fathersName = fathersName;
+	}
+
+	public String getFathersName() {
+		return fathersName;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getAddress() {
+		return address;
 	}
 }

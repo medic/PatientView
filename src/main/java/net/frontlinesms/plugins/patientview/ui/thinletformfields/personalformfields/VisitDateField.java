@@ -6,18 +6,19 @@ import net.frontlinesms.plugins.patientview.ui.thinletformfields.DateField;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.FormFieldDelegate;
 import net.frontlinesms.ui.ExtendedThinlet;
 
-public class AmenorrheaDateField extends DateField implements PersonalFormField {
+public class VisitDateField extends DateField implements PersonalFormField {
 
-	public AmenorrheaDateField(ExtendedThinlet thinlet, FormFieldDelegate delegate, Long dateOfConception) {
-		super(thinlet, "Date of Last Amenorrhea:", delegate);
-		if(dateOfConception != null){
-			this.setRawResponse(dateOfConception);
+	public VisitDateField(ExtendedThinlet thinlet,
+			FormFieldDelegate delegate, boolean showDateFormat, Long visitDate) {
+		super(thinlet, "Visit Date:", delegate, showDateFormat);
+		if(visitDate != null && visitDate > 0L){
+			setRawResponse(visitDate);
 		}
 	}
 
 	public void setFieldForPerson(Person p) {
-		if(p instanceof Patient && getRawResponse() != null){
-			((Patient) p).setDateOfAmenorrhea(getRawResponse());
-		}
+		Patient pat = (Patient) p;
+		pat.setVisitDate(getRawResponse());
 	}
+
 }
