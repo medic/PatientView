@@ -36,7 +36,7 @@ public class CHWComboBox extends ThinletFormField<CommunityHealthWorker> impleme
 	public void fillComboBox(CommunityHealthWorker toSelect){
 		thinlet.removeAll(comboBox);
 		List<CommunityHealthWorker> chws = chwDao.getAllCommunityHealthWorkers(false);
-		Object nullChoice = thinlet.createComboboxChoice("No CHW", null);
+		Object nullChoice = thinlet.createComboboxChoice(InternationalisationUtils.getI18nString("thinletformfields.nochw"), null);
 		thinlet.add(comboBox,nullChoice);
 		int indexToSelect = 0;
 		for(int i = 0; i < chws.size(); i++){

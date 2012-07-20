@@ -39,7 +39,7 @@ public class RoleComboBox extends ThinletFormField<Role> implements PersonalForm
 	@Override
 	public void validate() throws ValidationFailure{
 		if(!hasResponse()){
-			throw new ValidationFailure("\""+ getLabel().replace(":", "")+ "\" does not have a role selected.");
+			throw new ValidationFailure("\""+ getLabel().replace(":", "")+ "\" "+InternationalisationUtils.getI18nString("thinletformfields.role.error"));
 		}
 	}
 

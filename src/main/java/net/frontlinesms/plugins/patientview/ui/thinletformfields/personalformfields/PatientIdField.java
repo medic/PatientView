@@ -5,11 +5,12 @@ import net.frontlinesms.plugins.patientview.data.domain.people.Person;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.FormFieldDelegate;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.TextField;
 import net.frontlinesms.ui.ExtendedThinlet;
+import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
 public class PatientIdField extends TextField implements PersonalFormField{
 
 	public PatientIdField(String currentId, ExtendedThinlet thinlet, FormFieldDelegate delegate) {
-		super(thinlet, "ID:", delegate);
+		super(thinlet, InternationalisationUtils.getI18nString("medic.field.mapping.id")+":", delegate);
 		setRawResponse(currentId);
 	}
 

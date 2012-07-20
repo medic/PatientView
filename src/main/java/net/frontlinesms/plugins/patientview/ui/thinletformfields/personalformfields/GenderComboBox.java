@@ -42,7 +42,7 @@ public class GenderComboBox extends ThinletFormField<Gender> implements Personal
 	@Override
 	public void validate() throws ValidationFailure{
 		if(!hasResponse()){
-			throw new ValidationFailure("\""+ getLabel().replace(":", "")+ "\" does not have a gender selected.");
+			throw new ValidationFailure("\""+ getLabel().replace(":", "")+ "\" "+InternationalisationUtils.getI18nString("thinletformfields.gender.error"));
 		}
 	}
 	

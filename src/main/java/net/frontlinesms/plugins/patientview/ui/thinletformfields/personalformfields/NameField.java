@@ -21,7 +21,7 @@ public class NameField extends TextField implements PersonalFormField{
 	@Override
 	public void validate() throws ValidationFailure{
 		if(!(super.getStringResponse() !="" && super.getStringResponse() != null)){
-			throw new ValidationFailure("\""+ getLabel().replace(":", "")+ "\" is not filled out. Please enter the desired name.");
+			throw new ValidationFailure("\""+ getLabel().replace(":", "")+ "\" "+InternationalisationUtils.getI18nString("thinletformfields.name.error"));
 		}
 	}
 	
