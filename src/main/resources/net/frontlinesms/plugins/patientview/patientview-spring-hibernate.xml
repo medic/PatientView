@@ -41,5 +41,6 @@
 	<bean id="ReminderDao" class="net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernateReminderDao" parent="baseHibernateDao"/>
 	<bean id="FlagDao" class="net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernateFlagDao" parent="baseHibernateDao"/>
 	<bean id="FlagConditionDao" class="net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernateFlagConditionDao" parent="baseHibernateDao"/>
-		
+	<bean id="TriggeredFlagDao" class="net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernateTriggeredFlagDao" parent="baseHibernateDao"/>
+
 </beans>

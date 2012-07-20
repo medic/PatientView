@@ -26,5 +26,7 @@
 		<mapping class="net.frontlinesms.plugins.patientview.data.domain.flag.BooleanFlagCondition" />
 		<mapping class="net.frontlinesms.plugins.patientview.data.domain.flag.StringFlagCondition" />
 		<mapping class="net.frontlinesms.plugins.patientview.data.domain.flag.NumericFlagCondition" />
+		<mapping class="net.frontlinesms.plugins.patientview.data.domain.flag.TriggeredFlag" />
+		
 	</session-factory>
 </hibernate-configuration>
