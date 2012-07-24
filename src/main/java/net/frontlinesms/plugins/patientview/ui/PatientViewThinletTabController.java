@@ -21,9 +21,9 @@ import net.frontlinesms.plugins.patientview.search.simplesearch.SimpleSearchCont
 import net.frontlinesms.plugins.patientview.security.UserSessionManager;
 import net.frontlinesms.plugins.patientview.security.ui.LoginScreen;
 import net.frontlinesms.plugins.patientview.ui.administration.AdministrationTabController;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedAdvancedTableController;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.detailview.DetailViewController;
 import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
@@ -50,6 +50,7 @@ public class PatientViewThinletTabController implements ThinletUiEventHandler, T
 	private Object mainTab;
 
 	private AdministrationTabController adminTab;
+	private FlagCenterTabController flagTab;
 
 	/** login screen */
 	private LoginScreen loginScreen;
@@ -134,6 +135,9 @@ public class PatientViewThinletTabController implements ThinletUiEventHandler, T
 		if (adminTab != null) {
 			ui.remove(adminTab.getMainPanel());
 		}
+		if (flagTab != null) {
+			ui.remove(flagTab.getMainPanel());
+		}
 	}
 
 	/**
@@ -149,6 +153,10 @@ public class PatientViewThinletTabController implements ThinletUiEventHandler, T
 			if(UserSessionManager.getUserSessionManager().getCurrentUserRole() == Role.ADMIN){
 				adminTab = new AdministrationTabController(ui,pluginController.getApplicationContext());
 				ui.add(ui.getParent(getTab()),adminTab.getMainPanel());
+			}
+			if(UserSessionManager.getUserSessionManager().getCurrentUserRole() == Role.ADMIN){
+				flagTab = new FlagCenterTabController(ui,pluginController.getApplicationContext());
+				ui.add(ui.getParent(getTab()),flagTab.getMainPanel());
 			}
 			if(UserSessionManager.getUserSessionManager().getCurrentUserRole() == Role.REGISTRAR){
 				ui.removeAll(mainPanel);

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<tab text="Flags" name="flagTab" icon = "/icons/big_medic.png">
+<panel bottom="6" columns="1" gap="7" left="7" right="7" top="7" weightx="1" weighty="1">
+    <panel border="true" bottom="5" gap="5" left="5" name="filterPanel" right="5" top="5" weightx="1">
+        <label text="Find flags where"/>
+        <combobox editable="false" name="fieldSelect" selected="0" start="12" text="patient name" action="fieldSelectionChanged">
+            <choice name="patientNameChoice" text="patient name"/>
+            <choice name="flagNameChoice" text="flag name"/>
+        </combobox>
+        <label text="is"/>
+        <textfield name="textField" weightx="1" action="textChanged"/>
+        <checkbox name="activeCheckbox" selected="true" text="active" action="activeCheckboxChanged"/>
+        <checkbox name="resolvedCheckbox" text="resolved" action="resolvedCheckboxChanged"/>
+    </panel>
+    <panel name="tablePanel" weightx="1" weighty="1"/>
+    <panel name="actionPanel">
+   		<button text="Go To Patient Record" action="showPatientRecord" name="patientDashboardButton" enabled="false"/>
+    </panel>
+</panel>
+</tab>

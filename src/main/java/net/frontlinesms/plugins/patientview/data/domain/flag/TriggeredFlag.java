@@ -1,5 +1,8 @@
 package net.frontlinesms.plugins.patientview.data.domain.flag;
 
+import java.util.Date;
+
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +15,9 @@ import javax.persistence.Table;
 
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
+import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormResponse;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose;
+import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
 @Entity
 @Table(name = "medic_triggered_flag")
@@ -28,23 +33,40 @@ public class TriggeredFlag {
 	@ManyToOne(cascade={},fetch=FetchType.EAGER,optional=false)
 	private Patient patient;
 	
-	private String reason;
+	@ManyToOne(cascade={},fetch=FetchType.EAGER,optional=false)
+	private MedicFormResponse trigger;
+	
+	private String message;
 
-	private long dateTriggered;
+	private Long dateTriggered;
 
 	private boolean resolved;
 	
-	private long dateResolved;
+	@Basic(optional=true)
+	private Long dateResolved;
 	
 	@ManyToOne(cascade={},fetch=FetchType.EAGER,optional=true)
 	private Person resolvedBy;
 	
+	@Basic(optional=true)
 	private String comments;
 
 	@OneToOne(cascade={},fetch=FetchType.EAGER,optional=true)
 	private ScheduledDose appointment;
 
 	TriggeredFlag(){}
+	
+	public TriggeredFlag(Flag flag, MedicFormResponse trigger, String message){
+		this.flag= flag;
+		this.trigger = trigger;
+		this.comments = "";
+		this.message = message;
+		this.dateTriggered = trigger.getDateSubmitted();
+		this.resolved = false;
+		this.dateResolved = null;
+		this.resolvedBy = null;
+		this.patient = (Patient) trigger.getSubject();
+	}
 	
 	public long getId(){
 		return id;
@@ -57,6 +79,10 @@ public class TriggeredFlag {
 	public Flag getFlag() {
 		return flag;
 	}
+	
+	public String getFlagName(){
+		return flag.getName();
+	}
 
 	public void setPatient(Patient patient) {
 		this.patient = patient;
@@ -65,13 +91,17 @@ public class TriggeredFlag {
 	public Patient getPatient() {
 		return patient;
 	}
+	
+	public String getPatientName(){
+		return patient.getName();
+	}
 
 	public void setReason(String reason) {
-		this.reason = reason;
+		this.message = reason;
 	}
 
 	public String getReason() {
-		return reason;
+		return message;
 	}
 
 	public void setDateTriggered(long dateTriggered) {
@@ -80,6 +110,10 @@ public class TriggeredFlag {
 
 	public long getDateTriggered() {
 		return dateTriggered;
+	}
+	
+	public String getStringDateTriggered(){
+		return InternationalisationUtils.getDateFormat().format(new Date(dateTriggered));
 	}
 
 	public void setResolved(boolean resolved) {
@@ -97,6 +131,10 @@ public class TriggeredFlag {
 	public long getDateResolved() {
 		return dateResolved;
 	}
+	
+	public String getDateResolvedString(){
+		return InternationalisationUtils.getDateFormat().format(dateResolved);
+	}
 
 	public void setResolvedBy(Person resolvedBy) {
 		this.resolvedBy = resolvedBy;
@@ -106,8 +144,16 @@ public class TriggeredFlag {
 		return resolvedBy;
 	}
 
+	public String getResolverName(){
+		return resolvedBy.getName();
+	}
+	
 	public void setAppointment(ScheduledDose appointment) {
 		this.appointment = appointment;
+	}
+	
+	public String getAppointmentString(){
+		return InternationalisationUtils.getDateFormat().format(appointment.getDateScheduled());
 	}
 
 	public ScheduledDose getAppointment() {
@@ -120,5 +166,21 @@ public class TriggeredFlag {
 
 	public String getComments() {
 		return comments;
+	}
+
+	public void setTrigger(MedicFormResponse trigger) {
+		this.trigger = trigger;
+	}
+
+	public MedicFormResponse getTrigger() {
+		return trigger;
+	}
+	
+	public String getSubmitterName(){
+		if(this.trigger != null && this.trigger.getSubmitter() != null){
+			return this.trigger.getSubmitterName();
+		}else{
+			return "";		
+		}
 	}
 }

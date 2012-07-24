@@ -212,6 +212,7 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 			ui.setEnabled(find(FORM_SELECT),false);
 			ui.setText(find(FLAG_NAME_FIELD), f.getName());
 			ui.setSelectedIndex(find(ANY_OR_ALL_SELECT), f.isAny()?0:1);
+			ui.setText(find("phoneNumberField"), f.getDestinationPhoneNumber());
 			populateFormSelect(f.getForm());
 			populateConditions(f);
 			ui.setText(find(MESSAGE_TEXT_AREA), f.getMessage());
@@ -311,12 +312,14 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 		if(!checkField(MESSAGE_TEXT_AREA,THE_MESSAGE_TEXT)) return;
 		String name = ui.getText(find(FLAG_NAME_FIELD));
 		String message = ui.getText(find(MESSAGE_TEXT_AREA));
+		String phoneNum = ui.getText(find("phoneNumberField"));
 		boolean any = ui.getSelectedIndex(find(ANY_OR_ALL_SELECT)) == 0;
 		Flag newFlag;
 		if(isEditing){
 			newFlag = getSelectedFlag();
 			newFlag.setName(name);
 			newFlag.setMessage(message);
+			newFlag.setDestinationPhoneNumber(phoneNum);
 			newFlag.setAny(any);
 			Object[] conditions = ui.getItems(find(CONDITION_LIST));
 			for(Object item: conditions){
@@ -339,6 +342,7 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 			MedicForm mf = (MedicForm) ui.getAttachedObject(ui.getSelectedItem(find(FORM_SELECT)));
 			newFlag = new Flag(name, mf);
 			newFlag.setMessage(message);
+			newFlag.setDestinationPhoneNumber(phoneNum);
 			newFlag.setAny(any);
 			Object[] conditions = ui.getItems(find(CONDITION_LIST));
 			for(Object item: conditions){

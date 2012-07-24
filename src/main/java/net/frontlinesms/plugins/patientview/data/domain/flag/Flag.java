@@ -39,6 +39,8 @@ public class Flag {
 	//The templated message of this flag
 	private String message;
 	
+	private String destinationPhoneNumber;
+	
 	/**
 	 * true if 'any' conditions can be matched
 	 * false if 'all' conditions must be matched
@@ -146,5 +148,13 @@ public class Flag {
 
 	public Set<FlagCondition<?>> getConditions() {
 		return conditions;
+	}
+
+	public void setDestinationPhoneNumber(String destinationPhoneNumber) {
+		this.destinationPhoneNumber = destinationPhoneNumber;
+	}
+
+	public String getDestinationPhoneNumber() {
+		return destinationPhoneNumber;
 	}
 }

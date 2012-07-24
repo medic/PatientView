@@ -191,6 +191,10 @@ public class IncomingFormMatcher implements EventObserver{
 		Date lastAmenorrhea = null;
 		String phoneNum="";
 		String id = "";
+		String address="";
+		String mothersName="";
+		String fathersName="";
+		Date visitDate = null;
 		for(MedicFormFieldResponse mffr: mfr.getResponses()){
 			if(mffr.getField().getMapping() == null) continue;
 			switch(mffr.getField().getMapping()){
@@ -216,12 +220,32 @@ public class IncomingFormMatcher implements EventObserver{
 						lastAmenorrhea = InternationalisationUtils.parseDate(mffr.getValue());
 					}catch (Exception e) { lastAmenorrhea = null;}
 				break;
+				case ADDRESS:
+					address = mffr.getValue();
+				break;
+				case FATHERS_NAME:
+					fathersName = mffr.getValue();
+				break;
+				case MOTHERS_NAME:
+					mothersName = mffr.getValue();
+				break;
+				case VISIT_DATE:
+					try{
+						visitDate = InternationalisationUtils.parseDate(mffr.getValue());
+					}catch(Exception e){
+						visitDate = null;
+					}
+				break;
 				default: break;
 			}
 		}
 		Patient p = new Patient(null, name, gender, birthdate.getTime());
 		p.setPhoneNumber(phoneNum);
 		p.setExternalId(id);
+		p.setVisitDate(visitDate.getTime());
+		p.setMothersName(mothersName);
+		p.setFathersName(fathersName);
+		p.setAddress(address);
 		if(lastAmenorrhea != null){
 			p.setDateOfAmenorrhea(lastAmenorrhea.getTime());
 			patientDao.savePatient(p);

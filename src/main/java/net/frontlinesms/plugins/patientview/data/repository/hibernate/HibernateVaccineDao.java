@@ -61,7 +61,9 @@ public class HibernateVaccineDao extends BaseHibernateDao<Vaccine> implements Va
 		List<ScheduledDose> doses = scheduledDoseDao.getScheduledDoses(patient,null);
 		Set<Vaccine> vaccineSet = new HashSet<Vaccine>();
 		for(ScheduledDose dose: doses){
-			vaccineSet.add(dose.getDose().getVaccine());
+			if(dose.getDose() != null){
+				vaccineSet.add(dose.getDose().getVaccine());
+			}
 		}
 		return vaccineSet;
 	}

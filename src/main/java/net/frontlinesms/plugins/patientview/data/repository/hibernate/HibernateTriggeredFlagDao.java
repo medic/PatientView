@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.frontlinesms.data.repository.hibernate.BaseHibernateDao;
 import net.frontlinesms.plugins.patientview.data.domain.flag.TriggeredFlag;
+import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.repository.TriggeredFlagDao;
 
 import org.hibernate.criterion.DetachedCriteria;
@@ -87,10 +88,36 @@ public class HibernateTriggeredFlagDao extends BaseHibernateDao<TriggeredFlag> i
 		}
 		return c;
 	}
+	
+	private DetachedCriteria getCriteriaForFlagSearch(Patient patient, boolean resolved, boolean unresolved){
+		DetachedCriteria c = DetachedCriteria.forClass(TriggeredFlag.class);
+		if(patient != null){
+			c.add(Restrictions.eq("patient", patient));
+		}
+		if(resolved ^ unresolved){
+			if(resolved){
+				c.add(Restrictions.eq("resolved", true));
+			}else{
+				c.add(Restrictions.eq("resolved", false));
+			}
+		}
+		return c;
+	}
 
 	public List<TriggeredFlag> findTriggeredFlags(String flagName,
 			String patientName, boolean resolved, boolean unresolved,
 			int startIndex, int maxResults) {
 		return super.getList(getCriteriaForFlagSearch(flagName, patientName, resolved, unresolved), startIndex, maxResults);
+	}
+
+	public int countTriggeredFlags(Patient patient, boolean resolved, boolean active) {
+		
+		return super.getCount(getCriteriaForFlagSearch(patient,resolved,active));
+	}
+
+	public List<TriggeredFlag> findTriggeredFlags(Patient patient,
+			boolean resolved, boolean active, int startIndex, int maxResults) {
+		// TODO Auto-generated method stub
+		return super.getList(getCriteriaForFlagSearch(patient, resolved, active), startIndex, maxResults);
 	}
 }
