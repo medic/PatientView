@@ -64,14 +64,14 @@ public class FlagCenterTabController extends ViewHandler implements TableActionD
 	
 	public void showPatientRecord(){
 		Patient p = ((TriggeredFlag) table.getCurrentlySelectedObject()).getPatient();
-			PatientDashboard dash = new PatientDashboard(ui, appCon, p);
-			dash.expandDashboard();
+		PatientDashboard dash = new PatientDashboard(ui, appCon, p);
+		dash.expandDashboard("flagTabMainPanel","flagTab");
 	}
 
 	public void doubleClickAction(Object selectedObject) {
 		Patient p = ((TriggeredFlag) ui.getAttachedObject(selectedObject)).getPatient();
 		PatientDashboard dash = new PatientDashboard(ui, appCon, p);
-		dash.expandDashboard();
+		dash.expandDashboard("flagTabMainPanel","flagTab");
 	}
 	
 	public void resultsChanged() {}

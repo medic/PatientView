@@ -36,6 +36,9 @@ public class VaccineSchedulerTest extends BaseTestCase{
 		v.setDoses(doses);
 	}
 	
+	public void test_blah(){
+		assert(true);
+	}
 /*	public void test_scheduleVaccinesFromBirth_justMonths_scheduledProperly(){
 		setup(1980,Calendar.MAY,15,3);
 		List<ScheduledDose> schedDoses = VaccineScheduler.instance().scheduleVaccinesFromBirth(p, v);

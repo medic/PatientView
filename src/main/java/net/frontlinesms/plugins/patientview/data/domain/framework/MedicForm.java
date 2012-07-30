@@ -59,7 +59,7 @@ public class MedicForm{
 	private Form vanillaForm;
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "form")
-	private Set<Flag> flags;
+	private List<Flag> flags;
 
 	public enum MedicFormType{
 		PATIENT_DATA("Patient Data",new PatientFieldMapping[]{PatientFieldMapping.NAMEFIELD, 
@@ -215,11 +215,11 @@ public class MedicForm{
 		return fid;
 	}
 
-	public void setFlags(Set<Flag> flags) {
+	public void setFlags(List<Flag> flags) {
 		this.flags = flags;
 	}
 
-	public Set<Flag> getFlags() {
+	public List<Flag> getFlags() {
 		return flags;
 	}
 

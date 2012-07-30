@@ -39,16 +39,13 @@ import net.frontlinesms.plugins.patientview.vaccine.VaccineScheduler;
 import net.frontlinesms.ui.ExtendedThinlet;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
-import org.apache.log4j.Logger;
-import org.jfree.util.Log;
+
 import org.springframework.context.ApplicationContext;
 
 import uk.ac.shef.wit.simmetrics.similaritymetrics.JaroWinkler;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
 
 public class IncomingFormMatcher implements EventObserver{
-
-	private static Logger LOG = FrontlineUtils.getLogger(MedicFormResponse.class);
 	
 	private Levenshtein levenshtein;
 	private JaroWinkler jaroWinkler;
@@ -242,7 +239,7 @@ public class IncomingFormMatcher implements EventObserver{
 		Patient p = new Patient(null, name, gender, birthdate.getTime());
 		p.setPhoneNumber(phoneNum);
 		p.setExternalId(id);
-		p.setVisitDate(visitDate.getTime());
+		p.setVisitDate(visitDate!=null?visitDate.getTime():null);
 		p.setMothersName(mothersName);
 		p.setFathersName(fathersName);
 		p.setAddress(address);
@@ -254,8 +251,9 @@ public class IncomingFormMatcher implements EventObserver{
 				List<ScheduledDose> scheduledDoses = VaccineScheduler.instance().scheduleVaccinesFromDateOfAmenorrhea(p, v);
 				doseDao.saveScheduledDoses(scheduledDoses);
 			}
+		}else{
+			patientDao.savePatient(p);
 		}
-		patientDao.savePatient(p);
 		mfr.setSubject(p);
 		formResponseDao.saveMedicFormResponse(mfr);
 	}
@@ -288,7 +286,6 @@ public class IncomingFormMatcher implements EventObserver{
 	}
 	
 	public List<Candidate> getCandidatesForResponse(MedicFormResponse response, boolean searchAll){
-		Log.info("Attempting to map response");
 		List<Patient> patients;
 		List<Candidate> candidates = new ArrayList<Candidate>();
 		if(!searchAll){

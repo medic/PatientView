@@ -17,6 +17,9 @@ public abstract class Dashboard implements ThinletUiEventHandler{
 	
 	protected Object stashedPanel;
 	
+	protected String stashedTabName;
+	protected String stashedPanelName;
+	
 	//controllers
 	protected UiGeneratorController uiController;
 	protected ApplicationContext appCon;
@@ -34,18 +37,22 @@ public abstract class Dashboard implements ThinletUiEventHandler{
 	}
 	
 	
+	public void expandDashboard(String panelName, String tabName){
+		stashedTabName = tabName;
+		stashedPanelName = panelName;
+		stashedPanel = uiController.find(panelName);
+		uiController.removeAll(uiController.find(tabName));
+		uiController.add(uiController.find(tabName),getMainPanel());
+	}
+	
 	public void expandDashboard(){
-		stashedPanel = uiController.find(PVConstants.MAIN_PANEL_NAME);
-		uiController.removeAll(uiController.find(PVConstants.TAB_NAME));
-		uiController.add(uiController.find(PVConstants.TAB_NAME),getMainPanel());	
+		expandDashboard(PVConstants.MAIN_PANEL_NAME,PVConstants.TAB_NAME);	
 	}
 
 	public void collapseDashboard(){
-		uiController.removeAll(uiController.find(PVConstants.TAB_NAME));
-		uiController.add(uiController.find(PVConstants.TAB_NAME),stashedPanel);
+		System.out.println("Collapsing " + stashedPanelName + " " + stashedTabName);
+		uiController.removeAll(uiController.find(stashedTabName));
+		uiController.add(uiController.find(stashedTabName),stashedPanel);
 	}
-
-
-	
 }
 

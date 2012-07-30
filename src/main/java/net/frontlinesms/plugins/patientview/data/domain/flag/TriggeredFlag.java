@@ -153,7 +153,11 @@ public class TriggeredFlag {
 	}
 	
 	public String getAppointmentString(){
-		return InternationalisationUtils.getDateFormat().format(appointment.getDateScheduled());
+		if(appointment != null){
+			return InternationalisationUtils.getDateFormat().format(appointment.getWindowStartDate());
+		}else{
+			return "----";
+		}
 	}
 
 	public ScheduledDose getAppointment() {

@@ -60,7 +60,7 @@ public class RandomFormGenerator {
 				responses.add(new ResponseValue(getRandomResponse(field,subject)));
 			}
 		}
-		FormResponse formResponse = new FormResponse(subject.getChw().getPhoneNumber(), form, responses);
+		FormResponse formResponse = new FormResponse(getRandomPhoneNumber(), form, responses);
 		formResponseDao.saveResponse(formResponse);
 		return formResponse;
 	}

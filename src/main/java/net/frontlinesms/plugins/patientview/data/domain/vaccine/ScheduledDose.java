@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 
+import org.springframework.util.StringUtils;
+
 import net.frontlinesms.plugins.patientview.data.domain.appointment.Appointment;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
@@ -33,6 +35,8 @@ public class ScheduledDose extends Appointment implements Comparable<ScheduledDo
 	@ManyToOne(cascade={},fetch=FetchType.EAGER,optional=true)
 	private Person administeredBy;
 	
+	private String appointmentName;
+	
 	public ScheduledDose(){}
 	
 	public ScheduledDose(VaccineDose dose, Patient patient, long windowStartDate) {
@@ -47,7 +51,11 @@ public class ScheduledDose extends Appointment implements Comparable<ScheduledDo
 	}
 
 	public String getDoseName(){
-		return dose.getName();
+		if(!StringUtils.hasText(appointmentName)){
+			return dose.getName();
+		}else{
+			return appointmentName;
+		}
 	}
 	
 	public Patient getPatient() {
@@ -108,7 +116,10 @@ public class ScheduledDose extends Appointment implements Comparable<ScheduledDo
 	}
 
 	public int compareTo(ScheduledDose arg0) {
-		return this.getDose().getPosition() - arg0.getDose().getPosition();
+		if(getDose() != null){
+			return this.getDose().getPosition() - arg0.getDose().getPosition();
+		}
+		else return (int) (this.getId() - arg0.getId());
 	}
 
 	public void setPlaceAdministered(String placeAdministered) {
@@ -117,5 +128,13 @@ public class ScheduledDose extends Appointment implements Comparable<ScheduledDo
 
 	public String getPlaceAdministered() {
 		return location;
+	}
+
+	public String getAppointmentName() {
+		return appointmentName;
+	}
+
+	public void setAppointmentName(String appointmentName) {
+		this.appointmentName = appointmentName;
 	}
 }
