@@ -201,6 +201,9 @@ public class IncomingFormMatcher implements EventObserver{
 				case BIRTHDATEFIELD:
 					try{
 						birthdate = InternationalisationUtils.parseDate(mffr.getValue());
+						if(birthdate.getYear() < 1915){
+							birthdate.setYear((birthdate.getYear() %100) + 2000);
+						}
 					}catch (Exception e) { birthdate  =null; }
 				break;
 				case GENDER:
@@ -215,7 +218,13 @@ public class IncomingFormMatcher implements EventObserver{
 				case DATE_OF_LAST_AMENORRHEA:
 					try{
 						lastAmenorrhea = InternationalisationUtils.parseDate(mffr.getValue());
-					}catch (Exception e) { lastAmenorrhea = null;}
+						if(lastAmenorrhea .getYear() < 1915){
+							lastAmenorrhea .setYear((lastAmenorrhea.getYear() %100) + 2000);
+						}
+					}catch (Exception e) { 
+						lastAmenorrhea = null;
+						System.out.println("ERROR PARSING DATE: "+mffr.getValue());
+					}
 				break;
 				case ADDRESS:
 					address = mffr.getValue();
@@ -229,6 +238,9 @@ public class IncomingFormMatcher implements EventObserver{
 				case VISIT_DATE:
 					try{
 						visitDate = InternationalisationUtils.parseDate(mffr.getValue());
+						if(visitDate.getYear() < 1915){
+							visitDate.setYear((visitDate.getYear() %100) + 2000);
+						}
 					}catch(Exception e){
 						visitDate = null;
 					}
@@ -243,6 +255,9 @@ public class IncomingFormMatcher implements EventObserver{
 		p.setMothersName(mothersName);
 		p.setFathersName(fathersName);
 		p.setAddress(address);
+		if(mfr.getSubmitter() instanceof CommunityHealthWorker){
+			p.setChw((CommunityHealthWorker) mfr.getSubmitter());
+		}
 		if(lastAmenorrhea != null){
 			p.setDateOfAmenorrhea(lastAmenorrhea.getTime());
 			patientDao.savePatient(p);
