@@ -201,7 +201,7 @@ public class IncomingFormMatcher implements EventObserver{
 				case BIRTHDATEFIELD:
 					try{
 						birthdate = InternationalisationUtils.parseDate(mffr.getValue());
-						if(birthdate.getYear() < 1915){
+						if(birthdate.getYear() < 100){
 							birthdate.setYear((birthdate.getYear() %100) + 2000);
 						}
 					}catch (Exception e) { birthdate  =null; }
@@ -218,7 +218,7 @@ public class IncomingFormMatcher implements EventObserver{
 				case DATE_OF_LAST_AMENORRHEA:
 					try{
 						lastAmenorrhea = InternationalisationUtils.parseDate(mffr.getValue());
-						if(lastAmenorrhea .getYear() < 1915){
+						if(lastAmenorrhea .getYear() < 100){
 							lastAmenorrhea .setYear((lastAmenorrhea.getYear() %100) + 2000);
 						}
 					}catch (Exception e) { 
@@ -238,7 +238,7 @@ public class IncomingFormMatcher implements EventObserver{
 				case VISIT_DATE:
 					try{
 						visitDate = InternationalisationUtils.parseDate(mffr.getValue());
-						if(visitDate.getYear() < 1915){
+						if(visitDate.getYear() < 100){
 							visitDate.setYear((visitDate.getYear() %100) + 2000);
 						}
 					}catch(Exception e){
