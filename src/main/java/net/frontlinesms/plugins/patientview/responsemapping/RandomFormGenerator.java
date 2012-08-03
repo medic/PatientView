@@ -146,8 +146,8 @@ public class RandomFormGenerator {
 	private Date getRandomDate(){
 		int day = rand.nextInt(29);
 		int month = rand.nextInt(12);
-		int year = rand.nextInt(110);
-		GregorianCalendar calendar = new GregorianCalendar(1900+year,month,day);
+		int year = rand.nextInt(112);
+		GregorianCalendar calendar = new GregorianCalendar(1900 + year,month,day);
 		return calendar.getTime();
 	}
 }

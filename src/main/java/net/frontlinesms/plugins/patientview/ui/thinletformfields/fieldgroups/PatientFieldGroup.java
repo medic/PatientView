@@ -47,13 +47,13 @@ public class PatientFieldGroup extends PersonFieldGroup<Patient> {
 		super.addField(new VisitDateField(ui, this, false, getPerson()!=null?getPerson().getVisitDate():null));
 		super.addField(new ParentNameField(ui, this, true, getPerson()!=null?getPerson().getMothersName():""));
 		super.addField(new ParentNameField(ui, this, false, getPerson()!=null?getPerson().getFathersName():""));
-		AmenorrheaDateField df = new AmenorrheaDateField(ui, this, getPerson() == null?null:getPerson().getDateOfAmenorrhea());
-		super.addField(df);
+		if(getPerson() != null && getPerson().getDateOfAmenorrhea() != null){
+			super.addField(new AmenorrheaDateField(ui, this, getPerson().getDateOfAmenorrhea()));
+		}
 		if(isNewPersonGroup){
 			checkBox = new NewbornCheckbox(ui, "Enroll in ANC appointments?", null , appCon);
 			super.addField(checkBox);
 		}
-		
 	}
 	
 	@Override

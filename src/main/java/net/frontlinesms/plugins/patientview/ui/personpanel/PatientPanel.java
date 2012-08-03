@@ -69,10 +69,10 @@ public class PatientPanel extends PersonPanel<Patient> {
 		if(StringUtils.hasText(getPerson().getAddress())){
 			addLabelToLabelPanel("Address: " + getPerson().getAddress());
 		}
-		if(getPerson().getDateOfAmenorrhea() != null && getPerson().getDateOfAmenorrhea() > 0L){
+		if(getPerson().getDateOfAmenorrhea() != null){
 			addLabelToLabelPanel("Date of last menstrual period: "+ InternationalisationUtils.getDateFormat().format(getPerson().getDateOfAmenorrhea()));
 		}
-		if(getPerson().getVisitDate() != null && getPerson().getVisitDate() > 0L){
+		if(getPerson().getVisitDate() != null){
 			addLabelToLabelPanel("Visit Date: "+ InternationalisationUtils.getDateFormat().format(getPerson().getVisitDate()));
 		}
 		if(StringUtils.hasText(getPerson().getMothersName())){
