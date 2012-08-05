@@ -15,10 +15,7 @@
 		name="messagePanel" right="5" text="i18n.medic.common.message" top="5" weightx="1" icon="/icons/sms.png">
 		<panel gap="5" weightx="1" name="recipientPanel">
 			<label text="i18n.medic.reminders.send.to"/>
-			<combobox editable="false" columns="30" name="recipientSelect" selected="0">
-				<choice text="i18n.medic.common.patient"/>
-				<choice text="i18n.medic.reminder.destination.patients.chw"/>
-			</combobox>
+			<combobox editable="false" name="recipientSelect"/>
 		</panel>
 		<textarea name="messageTextArea" weightx="1" />
 		<panel gap="5" name="variablePanel" weightx="1">

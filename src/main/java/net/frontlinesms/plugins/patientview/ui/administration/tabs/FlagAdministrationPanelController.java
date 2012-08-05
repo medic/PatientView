@@ -171,6 +171,10 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 	 * a flag.
 	 */
 	public void addFlag(){
+		if(formDao.getAllMedicForms().isEmpty()){
+			ui.alert("Flags require forms - you must create at least one form before you can begin creating flags.");
+			return;
+		}
 		isEditing = false;
 		removeAll(find(ACTION_PANEL));
 		add(find(ACTION_PANEL),ui.loadComponentFromFile(EDIT_FLAG_XML, this));
@@ -243,6 +247,9 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 				toSelect =  i;
 			}
 			ui.add(groupSelect,ui.createComboboxChoice(group.getName(), group));		
+		}
+		if(toSelect == -1 && groups.size() > 0){
+			toSelect = 0;
 		}
 		ui.setSelectedIndex(groupSelect, toSelect);
 	}

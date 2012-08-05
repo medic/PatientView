@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.TimerTask;
 
 import net.frontlinesms.FrontlineUtils;
+import net.frontlinesms.data.domain.Contact;
+import net.frontlinesms.data.repository.GroupMembershipDao;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.event.ReminderEventDirectory;
 import net.frontlinesms.plugins.patientview.data.repository.PatientDao;
@@ -14,6 +16,7 @@ import net.frontlinesms.ui.UiGeneratorController;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
+import org.springframework.util.StringUtils;
 
 /**
  * This class is a thread that awakes every intervalMinutes minutes
@@ -25,6 +28,7 @@ public class ReminderDispatcher extends TimerTask{
 	public static final int INTERVAL_MINUTES = 60;
 	private PatientDao patientDao;
 	private ReminderDao reminderDao;
+	private GroupMembershipDao groupDao;
 	
 	private UiGeneratorController ui;
 	
@@ -34,6 +38,7 @@ public class ReminderDispatcher extends TimerTask{
 		this.ui = ui;
 		this.patientDao = (PatientDao) appCon.getBean("PatientDao");
 		this.reminderDao = (ReminderDao) appCon.getBean("ReminderDao");
+		this.groupDao = (GroupMembershipDao) appCon.getBean("groupMembershipDao");
 		ReminderEventDirectory directory = new ReminderEventDirectory(appCon);
 	}
 
@@ -55,21 +60,16 @@ public class ReminderDispatcher extends TimerTask{
 		if(activeReminders.size() > 0){
 			List<Patient> patients = patientDao.getAllPatients();
 			for(Reminder reminder: activeReminders){
+				List<Contact> contacts = groupDao.getMembers(reminder.getContactGroup());
 				String mess= null;
 				for(Patient p: patients){
 					mess = reminder.getMessageForPatient(p);
-					if(mess != null && !mess.equals("")){
-						String phoneNumber = null;
-						if(reminder.isSendToPatient()){
-							phoneNumber = p.getPhoneNumber();
-						}else if(p.getChw() != null){
-							phoneNumber = p.getChw().getPhoneNumber();
-						}else{
-							phoneNumber=p.getName()+" does not have a CHW";
+					if(StringUtils.hasText(mess)){
+						for(Contact contact : contacts){
+							ui.getFrontlineController().sendTextMessage(contact.getPhoneNumber(), mess);
+							LOG.info("Reminder dispatched for " + p.getName()+ ": " + mess);
+							System.out.println("Reminder dispatched for " + p.getName()+ ": " + mess);	
 						}
-						ui.getFrontlineController().sendTextMessage(phoneNumber, mess);
-						LOG.info("Reminder dispatched for " + p.getName()+ ": " + mess);
-						System.out.println("Reminder dispatched for " + p.getName()+ ": " + mess);
 					}
 				}
 			}

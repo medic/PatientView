@@ -10,10 +10,10 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
+import net.frontlinesms.data.domain.Group;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.RecurringReminderFrequency;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.ReminderEvent;
-import net.frontlinesms.plugins.patientview.utils.Pair;
 import net.frontlinesms.plugins.patientview.utils.TimeUtils;
 
 @Entity
@@ -32,8 +32,8 @@ public class RecurringReminder extends OneTimeReminder {
 	public RecurringReminder(Class<?> startEvent, int startDays, int startMonths,
 			Class<?> endEvent, int endDays, int endMonths,
 			RecurringReminderFrequency frequency, int timeOfDay,
-			String messageFormat, String name, boolean sendToPatient) {
-		super(messageFormat,name, timeOfDay,startEvent,startDays,startMonths, sendToPatient);
+			String messageFormat, String name, Group contactGroup) {
+		super(messageFormat,name, timeOfDay,startEvent,startDays,startMonths, contactGroup);
 		this.endEvent = endEvent.getCanonicalName();
 		this.endDays = endDays;
 		this.endMonths = endMonths;

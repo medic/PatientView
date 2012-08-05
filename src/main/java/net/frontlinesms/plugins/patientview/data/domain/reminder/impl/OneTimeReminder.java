@@ -1,5 +1,7 @@
 package net.frontlinesms.plugins.patientview.data.domain.reminder.impl;
 
+import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -8,12 +10,11 @@ import java.util.Map.Entry;
 
 import javax.persistence.Entity;
 
+import net.frontlinesms.data.domain.Group;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.Reminder;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.ReminderEvent;
-import net.frontlinesms.plugins.patientview.utils.Pair;
 import net.frontlinesms.plugins.patientview.utils.TimeUtils;
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 
 @Entity
 public class OneTimeReminder extends Reminder{
@@ -24,8 +25,8 @@ public class OneTimeReminder extends Reminder{
 	
 	public OneTimeReminder(){super();}
 
-	public OneTimeReminder(String messageFormat,String name, int timeOfDay, Class<?> startEvent, int startDays, int startMonths, boolean sendToPatient) {
-		super(timeOfDay,messageFormat,name,sendToPatient);
+	public OneTimeReminder(String messageFormat,String name, int timeOfDay, Class<?> startEvent, int startDays, int startMonths, Group contactGroup) {
+		super(timeOfDay,messageFormat,name,contactGroup);
 		this.startEvent = startEvent.getCanonicalName();
 		this.startDays = startDays;
 		this.startMonths = startMonths;

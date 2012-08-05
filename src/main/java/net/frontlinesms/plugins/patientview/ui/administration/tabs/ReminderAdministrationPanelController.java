@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.frontlinesms.data.domain.Group;
+import net.frontlinesms.data.repository.GroupDao;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.EventTimingOption;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.RecurringReminderFrequency;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.Reminder;
@@ -69,12 +71,14 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 	private static final String NO_REMINDERS = getI18nString("medic.reminders.none");
 	
 	private ReminderDao reminderDao;
+	private GroupDao groupDao;
 	
 	private boolean isEditing;
 	
 	public ReminderAdministrationPanelController(UiGeneratorController uiController, ApplicationContext appCon) {
 		super(uiController, appCon,THINLET_XML);
 		reminderDao = (ReminderDao) appCon.getBean("ReminderDao");
+		groupDao = (GroupDao) appCon.getBean("groupDao");
 		refreshReminderList(null);
 	}
 	
@@ -124,8 +128,8 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 			add(find(ACTION_PANEL),ui.loadComponentFromFile(DISPLAY_REMINDER_XML, this));
 			ui.setText(find(REMINDER_NAME_LABEL), getSelectedReminder().getName());
 			ui.setText(find(TIMING_TEXT_AREA), getSelectedReminder().getTimingString());
-			ui.setText(find(MESSAGE_TEXT_AREA), TO_THE+" "+ 
-				(getSelectedReminder().isSendToPatient()?PATIENT+":\n\n":PATIENTS_CHW+":\n\n") +
+			ui.setText(find(MESSAGE_TEXT_AREA), TO_THE+" contacts in the group \""+ 
+				getSelectedReminder().getContactGroup().getName()+"\":\n\n" +
 				getSelectedReminder().getMessageFormat());
 		}
 	}
@@ -187,8 +191,27 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 			populateEventOptionSelect(true,null);
 			populateDateOptionSelect(true,null);
 		}
+		populateRecipientSelect(null);
 	}
 	
+	private void populateRecipientSelect(Group contactGroup) {
+		Object groupSelect = ui.find(mainPanel,RECIPIENT_SELECT);
+		ui.removeAll(groupSelect);
+		List<Group> groups = groupDao.getAllGroups();
+		int toSelect = -1;
+		for(int i = 0; i < groups.size(); i++){
+			Group group = groups.get(i);
+			if(group.equals(contactGroup)){
+				toSelect =  i;
+			}
+			ui.add(groupSelect,ui.createComboboxChoice(group.getName(), group));		
+		}
+		if(toSelect == -1 && groups.size() > 0){
+			toSelect = 0;
+		}
+		ui.setSelectedIndex(groupSelect, toSelect);
+	}
+
 	private void populateEventOptionSelect(boolean fromEvent, Class<?> toSelect){
 		String eventSelect = fromEvent?FROM_EVENT_SELECT:TO_EVENT_SELECT;
 		//get the currently selected reminder type
@@ -328,7 +351,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 	
 	public void saveReminder(){
 		String name=null,fromMonthsString=null,fromDaysString=null,message = null;
-		boolean sendToPatient=false;
+		Group contactGroup = null;
 		Reminder r = getSelectedReminderInstance();
 		//create and check all the field data
 		if(checkField(REMINDER_NAME_FIELD, NAME_FIELD)){
@@ -343,7 +366,11 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 		if(checkField(MESSAGE_TEXT_AREA, MESSAGE_FIELD)){
 			message = ui.getText(find(MESSAGE_TEXT_AREA));
 		}else return;
-		sendToPatient = (ui.getSelectedIndex(find(RECIPIENT_SELECT))==0);
+		if(ui.getAttachedObject(ui.getSelectedItem(ui.find(mainPanel,RECIPIENT_SELECT))) == null){
+			ui.alert("You must select a contact group to send this reminder to.");
+			return;
+		}
+		contactGroup = (Group) ui.getAttachedObject(ui.getSelectedItem(ui.find(mainPanel,RECIPIENT_SELECT)));
 		//get the from event
 		Class<?> fromEvent = ui.getAttachedObject(ui.getSelectedItem(find(FROM_EVENT_SELECT))).getClass();
 		//correctly create the time of day, start days, and start months
@@ -365,7 +392,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 			oneTime.setName(name);
 			oneTime.setTimeOfDay(timeOfDay);
 			oneTime.setStartCriteria(fromEvent, fromDays, fromMonths);
-			oneTime.setSendToPatient(sendToPatient);
+			oneTime.setContactGroup(contactGroup);
 			reminderDao.saveOrUpdateReminder(oneTime);
 			reminderId = oneTime.getReminderId();
 		}else if(r instanceof RecurringReminder){
@@ -397,7 +424,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 			recur.setStartCriteria(fromEvent, fromDays, fromMonths);
 			recur.setEndCriteria(toEvent, toDays, toMonths);
 			recur.setFrequency(frequency);
-			recur.setSendToPatient(sendToPatient);
+			recur.setContactGroup(contactGroup);
 			reminderDao.saveOrUpdateReminder(recur);
 			reminderId = recur.getReminderId();
 		}
@@ -421,6 +448,7 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 		add(find(ACTION_PANEL),ui.loadComponentFromFile(EDIT_REMINDER_XML, this));
 		Reminder r = getSelectedReminder();
 		populateReminderTypeSelect(r.getClass(),false);
+		populateRecipientSelect(getSelectedReminder().getContactGroup());
 		removeAll(find(TIMING_PANEL));
 		if(r instanceof RecurringReminder){
 			RecurringReminder recur = (RecurringReminder) r;
@@ -454,7 +482,6 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 			ui.setSelectedIndex(find(TIME_OF_DAY_FIELD),recur.getTimeOfDay());
 			//set the message
 			ui.setText(find(MESSAGE_TEXT_AREA),recur.getMessageFormat());
-			ui.setSelectedIndex(find(RECIPIENT_SELECT), recur.isSendToPatient()?0:1);
 			ui.requestFocus(find(REMINDER_NAME_FIELD));
 		}else if(getSelectedReminderType().equals(OneTimeReminder.class)){
 			OneTimeReminder oneTime = (OneTimeReminder) r;
@@ -477,7 +504,6 @@ public class ReminderAdministrationPanelController extends AdministrationTabPane
 			ui.setSelectedIndex(find(TIME_OF_DAY_FIELD),oneTime.getTimeOfDay());
 			//set the message
 			ui.setText(find(MESSAGE_TEXT_AREA),oneTime.getMessageFormat());
-			ui.setSelectedIndex(find(RECIPIENT_SELECT), oneTime.isSendToPatient()?0:1);
 			ui.requestFocus(find(REMINDER_NAME_FIELD));
 		}
 	}

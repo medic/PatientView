@@ -4,13 +4,16 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import net.frontlinesms.data.domain.Group;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.reminder.event.ReminderEventDirectory;
 
@@ -34,19 +37,16 @@ public abstract class Reminder {
 	
 	protected String name;
 	
-	/**
-	 * Represents whether the reminder should be sent
-	 * to the patient or their health worker
-	 */
-	private boolean sendToPatient;
+	@ManyToOne(cascade={},fetch=FetchType.EAGER,optional=false)
+	protected Group contactGroup;
 	
 	public Reminder(){}
 	
-	public Reminder(int timeOfDay, String messageFormat, String name, boolean sendToPatient) {
+	public Reminder(int timeOfDay, String messageFormat, String name, Group contactGroup) {
 		this.timeOfDay = timeOfDay;
 		this.messageFormat = messageFormat;
 		this.name = name;
-		this.setSendToPatient(sendToPatient);
+		this.setContactGroup(contactGroup);
 	}
 	
 	//abstract methods
@@ -100,11 +100,11 @@ public abstract class Reminder {
 		return ReminderEventDirectory.getEventForClassName(eventClass);
 	}
 
-	public void setSendToPatient(boolean sendToPatient) {
-		this.sendToPatient = sendToPatient;
+	public Group getContactGroup() {
+		return contactGroup;
 	}
 
-	public boolean isSendToPatient() {
-		return sendToPatient;
+	public void setContactGroup(Group contactGroup) {
+		this.contactGroup = contactGroup;
 	}
 }
