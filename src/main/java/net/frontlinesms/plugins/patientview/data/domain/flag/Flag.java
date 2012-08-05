@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import net.frontlinesms.data.domain.Group;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormFieldResponse;
@@ -38,8 +39,9 @@ public class Flag {
 	
 	//The templated message of this flag
 	private String message;
-	
-	private String destinationPhoneNumber;
+		
+	@ManyToOne(cascade={},fetch=FetchType.EAGER,optional=false)
+	private Group contactGroup;
 	
 	/**
 	 * true if 'any' conditions can be matched
@@ -150,11 +152,11 @@ public class Flag {
 		return conditions;
 	}
 
-	public void setDestinationPhoneNumber(String destinationPhoneNumber) {
-		this.destinationPhoneNumber = destinationPhoneNumber;
+	public Group getContactGroup() {
+		return contactGroup;
 	}
 
-	public String getDestinationPhoneNumber() {
-		return destinationPhoneNumber;
+	public void setContactGroup(Group contactGroup) {
+		this.contactGroup = contactGroup;
 	}
 }

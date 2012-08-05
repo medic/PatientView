@@ -2,7 +2,9 @@ package net.frontlinesms.plugins.patientview.listener;
 
 import java.util.List;
 
+import net.frontlinesms.data.domain.Contact;
 import net.frontlinesms.data.events.EntitySavedNotification;
+import net.frontlinesms.data.repository.GroupMembershipDao;
 import net.frontlinesms.events.EventBus;
 import net.frontlinesms.events.EventObserver;
 import net.frontlinesms.events.FrontlineEventNotification;
@@ -19,6 +21,7 @@ public class FlagListener implements EventObserver{
 
 	private FlagDao flagDao;
 	private TriggeredFlagDao triggeredFlagDao;
+	private GroupMembershipDao groupDao;
 	private ApplicationContext appCon;
 	private UiGeneratorController ui;
 	
@@ -26,6 +29,7 @@ public class FlagListener implements EventObserver{
 		this.appCon = appCon;
 		this.ui = ui;
 		this.flagDao = (FlagDao) appCon.getBean("FlagDao");
+		this.groupDao = (GroupMembershipDao) appCon.getBean("groupMembershipDao");
 		this.triggeredFlagDao = (TriggeredFlagDao) appCon.getBean("TriggeredFlagDao");
 		((EventBus) appCon.getBean("eventBus")).registerObserver(this);
 	}
@@ -44,7 +48,9 @@ public class FlagListener implements EventObserver{
 		for(Flag flag: flags){
 			if(mfr.getForm().getFid() == flag.getForm().getFid() && flag.evaluate(mfr, appCon)){
 				String message= flag.generateMessage(mfr, appCon);
-				ui.getFrontlineController().sendTextMessage(flag.getDestinationPhoneNumber(), message);
+				for(Contact c: groupDao.getActiveMembers(flag.getContactGroup())){
+					ui.getFrontlineController().sendTextMessage(c.getPhoneNumber(), message);
+				}
 				ui.alert(flag.generateMessage(mfr, appCon));
 				TriggeredFlag tf = new TriggeredFlag(flag,mfr,message);
 				triggeredFlagDao.saveTriggeredFlag(tf);

@@ -3,6 +3,8 @@ package net.frontlinesms.plugins.patientview.ui.administration.tabs;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.frontlinesms.data.domain.Group;
+import net.frontlinesms.data.repository.GroupDao;
 import net.frontlinesms.plugins.patientview.data.domain.flag.Flag;
 import net.frontlinesms.plugins.patientview.data.domain.flag.FlagCondition;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
@@ -46,6 +48,7 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 	private static final String CONDITIONS_PANEL = "conditionsPanel";
 	private static final String CONDITION_BUTTONS_PANEL = 	"conditionButtonPanel";
 	private static final String MESSAGE_FIELD_SELECT = "messageFieldSelect";
+	private static final String CONTACT_GROUP_SELECT = "contactGroupSelect";
 	
 	private static final String CANNOT_BE_EMPTY = getI18nString("medic.flags.fields.cannot.be.empty");
 	private static final String THE_MESSAGE_TEXT = getI18nString("medic.flags.fields.message.text");
@@ -63,6 +66,7 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 	private FlagDao flagDao;
 	private FlagConditionDao conditionDao;
 	private MedicFormDao formDao;
+	private GroupDao groupDao;
 	private ArrayList<FlagCondition> toRemove;
 	
 	public FlagAdministrationPanelController(UiGeneratorController ui, ApplicationContext appCon) {
@@ -70,6 +74,7 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 		flagDao = (FlagDao) appCon.getBean("FlagDao");
 		conditionDao = (FlagConditionDao) appCon.getBean("FlagConditionDao");
 		formDao = (MedicFormDao) appCon.getBean("MedicFormDao");
+		groupDao = (GroupDao) appCon.getBean("groupDao");
 		isEditing = false;
 		toRemove = new ArrayList<FlagCondition>();
 		refreshFlagList(null);
@@ -170,6 +175,7 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 		removeAll(find(ACTION_PANEL));
 		add(find(ACTION_PANEL),ui.loadComponentFromFile(EDIT_FLAG_XML, this));
 		populateFormSelect(null);
+		populateContactGroupSelect(null);
 		populateMessageFieldSelect();
 		ui.requestFocus(find(FLAG_NAME_FIELD));
 		ui.setEnabled(find(EDIT_CONDITION_BUTTON), false);
@@ -212,8 +218,8 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 			ui.setEnabled(find(FORM_SELECT),false);
 			ui.setText(find(FLAG_NAME_FIELD), f.getName());
 			ui.setSelectedIndex(find(ANY_OR_ALL_SELECT), f.isAny()?0:1);
-			ui.setText(find("phoneNumberField"), f.getDestinationPhoneNumber());
 			populateFormSelect(f.getForm());
+			populateContactGroupSelect(f.getContactGroup());
 			populateConditions(f);
 			ui.setText(find(MESSAGE_TEXT_AREA), f.getMessage());
 			if(f.getConditions().size() == 0){
@@ -226,6 +232,21 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 		}
 	}
 	
+	private void populateContactGroupSelect(Group contactGroup) {
+		Object groupSelect = ui.find(mainPanel,CONTACT_GROUP_SELECT);
+		ui.removeAll(groupSelect);
+		List<Group> groups = groupDao.getAllGroups();
+		int toSelect = -1;
+		for(int i = 0; i < groups.size(); i++){
+			Group group = groups.get(i);
+			if(group.equals(contactGroup)){
+				toSelect =  i;
+			}
+			ui.add(groupSelect,ui.createComboboxChoice(group.getName(), group));		
+		}
+		ui.setSelectedIndex(groupSelect, toSelect);
+	}
+
 	private void populateConditions(Flag f){
 		for(FlagCondition c: f.getConditions()){
 			add(find(CONDITION_LIST),ui.createListItem(c.toString(), c));
@@ -312,14 +333,14 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 		if(!checkField(MESSAGE_TEXT_AREA,THE_MESSAGE_TEXT)) return;
 		String name = ui.getText(find(FLAG_NAME_FIELD));
 		String message = ui.getText(find(MESSAGE_TEXT_AREA));
-		String phoneNum = ui.getText(find("phoneNumberField"));
+		Group contactGroup = (Group) ui.getAttachedObject(ui.getSelectedItem(ui.find(mainPanel,CONTACT_GROUP_SELECT)));
 		boolean any = ui.getSelectedIndex(find(ANY_OR_ALL_SELECT)) == 0;
 		Flag newFlag;
 		if(isEditing){
 			newFlag = getSelectedFlag();
 			newFlag.setName(name);
 			newFlag.setMessage(message);
-			newFlag.setDestinationPhoneNumber(phoneNum);
+			newFlag.setContactGroup(contactGroup);
 			newFlag.setAny(any);
 			Object[] conditions = ui.getItems(find(CONDITION_LIST));
 			for(Object item: conditions){
@@ -342,7 +363,7 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 			MedicForm mf = (MedicForm) ui.getAttachedObject(ui.getSelectedItem(find(FORM_SELECT)));
 			newFlag = new Flag(name, mf);
 			newFlag.setMessage(message);
-			newFlag.setDestinationPhoneNumber(phoneNum);
+			newFlag.setContactGroup(contactGroup);
 			newFlag.setAny(any);
 			Object[] conditions = ui.getItems(find(CONDITION_LIST));
 			for(Object item: conditions){

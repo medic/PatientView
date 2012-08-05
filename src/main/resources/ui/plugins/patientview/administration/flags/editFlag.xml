@@ -40,8 +40,8 @@
         </panel>
     </panel>
     <panel gap="5">
-        <label text="Destination Phone Number:"/>
-        <textfield columns="25" name="phoneNumberField"/>
+        <label text="Contact group to notify:"/>
+        <combobox editable="false" name="contactGroupSelect"/>
     </panel>
     <panel gap="10" halign="left" name="bottomButtonPanel" valign="top" weightx="1" weighty="1">
         <button action="saveFlag()" icon="/icons/tick.png" name="saveFlagButton" text="i18n.medic.flags.save"/>
