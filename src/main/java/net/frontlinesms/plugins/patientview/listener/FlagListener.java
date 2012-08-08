@@ -47,20 +47,15 @@ public class FlagListener implements EventObserver{
 	private void handleForm(MedicFormResponse mfr){
 		List<Flag> flags = flagDao.getAllFlags();
 		for(Flag flag: flags){
-			if(mfr.getForm().getFid() == flag.getForm().getFid() && flag.evaluate(mfr, appCon) && mfr.getSubject() != null){
-				String chwNum = ((Patient) mfr.getSubject()).getChw().getPhoneNumber();
-				boolean send = false;
+			if(mfr.getForm().getFid() == flag.getForm().getFid() && flag.evaluate(mfr, appCon)){
+				String message = flag.generateMessage(mfr, appCon);
 				for(Contact c: groupDao.getActiveMembers(flag.getContactGroup())){
-					if(!c.getPhoneNumber().trim().equals(chwNum)) continue;
-					send = true;
+					ui.getFrontlineController().sendTextMessage(c.getPhoneNumber(), message);
 				}
-				if(send){
-					String message= flag.generateMessage(mfr, appCon);
-					ui.getFrontlineController().sendTextMessage(chwNum, message);
-					ui.alert(flag.generateMessage(mfr, appCon));
-					TriggeredFlag tf = new TriggeredFlag(flag,mfr,message);
-					triggeredFlagDao.saveTriggeredFlag(tf);
-				}
+				ui.alert(message);
+				TriggeredFlag tf = new TriggeredFlag(flag,mfr,message);
+				triggeredFlagDao.saveTriggeredFlag(tf);
+
 			}
 		}
 	}
