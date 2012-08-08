@@ -55,6 +55,7 @@ public class FlexibleFormResponsePanel implements ThinletUiEventHandler{
 		state = State.ALL_VISIBLE;
 		showForm();
 	}
+	
 	public void showId(){
 		uiController.setVisible(showAllButton,true);
 		uiController.setVisible(showIdButton,false);
@@ -69,9 +70,9 @@ public class FlexibleFormResponsePanel implements ThinletUiEventHandler{
 		for(MedicFormFieldResponse r: fieldResponses){
 			responses.add(r.getValue());
 		}
-		Iterator<String> responseIt = responses.iterator();
 		List<MedicFormField> fields = ((MedicFormFieldDao) appCon.getBean("MedicFormFieldDao")).getFieldsOnForm(response.getForm());
-		for(MedicFormField ff: fields){
+		for(MedicFormFieldResponse mffr: fieldResponses){
+			MedicFormField ff = mffr.getField();
 			if(!(ff.getMapping()==null && state == State.ID_FIELDS_VISIBLE)){
 				Object field = null;
 				if(ff.getDatatype() == DataType.CHECK_BOX ||
@@ -83,7 +84,7 @@ public class FlexibleFormResponsePanel implements ThinletUiEventHandler{
 					uiController.setEnabled(field, false);
 					uiController.setInteger(field, "weightx", 1);
 					uiController.setChoice(field, "halign", "fill");
-					String r = responseIt.next();
+					String r = mffr.getValue();
 					if(r.equalsIgnoreCase("true")){
 						uiController.setSelected(field, true);
 					}
@@ -96,7 +97,7 @@ public class FlexibleFormResponsePanel implements ThinletUiEventHandler{
 					uiController.setInteger(field, "weightx", 1);
 					uiController.setChoice(field, "halign", "fill");
 					uiController.setChoice(field2, "halign","left");
-					uiController.setText(field,responseIt.next());
+					uiController.setText(field,mffr.getValue());
 				}else if(ff.getDatatype() == DataType.TRUNCATED_TEXT ||
 						ff.getDatatype() == DataType.WRAPPED_TEXT){
 					field = uiController.createLabel(ff.getLabel());
@@ -111,7 +112,7 @@ public class FlexibleFormResponsePanel implements ThinletUiEventHandler{
 					uiController.setInteger(field, "weightx", 1);
 					uiController.setChoice(field, "halign", "fill");
 					uiController.setChoice(field2, "halign", "center");
-					uiController.setText(field, responseIt.next());
+					uiController.setText(field, mffr.getValue());
 				}
 			}
 		}

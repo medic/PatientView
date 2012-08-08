@@ -117,8 +117,8 @@ public class RandomFormGenerator {
 	}
 
 	private String getId(Patient subject){
-		if(subject != null && StringUtils.hasText(subject.getExternalId())){
-			return subject.getExternalId();
+		if(subject != null && StringUtils.hasText(subject.getStringID())){
+			return subject.getStringID();
 		}else{
 			return String.valueOf(rand.nextInt(10000000));
 		}

@@ -60,7 +60,7 @@ public class Candidate implements Comparable<Candidate>{
 	}
 	
 	public String getStringID(){
-		return patient.getPid() +"";
+		return patient.getStringID();
 	}
 	
 	public String getStringBirthdate(){
