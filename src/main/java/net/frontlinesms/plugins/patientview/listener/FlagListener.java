@@ -10,6 +10,7 @@ import net.frontlinesms.events.EventObserver;
 import net.frontlinesms.events.FrontlineEventNotification;
 import net.frontlinesms.plugins.patientview.data.domain.flag.Flag;
 import net.frontlinesms.plugins.patientview.data.domain.flag.TriggeredFlag;
+import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormResponse;
 import net.frontlinesms.plugins.patientview.data.repository.FlagDao;
 import net.frontlinesms.plugins.patientview.data.repository.TriggeredFlagDao;
@@ -46,14 +47,20 @@ public class FlagListener implements EventObserver{
 	private void handleForm(MedicFormResponse mfr){
 		List<Flag> flags = flagDao.getAllFlags();
 		for(Flag flag: flags){
-			if(mfr.getForm().getFid() == flag.getForm().getFid() && flag.evaluate(mfr, appCon)){
-				String message= flag.generateMessage(mfr, appCon);
+			if(mfr.getForm().getFid() == flag.getForm().getFid() && flag.evaluate(mfr, appCon) && mfr.getSubject() != null){
+				String chwNum = ((Patient) mfr.getSubject()).getChw().getPhoneNumber();
+				boolean send = false;
 				for(Contact c: groupDao.getActiveMembers(flag.getContactGroup())){
-					ui.getFrontlineController().sendTextMessage(c.getPhoneNumber(), message);
+					if(!c.getPhoneNumber().trim().equals(chwNum)) continue;
+					send = true;
 				}
-				ui.alert(flag.generateMessage(mfr, appCon));
-				TriggeredFlag tf = new TriggeredFlag(flag,mfr,message);
-				triggeredFlagDao.saveTriggeredFlag(tf);
+				if(send){
+					String message= flag.generateMessage(mfr, appCon);
+					ui.getFrontlineController().sendTextMessage(chwNum, message);
+					ui.alert(flag.generateMessage(mfr, appCon));
+					TriggeredFlag tf = new TriggeredFlag(flag,mfr,message);
+					triggeredFlagDao.saveTriggeredFlag(tf);
+				}
 			}
 		}
 	}

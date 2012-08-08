@@ -65,10 +65,15 @@ public class ReminderDispatcher extends TimerTask{
 				for(Patient p: patients){
 					mess = reminder.getMessageForPatient(p);
 					if(StringUtils.hasText(mess)){
+						boolean send = false;
 						for(Contact contact : contacts){
-							ui.getFrontlineController().sendTextMessage(contact.getPhoneNumber(), mess);
+							if(!contact.getPhoneNumber().trim().equals(p.getPhoneNumber())) continue;
+							send = true;	
+						}
+						if(send){
+							ui.getFrontlineController().sendTextMessage(p.getChw().getPhoneNumber(), mess);
 							LOG.info("Reminder dispatched for " + p.getName()+ ": " + mess);
-							System.out.println("Reminder dispatched for " + p.getName()+ ": " + mess);	
+							System.out.println("Reminder dispatched for " + p.getName()+ ": " + mess);
 						}
 					}
 				}

@@ -16,7 +16,7 @@ public class ParentNameField extends TextField implements PersonalFormField {
 	public ParentNameField(ExtendedThinlet thinlet,
 			FormFieldDelegate delegate, boolean mother, String name) {
 		super(thinlet, InternationalisationUtils.getI18nString(
-						mother?"thinletformfields.mothersname":"thinlet.formfields.fathersname")+":"
+						mother?"thinletformfields.mothersname":"thinletformfields.fathersname")+":"
 						, delegate);
 		this.mother = mother;
 		if(StringUtils.hasText(name)){

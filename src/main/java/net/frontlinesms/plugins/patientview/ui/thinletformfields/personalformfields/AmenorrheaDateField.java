@@ -10,7 +10,7 @@ import net.frontlinesms.ui.i18n.InternationalisationUtils;
 public class AmenorrheaDateField extends DateField implements PersonalFormField {
 
 	public AmenorrheaDateField(ExtendedThinlet thinlet, FormFieldDelegate delegate, Long dateOfConception) {
-		super(thinlet, InternationalisationUtils.getI18nString("thinletformfields.menstrualperiod")+":", delegate);
+		super(thinlet, InternationalisationUtils.getI18nString("thinletformfields.menstrualperiod")+":", delegate,true);
 		if(dateOfConception != null){
 			this.setRawResponse(dateOfConception);
 		}
