@@ -64,10 +64,10 @@ public class ReminderDispatcher extends TimerTask{
 				String mess= null;
 				for(Patient p: patients){
 					mess = reminder.getMessageForPatient(p);
-					if(StringUtils.hasText(mess)){
+					if(StringUtils.hasText(mess) && p.getChw() != null){
 						boolean send = false;
 						for(Contact contact : contacts){
-							if(!contact.getPhoneNumber().trim().equals(p.getPhoneNumber())) continue;
+							if(!contact.getPhoneNumber().trim().equals(p.getChw().getPhoneNumber())) continue;
 							send = true;	
 						}
 						if(send){

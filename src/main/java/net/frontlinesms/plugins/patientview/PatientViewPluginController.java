@@ -56,7 +56,7 @@ public class PatientViewPluginController extends BasePluginController{
 		int firstRunWait = (61 - minutes) % 60;
 		System.out.println("Dispatching reminders in " + firstRunWait + " minutes");
 		t.scheduleAtFixedRate(reminderDispatch, firstRunWait * 60 * 1000 , ReminderDispatcher.INTERVAL_MINUTES * 60 * 1000);
-//		t.scheduleAtFixedRate(reminderDispatch, 1000, 15 * 1000);
+		//t.scheduleAtFixedRate(reminderDispatch, 1000, 15 * 1000);
 		return tabController.getTab();
 	}
 
