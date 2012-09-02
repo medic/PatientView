@@ -11,6 +11,7 @@ import net.frontlinesms.plugins.patientview.data.domain.people.Person;
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormResponse;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;
 import net.frontlinesms.plugins.patientview.search.impl.FormResponseResultSet;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.StaticSelectionTableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedTableController;
@@ -23,7 +24,7 @@ import net.frontlinesms.ui.UiGeneratorController;
 import org.springframework.context.ApplicationContext;
 public class FormResponseTab<P extends Person> extends TabController implements TableActionDelegate, FormFieldDelegate {
 
-	protected PagedTableController formResponseTable;
+	protected StaticSelectionTableController formResponseTable;
 	protected FormResponseDetailViewPanelController formResponsePanel;
 	protected FormResponseResultSet resultSet;
 	protected Object comboBox;
@@ -64,7 +65,7 @@ public class FormResponseTab<P extends Person> extends TabController implements 
 		}
 		resultSet.setAroundDate(new Date());
 		// add the form response table
-		formResponseTable = new PagedTableController(this, ui,ui.find(getMainPanel(),"tablePanel"));
+		formResponseTable = new StaticSelectionTableController(this, ui,ui.find(getMainPanel(),"tablePanel"));
 		if(isCHW()){
 			formResponseTable.putHeader(MedicFormResponse.class, HeaderColumn.createColumnList(new String[] { getI18nString(FORM_NAME_COLUMN), getI18nString(FORM_SUBJECT_COLUMN), getI18nString(DATE_SUBMITTED_COLUMN) },new String[]{"/icons/form.png","", "/icons/date_sent.png"}, new String[] { "getFormName", "getSubjectName", "getStringDateSubmitted" }));
 		}else{
@@ -73,7 +74,6 @@ public class FormResponseTab<P extends Person> extends TabController implements 
 		formResponseTable.setResultsSet(resultSet);
 		formResponseTable.updateTable();
 		formResponseTable.setNoResultsMessage(getI18nString("medic.form.responses.tab.no.search.results"));
-		formResponseTable.enableRefreshButton(appCon);
 		//set up controls
 		//create the date controls
 		DateField dateField = new DateField(ui,getI18nString(DATE_SUBMITTED_COLUMN),this);
@@ -102,7 +102,9 @@ public class FormResponseTab<P extends Person> extends TabController implements 
 		formResponseTable.setSelected(0);
 	}
 	
-
+	public void willAppear(){
+		formResponseTable.updateTable();
+	}
 	
 	protected boolean isCHW(){
 		return (person instanceof CommunityHealthWorker);
@@ -114,7 +116,9 @@ public class FormResponseTab<P extends Person> extends TabController implements 
 	}
 
 	public void doubleClickAction(Object selectedObject) {}
-	public void resultsChanged() {}
+	public void resultsChanged() {
+		
+	}
 
 	public void formFieldChanged(ThinletFormField changedField, String newValue) {
 		resultSet.setAroundDate(new Date(((DateField) changedField).getRawResponse()));

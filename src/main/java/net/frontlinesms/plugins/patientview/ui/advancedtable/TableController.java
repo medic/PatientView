@@ -333,7 +333,7 @@ public class TableController extends ViewHandler{
 	/**
 	 * @return The object attached to the currently selected row
 	 */
-	public Object getCurrentlySelectedObject(){
+	public Object getSelectedObject(){
 		return ui.getAttachedObject(ui.getSelectedItem(table));
 	}
 	

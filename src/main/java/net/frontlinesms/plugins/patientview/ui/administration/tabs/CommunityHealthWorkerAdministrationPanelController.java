@@ -76,12 +76,12 @@ public class CommunityHealthWorkerAdministrationPanelController extends PersonAd
 	
 	@Override
 	public void removeButtonClicked(){
-		DeleteDialogController deleteDialog = new DeleteDialogController(ui,this,"Person",appCon,(CommunityHealthWorker) super.advancedTableController.getCurrentlySelectedObject());
+		DeleteDialogController deleteDialog = new DeleteDialogController(ui,this,"Person",appCon,(CommunityHealthWorker) super.advancedTableController.getSelectedObject());
 	}
 	
 	public void dialogReturned(Boolean delete, String reason, CommunityHealthWorker newChw) {
 		if(delete){
-			CommunityHealthWorker chw = ((CommunityHealthWorker) super.advancedTableController.getCurrentlySelectedObject());
+			CommunityHealthWorker chw = ((CommunityHealthWorker) super.advancedTableController.getSelectedObject());
 			chwDao.deleteCommunityHealthWorker(chw,reason,newChw);
 			super.advancedTableController.refresh();
 		}

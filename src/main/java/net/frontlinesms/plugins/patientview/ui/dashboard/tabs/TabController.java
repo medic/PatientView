@@ -1,22 +1,18 @@
 package net.frontlinesms.plugins.patientview.ui.dashboard.tabs;
 
+import net.frontlinesms.plugins.patientview.ui.ViewHandler;
+import net.frontlinesms.ui.ExtendedThinlet;
 import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
 
-public class TabController {
+public class TabController extends ViewHandler{
 
-	protected UiGeneratorController ui;
-	protected ApplicationContext appCon;
 	private Object tab;
-	protected Object mainPanel;
 	
 	public TabController(UiGeneratorController uiController, ApplicationContext appCon) {
-		super();
-		this.ui = uiController;
-		this.appCon = appCon;
-		this.tab = uiController.create("tab");
-		this.mainPanel = uiController.create("panel");
+		super(uiController,appCon);
+		this.tab = ExtendedThinlet.create("tab");
 		uiController.setWeight(mainPanel, 1, 1);
 		uiController.setInteger(mainPanel, "top", 5);
 		uiController.setInteger(mainPanel, "left", 5);
@@ -29,15 +25,19 @@ public class TabController {
 		return tab;
 	}
 	
-	public Object getMainPanel(){
-		return mainPanel;
-	}
-	
 	protected void setTitle(String title){
 		ui.setText(tab, title);
 	}
 	
 	protected void setIconPath(String iconPath){
 		ui.setIcon(tab,iconPath);
+	}
+	
+	public void willAppear(){
+		System.out.println("Tab selected: " + ui.getText(tab));
+	}
+	
+	public void willDisappear(){
+		System.out.println("Tab unselected: " + ui.getText(tab));
 	}
 }

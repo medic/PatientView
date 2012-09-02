@@ -20,13 +20,13 @@ public class PatientDashboard extends PersonDashboard<Patient> {
 
 	@Override
 	protected void init() {
-		uiController.add(leftPanel,new PatientPanel(uiController,appCon,person).getMainPanel());
-		tabs.add(new FormResponseTab(uiController,appCon,person));
-		tabs.add(new FlagTab(uiController,appCon,person));
+		ui.add(leftPanel,new PatientPanel(ui,appCon,person).getMainPanel());
+		tabs.add(new FormResponseTab(ui,appCon,person));
+		tabs.add(new FlagTab(ui,appCon,person));
 		if(UserSessionManager.getUserSessionManager().getCurrentUserRole() == Role.READWRITE||
 		   UserSessionManager.getUserSessionManager().getCurrentUserRole() == Role.ADMIN){
-				tabs.add(new SubmitFormTab(uiController,appCon,person));
-				tabs.add(new PatientVaccineTab(uiController,appCon,person));
+				tabs.add(new SubmitFormTab(ui,appCon,person));
+				tabs.add(new PatientVaccineTab(ui,appCon,person));
 		}
 	}
 

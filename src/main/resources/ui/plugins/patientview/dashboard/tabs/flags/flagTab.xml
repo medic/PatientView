@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <panel columns="1" weightx="1" weighty="1" top="5" left="5" bottom="5" right="5" gap="5">
     <panel border="true" bottom="5" gap="5" left="5" name="filterPanel" right="5" top="5" weightx="1">
-        <checkbox name="activeCheckbox" selected="true" text="active" action="activeCheckboxChanged" group="stuff"/>
-        <checkbox name="resolvedCheckbox" text="resolved" action="resolvedCheckboxChanged" group="stuff"/>
+        <checkbox name="activeCheckbox" selected="true" text="active" action="checkboxChanged(this.name)"/>
+        <checkbox name="resolvedCheckbox" text="resolved" action="checkboxChanged(this.name)"/>
     </panel>
     <panel name="tablePanel" weighty="1"/>
     <panel name="actionPanel" weightx="1" weighty="1" gap="5">

@@ -151,7 +151,7 @@ public class UserAdministrationPanelController extends PersonAdministrationPanel
 	
 	public void dialogReturned(Boolean delete, String reason, CommunityHealthWorker newCHW) {
 		if(delete){
-			User user = ((User) super.advancedTableController.getCurrentlySelectedObject());
+			User user = ((User) super.advancedTableController.getSelectedObject());
 			userDao.deleteUser(user,reason);
 			super.advancedTableController.refresh();
 		}

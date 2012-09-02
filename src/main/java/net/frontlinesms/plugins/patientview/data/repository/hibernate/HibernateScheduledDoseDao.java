@@ -1,8 +1,8 @@
 package net.frontlinesms.plugins.patientview.data.repository.hibernate;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import net.frontlinesms.data.repository.hibernate.BaseHibernateDao;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
@@ -14,6 +14,8 @@ import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projection;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 public class HibernateScheduledDoseDao extends BaseHibernateDao<ScheduledDose> implements ScheduledDoseDao {
@@ -104,5 +106,18 @@ public class HibernateScheduledDoseDao extends BaseHibernateDao<ScheduledDose> i
 			c.add(Restrictions.eq("attended", false));
 		}
 		return super.getList(c);
+	}
+
+	public List<ScheduledDose> getScheduledDoses(Set<Vaccine> vaccines, Patient patient) {
+		DetachedCriteria c = super.getCriterion();
+		if(vaccines != null){
+			c.createCriteria("dose").add(Restrictions.in("vaccine",vaccines));
+		}
+		if(patient != null){
+			c.add(Restrictions.eq("patient",patient));
+		}
+		List<ScheduledDose> doses = super.getList(c);
+		Collections.sort(doses);
+		return doses;
 	}
 }

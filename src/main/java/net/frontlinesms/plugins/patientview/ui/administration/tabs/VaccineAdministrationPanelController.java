@@ -308,7 +308,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	 * Called when the "Edit Dose" button is clicked
 	 */
 	public void editDose(){
-		VaccineDose dose = (VaccineDose) doseTableController.getCurrentlySelectedObject();
+		VaccineDose dose = (VaccineDose) doseTableController.getSelectedObject();
 		currentlyEditingDose = dose;
 		//create the panel
 		removeAll(find(DOSE_ACTION_PANEL));
@@ -345,7 +345,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	 * the dose.
 	 */
 	public void removeDose(){
-		if(scheduledDoseDao.getScheduledDoses(null, (VaccineDose) doseTableController.getCurrentlySelectedObject()).size() != 0){
+		if(scheduledDoseDao.getScheduledDoses(null, (VaccineDose) doseTableController.getSelectedObject()).size() != 0){
 			ui.alert(getI18nString("medic.appointment.cannot.delete.already.scheduled"));
 		}else{
 			ui.showConfirmationDialog("removeDoseConfirmed()", this,"medic.vaccine.dose.confirm.delete");
@@ -357,9 +357,9 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 	 * would like to delete a VaccineDose.
 	 */
 	public void removeDoseConfirmed(){
-		getCurrentlySelectedVaccine().removeDose((VaccineDose) doseTableController.getCurrentlySelectedObject());
+		getCurrentlySelectedVaccine().removeDose((VaccineDose) doseTableController.getSelectedObject());
 		vaccineDao.saveOrUpdateVaccine(getCurrentlySelectedVaccine());
-		vaccineDoseDao.deleteVaccineDose((VaccineDose) doseTableController.getCurrentlySelectedObject());
+		vaccineDoseDao.deleteVaccineDose((VaccineDose) doseTableController.getSelectedObject());
 		int vaccineIndex = ui.getSelectedIndex(find(VACCINE_LIST));
 		refreshVaccines(null);
 		setVaccineListSelectedIndex(vaccineIndex);

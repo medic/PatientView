@@ -187,4 +187,13 @@ public class TriggeredFlag {
 			return "";		
 		}
 	}
+	
+	@Override
+	public boolean equals(Object other){
+		if(other instanceof TriggeredFlag){
+			return this.getId() == ((TriggeredFlag) other).getId();
+		}else{
+			return false;
+		}
+	}
 }

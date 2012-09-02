@@ -169,8 +169,8 @@ public class AttributeAdministrationPanelController extends AdministrationTabPan
 			PersonAttribute newAttribute = new PersonAttribute(label,dataType);
 			newAttribute.setPersonType(personType);
 			attributeDao.saveAttribute(newAttribute);
-		}else if(fieldSearchTableController.getCurrentlySelectedObject() != null){
-			MedicFormField field = (MedicFormField) fieldSearchTableController.getCurrentlySelectedObject();
+		}else if(fieldSearchTableController.getSelectedObject() != null){
+			MedicFormField field = (MedicFormField) fieldSearchTableController.getSelectedObject();
 			field.setIsAttributePanelField(true);
 			formFieldDao.updateField(field);
 		}else{
@@ -190,7 +190,7 @@ public class AttributeAdministrationPanelController extends AdministrationTabPan
 	}
 	
 	public void removeItemButtonPressed(){
-		Object field = currentItemTableController.getCurrentlySelectedObject();
+		Object field = currentItemTableController.getSelectedObject();
 		if(field instanceof MedicFormField){
 			((MedicFormField) field).setIsAttributePanelField(false);
 			formFieldDao.updateField((MedicFormField) field);

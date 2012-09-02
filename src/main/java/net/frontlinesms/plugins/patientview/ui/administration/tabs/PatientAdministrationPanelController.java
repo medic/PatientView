@@ -74,7 +74,7 @@ public class PatientAdministrationPanelController extends PersonAdministrationPa
 	
 	public void dialogReturned(Boolean delete, String reason, CommunityHealthWorker newCHW) {
 		if(delete){
-			Patient patient = ((Patient) super.advancedTableController.getCurrentlySelectedObject());
+			Patient patient = ((Patient) super.advancedTableController.getSelectedObject());
 			patientDao.deletePatient(patient, reason);
 			super.advancedTableController.refresh();
 		}

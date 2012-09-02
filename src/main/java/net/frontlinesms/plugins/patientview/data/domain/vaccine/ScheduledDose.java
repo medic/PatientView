@@ -9,13 +9,13 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 
-import org.springframework.util.StringUtils;
-
 import net.frontlinesms.plugins.patientview.data.domain.appointment.Appointment;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.people.Person;
 import net.frontlinesms.plugins.patientview.security.UserSessionManager;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
+
+import org.springframework.util.StringUtils;
 
 @Entity
 @DiscriminatorValue(value = "vaccine")
@@ -51,13 +51,21 @@ public class ScheduledDose extends Appointment implements Comparable<ScheduledDo
 	}
 
 	public String getDoseName(){
-		if(!StringUtils.hasText(appointmentName)){
-			return dose.getName();
-		}else{
+		if(StringUtils.hasText(appointmentName)){
 			return appointmentName;
+			
+		}else{
+			return dose.getName();
 		}
 	}
 	
+	public String getVaccineSeriesName(){
+		if(this.dose != null){
+			return this.dose.getVaccine().getName();
+		}else{
+			return "----";
+		}
+	}
 	public Patient getPatient() {
 		return patient;
 	}
@@ -116,10 +124,19 @@ public class ScheduledDose extends Appointment implements Comparable<ScheduledDo
 	}
 
 	public int compareTo(ScheduledDose arg0) {
-		if(getDose() != null){
-			return this.getDose().getPosition() - arg0.getDose().getPosition();
+		if(this.getDose() != null && arg0.getDose() != null){
+			if(this.getDose().getVaccine().getVaccineId() == arg0.getDose().getVaccine().getVaccineId()){
+				return this.getDose().getPosition() - arg0.getDose().getPosition();
+			}else{
+				return (int) (this.getDose().getVaccine().getVaccineId() - arg0.getDose().getVaccine().getVaccineId());
+			}
+		}else if(this.getDose() == null && arg0.getDose() == null){
+			return (int) (this.getDateScheduled() - arg0.getDateScheduled());
+		}else if(this.getDose() == null){
+			return -1;
+		}else{
+			return 1;
 		}
-		else return (int) (this.getId() - arg0.getId());
 	}
 
 	public void setPlaceAdministered(String placeAdministered) {

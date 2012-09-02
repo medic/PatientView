@@ -70,7 +70,7 @@ public abstract class PersonAdministrationPanelController<E extends Person> exte
 		ui.setIcon(find(REMOVE_BUTTON), getIcons()[REMOVE_INDEX]);
 		((EventBus) appCon.getBean("eventBus")).registerObserver(this);
 		advancedTableController.setSelected(0);
-		selectionChanged(advancedTableController.getCurrentlySelectedObject());
+		selectionChanged(advancedTableController.getSelectedObject());
 	}
 	
 	public void editButtonClicked(){
@@ -138,7 +138,7 @@ public abstract class PersonAdministrationPanelController<E extends Person> exte
 		personResultSet.setNameString(text);
 		advancedTableController.updateTable();
 		advancedTableController.setSelected(0);
-		selectionChanged(advancedTableController.getCurrentlySelectedObject());
+		selectionChanged(advancedTableController.getSelectedObject());
 	}
 	
 	/**

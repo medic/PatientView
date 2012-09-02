@@ -1,7 +1,5 @@
 package net.frontlinesms.plugins.patientview.ui.dashboard;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,10 +18,6 @@ import net.frontlinesms.ui.UiGeneratorController;
 import org.springframework.context.ApplicationContext;
 
 import thinlet.Thinlet;
-
-import org.springframework.context.ApplicationContext;
-
-import thinlet.Thinlet;
 public abstract class PersonDashboard<P extends Person> extends Dashboard {
 
 	protected P person;
@@ -32,6 +26,8 @@ public abstract class PersonDashboard<P extends Person> extends Dashboard {
 	protected List<TabController> tabs;
 	
 	protected boolean inEditingMode;
+	
+	protected int selectedTab = -1;
 	
 	private static final String GO_BACK_BUTTON = "patientrecord.buttons.go.back";
 	
@@ -55,49 +51,91 @@ public abstract class PersonDashboard<P extends Person> extends Dashboard {
 		init();
 		//add all the tabs
 		for(TabController tab: tabs){
-			uiController.add(tabbedPanel,tab.getTab());
+			addTab(tab);
 		}
 		//add the attribute panel
-		attributePanel = new PersonAttributePanel(uiController,appCon,person);
-		uiController.add(leftPanel,attributePanel.getMainPanel());
-		uiController.add(leftPanel,getBottomButtons());
+		attributePanel = new PersonAttributePanel(ui,appCon,person);
+		ui.add(leftPanel,attributePanel.getMainPanel());
+		ui.add(leftPanel,getBottomButtons());
+	}
+	
+	public void addTab(TabController tab){
+		subviews.add(tab);
+		add(tabbedPanel,tab.getTab());
+	}
+	
+	@Override
+	public void subviewsWillAppear(){
+		if(selectedTab >= 0 && selectedTab < tabs.size()){
+			tabs.get(selectedTab).willAppear();
+		}
+	}
+	
+	@Override
+	public void subviewsWillDisappear(){
+		if(selectedTab >= 0 && selectedTab < tabs.size()){
+			tabs.get(selectedTab).willDisappear();
+		}
+	}
+	
+	public void willAppear(){
+		if(selectedTab == -1){
+			selectedTab = 0;
+		}
+		subviewsWillAppear();
+	}
+	
+	public void tabSelectionChanged(){
+		if(selectedTab >= 0 && selectedTab < tabs.size()){
+			tabs.get(selectedTab).willDisappear();
+		}
+		selectedTab = ui.getSelectedIndex(tabbedPanel);
+		if(selectedTab >= 0 && selectedTab < tabs.size()){
+			tabs.get(selectedTab).willAppear();
+		}
+	}
+	
+	public void setSelectedTab(int tabNum){
+		if(tabNum >= tabs.size()) return;
+		ui.setInteger(tabbedPanel, "selected", tabNum);
+		tabSelectionChanged();
 	}
 	
 	protected Object getBottomButtons(){
-		Object buttonPanel = uiController.create("panel");
-		uiController.setName(buttonPanel, "buttonPanel");
-		uiController.setColumns(buttonPanel, 3);
-		Object leftButton = uiController.createButton(!inEditingMode?getI18nString(GO_BACK_BUTTON):getI18nString(SAVE));
-		Object rightButton = uiController.createButton(!inEditingMode?getI18nString(EDIT_ATTRIBUTES):getI18nString(CANCEL));
+		Object buttonPanel = ui.create("panel");
+		ui.setName(buttonPanel, "buttonPanel");
+		ui.setColumns(buttonPanel, 3);
+		Object leftButton = ui.createButton(!inEditingMode?getI18nString(GO_BACK_BUTTON):getI18nString(SAVE));
+		Object rightButton = ui.createButton(!inEditingMode?getI18nString(EDIT_ATTRIBUTES):getI18nString(CANCEL));
 		if(inEditingMode){
-			uiController.setAction(leftButton, "saveButtonClicked", null, this);
-			uiController.setAction(rightButton, "cancelButtonClicked", null, this);
-			uiController.setIcon(leftButton, SAVE_ICON);
-			uiController.setIcon(rightButton, CANCEL_ICON);
+			ui.setAction(leftButton, "saveButtonClicked", null, this);
+			ui.setAction(rightButton, "cancelButtonClicked", null, this);
+			ui.setIcon(leftButton, SAVE_ICON);
+			ui.setIcon(rightButton, CANCEL_ICON);
 			
 		}else{
-			uiController.setAction(leftButton, "goBack()", null, this);
-			uiController.setIcon(leftButton, "/icons/arrow_turn_left_large.png");
-			uiController.setAction(rightButton, "editButtonClicked()", null, this);
-			uiController.setIcon(rightButton, EDIT_ATTRIBUTE_ICON + (person.getGender() == Gender.MALE?"male.png":"female.png"));
+			ui.setAction(leftButton, "goBack()", null, this);
+			ui.setIcon(leftButton, "/icons/arrow_turn_left_large.png");
+			ui.setAction(rightButton, "editButtonClicked()", null, this);
+			ui.setIcon(rightButton, EDIT_ATTRIBUTE_ICON + (person.getGender() == Gender.MALE?"male.png":"female.png"));
 			if(((PersonAttributeDao) appCon.getBean("PersonAttributeDao")).getAllAttributesForPerson(person).size() == 0 && (person.getClass().equals(CommunityHealthWorker.class) ||(person.getClass().equals(Patient.class) && ((MedicFormFieldDao) appCon.getBean("MedicFormFieldDao")).getAttributePanelFields().size() == 0 ))){
-				uiController.setEnabled(rightButton,false);
+				ui.setEnabled(rightButton,false);
 			}
 		}
-		uiController.setHAlign(leftButton, Thinlet.LEFT);
-		uiController.setVAlign(leftButton, Thinlet.BOTTOM);
+		ui.setHAlign(leftButton, Thinlet.LEFT);
+		ui.setVAlign(leftButton, Thinlet.BOTTOM);
 		if(UserSessionManager.getUserSessionManager().getCurrentUserRole() == Role.READWRITE||
 		   UserSessionManager.getUserSessionManager().getCurrentUserRole() == Role.ADMIN){
-			uiController.add(buttonPanel,leftButton);
+			ui.add(buttonPanel,leftButton);
 		}
-		Object spacerLabel = uiController.createLabel("");
-		uiController.setWeight(spacerLabel, 1, 0);
-		uiController.add(buttonPanel,spacerLabel);
-		uiController.setHAlign(rightButton, Thinlet.RIGHT);
-		uiController.setVAlign(rightButton, Thinlet.BOTTOM);
-		uiController.add(buttonPanel, rightButton);
-		uiController.setWeight(buttonPanel, 1, 1);
-		uiController.setVAlign(buttonPanel, Thinlet.BOTTOM);
+		Object spacerLabel = ui.createLabel("");
+		ui.setWeight(spacerLabel, 1, 0);
+		ui.add(buttonPanel,spacerLabel);
+		ui.setHAlign(rightButton, Thinlet.RIGHT);
+		ui.setVAlign(rightButton, Thinlet.BOTTOM);
+		ui.add(buttonPanel, rightButton);
+		ui.setWeight(buttonPanel, 1, 1);
+		ui.setVAlign(buttonPanel, Thinlet.BOTTOM);
 		return buttonPanel;
 	}
 	
@@ -108,22 +146,22 @@ public abstract class PersonDashboard<P extends Person> extends Dashboard {
 	public void editButtonClicked(){
 		inEditingMode=true;
 		attributePanel.switchToEditingPanel();
-		uiController.remove(uiController.find(leftPanel,"buttonPanel"));
-		uiController.add(leftPanel,getBottomButtons());
+		ui.remove(ui.find(leftPanel,"buttonPanel"));
+		ui.add(leftPanel,getBottomButtons());
 	}
 	
 	public void saveButtonClicked(){
 		if(attributePanel.stopEditingWithSave()){
 			inEditingMode=false;
-			uiController.remove(uiController.find(leftPanel,"buttonPanel"));
-			uiController.add(leftPanel,getBottomButtons());
+			ui.remove(ui.find(leftPanel,"buttonPanel"));
+			ui.add(leftPanel,getBottomButtons());
 		}
 	}
 	
 	public void cancelButtonClicked(){
 		inEditingMode=false;
 		attributePanel.stopEditingWithoutSave();
-		uiController.remove(uiController.find(leftPanel,"buttonPanel"));
-		uiController.add(leftPanel,getBottomButtons());
+		ui.remove(ui.find(leftPanel,"buttonPanel"));
+		ui.add(leftPanel,getBottomButtons());
 	}
 }

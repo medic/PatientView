@@ -143,7 +143,7 @@ public class FormResponseMappingPanelController extends AdministrationTabPanel i
 				selectionChanged(null);
 			}
 		}else{
-			selectionChanged(tableController.getCurrentlySelectedObject());
+			selectionChanged(tableController.getSelectedObject());
 		}
 	}
 	

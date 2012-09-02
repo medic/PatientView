@@ -16,9 +16,9 @@ public class CommunityHealthWorkerDashboard extends PersonDashboard<CommunityHea
 
 	@Override
 	protected void init() {
-		uiController.add(leftPanel,new CommunityHealthWorkerPanel(uiController,appCon,person).getMainPanel());
-		tabs.add(new FormResponseTab(uiController,appCon,person));
-		tabs.add(new SmsMessagesTab(uiController,appCon,person));
+		ui.add(leftPanel,new CommunityHealthWorkerPanel(ui,appCon,person).getMainPanel());
+		tabs.add(new FormResponseTab(ui,appCon,person));
+		tabs.add(new SmsMessagesTab(ui,appCon,person));
 	}
 
 }

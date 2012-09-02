@@ -17,7 +17,7 @@ import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
 
-public class AppointmentTab extends TabController implements ThinletUiEventHandler, TableActionDelegate {
+public class AppointmentTab extends TabController implements TableActionDelegate {
 
 	private static final String FILE_PREFIX = "/ui/plugins/patientview/dashboard/tabs/appointments/";
 	private static final String XML_FILE = FILE_PREFIX + "appointmentTab.xml";
@@ -70,6 +70,11 @@ public class AppointmentTab extends TabController implements ThinletUiEventHandl
 		ui.add(ui.find(mainPanel,APPOINTMENT_TABLE_PANEL),appointmentTable.getMainPanel());
 		//initialize the dao
 		appointmentDao = (AppointmentDao) appCon.getBean("AppointmentDao");
+		refreshAppointmentTable();
+	}
+	
+	@Override
+	public void willAppear(){
 		refreshAppointmentTable();
 	}
 	
@@ -173,7 +178,7 @@ public class AppointmentTab extends TabController implements ThinletUiEventHandl
 	}
 
 	private Appointment getSelectedAppointment(){
-		return (Appointment) appointmentTable.getCurrentlySelectedObject();
+		return (Appointment) appointmentTable.getSelectedObject();
 	}
 
 	public void doubleClickAction(Object selectedObject) {}

@@ -11,6 +11,7 @@ import net.frontlinesms.ui.UiGeneratorController;
 
 import org.hibernate.classic.ValidationFailure;
 import org.springframework.context.ApplicationContext;
+import org.springframework.util.StringUtils;
 
 public abstract class ThinletFormField<E>{
 
@@ -71,7 +72,7 @@ public abstract class ThinletFormField<E>{
 	
 	/**returns true if the field currently has a response **/
 	public boolean hasResponse(){
-		return getStringResponse() !=null && getStringResponse()!="";
+		return StringUtils.hasText(getStringResponse());
 	}
 	
 	/**returns the current response in string form 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <dialog bottom="5" left="5" resizable="true" right="5" text="Schedule Appointment" top="5" columns="1" gap="5">
+    <panel name="namePanel"/>
     <panel name="datePanel"/>
     <panel>
         <button action="schedule" text="Schedule"/>

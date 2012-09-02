@@ -10,7 +10,6 @@ import net.frontlinesms.events.EventObserver;
 import net.frontlinesms.events.FrontlineEventNotification;
 import net.frontlinesms.plugins.patientview.data.domain.flag.Flag;
 import net.frontlinesms.plugins.patientview.data.domain.flag.TriggeredFlag;
-import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormResponse;
 import net.frontlinesms.plugins.patientview.data.repository.FlagDao;
 import net.frontlinesms.plugins.patientview.data.repository.TriggeredFlagDao;
@@ -45,6 +44,7 @@ public class FlagListener implements EventObserver{
 	}
 	
 	private void handleForm(MedicFormResponse mfr){
+		if(mfr.getSubject() == null) return;
 		List<Flag> flags = flagDao.getAllFlags();
 		for(Flag flag: flags){
 			if(mfr.getForm().getFid() == flag.getForm().getFid() && flag.evaluate(mfr, appCon)){
