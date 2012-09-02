@@ -6,7 +6,7 @@ import net.frontlinesms.plugins.patientview.data.domain.people.Gender;
 import net.frontlinesms.plugins.patientview.search.FieldDescriptor;
 import net.frontlinesms.plugins.patientview.search.QueryGenerator;
 import net.frontlinesms.plugins.patientview.search.SearchController;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedAdvancedTableController;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedTableController;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.DateField;
 import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
@@ -32,7 +32,7 @@ public class SimpleSearchController implements ThinletUiEventHandler, SearchCont
 	private Object fieldComboBox;
 	private Object entityComboBox;
 	private Object descriptorPanel;
-	private PagedAdvancedTableController tableController;
+	private PagedTableController tableController;
 	
 	//entry controls
 	private Object textField;
@@ -45,7 +45,7 @@ public class SimpleSearchController implements ThinletUiEventHandler, SearchCont
 	private static final String BEFORE = "simplesearch.labels.before";
 	private static final String AFTER = "simplesearch.labels.after";
 	
-	public SimpleSearchController(UiGeneratorController uiController, ApplicationContext appCon, PagedAdvancedTableController resultsTable){
+	public SimpleSearchController(UiGeneratorController uiController, ApplicationContext appCon, PagedTableController resultsTable){
 		this.uiController = uiController;
 		this.tableController = resultsTable;
 		queryGenerator = new SimpleSearchQueryGenerator(this,appCon);

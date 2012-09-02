@@ -22,7 +22,7 @@ import net.frontlinesms.plugins.patientview.security.UserSessionManager;
 import net.frontlinesms.plugins.patientview.security.ui.LoginScreen;
 import net.frontlinesms.plugins.patientview.ui.administration.AdministrationTabController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedAdvancedTableController;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedTableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.detailview.DetailViewController;
 import net.frontlinesms.ui.ThinletUiEventHandler;
@@ -63,7 +63,7 @@ public class PatientViewThinletTabController implements ThinletUiEventHandler, T
 	// other sub-controllers
 	/** controller for the detailed view **/
 	private DetailViewController detailViewController;
-	private PagedAdvancedTableController tableController;
+	private PagedTableController tableController;
 
 	// Search Controllers
 	private SimpleSearchController simpleSearch;
@@ -164,7 +164,7 @@ public class PatientViewThinletTabController implements ThinletUiEventHandler, T
 				ui.add(mainPanel,rsc.getMainPanel());
 			}else{
 			//initialize the results table
-			tableController = new PagedAdvancedTableController(this, ui, ui.find(mainTab, "resultTable"));
+			tableController = new PagedTableController(this, ui, ui.find(mainTab, "resultTable"));
 			//create all the column labels
 			String nameLabel = getI18nString(NAME_COLUMN);
 			String bdayLabel = getI18nString(BDAY_COLUMN);

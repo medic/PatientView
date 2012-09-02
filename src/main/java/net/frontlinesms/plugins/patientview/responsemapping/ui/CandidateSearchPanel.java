@@ -15,7 +15,7 @@ import net.frontlinesms.plugins.patientview.data.repository.PatientDao;
 import net.frontlinesms.plugins.patientview.responsemapping.Candidate;
 import net.frontlinesms.plugins.patientview.responsemapping.IncomingFormMatcher;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableController;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.TableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
 import net.frontlinesms.plugins.patientview.ui.personpanel.PatientPanel;
 import net.frontlinesms.ui.ThinletUiEventHandler;
@@ -43,7 +43,7 @@ public class CandidateSearchPanel implements ThinletUiEventHandler, TableActionD
 	private List<Candidate> candidates;
 	
 	/** the table controller for viewing candidates and patients**/
-	private AdvancedTableController tableController;
+	private TableController tableController;
 	/** the object that matches forms to patients**/
 	private IncomingFormMatcher matcher;
 	/** the form response for this panel**/
@@ -133,7 +133,7 @@ public class CandidateSearchPanel implements ThinletUiEventHandler, TableActionD
 			
 			Object panel = uiController.loadComponentFromFile(UI_FILE, this);
 			//create the advanced table controller
-			tableController = new AdvancedTableController(this, uiController);
+			tableController = new TableController(this, uiController);
 			//if searching patients, we want name, id and chw
 			tableController.putHeader(Patient.class, HeaderColumn.createColumnList(new String[]{getI18nString("medic.common.labels.name"), getI18nString("medic.common.labels.id"), getI18nString("medic.common.chw")},
 					 new String[]{"/icons/user.png", "/icons/key.png","/icons/user_phone.png"},

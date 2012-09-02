@@ -10,7 +10,7 @@ import net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.Vaccine;
 import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
 import net.frontlinesms.plugins.patientview.data.repository.VaccineDao;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableController;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.TableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.dashboard.tabs.vaccine.RescheduleVaccinesDialog;
@@ -69,7 +69,7 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 	private static final String NO_APPTS_SCHEDULED= getI18nString("medic.appointments.none.scheduled");
 	private static final String ALL_APPT_SERIES = getI18nString("medic.appointments.series.all");
 	
-	private AdvancedTableController scheduledDoseController;
+	private TableController scheduledDoseController;
 	
 	private Patient patient;
 	private Vaccine currentVaccine;
@@ -99,17 +99,23 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 		ui.removeAll(getTab());
 		ui.add(getTab(),getMainPanel());
 		//setup table
-		scheduledDoseController = new AdvancedTableController(this, uiController);
-		List<HeaderColumn> doseColumns = new ArrayList<HeaderColumn>();
-		doseColumns.add(new HeaderColumn("getDoseName", "/icons/calendar_small.png", APPOINTMENT_NAME));
-		doseColumns.add(new HeaderColumn("getWindowStartDateString", "/icons/date_add.png", DATE_SCHEDULED));
-		doseColumns.add(new HeaderColumn("getAdministeredString", "/icons/tick.png", STATUS));
+		scheduledDoseController = new TableController(this, uiController);
+		oneVaccineDoseHeaders = new ArrayList<HeaderColumn>();
+		allVaccinesDoseHeaders = new ArrayList<HeaderColumn>();
+		oneVaccineDoseHeaders.add(new HeaderColumn("getDoseName", "/icons/calendar_small.png", APPOINTMENT_NAME));
+		oneVaccineDoseHeaders.add(new HeaderColumn("getWindowStartDateString", "/icons/date_add.png", DATE_SCHEDULED));
+		oneVaccineDoseHeaders.add(new HeaderColumn("getAdministeredString", "/icons/tick.png", STATUS));
+		allVaccinesDoseHeaders.add(new HeaderColumn("getVaccineSeriesName", "/icons/calendar_small.png", "Appointment Series"));
+		allVaccinesDoseHeaders.add(new HeaderColumn("getDoseName", "/icons/calendar_small.png", APPOINTMENT_NAME));
+		allVaccinesDoseHeaders.add(new HeaderColumn("getWindowStartDateString", "/icons/date_add.png", DATE_SCHEDULED));
+		allVaccinesDoseHeaders.add(new HeaderColumn("getAdministeredString", "/icons/tick.png", STATUS));
 		//doseColumns.add(new HeaderColumn("getWindowEndDateString", "/icons/date_delete.png", "Window End Date"));
-		scheduledDoseController.putHeader(ScheduledDose.class, doseColumns);
+		scheduledDoseController.putHeader(ScheduledDose.class, oneVaccineDoseHeaders);
 		scheduledDoseController.setNoResultsMessage(NO_APPTS_SCHEDULED);
 		scheduledDoseController.setResults(new ArrayList<ScheduledDose>());
 		ui.add(ui.find(mainPanel,SCHEDULED_DOSE_TABLE_PANEL),scheduledDoseController.getMainPanel());
 		populateVaccineList(null);
+		updateDoseTableHeader();
 		refreshDoseTable();
 	}
 	

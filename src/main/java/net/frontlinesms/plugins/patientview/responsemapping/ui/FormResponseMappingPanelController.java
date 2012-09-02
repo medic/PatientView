@@ -13,7 +13,7 @@ import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;
 import net.frontlinesms.plugins.patientview.search.impl.FormMappingResultSet;
 import net.frontlinesms.plugins.patientview.ui.administration.AdministrationTabPanel;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedAdvancedTableController;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedTableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.DateField;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.FormFieldDelegate;
@@ -28,7 +28,7 @@ public class FormResponseMappingPanelController extends AdministrationTabPanel i
 	private Object actionPanel;
 	private Object comboBox;
 	
-	private PagedAdvancedTableController tableController;
+	private PagedTableController tableController;
 	private FormMappingResultSet resultSet;
 	private MedicFormResponse currentResponse;
 	
@@ -48,7 +48,7 @@ public class FormResponseMappingPanelController extends AdministrationTabPanel i
 	private void init(){
 		actionPanel = find("actionPanel");
 		//set up the table
-		tableController = new PagedAdvancedTableController(this,ui, find("tablePanel"));
+		tableController = new PagedTableController(this,ui, find("tablePanel"));
 		tableController.putHeader(MedicFormResponse.class, HeaderColumn.createColumnList(new String[]{getI18nString("medic.common.labels.form.name"),getI18nString("medic.common.labels.date.submitted"),getI18nString("medic.common.labels.submitter")}, 
 				 																		 new String[]{"/icons/form.png","/icons/date_sent.png","/icons/user_sender.png"},
 				 																		 new String[]{"getFormName","getStringDateSubmitted","getSubmitterName"}));

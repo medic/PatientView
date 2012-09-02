@@ -9,7 +9,7 @@ import net.frontlinesms.plugins.patientview.data.repository.PatientDao;
 import net.frontlinesms.plugins.patientview.security.UserSessionManager;
 import net.frontlinesms.plugins.patientview.ui.PatientViewThinletTabController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableController;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.TableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
 import net.frontlinesms.plugins.patientview.ui.personpanel.PatientPanel;
 import net.frontlinesms.plugins.patientview.ui.personpanel.PersonPanelDelegate;
@@ -28,7 +28,7 @@ public class RegistrationScreenController implements ThinletUiEventHandler, Tabl
 	
 	private Object mainPanel;
 	
-	private AdvancedTableController patientTable;
+	private TableController patientTable;
 	
 	private static final String UI_FILE_XML = "/ui/plugins/patientview/registrationTab.xml";
 	
@@ -44,7 +44,7 @@ public class RegistrationScreenController implements ThinletUiEventHandler, Tabl
 	private void init(){
 		mainPanel = uiController.loadComponentFromFile(UI_FILE_XML, this);
 		patientDao = (PatientDao) appCon.getBean("PatientDao");
-		patientTable = new AdvancedTableController(this,uiController);
+		patientTable = new TableController(this,uiController);
 		patientTable.putHeader(Patient.class, HeaderColumn.createColumnList(new String[]{getI18nString("medic.common.labels.name"), getI18nString("thinletformfields.birthdate"), getI18nString("medic.common.labels.id"),getI18nString("medic.common.chw")},
 				 new String[]{"/icons/user.png", "/icons/cake.png", "/icons/key.png",""},
 				 new String[]{"getName", "getStringBirthdate", "getStringID","getCHWName"}));

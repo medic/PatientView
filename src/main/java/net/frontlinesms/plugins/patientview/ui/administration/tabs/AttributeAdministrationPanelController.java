@@ -12,7 +12,7 @@ import net.frontlinesms.plugins.patientview.data.repository.MedicFormFieldDao;
 import net.frontlinesms.plugins.patientview.data.repository.PersonAttributeDao;
 import net.frontlinesms.plugins.patientview.data.repository.PersonAttributeResponseDao;
 import net.frontlinesms.plugins.patientview.ui.administration.AdministrationTabPanel;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableController;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.TableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.ui.ThinletUiEventHandler;
@@ -48,8 +48,8 @@ public class AttributeAdministrationPanelController extends AdministrationTabPan
 	private Object dataTypeComboBox;
 	
 	/*Table Controllers*/
-	private AdvancedTableController fieldSearchTableController;
-	private AdvancedTableController currentItemTableController;
+	private TableController fieldSearchTableController;
+	private TableController currentItemTableController;
 	
 	
 	/*DAOs*/
@@ -77,8 +77,8 @@ public class AttributeAdministrationPanelController extends AdministrationTabPan
 		dataTypeComboBox = find("dataTypeComboBox");
 		
 		//initialize the advanced tables
-		fieldSearchTableController = new AdvancedTableController(this,uiController);
-		currentItemTableController = new AdvancedTableController(this,uiController);
+		fieldSearchTableController = new TableController(this,uiController);
+		currentItemTableController = new TableController(this,uiController);
 		
 		fieldSearchTableController.putHeader(MedicFormField.class, HeaderColumn.createColumnList(new String[]{getI18nString(LABEL_COLUMN), getI18nString(PARENT_FORM_COLUMN)},
 																								 new String[]{"/icons/tag_purple.png", "/icons/form.png"},

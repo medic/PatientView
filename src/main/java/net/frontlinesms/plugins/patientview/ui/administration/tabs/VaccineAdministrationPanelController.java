@@ -9,7 +9,7 @@ import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
 import net.frontlinesms.plugins.patientview.data.repository.VaccineDao;
 import net.frontlinesms.plugins.patientview.data.repository.VaccineDoseDao;
 import net.frontlinesms.plugins.patientview.ui.administration.AdministrationTabPanel;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableController;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.TableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.ui.UiGeneratorController;
@@ -18,7 +18,7 @@ import org.springframework.context.ApplicationContext;
 
 public class VaccineAdministrationPanelController extends AdministrationTabPanel implements TableActionDelegate{
 
-	private AdvancedTableController doseTableController;
+	private TableController doseTableController;
 	
 	/**
 	 * The vaccine dose that is currently being edited, if any 
@@ -87,7 +87,7 @@ public class VaccineAdministrationPanelController extends AdministrationTabPanel
 		this.vaccineDoseDao = (VaccineDoseDao) appCon.getBean("VaccineDoseDao");
 		this.scheduledDoseDao = (ScheduledDoseDao) appCon.getBean("ScheduledDoseDao");
 		//create the dose table
-		doseTableController = new AdvancedTableController(this, uiController);
+		doseTableController = new TableController(this, uiController);
 		doseTableController.setNoResultsMessage(NO_APPTS);
 		List<HeaderColumn> columnList = new ArrayList<HeaderColumn>();
 		columnList.add(new HeaderColumn("getName", "/icons/date.png", APPT_NAME));

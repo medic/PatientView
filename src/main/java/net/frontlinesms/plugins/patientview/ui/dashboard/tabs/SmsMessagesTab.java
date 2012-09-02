@@ -8,7 +8,7 @@ import net.frontlinesms.plugins.patientview.data.domain.people.CommunityHealthWo
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicMessageResponse;
 import net.frontlinesms.plugins.patientview.search.impl.SmsMessageResultSet;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedAdvancedTableController;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedTableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.CheckBox;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.DateField;
@@ -25,7 +25,7 @@ public class SmsMessagesTab extends TabController implements TableActionDelegate
 
 	private UiGeneratorController uiController;
 	private SmsMessageResultSet resultSet;
-	private PagedAdvancedTableController tableController;
+	private PagedTableController tableController;
 	private MessagePanelHandler messagePanelHandler;
 	
 	private static final String UI_FILE = "/ui/plugins/patientview/dashboard/tabs/smsMessageTab.xml";
@@ -62,7 +62,7 @@ public class SmsMessagesTab extends TabController implements TableActionDelegate
 		uiController.add(controlPanel,uiController.createLabel("   "));
 		uiController.add(controlPanel,fromCheckBox.getThinletPanel());
 		//create the table
-		tableController = new PagedAdvancedTableController(this, uiController);
+		tableController = new PagedTableController(this, uiController);
 		tableController.putHeader(MedicMessageResponse.class, HeaderColumn.createColumnList(new String[]{getI18nString("common.status"),getI18nString("medic.common.labels.date"), getI18nString("medic.common.labels.sender"),getI18nString("medic.common.labels.recipient"),getI18nString("medic.common.labels.message")}, 
 				new String[]{"/icons/status.png","", "/icons/user_sender.png","/icons/user_receiver.png","/icons/description.png"},
 				new String[]{"getStatus","getStringDateSubmitted","getSenderMsisdn","getRecipientMsisdn","getMessageContent"}));

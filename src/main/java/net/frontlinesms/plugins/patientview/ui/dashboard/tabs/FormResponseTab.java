@@ -13,7 +13,7 @@ import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;
 import net.frontlinesms.plugins.patientview.search.impl.FormResponseResultSet;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedAdvancedTableController;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedTableController;
 import net.frontlinesms.plugins.patientview.ui.detailview.panels.FormResponseDetailViewPanelController;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.DateField;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.FormFieldDelegate;
@@ -23,7 +23,7 @@ import net.frontlinesms.ui.UiGeneratorController;
 import org.springframework.context.ApplicationContext;
 public class FormResponseTab<P extends Person> extends TabController implements TableActionDelegate, FormFieldDelegate {
 
-	protected PagedAdvancedTableController formResponseTable;
+	protected PagedTableController formResponseTable;
 	protected FormResponseDetailViewPanelController formResponsePanel;
 	protected FormResponseResultSet resultSet;
 	protected Object comboBox;
@@ -64,7 +64,7 @@ public class FormResponseTab<P extends Person> extends TabController implements 
 		}
 		resultSet.setAroundDate(new Date());
 		// add the form response table
-		formResponseTable = new PagedAdvancedTableController(this, ui,ui.find(getMainPanel(),"tablePanel"));
+		formResponseTable = new PagedTableController(this, ui,ui.find(getMainPanel(),"tablePanel"));
 		if(isCHW()){
 			formResponseTable.putHeader(MedicFormResponse.class, HeaderColumn.createColumnList(new String[] { getI18nString(FORM_NAME_COLUMN), getI18nString(FORM_SUBJECT_COLUMN), getI18nString(DATE_SUBMITTED_COLUMN) },new String[]{"/icons/form.png","", "/icons/date_sent.png"}, new String[] { "getFormName", "getSubjectName", "getStringDateSubmitted" }));
 		}else{

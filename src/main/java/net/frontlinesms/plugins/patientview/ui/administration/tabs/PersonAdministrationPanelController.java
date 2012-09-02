@@ -11,7 +11,7 @@ import net.frontlinesms.plugins.patientview.search.impl.PersonResultSet;
 import net.frontlinesms.plugins.patientview.ui.administration.AdministrationTabPanel;
 import net.frontlinesms.plugins.patientview.ui.administration.DeleteDialogController;
 import net.frontlinesms.plugins.patientview.ui.administration.DeleteDialogDelegate;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedAdvancedTableController;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedTableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.personpanel.PersonPanel;
 import net.frontlinesms.ui.UiGeneratorController;
@@ -23,7 +23,7 @@ public abstract class PersonAdministrationPanelController<E extends Person> exte
 	/**
 	 * The main panel of the person administration screen
 	 */
-	protected PagedAdvancedTableController advancedTableController;
+	protected PagedTableController advancedTableController;
 	protected PersonResultSet<E> personResultSet;
 	private Object advancedTable;
 	protected PersonPanel<E> currentPersonPanel;
@@ -57,7 +57,7 @@ public abstract class PersonAdministrationPanelController<E extends Person> exte
 
 	private void init(){
 		advancedTable = find(RESULTS_TABLE);
-		advancedTableController = new PagedAdvancedTableController(this,ui,advancedTable);
+		advancedTableController = new PagedTableController(this,ui,advancedTable);
 		putHeader();
 		personResultSet = new PersonResultSet<E>(appCon, getPersonClass());
 		advancedTableController.setResultsSet(personResultSet);

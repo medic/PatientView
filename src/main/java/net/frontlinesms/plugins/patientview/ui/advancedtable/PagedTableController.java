@@ -14,7 +14,7 @@ import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
 
-public class PagedAdvancedTableController extends AdvancedTableController implements EventObserver{
+public class PagedTableController extends TableController implements EventObserver{
 
 	protected PagedResultSet resultSet;
 	
@@ -26,7 +26,7 @@ public class PagedAdvancedTableController extends AdvancedTableController implem
 		
 	protected Map<Class<?>,Boolean> refreshButtonStates = Collections.synchronizedMap(new HashMap<Class<?>,Boolean>());
 	
-	public PagedAdvancedTableController(TableActionDelegate delegate,UiGeneratorController uiController) {
+	public PagedTableController(TableActionDelegate delegate,UiGeneratorController uiController) {
 		super(delegate, uiController);
 		ui.setWeight(mainPanel, 1, 1);
 		ui.setColumns(mainPanel,1);
@@ -35,7 +35,7 @@ public class PagedAdvancedTableController extends AdvancedTableController implem
 		add(pagingControls);			
 	}
 	
-	public PagedAdvancedTableController(TableActionDelegate delegate,UiGeneratorController uiController, Object panel) {
+	public PagedTableController(TableActionDelegate delegate,UiGeneratorController uiController, Object panel) {
 			super(delegate, uiController);
 			setMainPanel(panel);
 			ui.setWeight(mainPanel, 1, 1);

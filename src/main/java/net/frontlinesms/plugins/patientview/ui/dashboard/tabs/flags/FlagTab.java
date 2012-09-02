@@ -7,7 +7,7 @@ import net.frontlinesms.plugins.patientview.data.domain.flag.TriggeredFlag;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.search.impl.TriggeredFlagResultSet;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedAdvancedTableController;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedTableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.dashboard.tabs.TabController;
 import net.frontlinesms.ui.ThinletUiEventHandler;
@@ -19,8 +19,11 @@ public class FlagTab  extends TabController implements ThinletUiEventHandler, Ta
 	private static final String UI_XML = "/ui/plugins/patientview/dashboard/tabs/flags/flagTab.xml";
 
 	private Patient patient;
-	private PagedAdvancedTableController table;
+	private PagedTableController table;
 	private TriggeredFlagResultSet resultSet;
+	
+	private int resolvedSelected = 0;
+	private int unresolvedSelected = 0;
 	
 	private boolean searchingForPatient = true;
 	
@@ -32,10 +35,10 @@ public class FlagTab  extends TabController implements ThinletUiEventHandler, Ta
 		this.patient = patient;
 		resultSet = new TriggeredFlagResultSet(appCon);
 		resultSet.setPatient(patient);
-		table = new PagedAdvancedTableController(this,uiController);
+		table = new PagedTableController(this,uiController);
 		table.setResultsSet(resultSet);
 		List<HeaderColumn> columns = new ArrayList<HeaderColumn>();
-		columns.add(new HeaderColumn("getFlagName", "", "Type"));
+		columns.add(new HeaderColumn("getFlagName", "", "Flag"));
 		columns.add(new HeaderColumn("getStringDateTriggered", "", "Date Raised"));
 		columns.add(new HeaderColumn("getReason", "", "Reason"));
 		columns.add(new HeaderColumn("getAppointmentString","","Appointment"));
@@ -45,19 +48,13 @@ public class FlagTab  extends TabController implements ThinletUiEventHandler, Ta
 		table.refresh();
 	}
 
-	public void activeCheckboxChanged(){
+	public void checkboxChanged(){
+		System.out.println("active called");
 		boolean active = ui.isSelected(ui.find(mainPanel,"activeCheckbox"));
 		resultSet.setActive(active);
 		resultSet.setResolved(!active);
 		setHeaders(active);
-		table.refresh();
-	}
-	
-	public void resolvedCheckboxChanged(){
-		boolean resolved = ui.isSelected(ui.find(mainPanel,"resolvedCheckbox"));
-		resultSet.setResolved(resolved);
-		resultSet.setActive(!resolved);
-		setHeaders(!resolved);
+		table.setSelected(active?unresolvedSelected:resolvedSelected);
 		table.refresh();
 	}
 	

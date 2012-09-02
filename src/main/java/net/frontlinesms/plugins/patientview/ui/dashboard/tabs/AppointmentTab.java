@@ -8,7 +8,7 @@ import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose;
 import net.frontlinesms.plugins.patientview.data.repository.AppointmentDao;
 import net.frontlinesms.plugins.patientview.security.UserSessionManager;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.AdvancedTableController;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.TableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.DateField;
@@ -43,7 +43,7 @@ public class AppointmentTab extends TabController implements ThinletUiEventHandl
 	
 	private DateField dateField;
 	
-	AdvancedTableController appointmentTable;
+	TableController appointmentTable;
 	
 	public AppointmentTab(UiGeneratorController uiController, ApplicationContext appCon, Patient patient) {
 		super(uiController, appCon);
@@ -58,7 +58,7 @@ public class AppointmentTab extends TabController implements ThinletUiEventHandl
 		Object buttonPanel = ui.loadComponentFromFile(BUTTON_PANEL_XML, this);
 		ui.add(ui.find(mainPanel,BOTTOM_PANEL),buttonPanel);
 		//initialize the table
-		appointmentTable = new AdvancedTableController(this, ui);
+		appointmentTable = new TableController(this, ui);
 		List<HeaderColumn> appointmentColumns = new ArrayList<HeaderColumn>();
 		appointmentColumns.add(new HeaderColumn("getReason", "/icons/syringe_small.png", "Reason"));
 		appointmentColumns.add(new HeaderColumn("getScheduledDateString", "/icons/date_add.png", "Date Scheduled"));

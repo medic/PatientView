@@ -7,7 +7,7 @@ import net.frontlinesms.plugins.patientview.data.domain.flag.TriggeredFlag;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.search.impl.TriggeredFlagResultSet;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedAdvancedTableController;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedTableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.dashboard.PatientDashboard;
 import net.frontlinesms.ui.UiGeneratorController;
@@ -15,7 +15,7 @@ import net.frontlinesms.ui.UiGeneratorController;
 import org.springframework.context.ApplicationContext;
 
 public class FlagCenterTabController extends ViewHandler implements TableActionDelegate {
-	private PagedAdvancedTableController table;
+	private PagedTableController table;
 	private TriggeredFlagResultSet resultSet;
 	
 	private static final String UI_XML =  "/ui/plugins/patientview/flagTab.xml";
@@ -23,7 +23,7 @@ public class FlagCenterTabController extends ViewHandler implements TableActionD
 	public FlagCenterTabController(UiGeneratorController ui, ApplicationContext appCon) {
 		super(ui, appCon,UI_XML);
 		resultSet = new TriggeredFlagResultSet(appCon);
-		table = new PagedAdvancedTableController(this,ui);
+		table = new PagedTableController(this,ui);
 		table.setResultsSet(resultSet);
 		List<HeaderColumn> columns = new ArrayList<HeaderColumn>();
 		columns.add(new HeaderColumn("getFlagName", "", "Flag Type"));

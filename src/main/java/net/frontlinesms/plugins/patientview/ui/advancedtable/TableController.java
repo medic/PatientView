@@ -23,7 +23,7 @@ import thinlet.Thinlet;
  * @author Dieterich
  *
  */
-public class AdvancedTableController extends ViewHandler{
+public class TableController extends ViewHandler{
 	
 	/** the thinlet table**/
 	protected Object table;
@@ -79,7 +79,7 @@ public class AdvancedTableController extends ViewHandler{
 	 * @param uiController
 	 * @param useTableMethod
 	 */
-	public AdvancedTableController(TableActionDelegate delegate, UiGeneratorController uiController){
+	public TableController(TableActionDelegate delegate, UiGeneratorController uiController){
 		super(uiController,null);
 		this.delegate = delegate;
 		this.table = Thinlet.create("table");
