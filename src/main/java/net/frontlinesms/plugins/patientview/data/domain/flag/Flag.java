@@ -67,7 +67,7 @@ public class Flag {
 		MedicFormFieldResponseDao responseDao = (MedicFormFieldResponseDao) context.getBean("MedicFormFieldResponseDao");
 		for(FlagCondition<?> c: getConditions()){
 			MedicFormFieldResponse response = responseDao.getResponseForFormResponseAndField(mfr, c.getField());
-			boolean condResult = c.evaluate(response);
+			boolean condResult = c.evaluate(response, mfr, context);
 			if(isAny() && condResult){
 				return true;
 			}else if(!isAny() && !condResult){

@@ -46,7 +46,8 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 	private static final String FORM_LABEL = "formLabel";
 	private static final String CONFIRMATION_DIALOG = "confirmDialog";
 	private static final String CONDITIONS_PANEL = "conditionsPanel";
-	private static final String CONDITION_BUTTONS_PANEL = 	"conditionButtonPanel";
+//	private static final String CONDITION_BUTTONS_PANEL = 	"conditionButtonPanel";
+	private static final String CONDITION_ACTIONS_PANEL = "conditionActionsPanel";
 	private static final String MESSAGE_FIELD_SELECT = "messageFieldSelect";
 	private static final String CONTACT_GROUP_SELECT = "contactGroupSelect";
 	
@@ -280,14 +281,14 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 	public void addCondition(){
 		EditConditionPanel p = new EditConditionPanel(ui, appCon, getSelectedForm(), null,this);
 		ui.setText(find(p.getMainPanel(),"saveEditingCondition"), ADD);
-		ui.removeAll(find(CONDITION_BUTTONS_PANEL));
-		add(find(CONDITION_BUTTONS_PANEL),p.getMainPanel());
+		ui.removeAll(find(CONDITION_ACTIONS_PANEL));
+		add(find(CONDITION_ACTIONS_PANEL),p.getMainPanel());
 	}
 	
 	public void editCondition(){
 		EditConditionPanel p = new EditConditionPanel(ui, appCon, getSelectedForm(), getSelectedCondition(),this);
-		ui.removeAll(find(CONDITION_BUTTONS_PANEL));
-		add(find(CONDITION_BUTTONS_PANEL),p.getMainPanel());
+		ui.removeAll(find(CONDITION_ACTIONS_PANEL));
+		add(find(CONDITION_ACTIONS_PANEL),p.getMainPanel());
 	}
 	
 	public void removeCondition(){
@@ -331,8 +332,8 @@ public class FlagAdministrationPanelController extends AdministrationTabPanel {
 	}
 	
 	public void conditionEditingCancelled(){
-		ui.removeAll(find(CONDITION_BUTTONS_PANEL));
-		ui.add(find(CONDITION_BUTTONS_PANEL),ui.loadComponentFromFile(CONDITION_BUTTONS_XML, this));
+		ui.removeAll(find(CONDITION_ACTIONS_PANEL));
+		ui.add(find(CONDITION_ACTIONS_PANEL),ui.loadComponentFromFile(CONDITION_BUTTONS_XML, this));
 	}
 	
 	public void saveFlag(){

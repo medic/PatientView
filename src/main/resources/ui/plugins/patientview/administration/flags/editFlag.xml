@@ -19,7 +19,7 @@
             <label name="anyAllPostLabel" text="i18n.medic.flags.conditions.met"/>
         </panel>
         <list name="conditionList" weightx="2" selection="single"/>
-        <panel name="conditionActions">
+        <panel name="conditionActionsPanel">
         <panel gap="5" name="conditionButtonPanel">
             <button action="addCondition()" name="addConditionButton" text="i18n.medic.flags.condition.add" icon="/icons/add.png"/>
             <button action="editCondition()" name="editConditionButton" text="i18n.medic.flags.condition.edit" icon="/icons/pencil.png"/>

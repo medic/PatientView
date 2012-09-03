@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.frontlinesms.plugins.forms.data.domain.Form;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
+import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormSeries;
 
 public interface MedicFormDao {
 
@@ -43,5 +44,8 @@ public interface MedicFormDao {
 	 * @return the corresponding Medic Form
 	 */
 	public MedicForm getMedicFormForForm(Form form);
+	
+	
+	public List<MedicForm> getFormsForSeries(MedicFormSeries series);
 
 }

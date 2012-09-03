@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -36,8 +37,7 @@ import org.hibernate.annotations.OrderBy;
 @Entity
 @Table(name = "medic_forms")
 public class MedicForm{
-	
-	
+
 	/** Unique id for this entity. This is for hibernate usage. */
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,6 +61,12 @@ public class MedicForm{
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "form")
 	private List<Flag> flags;
 
+	@ManyToOne(cascade={},fetch=FetchType.EAGER,optional=true)
+	@JoinColumn(name="parentForm")
+	private MedicFormSeries series;
+	
+	private int seriesPosition;
+	
 	public enum MedicFormType{
 		PATIENT_DATA("Patient Data",new PatientFieldMapping[]{PatientFieldMapping.NAMEFIELD, 
 				PatientFieldMapping.BIRTHDATEFIELD,PatientFieldMapping.IDFIELD}), 
@@ -253,5 +259,21 @@ public class MedicForm{
 
 	public MedicFormType getType() {
 		return type;
+	}
+
+	public int getSeriesPosition() {
+		return seriesPosition;
+	}
+
+	public void setSeriesPosition(int seriesPosition) {
+		this.seriesPosition = seriesPosition;
+	}
+
+	public MedicFormSeries getSeries() {
+		return series;
+	}
+
+	public void setSeries(MedicFormSeries series) {
+		this.series = series;
 	}
 }

@@ -20,6 +20,9 @@ import javax.persistence.Table;
 import net.frontlinesms.plugins.patientview.data.domain.framework.DataType;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField;
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormFieldResponse;
+import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormResponse;
+
+import org.springframework.context.ApplicationContext;
 
 @Entity
 @Table(name="medic_flag_conditions")
@@ -44,7 +47,7 @@ public abstract class FlagCondition<E> {
 	@Enumerated(EnumType.ORDINAL)
 	private FlagConditionOperation operation;
 		
-	public abstract boolean evaluate(MedicFormFieldResponse fieldResponse);
+	public abstract boolean evaluate(MedicFormFieldResponse fieldResponse, MedicFormResponse formResponse, ApplicationContext appCon);
 
 	public FlagCondition(){}
 	

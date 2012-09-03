@@ -8,8 +8,10 @@ import net.frontlinesms.plugins.patientview.data.domain.flag.TriggeredFlag;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.data.repository.TriggeredFlagDao;
 
+import org.hibernate.Criteria;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.util.StringUtils;
 
@@ -40,6 +42,7 @@ public class HibernateTriggeredFlagDao extends BaseHibernateDao<TriggeredFlag> i
 			}else{
 				c.add(Restrictions.eq("resolved",false));
 			}
+			c.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 			return super.getList(c);
 		}else if(resolved && unresolved){
 			return getAllTriggeredFlags();
@@ -86,6 +89,7 @@ public class HibernateTriggeredFlagDao extends BaseHibernateDao<TriggeredFlag> i
 				c.add(Restrictions.eq("resolved", false));
 			}
 		}
+		c.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return c;
 	}
 	
@@ -101,6 +105,7 @@ public class HibernateTriggeredFlagDao extends BaseHibernateDao<TriggeredFlag> i
 				c.add(Restrictions.eq("resolved", false));
 			}
 		}
+		c.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return c;
 	}
 
@@ -117,7 +122,6 @@ public class HibernateTriggeredFlagDao extends BaseHibernateDao<TriggeredFlag> i
 
 	public List<TriggeredFlag> findTriggeredFlags(Patient patient,
 			boolean resolved, boolean active, int startIndex, int maxResults) {
-		// TODO Auto-generated method stub
 		return super.getList(getCriteriaForFlagSearch(patient, resolved, active), startIndex, maxResults);
 	}
 }

@@ -13,6 +13,7 @@ import net.frontlinesms.plugins.patientview.search.OrderBySQL;
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 public class HibernateMedicFormResponseDao extends BaseHibernateDao<MedicFormResponse> implements MedicFormResponseDao{
@@ -134,5 +135,21 @@ public class HibernateMedicFormResponseDao extends BaseHibernateDao<MedicFormRes
 		}
 		c.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return super.getHibernateTemplate().findByCriteria(c, startIndex, maxResults);
+	}
+
+	public MedicFormResponse findLatestFormResponseForSubject(Person subject, MedicForm form) {
+		DetachedCriteria c = DetachedCriteria.forClass(MedicFormResponse.class);
+		if(subject != null){
+			c.add(Restrictions.eq("subject", subject));
+		}
+		if(form != null){
+			c.add(Restrictions.eq("form", form));
+		}
+		c.addOrder(Order.asc("dateSubmitted"));
+		try{
+			return super.getList(c, 0, 1).get(0);
+		}catch(Throwable t){
+			return null;
+		}
 	}
 }

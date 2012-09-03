@@ -19,15 +19,14 @@ public class Pair<A,B> {
     }
 
     public boolean equals(Object other) {
-   	return
-	    other instanceof Pair &&
+   	return other instanceof Pair &&
 	    equals(one, ((Pair)other).one) &&
 	    equals(two, ((Pair)other).two);
     }
 
     public int hashCode() {
-	if (one == null) return (two == null) ? 0 : two.hashCode() + 1;
-	else if (two == null) return one.hashCode() + 2;
-	else return one.hashCode() * 17 + two.hashCode();
+    	if (one == null) return (two == null) ? 0 : two.hashCode() + 1;
+    	else if (two == null) return one.hashCode() + 2;
+    	else return one.hashCode() * 17 + two.hashCode();
     }
 }

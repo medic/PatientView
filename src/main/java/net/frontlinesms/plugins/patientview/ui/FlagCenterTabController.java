@@ -7,7 +7,6 @@ import net.frontlinesms.plugins.patientview.data.domain.flag.TriggeredFlag;
 import net.frontlinesms.plugins.patientview.data.domain.people.Patient;
 import net.frontlinesms.plugins.patientview.search.impl.TriggeredFlagResultSet;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.PagedTableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.StaticSelectionTableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
 import net.frontlinesms.plugins.patientview.ui.dashboard.PatientDashboard;

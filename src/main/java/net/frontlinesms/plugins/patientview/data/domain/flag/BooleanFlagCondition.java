@@ -3,7 +3,10 @@ package net.frontlinesms.plugins.patientview.data.domain.flag;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
+import org.springframework.context.ApplicationContext;
+
 import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormFieldResponse;
+import net.frontlinesms.plugins.patientview.data.domain.response.MedicFormResponse;
 
 @Entity
 @DiscriminatorValue(value = "bool")
@@ -12,7 +15,7 @@ public class BooleanFlagCondition extends FlagCondition<Boolean> {
 	private boolean boolOperand;
 	
 	@Override
-	public boolean evaluate(MedicFormFieldResponse response) {
+	public boolean evaluate(MedicFormFieldResponse response, MedicFormResponse formResponse, ApplicationContext appCon) {
 		boolean v = response.getValue().equalsIgnoreCase("true");
 		return v == boolOperand;
 	}

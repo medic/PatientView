@@ -1,10 +1,7 @@
 package net.frontlinesms.plugins.patientview.ui.dashboard.tabs;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
-
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -13,9 +10,9 @@ import net.frontlinesms.plugins.patientview.data.domain.vaccine.ScheduledDose;
 import net.frontlinesms.plugins.patientview.data.domain.vaccine.Vaccine;
 import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
 import net.frontlinesms.plugins.patientview.data.repository.VaccineDao;
-import net.frontlinesms.plugins.patientview.ui.advancedtable.TableController;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.HeaderColumn;
 import net.frontlinesms.plugins.patientview.ui.advancedtable.TableActionDelegate;
+import net.frontlinesms.plugins.patientview.ui.advancedtable.TableController;
 import net.frontlinesms.plugins.patientview.ui.dashboard.tabs.vaccine.RescheduleVaccinesDialog;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.DateField;
 import net.frontlinesms.plugins.patientview.ui.thinletformfields.FormFieldDelegate;

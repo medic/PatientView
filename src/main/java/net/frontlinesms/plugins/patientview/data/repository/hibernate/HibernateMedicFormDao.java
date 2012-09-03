@@ -5,10 +5,12 @@ import java.util.List;
 import net.frontlinesms.data.repository.hibernate.BaseHibernateDao;
 import net.frontlinesms.plugins.forms.data.domain.Form;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
+import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormSeries;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;
 
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.DistinctRootEntityResultTransformer;
 
@@ -45,5 +47,13 @@ public class HibernateMedicFormDao extends BaseHibernateDao<MedicForm> implement
 		DetachedCriteria c = DetachedCriteria.forClass(MedicForm.class);
 		c.add(Restrictions.eq("vanillaForm", form));
 		return super.getUnique(c);
+	}
+
+	public List<MedicForm> getFormsForSeries(MedicFormSeries series) {
+		DetachedCriteria c = DetachedCriteria.forClass(MedicForm.class);
+		c.add(Restrictions.eq("series", series));
+		c.addOrder(Order.asc("seriesPosition"));
+		return super.getList(c);
+
 	}
 }

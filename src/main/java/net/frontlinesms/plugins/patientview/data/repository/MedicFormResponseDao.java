@@ -63,4 +63,7 @@ public interface MedicFormResponseDao {
 	public int countFindFormResponsesWithPeople(Person submitter, Person subject, MedicForm form);
 	
 	public List<MedicFormResponse> findFormResponsesWithPeople(Person submitter, Person subject, MedicForm form, Date aroundDate, int startIndex, int maxResults);
+	
+	public MedicFormResponse findLatestFormResponseForSubject(Person subject, MedicForm form);
+
 }
