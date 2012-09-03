@@ -23,8 +23,14 @@ public class SimpleSearchQueryGenerator extends QueryGenerator{
 			query +="deleted = false and ";
 		}
 		if(field.getDataType() == SimpleSearchDataType.STRING){
-			query +=  "lower(" +sEntity.getTableAlias() + "." + field.getDatabaseName()+")";
-			query += " like '%" + searchController.getTextInput().toLowerCase() + "%'";
+			if(sEntity == SimpleSearchEntity.PATIENT && field.getDatabaseName() == "pid"){
+				query += "( cast(" + sEntity.getTableAlias() + ".pid as string) like '%"+searchController.getTextInput() + "%'";
+				query += "or " + sEntity.getTableAlias() + ".externalId like '%"+searchController.getTextInput() + "%')"; 
+			}else{
+				query +=  "lower(" +sEntity.getTableAlias() + "." + field.getDatabaseName()+")";
+				query += " like '%" + searchController.getTextInput().toLowerCase() + "%'";
+			}
+			
 		}else if(field.getDataType() == SimpleSearchDataType.NUMBER){
 			if(searchController.getNumberInput().equals("") || searchController.getNumberInput() == null){
 				return;
@@ -34,8 +40,8 @@ public class SimpleSearchQueryGenerator extends QueryGenerator{
 			}catch(Exception e){
 				return;
 			}
-			query +=  sEntity.getTableAlias() + "." + field.getDatabaseName();
-			query += " = " + searchController.getNumberInput();
+			query +=  "("+ sEntity.getTableAlias() + "." + field.getDatabaseName();
+			query += " = " + searchController.getNumberInput() ;
 		}else if(field.getDataType() == SimpleSearchDataType.ENUM){
 			query +=  sEntity.getTableAlias() + "." + field.getDatabaseName();
 			query += " = '" + searchController.getEnumInput() + "'";

@@ -29,7 +29,7 @@ public enum SimpleSearchEntity {
 			 new FieldDescriptor[] {new FieldDescriptor(null,"simplesearch.fields.name","name",SimpleSearchDataType.STRING),
 									new FieldDescriptor(null,"simplesearch.fields.chw.name","chw.name",SimpleSearchDataType.STRING),
 									new FieldDescriptor(null,"simplesearch.fields.birthdate","birthdate",SimpleSearchDataType.DATE),
-									new FieldDescriptor(null,"simplesearch.fields.id","pid",SimpleSearchDataType.NUMBER)}),
+									new FieldDescriptor(null,"simplesearch.fields.id","pid",SimpleSearchDataType.STRING)}),
 	
 	CHW("medic.common.chws",
 		"chw",
@@ -101,6 +101,7 @@ public enum SimpleSearchEntity {
 		this.tableAlias = tableAlias;
 		this.fields = new ArrayList<FieldDescriptor>();
 		for(int i = 0; i < fields.length; i++ ){
+			fields[i].setParentEntity(this);
 			this.fields.add(fields[i]);
 		}
 	}

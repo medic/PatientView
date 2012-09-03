@@ -35,10 +35,19 @@ import org.hibernate.annotations.IndexColumn;
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 public abstract class Person extends Deletable{
 	
+
 	/** Unique id for this entity.  This is for hibernate usage. */
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(unique=true,nullable=false,updatable=false)
 	protected long pid;
+	
+	public long getPid(){
+		return pid;
+	}
+	
+	public void setPid(long pid){
+		this.pid = pid;
+	}
 	
 	/**
 	 * Name of this person
@@ -100,10 +109,6 @@ public abstract class Person extends Deletable{
 		this.gender = gender;
 		this.birthdate = birthdate;
 		this.phoneNumber = phoneNumber;
-	}
-	
-	public long getPid() {
-		return pid;
 	}
 	
 	/**

@@ -200,7 +200,9 @@ public class SimpleSearchController implements ThinletUiEventHandler, SearchCont
 	}
 
 	public void textEntryChanged(){
-		if(currentField.getDataType().equals(SimpleSearchDataType.NUMBER)){
+		if(currentField.getDataType().equals(SimpleSearchDataType.NUMBER) || 
+				(currentField.getParentEntity() == SimpleSearchEntity.PATIENT &&
+				 currentField.getDatabaseName() == "pid")){
 			searchButtonPressed();
 		}else if(getTextInput().length() >= 3 || getTextInput().trim().equals("")){
 			searchButtonPressed();

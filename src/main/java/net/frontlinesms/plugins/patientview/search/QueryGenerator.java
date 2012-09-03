@@ -9,8 +9,6 @@ import org.springframework.context.ApplicationContext;
 /**
  * A base class for generating HQL search queries
  * Has utilities for paging, query running, and performance monitoring
- * @author Dieterich Lawson
- *
  */
 public abstract class QueryGenerator extends PagedResultSet{
 	
