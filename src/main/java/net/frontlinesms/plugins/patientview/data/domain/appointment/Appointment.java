@@ -39,6 +39,8 @@ public class Appointment {
 	@Basic(optional=true)
 	protected long dateScheduled;
 	
+	protected String appointmentName;
+
 	protected boolean attended;
 	
 	protected String location;
@@ -113,5 +115,13 @@ public class Appointment {
 
 	public String getNote() {
 		return note;
+	}
+
+	public String getAppointmentName() {
+		return appointmentName;
+	}
+
+	public void setAppointmentName(String appointmentName) {
+		this.appointmentName = appointmentName;
 	}
 }

@@ -34,9 +34,7 @@ public class ScheduledDose extends Appointment implements Comparable<ScheduledDo
 	
 	@ManyToOne(cascade={},fetch=FetchType.EAGER,optional=true)
 	private Person administeredBy;
-	
-	private String appointmentName;
-	
+		
 	public ScheduledDose(){}
 	
 	public ScheduledDose(VaccineDose dose, Patient patient, long windowStartDate) {
@@ -51,8 +49,8 @@ public class ScheduledDose extends Appointment implements Comparable<ScheduledDo
 	}
 
 	public String getDoseName(){
-		if(StringUtils.hasText(appointmentName)){
-			return appointmentName;
+		if(StringUtils.hasText(getAppointmentName())){
+			return getAppointmentName();
 			
 		}else{
 			return dose.getName();

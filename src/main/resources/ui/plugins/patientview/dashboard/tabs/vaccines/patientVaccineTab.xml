@@ -15,5 +15,17 @@
             <label weightx="1"/>
             <button action="rescheduleAllDosesClicked()" name="rescheduleAllButton" text="i18n.medic.appointments.reschedule.all" icon="/icons/calendar_refresh_all.png"/>
         </panel>
+        <panel  name="appointmentNotesPanel" weightx="1" weighty="1">
+          <panel visible="false" top="5" bottom="5" left="5" right="5" columns="1" gap="5" name="innerNotesPanel" weightx="1" weighty="1" border="true">
+	          <textarea name="notesTextArea" border="false" editable="false" weightx="1" weighty="1" wrap="true"/>
+	          <panel weightx="1" name="editNotesButtonPanel" halign="right" valign="bottom">
+	          	<button action="editNotes()" name="editNotesButton" text="Edit" icon="/icons/pencil.png"/>
+	          </panel>
+	          <panel visible="false" gap="10" weightx="1" name="saveNotesButtonPanel" halign="right" valign="bottom">
+	          	<button action="saveNotes()" name="saveNotesButton" text="Save" icon="/icons/tick.png"/>
+	          	<button action="cancelEditingNotes()" name="crossNotesButton" text="Cancel" icon="/icons/cross.png"/>
+	          </panel>
+          </panel>
+        </panel>
     </panel>
 </panel>

@@ -23,6 +23,7 @@ import net.frontlinesms.ui.ThinletUiEventHandler;
 import net.frontlinesms.ui.UiGeneratorController;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.util.StringUtils;
 
 public class PatientVaccineTab extends TabController implements ThinletUiEventHandler, TableActionDelegate, FormFieldDelegate {
 
@@ -66,6 +67,12 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 	private static final String NO_APPT_SERIES= getI18nString("medic.appointments.no.series");
 	private static final String NO_APPTS_SCHEDULED= getI18nString("medic.appointments.none.scheduled");
 	private static final String ALL_APPT_SERIES = getI18nString("medic.appointments.series.all");
+	
+	private static final String NOTES_PANEL = "appointmentNotesPanel";
+	private static final String INNER_NOTES_PANEL = "innerNotesPanel";
+	private static final String NOTES_TEXT_AREA = "notesTextArea";
+	private static final String EDIT_NOTES_BUTTONS = "editNotesButtonPanel";
+	private static final String SAVE_NOTES_BUTTONS = "saveNotesButtonPanel";
 	
 	private TableController scheduledDoseController;
 	
@@ -407,6 +414,42 @@ public class PatientVaccineTab extends TabController implements ThinletUiEventHa
 	
 	public void selectionChanged(Object selectedObject) {
 		updateDoseActionButtons();
+		updateNotesPanel();
+	}
+	
+	private void updateNotesPanel(){
+		ScheduledDose dose = (ScheduledDose) scheduledDoseController.getSelectedObject();
+		if(dose == null) return;
+		ui.setVisible(ui.find(mainPanel,INNER_NOTES_PANEL),true);
+		ui.setVisible(ui.find(mainPanel,EDIT_NOTES_BUTTONS),true);
+		ui.setVisible(ui.find(mainPanel,SAVE_NOTES_BUTTONS),false);
+		ui.setEditable(ui.find(mainPanel,NOTES_TEXT_AREA), false);
+		ui.setBorder(ui.find(mainPanel,NOTES_TEXT_AREA), false);
+		ui.setText(ui.find(mainPanel,INNER_NOTES_PANEL), "Notes for '" + dose.getAppointmentName() + "'");
+		ui.setText(ui.find(mainPanel,NOTES_TEXT_AREA), dose.getNote());
+	}
+	
+	public void editNotes(){
+		ui.setEditable(ui.find(mainPanel,NOTES_TEXT_AREA), true);
+		ui.setBorder(ui.find(mainPanel,NOTES_TEXT_AREA), true);
+		ui.setVisible(ui.find(mainPanel,EDIT_NOTES_BUTTONS),false);
+		ui.setVisible(ui.find(mainPanel,SAVE_NOTES_BUTTONS),true);
+	}
+	
+	public void saveNotes(){
+		ScheduledDose dose = (ScheduledDose) scheduledDoseController.getSelectedObject();
+		dose.setNote(ui.getText(ui.find(mainPanel,NOTES_TEXT_AREA)));
+		scheduledDoseDao.saveOrUpdateScheduledDose(dose);
+		cancelEditingNotes();
+	}
+	
+	public void cancelEditingNotes(){
+		ui.setEditable(ui.find(mainPanel,NOTES_TEXT_AREA), false);
+		ui.setBorder(ui.find(mainPanel,NOTES_TEXT_AREA), false);
+		ui.setVisible(ui.find(mainPanel,EDIT_NOTES_BUTTONS),true);
+		ui.setVisible(ui.find(mainPanel,SAVE_NOTES_BUTTONS),false);
+		ScheduledDose dose = (ScheduledDose) scheduledDoseController.getSelectedObject();
+		ui.setText(ui.find(mainPanel,NOTES_TEXT_AREA), dose.getNote());
 	}
 
 	public void formFieldChanged(ThinletFormField changedField, String newValue) {}
