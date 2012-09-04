@@ -8,6 +8,9 @@ import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormSeries;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;
 
+import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -35,6 +38,19 @@ public class HibernateMedicFormDao extends BaseHibernateDao<MedicForm> implement
 	public List<MedicForm> getAllMedicForms() {
 		return super.getAll();
 	}
+	
+	public List<MedicForm> getAllMedicFormsInitialized() {
+		Session session = this.getSessionFactory().openSession();
+		Criteria c = session.createCriteria(MedicForm.class);
+		c.setResultTransformer(DistinctRootEntityResultTransformer.INSTANCE);
+		List<MedicForm> forms = c.list();
+		for(MedicForm form : forms){
+			if(form.getSeries() == null) continue;
+			Hibernate.initialize(form.getSeries().getForms());
+		}
+		session.close();
+		return forms;
+	}
 
 	public List<MedicForm> findMedicFormsByName(String nameFragment){
 		DetachedCriteria c = DetachedCriteria.forClass(MedicForm.class);
@@ -50,10 +66,24 @@ public class HibernateMedicFormDao extends BaseHibernateDao<MedicForm> implement
 	}
 
 	public List<MedicForm> getFormsForSeries(MedicFormSeries series) {
-		DetachedCriteria c = DetachedCriteria.forClass(MedicForm.class);
+		Session session = this.getSessionFactory().openSession();
+		Criteria c = session.createCriteria(MedicForm.class);
 		c.add(Restrictions.eq("series", series));
 		c.addOrder(Order.asc("seriesPosition"));
-		return super.getList(c);
+		c.setResultTransformer(DistinctRootEntityResultTransformer.INSTANCE);
+		List<MedicForm> forms = c.list();
+		for(MedicForm form : forms){
+			if(form.getSeries() == null) continue;
+			Hibernate.initialize(form.getSeries().getForms());
+		}
+		session.close();
+		return forms;
+	}
 
+	public List<MedicForm> getFormsNotInSeries() {
+		DetachedCriteria c = DetachedCriteria.forClass(MedicForm.class);
+		c.add(Restrictions.isNull("series"));
+		c.setResultTransformer(DistinctRootEntityResultTransformer.INSTANCE);
+		return super.getList(c);
 	}
 }

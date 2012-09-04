@@ -1,0 +1,13 @@
+<panel columns="2" gap="5" name="formSeriesPanel" weightx="1" weighty="1">
+	<list action="formListSelectionChanged" name="formList" weightx="1" weighty="1" />
+	<panel columns="1" gap="5" valign="center">
+		<button action="moveFormUp()" name="upButton" text="▲" />
+		<button action="moveFormDown()" name="downButton" text="▼" />
+	</panel>
+	<panel gap="5" weightx="1">
+		<label text="Add form to series:" />
+		<combobox action="insertForm()" editable="false" name="addFormToSeriesCombobox" />
+		<label weightx="1" />
+		<button action="removeForm()" name="removeFormButton" text="Remove Form" />
+	</panel>
+</panel>

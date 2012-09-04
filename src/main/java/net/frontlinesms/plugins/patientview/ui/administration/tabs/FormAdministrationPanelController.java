@@ -4,12 +4,14 @@ import java.util.Collection;
 
 import net.frontlinesms.plugins.forms.data.domain.Form;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
-import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm.MedicFormType;
+import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField.PatientFieldMapping;
+import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormSeries;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormFieldDao;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormResponseDao;
+import net.frontlinesms.plugins.patientview.data.repository.MedicFormSeriesDao;
 import net.frontlinesms.plugins.patientview.ui.administration.AdministrationTabPanel;
 import net.frontlinesms.ui.UiGeneratorController;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
@@ -25,7 +27,7 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 	private static final String FIELDS_ON_FORM_PREFIX = "admin.forms.fields.on.form.prefix";
 	private static final String FORM_ALREADY_RESPONDED_TO_DIALG = "admin.forms.form.already.responded.to.dialog";
 	
-	private static final String FORM_PANEL_XML = "/ui/plugins/patientview/administration/formAdministrationPanel.xml";
+	private static final String FORM_PANEL_XML = "/ui/plugins/patientview/administration/forms/formAdministrationPanel.xml";
 	
 	/* Thinlet objects */
 	/**The main Thinlet container for this panel */
@@ -42,6 +44,7 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 	/* Daos */
 	MedicFormDao patientViewFormDao;
 	MedicFormFieldDao patientViewFieldDao;
+	private MedicFormSeriesDao seriesDao;
 	
 	public String getListItemTitle() {
 		return InternationalisationUtils.getI18nString(FORM_PANEL_TITLE);
@@ -60,6 +63,7 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 		//initialize the daos
 		patientViewFormDao = (MedicFormDao) appCon.getBean("MedicFormDao");
 		patientViewFieldDao = (MedicFormFieldDao) appCon.getBean("MedicFormFieldDao");
+		seriesDao = (MedicFormSeriesDao) appCon.getBean("MedicFormSeriesDao");
 		//initialize the lists, etc..
 		populatePatientViewFormList();
 	}
@@ -87,7 +91,7 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 	 * proper list
 	 */
 	private void populatePatientViewFormList(){
-		Collection<MedicForm> pvForms = patientViewFormDao.getAllMedicForms();
+		Collection<MedicForm> pvForms = patientViewFormDao.getAllMedicFormsInitialized();
 		removeAll(patientViewFormList);
 		for(MedicForm f: pvForms){
 			Object item = ui.createListItem(f.getName(), f);
@@ -107,7 +111,35 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 		if(selectedForm != null){
 			populateFieldList(selectedForm);
 			populateFormTypeSelect(selectedForm);
+			addFormSeriesPanel(selectedForm);
 		}
+	}
+	
+	private void addFormSeriesPanel(MedicForm form){
+		Object outerPanel = find("outerSeriesPanel");
+		ui.removeAll(outerPanel);
+		if(form.getSeries() != null){
+			FormSeriesPanelController panel = new FormSeriesPanelController(ui, appCon, (MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList)));
+			ui.add(outerPanel,panel.getMainPanel());
+		}else{
+			Object button = ui.createButton("Create Form Series", "createFormSeries()",null, this);
+			Object panel = ui.createPanel("outerButtonPanel");
+			ui.setHAlign(panel, "center");
+			ui.setVAlign(panel, "center");
+			ui.setWeight(panel, 1, 1);
+			ui.add(panel,button);
+			ui.add(outerPanel,panel);
+		}
+	}
+	
+	public void createFormSeries(){
+		MedicForm selectedForm = (MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList));
+		MedicFormSeries series = new MedicFormSeries(selectedForm);
+		seriesDao.saveFormSeries(series);
+		Object outerPanel = find("outerSeriesPanel");
+		ui.removeAll(outerPanel);
+		FormSeriesPanelController panel = new FormSeriesPanelController(ui, appCon, (MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList)));
+		ui.add(outerPanel,panel.getMainPanel());
 	}
 	
 	/**

@@ -4,11 +4,11 @@
     <label font="17 bold" text="i18n.admin.tabs.form.panel.title"/>
     <separator/>
     <panel columns="3" gap="5" top="5" weightx="1" weighty="1">
-        <panel border="true" bottom="5" columns="1" gap="5" icon="/icons/form.png" left="5" name="formListPanel" right="5" text="i18n.admin.forms.patientview.forms" top="2" weightx="1" weighty="1">
+        <panel border="true" bottom="5" columns="1" gap="5" icon="/icons/form.png" left="5" name="formListPanel" right="5" text="i18n.admin.forms.patientview.forms" top="2" weightx="2" weighty="1">
             <list action="patientViewFormListSelectionChanged()" name="patientViewFormList" weightx="1" weighty="1"/>
             <button action="removeButtonClicked()" halign="center" icon="/icons/delete.png" name="removePatientViewFormButton" text="i18n.admin.forms.remove.patientview.form"/>
         </panel>
-        <panel border="true" bottom="5" icon="/icons/textfield.png" left="5" name="fieldListPanel" right="5" top="2" weightx="1" weighty="1">
+        <panel border="true" bottom="5" icon="/icons/textfield.png" left="5" name="fieldListPanel" right="5" top="2" weightx="2" weighty="1">
             <list action="fieldListSelectionChanged()" name="fieldList" rowspan="2" weightx="1" weighty="1"/>
         </panel>
         <panel columns="1" gap="5" weightx="1" weighty="1">
@@ -18,7 +18,7 @@
             <panel border="true" bottom="5" icon="/icons/link.png" left="5" name="fieldInfoPanel" right="5" text="i18n.admin.forms.field.mapping" top="3" weightx="1">
                 <combobox editable="false" name="mappingComboBox" weightx="1"/>
             </panel>
-            <panel columns="1" rowspan="2" weightx="1" weighty="1"/>
+            <panel border="true" text="Form Series" columns="1" rowspan="2" weightx="1" weighty="1" name="outerSeriesPanel" top="5" bottom="5" left="5" right="5"/>
             <panel columns="1" gap="4" left="6" right="6">
                 <separator/>
                 <label font="bold" halign="center" icon="/icons/help.png" text="i18n.admin.forms.blurb.title"/>

@@ -14,4 +14,5 @@ public interface MedicFormSeriesDao {
 	public void updateFormSeries(MedicFormSeries series);
 	
 	public List<MedicFormSeries> getAllFormSeries();	
+	public void initializeSeries(MedicFormSeries series);
 }

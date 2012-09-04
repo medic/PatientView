@@ -47,5 +47,9 @@ public interface MedicFormDao {
 	
 	
 	public List<MedicForm> getFormsForSeries(MedicFormSeries series);
+	
+	public List<MedicForm> getFormsNotInSeries();
+	
+	public List<MedicForm> getAllMedicFormsInitialized();
 
 }
