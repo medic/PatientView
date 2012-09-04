@@ -31,6 +31,10 @@ public class HibernateMedicFormResponseSeriesDao extends BaseHibernateDao<MedicF
 	public MedicFormDao getFormDao (){return formDao;}
 	
 	public List<MedicFormResponse> getFormResponseSeries(Person subject, MedicFormSeries series) {
+		return getFormResponseSeries(subject, series.getName());
+	}
+	
+	public List<MedicFormResponse> getFormResponseSeries(Person subject, String series) {
 		List<MedicFormResponse> responses = new ArrayList<MedicFormResponse>();
 		List<MedicForm> forms = formDao.getFormsForSeries(series);
 		for(MedicForm form : forms){
@@ -43,6 +47,10 @@ public class HibernateMedicFormResponseSeriesDao extends BaseHibernateDao<MedicF
 	}
 
 	public Map<String, String> getFieldValuesInFormResponseSeries(Person subject, MedicFormSeries series, DataType type) {
+		return getFieldValuesInFormResponseSeries(subject, series.getName(), type);	
+	}
+	
+	public Map<String, String> getFieldValuesInFormResponseSeries(Person subject, String series, DataType type) {
 		List<MedicFormResponse> responses = getFormResponseSeries(subject,series);
 		Map<String,String> values = new HashMap<String,String>();
 		for(MedicFormResponse response: responses){

@@ -8,9 +8,6 @@ import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormSeries;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;
 
-import org.hibernate.Criteria;
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -38,19 +35,6 @@ public class HibernateMedicFormDao extends BaseHibernateDao<MedicForm> implement
 	public List<MedicForm> getAllMedicForms() {
 		return super.getAll();
 	}
-	
-	public List<MedicForm> getAllMedicFormsInitialized() {
-		Session session = this.getSessionFactory().openSession();
-		Criteria c = session.createCriteria(MedicForm.class);
-		c.setResultTransformer(DistinctRootEntityResultTransformer.INSTANCE);
-		List<MedicForm> forms = c.list();
-		for(MedicForm form : forms){
-			if(form.getSeries() == null) continue;
-			Hibernate.initialize(form.getSeries().getForms());
-		}
-		session.close();
-		return forms;
-	}
 
 	public List<MedicForm> findMedicFormsByName(String nameFragment){
 		DetachedCriteria c = DetachedCriteria.forClass(MedicForm.class);
@@ -66,18 +50,15 @@ public class HibernateMedicFormDao extends BaseHibernateDao<MedicForm> implement
 	}
 
 	public List<MedicForm> getFormsForSeries(MedicFormSeries series) {
-		Session session = this.getSessionFactory().openSession();
-		Criteria c = session.createCriteria(MedicForm.class);
-		c.add(Restrictions.eq("series", series));
+		return getFormsForSeries(series.getName());
+	}
+	
+	public List<MedicForm> getFormsForSeries(String series) {
+		DetachedCriteria c = DetachedCriteria.forClass(MedicForm.class);
+		c.add(Restrictions.eq("series",series));
 		c.addOrder(Order.asc("seriesPosition"));
 		c.setResultTransformer(DistinctRootEntityResultTransformer.INSTANCE);
-		List<MedicForm> forms = c.list();
-		for(MedicForm form : forms){
-			if(form.getSeries() == null) continue;
-			Hibernate.initialize(form.getSeries().getForms());
-		}
-		session.close();
-		return forms;
+		return super.getList(c);
 	}
 
 	public List<MedicForm> getFormsNotInSeries() {
@@ -85,5 +66,11 @@ public class HibernateMedicFormDao extends BaseHibernateDao<MedicForm> implement
 		c.add(Restrictions.isNull("series"));
 		c.setResultTransformer(DistinctRootEntityResultTransformer.INSTANCE);
 		return super.getList(c);
+	}
+
+	public MedicForm getMedicFormForId(long id) {
+		DetachedCriteria c = DetachedCriteria.forClass(MedicForm.class);
+		c.add(Restrictions.eq("fid", id));
+		return super.getUnique(c);
 	}
 }

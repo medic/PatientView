@@ -5,11 +5,9 @@ import java.util.List;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormSeries;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;
-import net.frontlinesms.plugins.patientview.data.repository.MedicFormSeriesDao;
 import net.frontlinesms.plugins.patientview.ui.ViewHandler;
 import net.frontlinesms.ui.UiGeneratorController;
 
-import org.hibernate.Hibernate;
 import org.springframework.context.ApplicationContext;
 
 public class FormSeriesPanelController extends ViewHandler{
@@ -21,9 +19,7 @@ public class FormSeriesPanelController extends ViewHandler{
 	private MedicFormSeries series;
 	
 	private MedicFormDao formDao;
-	
-	private MedicFormSeriesDao seriesDao;
-	
+		
 	private static final String FORM_LIST = "formList";
 	private static final String UP_BUTTON = "upButton";
 	private static final String DOWN_BUTTON = "downButton";
@@ -32,9 +28,8 @@ public class FormSeriesPanelController extends ViewHandler{
 	public FormSeriesPanelController(UiGeneratorController ui, ApplicationContext appCon, MedicForm form) {
 		super(ui, appCon, UI_XML);
 		this.form = form;
-		this.series = form.getSeries();
 		this.formDao = (MedicFormDao) appCon.getBean("MedicFormDao");
-		this.seriesDao = (MedicFormSeriesDao) appCon.getBean("MedicFormSeriesDao");
+		this.series = new MedicFormSeries(formDao.getFormsForSeries(form.getSeries()));
 		populateSeriesList(0);
 		populateAddFormSelect();
 	}
@@ -53,11 +48,13 @@ public class FormSeriesPanelController extends ViewHandler{
 	public void formListSelectionChanged(){
 		if(getSelectedIndex() == 0){
 			ui.setEnabled(ui.find(mainPanel,UP_BUTTON), false);
-		}else if(getSelectedIndex() == ui.getCount(ui.find(mainPanel,FORM_LIST))){
+		}else{
+			ui.setEnabled(ui.find(mainPanel,UP_BUTTON), true);
+		}
+		if(getSelectedIndex() == series.getForms().size() -1){
 			ui.setEnabled(ui.find(mainPanel,DOWN_BUTTON), false);
 		}else{
 			ui.setEnabled(ui.find(mainPanel,DOWN_BUTTON), true);
-			ui.setEnabled(ui.find(mainPanel,UP_BUTTON), true);
 		}
 	}
 	
@@ -75,10 +72,11 @@ public class FormSeriesPanelController extends ViewHandler{
 			indexToSelect = forms.size() - 1;
 		}
 		ui.setSelectedIndex(ui.find(mainPanel,FORM_LIST), indexToSelect);
+		formListSelectionChanged();
 	}
 	
 	private MedicForm getSelectedForm(){
-		return (MedicForm) ui.getAttachedObject(ui.getSelectedItem(ui.find(mainPanel,FORM_LIST)));
+		return series.getForm(getSelectedIndex());
 	}
 	
 	private int getSelectedIndex(){
@@ -86,52 +84,39 @@ public class FormSeriesPanelController extends ViewHandler{
 	}
 	
 	public void moveFormUp(){
-		moveForm(getSelectedForm(),-1);
+		moveForm(getSelectedIndex(),-1);
 	}
 	
 	public void moveFormDown(){
-		moveForm(getSelectedForm(),1);
+		moveForm(getSelectedIndex(),1);
 	}
 	
-	private void moveForm(MedicForm toMove, int dIndex){
-		int index = getSelectedIndex();
-		MedicForm form = getSelectedForm();
-		List<MedicForm> forms = formDao.getFormsForSeries(series);
-		forms.remove(form);
-		forms.add(index+dIndex,form);
-		for(int i = 0; i < forms.size();i++){
-			forms.get(i).setSeriesPosition(i);
-			formDao.updateMedicForm(forms.get(i));
+	private void moveForm(int indexToMove, int dIndex){
+		series.moveForm(indexToMove, getSelectedIndex() + dIndex);
+		for(MedicForm sForm : series.getForms()){
+			formDao.updateMedicForm(sForm);
 		}
-		series.moveForm(form, index + dIndex);
-		populateSeriesList(index + dIndex);
+		populateSeriesList(getSelectedIndex() + dIndex);
 	}
 
 	public void removeForm(){
 		MedicForm form = getSelectedForm();
-		List<MedicForm> forms = formDao.getFormsForSeries(series);
-		forms.remove(form);
-		form.setSeries(null);
-		for(int i = 0; i < forms.size();i++){
-			forms.get(i).setSeriesPosition(i);
-			formDao.updateMedicForm(forms.get(i));
+		series.removeForm(form);
+		for(MedicForm sForm : series.getForms()){
+			formDao.updateMedicForm(sForm);
 		}
 		formDao.updateMedicForm(form);
 		populateSeriesList(getSelectedIndex());
+		populateAddFormSelect();
 		//TODO: If you just removed the selected form, close
 	}
 	
 	public void insertForm(){
-		MedicForm form = getSelectedForm();
-//		List<MedicForm> forms = formDao.getFormsForSeries(series);
-//		form.setSeries(series);
-//		forms.add(getSelectedIndex()+1,form);
-//		for(int i = 0; i < forms.size();i++){
-//			forms.get(i).setSeriesPosition(i);
-//			formDao.updateMedicForm(forms.get(i));
-//		}
+		MedicForm form = (MedicForm) ui.getAttachedObject(ui.getSelectedItem(ui.find(mainPanel,ADD_FORM_SELECT)));
 		series.insertForm(form, getSelectedIndex()+1);
-		seriesDao.updateFormSeries(series);
+		for(MedicForm sForm : series.getForms()){
+			formDao.updateMedicForm(sForm);
+		}
 		populateSeriesList(getSelectedIndex()+1);
 		populateAddFormSelect();
 	}

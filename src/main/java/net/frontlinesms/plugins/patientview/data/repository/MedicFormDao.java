@@ -31,6 +31,8 @@ public interface MedicFormDao {
 	 */
 	public List<MedicForm> getAllMedicForms();
 	
+	public MedicForm getMedicFormForId(long id);
+	
 	/**
 	 * Finds all MedicForms with nameFragment anywhere
 	 * in their name. Performs a like query.
@@ -47,9 +49,7 @@ public interface MedicFormDao {
 	
 	
 	public List<MedicForm> getFormsForSeries(MedicFormSeries series);
+	public List<MedicForm> getFormsForSeries(String series);
 	
 	public List<MedicForm> getFormsNotInSeries();
-	
-	public List<MedicForm> getAllMedicFormsInitialized();
-
 }

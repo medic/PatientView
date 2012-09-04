@@ -60,10 +60,8 @@ public class MedicForm{
 	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE, mappedBy = "form")
 	private List<Flag> flags;
-
-	@ManyToOne(cascade={},fetch=FetchType.EAGER,optional=true)
-	@JoinColumn(name="parentForm")
-	private MedicFormSeries series;
+	
+	private String series;
 	
 	private int seriesPosition;
 	
@@ -269,11 +267,11 @@ public class MedicForm{
 		this.seriesPosition = seriesPosition;
 	}
 
-	public MedicFormSeries getSeries() {
+	public String getSeries() {
 		return series;
 	}
 
-	public void setSeries(MedicFormSeries series) {
+	public void setSeries(String series) {
 		this.series = series;
 	}
 }

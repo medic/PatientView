@@ -3,37 +3,21 @@ package net.frontlinesms.plugins.patientview.data.domain.framework;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-
 public class MedicFormSeries {
 
-	/** Unique id for this entity. This is for hibernate usage. */
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(unique = true, nullable = false, updatable = false)
-	private long fsid;
-	
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "series")
-	@Cascade({CascadeType.SAVE_UPDATE})
-	@OrderBy(value="seriesPosition")
 	private List<MedicForm> forms;
+	private String name;
 	
-	public MedicFormSeries(){}
-	
-	public MedicFormSeries(MedicForm first){
+	public MedicFormSeries(MedicForm first, String name){
 		forms = new ArrayList<MedicForm>();
+		this.setName(name);
 		addForm(first);
+	}
+	
+	public MedicFormSeries(List<MedicForm> forms){
+		this.forms = forms;
+		if(forms.size() > 0)
+			this.name = forms.get(0).getName();
 	}
 	
 	public void setForms(List<MedicForm> forms){
@@ -41,13 +25,9 @@ public class MedicFormSeries {
 		updatePositions();
 	}
 	
-	public long getFsid() {
-		return fsid;
-	}
-	
 	public boolean addForm(MedicForm form){
 		boolean val = forms.add(form);
-		form.setSeries(this);
+		form.setSeries(getName());
 		updatePositions();
 		return val;
 	}
@@ -59,15 +39,15 @@ public class MedicFormSeries {
 		return val;
 	}
 	
-	public void moveForm(MedicForm form, int newIndex){
-		forms.remove(form);
+	public void moveForm(int oldIndex, int newIndex){
+		MedicForm form = forms.remove(oldIndex);
 		forms.add(newIndex,form);
 		updatePositions();
 	}
 	
 	public void insertForm(MedicForm form, int index){
-		form.setSeries(this);
 		forms.add(index, form);
+		form.setSeries(getName());
 		updatePositions();
 	}
 	
@@ -83,5 +63,13 @@ public class MedicFormSeries {
 	
 	public List<MedicForm> getForms(){
 		return forms;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }
