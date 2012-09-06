@@ -30,7 +30,7 @@ public class MedicFormResponse extends Response{
 	@JoinColumn(name="form" )
 	private MedicForm form;
 	
-	@OneToMany(fetch=FetchType.LAZY,mappedBy="formResponse",cascade=CascadeType.ALL)
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="formResponse",cascade=CascadeType.ALL)
 	@OrderBy(clause = "responsePosition asc")
 	private List<MedicFormFieldResponse> responses;
 	

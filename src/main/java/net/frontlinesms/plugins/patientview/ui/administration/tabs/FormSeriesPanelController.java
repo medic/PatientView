@@ -19,17 +19,20 @@ public class FormSeriesPanelController extends ViewHandler{
 	private MedicFormSeries series;
 	
 	private MedicFormDao formDao;
+	
+	private FormAdministrationPanelController parent;
 		
 	private static final String FORM_LIST = "formList";
 	private static final String UP_BUTTON = "upButton";
 	private static final String DOWN_BUTTON = "downButton";
 	private static final String ADD_FORM_SELECT = "addFormToSeriesCombobox";
 	
-	public FormSeriesPanelController(UiGeneratorController ui, ApplicationContext appCon, MedicForm form) {
+	public FormSeriesPanelController(UiGeneratorController ui, ApplicationContext appCon, MedicForm form,FormAdministrationPanelController parent) {
 		super(ui, appCon, UI_XML);
 		this.form = form;
 		this.formDao = (MedicFormDao) appCon.getBean("MedicFormDao");
 		this.series = new MedicFormSeries(formDao.getFormsForSeries(form.getSeries()));
+		this.parent = parent;
 		populateSeriesList(0);
 		populateAddFormSelect();
 	}
@@ -60,16 +63,15 @@ public class FormSeriesPanelController extends ViewHandler{
 	
 	private void populateSeriesList(int indexToSelect){
 		if(series == null) return;
-		List<MedicForm> forms = formDao.getFormsForSeries(series);
 		ui.removeAll(ui.find(mainPanel,FORM_LIST));
-		for(MedicForm form : forms){
+		for(MedicForm form : series.getForms()){
 			Object item = ui.createListItem(form.getName(), form);
 			ui.add(ui.find(mainPanel,FORM_LIST),item);
 		}
 		if(indexToSelect < 0 ){
 			indexToSelect = 0;
-		}else if(indexToSelect >= forms.size()){
-			indexToSelect = forms.size() - 1;
+		}else if(indexToSelect >= series.getForms().size()){
+			indexToSelect = series.getForms().size() - 1;
 		}
 		ui.setSelectedIndex(ui.find(mainPanel,FORM_LIST), indexToSelect);
 		formListSelectionChanged();
@@ -108,7 +110,9 @@ public class FormSeriesPanelController extends ViewHandler{
 		formDao.updateMedicForm(form);
 		populateSeriesList(getSelectedIndex());
 		populateAddFormSelect();
-		//TODO: If you just removed the selected form, close
+		if(form.getFid() == this.form.getFid()){
+			parent.formSeriesDeleted();
+		}
 	}
 	
 	public void insertForm(){

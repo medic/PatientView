@@ -1,5 +1,6 @@
 package net.frontlinesms.plugins.patientview.data.repository.hibernate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.frontlinesms.data.repository.hibernate.BaseHibernateDao;
@@ -13,6 +14,7 @@ import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.DistinctRootEntityResultTransformer;
+import org.springframework.util.StringUtils;
 
 public class HibernateMedicFormDao extends BaseHibernateDao<MedicForm> implements MedicFormDao{
 	
@@ -54,6 +56,7 @@ public class HibernateMedicFormDao extends BaseHibernateDao<MedicForm> implement
 	}
 	
 	public List<MedicForm> getFormsForSeries(String series) {
+		if(!StringUtils.hasText(series)) return new ArrayList<MedicForm>();
 		DetachedCriteria c = DetachedCriteria.forClass(MedicForm.class);
 		c.add(Restrictions.eq("series",series));
 		c.addOrder(Order.asc("seriesPosition"));

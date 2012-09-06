@@ -113,12 +113,17 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 		}
 	}
 	
+	public void formSeriesDeleted(){
+		MedicForm selectedForm = (MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList));
+		addFormSeriesPanel(selectedForm);
+	}
+	
 	private void addFormSeriesPanel(MedicForm f){
 		MedicForm form = patientViewFormDao.getMedicFormForId(f.getFid());
 		Object outerPanel = find("outerSeriesPanel");
 		ui.removeAll(outerPanel);
 		if(StringUtils.hasText(form.getSeries())){
-			FormSeriesPanelController panel = new FormSeriesPanelController(ui, appCon, (MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList)));
+			FormSeriesPanelController panel = new FormSeriesPanelController(ui, appCon, form,this);
 			ui.add(outerPanel,panel.getMainPanel());
 		}else{
 			Object button = ui.createButton("Create Form Series", "createFormSeries()",null, this);
@@ -132,16 +137,15 @@ public class FormAdministrationPanelController extends AdministrationTabPanel{
 	}
 	
 	public void createFormSeries(){
-		createFormSeries(((MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList))).getName());
+		createFormSeries((MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList)));
 	}
 	
-	public void createFormSeries(String name){
-		MedicForm selectedForm = (MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList));
-		MedicFormSeries series = new MedicFormSeries(selectedForm,name);
-		patientViewFormDao.updateMedicForm(selectedForm);
+	public void createFormSeries(MedicForm form){
+		form.setSeries(form.getName());
+		patientViewFormDao.updateMedicForm(form);
 		Object outerPanel = find("outerSeriesPanel");
 		ui.removeAll(outerPanel);
-		FormSeriesPanelController panel = new FormSeriesPanelController(ui, appCon, (MedicForm) ui.getAttachedObject(ui.getSelectedItem(patientViewFormList)));
+		FormSeriesPanelController panel = new FormSeriesPanelController(ui, appCon,form,this);
 		ui.add(outerPanel,panel.getMainPanel());
 	}
 	
