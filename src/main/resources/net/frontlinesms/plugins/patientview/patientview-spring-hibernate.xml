@@ -45,6 +45,7 @@
 	
 	<bean id="MedicFormResponseSeriesDao" class="net.frontlinesms.plugins.patientview.data.repository.hibernate.HibernateMedicFormResponseSeriesDao" parent="baseHibernateDao">
 		<property name="responseDao" ref="MedicFormResponseDao"/>
+		<property name="fieldResponseDao" ref="MedicFormFieldResponseDao"/>
 		<property name="formDao" ref="MedicFormDao"/>
 	</bean>
 </beans>
