@@ -174,12 +174,13 @@ public class IncomingFormMatcher implements EventObserver{
 			ui.alert("The form "+ mfr.getFormName() + " was submitted for " + (subject == null? "Unknown patient" : subject.getName()) +
 					" out of order, and was ignored. You can still view the form's data in the 'Forms' tab.");
 		}else{
+			mfr.setSubject(subject);
 			formResponseDao.saveMedicFormResponse(mfr);
 		}
 	}
 	
 	private boolean inSeriesOrder(MedicFormResponse mfr, Person subject){
-		if(!StringUtils.hasText(mfr.getForm().getSeries())){
+		if(subject == null || !StringUtils.hasText(mfr.getForm().getSeries())){
 			return true;
 		}
 		int latest = seriesDao.getMostRecentFormResponseInSeries(mfr.getForm().getSeries(), subject);

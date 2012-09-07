@@ -87,7 +87,12 @@ public class RandomFormGenerator {
 				}else{
 					return df.format(getRandomDate());
 				}
-			case NUMERIC_TEXT_FIELD: return rand.nextInt(500)+"";
+			case NUMERIC_TEXT_FIELD: 
+				if(field.getMapping() == PatientFieldMapping.IDFIELD){
+					return getId((Patient) subject);
+				}else{
+					return rand.nextInt(500)+"";
+				}
 			default: return "";
 		}
 	}
