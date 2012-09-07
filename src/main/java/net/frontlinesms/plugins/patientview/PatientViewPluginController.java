@@ -49,6 +49,7 @@ public class PatientViewPluginController extends BasePluginController{
 		tabController = new PatientViewThinletTabController(this,ui);
 		//start the reminder dispatcher
 		reminderDispatch = new ReminderDispatcher(ui, applicationContext);
+		incomingFormMatcher = new IncomingFormMatcher(uiController, applicationContext);
 		//start the flag listener
 		flagListener = new FlagListener(applicationContext, ui);
 		Timer t = new Timer();
@@ -93,7 +94,7 @@ public class PatientViewPluginController extends BasePluginController{
 		this.applicationContext = applicationContext;
 		//start some services
 		UserSessionManager.getUserSessionManager().init(applicationContext);
-		incomingFormMatcher = new IncomingFormMatcher(applicationContext);
+		PVProperties.getInstance();
 		messageListener = new PatientViewMessageListener(applicationContext);
 		formListener = new PatientViewFormListener(applicationContext);
 		VaccineScheduler.instance().init(applicationContext);

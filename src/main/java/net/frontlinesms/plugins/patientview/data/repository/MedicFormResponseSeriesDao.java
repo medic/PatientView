@@ -16,4 +16,5 @@ public interface MedicFormResponseSeriesDao {
 	
 	public Map<String,String> getFieldValuesInFormResponseSeries(MedicFormResponse response,DataType type);
 
+    public int getMostRecentFormResponseInSeries(String series,Person subject);
 }

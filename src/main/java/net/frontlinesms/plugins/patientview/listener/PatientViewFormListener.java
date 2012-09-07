@@ -1,17 +1,13 @@
 package net.frontlinesms.plugins.patientview.listener;
 
-import static net.frontlinesms.ui.i18n.InternationalisationUtils.getI18nString;
 import net.frontlinesms.FrontlineUtils;
 import net.frontlinesms.data.events.EntityUpdatedNotification;
 import net.frontlinesms.events.EventBus;
 import net.frontlinesms.events.EventObserver;
 import net.frontlinesms.events.FrontlineEventNotification;
 import net.frontlinesms.plugins.forms.data.domain.Form;
-import net.frontlinesms.plugins.patientview.data.domain.framework.DataType;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
-import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm.MedicFormType;
-import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField.PatientFieldMapping;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;
 import net.frontlinesms.plugins.patientview.data.repository.UserDao;
 

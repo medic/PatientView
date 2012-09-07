@@ -4,10 +4,11 @@
 		<button action="moveFormUp()" name="upButton" text="▲" />
 		<button action="moveFormDown()" name="downButton" text="▼" />
 	</panel>
-	<panel gap="5" weightx="1">
+	<panel gap="5" weightx="1" columns="4" >
 		<label text="Add form to series:" />
 		<combobox action="insertForm()" editable="false" name="addFormToSeriesCombobox" />
-		<label weightx="1" />
+		<label weightx="1"/>
 		<button action="removeForm()" name="removeFormButton" text="Remove Form" />
+		<checkbox colspan="4" action="enforceOrderChanged()" name="enforceOrderCheckbox" text="Ignore out-of-order forms (all series)"/>
 	</panel>
 </panel>

@@ -28,7 +28,7 @@ public class UserSessionManager {
 		isLoggedIn = false;
 	}
 
-	public static UserSessionManager getUserSessionManager() {
+	public static synchronized UserSessionManager getUserSessionManager() {
 		if (sessionManager == null) {
 			sessionManager = new UserSessionManager();
 		}

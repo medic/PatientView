@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.List;
 
 import net.frontlinesms.FrontlineSMSConstants;
-import net.frontlinesms.FrontlineUtils;
 import net.frontlinesms.data.events.EntitySavedNotification;
 import net.frontlinesms.events.EventBus;
 import net.frontlinesms.events.EventObserver;
@@ -18,6 +17,7 @@ import net.frontlinesms.plugins.forms.data.domain.Form;
 import net.frontlinesms.plugins.forms.data.domain.FormResponse;
 import net.frontlinesms.plugins.forms.data.domain.ResponseValue;
 import net.frontlinesms.plugins.forms.data.repository.FormDao;
+import net.frontlinesms.plugins.patientview.PVProperties;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormField.PatientFieldMapping;
 import net.frontlinesms.plugins.patientview.data.domain.people.CommunityHealthWorker;
@@ -32,15 +32,17 @@ import net.frontlinesms.plugins.patientview.data.repository.CommunityHealthWorke
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormFieldResponseDao;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormResponseDao;
+import net.frontlinesms.plugins.patientview.data.repository.MedicFormResponseSeriesDao;
 import net.frontlinesms.plugins.patientview.data.repository.PatientDao;
 import net.frontlinesms.plugins.patientview.data.repository.ScheduledDoseDao;
 import net.frontlinesms.plugins.patientview.data.repository.VaccineDao;
 import net.frontlinesms.plugins.patientview.vaccine.VaccineScheduler;
 import net.frontlinesms.ui.ExtendedThinlet;
+import net.frontlinesms.ui.UiGeneratorController;
 import net.frontlinesms.ui.i18n.InternationalisationUtils;
 
-
 import org.springframework.context.ApplicationContext;
+import org.springframework.util.StringUtils;
 
 import uk.ac.shef.wit.simmetrics.similaritymetrics.JaroWinkler;
 import uk.ac.shef.wit.simmetrics.similaritymetrics.Levenshtein;
@@ -58,14 +60,17 @@ public class IncomingFormMatcher implements EventObserver{
 	private PatientDao patientDao;
 	private CommunityHealthWorkerDao chwDao;
 	private VaccineDao vaccineDao;
+	private MedicFormResponseSeriesDao seriesDao;
 	
 	private SimpleDateFormat shortFormatter;
 	private DateFormat longFormatter;
 	
 	private ApplicationContext appCon;
+	private UiGeneratorController ui;
 	
-	public IncomingFormMatcher(ApplicationContext appCon){
+	public IncomingFormMatcher(UiGeneratorController ui, ApplicationContext appCon){
 		this.appCon = appCon;
+		this.ui = ui;
 		vanillaFormDao = (FormDao) appCon.getBean("formDao");
 		formDao = (MedicFormDao) appCon.getBean("MedicFormDao");
 		formResponseDao = (MedicFormResponseDao) appCon.getBean("MedicFormResponseDao");
@@ -74,6 +79,7 @@ public class IncomingFormMatcher implements EventObserver{
 		chwDao = (CommunityHealthWorkerDao) appCon.getBean("CHWDao");
 		doseDao = (ScheduledDoseDao) appCon.getBean("ScheduledDoseDao");
 		vaccineDao = (VaccineDao) appCon.getBean("VaccineDao");
+		seriesDao = (MedicFormResponseSeriesDao) appCon.getBean("MedicFormResponseSeriesDao");
 		((EventBus) appCon.getBean("eventBus")).registerObserver(this);
 		//create the test harness
 		ExtendedThinlet thinlet = new ExtendedThinlet();
@@ -154,13 +160,31 @@ public class IncomingFormMatcher implements EventObserver{
 				handleAppointmentForm(mfr);
 			break;
 			case PATIENT_DATA:
-				mfr.setSubject(getFinalCandidate(mfr));
+				handlePatientDataForm(mfr);
+			break;
 			default:
 				formResponseDao.saveMedicFormResponse(mfr);
 			break;
 		}
 	}
 	
+	private void handlePatientDataForm(MedicFormResponse mfr){
+		Person subject = getFinalCandidate(mfr);
+		if(PVProperties.getInstance().shouldEnforceSeriesOrder() && !inSeriesOrder(mfr,subject)){
+			ui.alert("The form "+ mfr.getFormName() + " was submitted for " + (subject == null? "Unknown patient" : subject.getName()) +
+					" out of order, and was ignored. You can still view the form's data in the 'Forms' tab.");
+		}else{
+			formResponseDao.saveMedicFormResponse(mfr);
+		}
+	}
+	
+	private boolean inSeriesOrder(MedicFormResponse mfr, Person subject){
+		if(!StringUtils.hasText(mfr.getForm().getSeries())){
+			return true;
+		}
+		int latest = seriesDao.getMostRecentFormResponseInSeries(mfr.getForm().getSeries(), subject);
+		return latest + 1 == mfr.getForm().getSeriesPosition();
+	}
 	
 	private void handleAppointmentForm(MedicFormResponse mfr) {
 		mfr.setSubject(getFinalCandidate(mfr));

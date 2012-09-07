@@ -75,4 +75,16 @@ public class HibernateMedicFormResponseSeriesDao extends BaseHibernateDao<MedicF
 		}
 		return values;
 	}
+	public int getMostRecentFormResponseInSeries(String series,Person subject) {
+		List<MedicForm> forms = formDao.getFormsForSeries(series);
+		int latest = -1;
+		for(MedicForm form : forms){
+			if(responseDao.findLatestFormResponseForSubject(subject, form) != null){
+				if(form.getSeriesPosition() > latest){
+					latest = form.getSeriesPosition();
+				}
+			}
+		}
+		return latest;
+	}
 }

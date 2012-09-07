@@ -2,6 +2,7 @@ package net.frontlinesms.plugins.patientview.ui.administration.tabs;
 
 import java.util.List;
 
+import net.frontlinesms.plugins.patientview.PVProperties;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicForm;
 import net.frontlinesms.plugins.patientview.data.domain.framework.MedicFormSeries;
 import net.frontlinesms.plugins.patientview.data.repository.MedicFormDao;
@@ -35,6 +36,20 @@ public class FormSeriesPanelController extends ViewHandler{
 		this.parent = parent;
 		populateSeriesList(0);
 		populateAddFormSelect();
+		populateEnforceOrderCheckbox();
+	}
+	
+	private void populateEnforceOrderCheckbox(){
+		if(PVProperties.getInstance().shouldEnforceSeriesOrder()){
+			ui.setSelected(ui.find(mainPanel,"enforceOrderCheckbox"), true);
+		}else{
+			ui.setSelected(ui.find(mainPanel,"enforceOrderCheckbox"), false);
+		}
+	}
+	
+	public void enforceOrderChanged(){
+		boolean enfore = ui.isSelected(ui.find(mainPanel,"enforceOrderCheckbox"));
+		PVProperties.getInstance().setShouldEnforceSeriesOrder(enfore);
 	}
 	
 	private void populateAddFormSelect(){

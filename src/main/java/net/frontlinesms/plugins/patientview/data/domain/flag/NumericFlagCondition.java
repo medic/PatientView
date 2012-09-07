@@ -27,6 +27,12 @@ public class NumericFlagCondition extends FlagCondition<String> {
 		double i = Double.valueOf(fieldResponse.getValue());
 		MedicFormResponseSeriesDao seriesDao = (MedicFormResponseSeriesDao) appCon.getBean("MedicFormResponseSeriesDao");
 		Map<String,String> values = seriesDao.getFieldValuesInFormResponseSeries(formResponse,DataType.NUMERIC_TEXT_FIELD);
+		for(String key : values.keySet()){
+			expression = expression.replace("{"+key+"}", ""+values.get(key));
+		}
+		if(expression.indexOf('{')!= -1){
+			return false;
+		}
 		double numOperand = evaluate(expression, values);
 		if (getOperation() == FlagConditionOperation.EQUAL) {
 			return i == numOperand;
@@ -44,9 +50,7 @@ public class NumericFlagCondition extends FlagCondition<String> {
 	}
 
 	public double evaluate(String expression, Map<String,String> values) {
-		for(String key : values.keySet()){
-			expression = expression.replace("{"+key+"}", ""+values.get(key));
-		}
+		
 		return ExpressionUtils.evaluate(expression);
 	}
 
