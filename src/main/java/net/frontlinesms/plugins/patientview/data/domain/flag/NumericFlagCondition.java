@@ -23,6 +23,7 @@ public class NumericFlagCondition extends FlagCondition<String> {
 	@Override
 	public boolean evaluate(MedicFormFieldResponse fieldResponse, MedicFormResponse formResponse, ApplicationContext appCon) {
 		if(!StringUtils.hasText(expression)) return false;
+		if(!StringUtils.hasText(fieldResponse.getValue())) return false;
 		double i = Double.valueOf(fieldResponse.getValue());
 		MedicFormResponseSeriesDao seriesDao = (MedicFormResponseSeriesDao) appCon.getBean("MedicFormResponseSeriesDao");
 		Map<String,String> values = seriesDao.getFieldValuesInFormResponseSeries(formResponse,DataType.NUMERIC_TEXT_FIELD);
